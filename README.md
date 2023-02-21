@@ -92,7 +92,7 @@ More details can be found here [ohmyzsh/wiki](https://github.com/ohmyzsh/ohmyzsh
    source zsh-snap/install.zsh
    ```
 
-### Install and set up node with [nvm](https://github.com/nvm-sh/nvm)
+## Install and set up node with [nvm](https://github.com/nvm-sh/nvm)
 
 1. Run
 
@@ -111,7 +111,7 @@ More details can be found here [ohmyzsh/wiki](https://github.com/ohmyzsh/ohmyzsh
 
 4. Install node `nvm install 16 --lts` (see the available version list using `nvm ls`)
 
-### Install and set up [Golang](https://go.dev/)
+## Install and set up [Golang](https://go.dev/)
 
 1. Download the package through with curl
 
@@ -133,7 +133,7 @@ More details can be found here [ohmyzsh/wiki](https://github.com/ohmyzsh/ohmyzsh
 
 4. `source ~/.zshrc` and check go version `go version`
 
-### Install and set up Python using [pyenv](https://github.com/pyenv/pyenv)
+## Install and set up Python using [pyenv](https://github.com/pyenv/pyenv)
 
 1. Run
 
