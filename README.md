@@ -25,7 +25,9 @@ For Terminal, prefer to use this one: [Windows Terminal](https://apps.microsoft.
    ```sh
    sudo apt install \
       build-essential \
+      bat \
       curl \
+      fzf \
       git \
       libbz2-dev \
       libffi-dev \

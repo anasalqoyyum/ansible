@@ -78,12 +78,14 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker)
+plugins=(git z)
 
 source $ZSH/oh-my-zsh.sh
+
 # znap source marlonrichert/zsh-autocomplete
 znap source zsh-users/zsh-autosuggestions
 znap source zsh-users/zsh-syntax-highlighting
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -112,6 +114,10 @@ znap source zsh-users/zsh-syntax-highlighting
 
 alias vs="code ."
 alias lg="lazygit"
+alias bat="batcat"
+alias exp="explorer.exe ."
+alias yolo="find . -name 'node_modules' -type d -prune -print -exec sudo rm -rf '{}' \;"
+alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
