@@ -1,5 +1,7 @@
 # Personal Dev Environment Setup
 
+![Preview](https://i.imgur.com/pBUUAsr.png)
+
 Perhaps can only be applied to WSL Ubuntu (or Unix in General)
 
 For WSL Installation refer to: [WSL Install](https://learn.microsoft.com/en-us/windows/wsl/install)
@@ -184,7 +186,7 @@ Some issues that I encountered
 
 ### Docker vendor_completions issue with zsh
 
-[here](https://github.com/docker/for-win/issues/8336#issuecomment-718369597)
+[Source](https://github.com/docker/for-win/issues/8336#issuecomment-718369597)
 
 Make sure docker desktop is currently running
 
