@@ -82,9 +82,9 @@ plugins=(git z)
 
 source $ZSH/oh-my-zsh.sh
 
-# znap source marlonrichert/zsh-autocomplete
 znap source zsh-users/zsh-autosuggestions
 znap source zsh-users/zsh-syntax-highlighting
+# znap source marlonrichert/zsh-autocomplete
 
 # User configuration
 
@@ -122,8 +122,15 @@ alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# Add Golang to $PATH
 export PATH="$PATH:/usr/local/go/bin"
 
+# Add Rust to $PATH
+export PATH="$HOME/.cargo/bin:$PATH"
+
+export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+
+# Loads pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"

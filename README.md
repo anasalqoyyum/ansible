@@ -1,6 +1,6 @@
 # Personal Dev Environment Setup
 
-Mostly only applied to WSL Ubuntu (or Unix in General)
+Perhaps can only be applied to WSL Ubuntu (or Unix in General)
 
 For WSL Installation refer to: [WSL Install](https://learn.microsoft.com/en-us/windows/wsl/install)
 
@@ -15,6 +15,9 @@ For Terminal, prefer to use this one: [Windows Terminal](https://apps.microsoft.
 - [Install and set up node with nvm](#install-and-set-up-node-with-nvm)
 - [Install and set up Golang](#install-and-set-up-golang)
 - [Install and set up Python using pyenv](#install-and-set-up-python-using-pyenv)
+- [Install and set up Rust](#install-and-set-up-rust)
+- [Troubleshoot](#troubleshoot)
+  - [Docker vendor_completions issue with zsh](#docker-vendor_completions-issue-with-zsh)
 
 ## Prerequisites
 
@@ -41,6 +44,7 @@ For Terminal, prefer to use this one: [Windows Terminal](https://apps.microsoft.
       llvm \
       make \
       tk-dev \
+      ripgrep \
       wget \
       xz-utils \
       zlib1g-dev
@@ -160,3 +164,31 @@ More details can be found here [ohmyzsh/wiki](https://github.com/ohmyzsh/ohmyzsh
 4. Install python `pyenv install 3.11` (see the available version list using `pyenv install --list`)
 
 5. Set it to the default using `pyenv global 3.11`
+
+## Install and set up Rust
+
+1. Run `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`
+
+2. `source "$HOME/.cargo/env"`
+
+3. Put this in `~/.zshrc`
+
+   ```sh
+   export PATH="$HOME/.cargo/bin:$PATH"
+   ```
+
+## Troubleshoot
+
+Some issues that I encountered
+
+### Docker vendor_completions issue with zsh
+
+[here](https://github.com/docker/for-win/issues/8336#issuecomment-718369597)
+
+Make sure docker desktop is currently running
+
+1. `sudo rm -rf /usr/share/zsh/vendor-completions/_docker`
+
+2. `sudo cp /mnt/wsl/docker-desktop/cli-tools/usr/share/zsh/vendor-completions/_docker /usr/share/zsh/vendor-completions/`
+
+3. `sudo chattr +i /usr/share/zsh/vendor-completions/_docker`
