@@ -43,6 +43,7 @@ For Terminal, prefer to use this one: [Windows Terminal](https://apps.microsoft.
       libxmlsec1-dev \
       llvm \
       make \
+      tmux \
       tk-dev \
       ripgrep \
       wget \
