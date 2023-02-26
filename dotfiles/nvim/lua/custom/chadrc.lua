@@ -1,10 +1,13 @@
----@type ChadrcConfig
 local M = {}
 
+M.plugins = require "custom.plugins"
+
 M.ui = {
-  theme_toggle = { "onedark" },
-  theme = "onedark",
-  transparency = true,
+    theme = "onedark",
+    theme_toggle = {},
+    transparency = true
 }
+
+M.mappings = require "custom.mappings"
 
 return M
