@@ -18,6 +18,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git z tmux)
 
 ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_AUTOCONNECT=false
 
 source $ZSH/oh-my-zsh.sh
 
@@ -31,6 +32,8 @@ alias vs="code ."
 alias lg="lazygit"
 alias bat="batcat"
 alias exp="explorer.exe ."
+alias nv="nvim"
+alias tkas="tmux kill-session -a"
 alias yolo="find . -name 'node_modules' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 
