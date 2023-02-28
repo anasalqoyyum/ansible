@@ -10,7 +10,7 @@
 
 3. Run `bob use 0.8.1`
 
-4. Add to `~/.zshrc` `export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"`
+4. Add to `~/.zshrc`
 
    ```sh
    export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
@@ -21,3 +21,5 @@
    ```sh
    git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 && nvim
    ```
+
+6. npm install -g typescript typescript-language-server prettier
