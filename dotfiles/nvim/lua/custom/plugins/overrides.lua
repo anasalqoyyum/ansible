@@ -28,7 +28,7 @@ M.nvimtree = {
 
 M.blankline = {
     filetype_exclude = {"help", "terminal", "alpha", "packer", "lspinfo", "TelescopePrompt", "TelescopeResults",
-                        "nvchad_cheatsheet", "lsp-installer", "norg"}
+                        "nvchad_cheatsheet", "lsp-installer", "norg", ""}
 }
 
 M.alpha = {
@@ -55,7 +55,7 @@ M.mason = {
     ensure_installed = { -- lua stuff
     "lua-language-server", "stylua", -- web dev
     "css-lsp", "html-lsp", "typescript-language-server", "deno", -- "emmet-ls",
-    "gopls", "json-lsp", "tailwindcss-language-server", -- shell
+    "json-lsp", "tailwindcss-language-server", "gopls", -- shell
     "shfmt", "shellcheck", "prettierd"}
 }
 

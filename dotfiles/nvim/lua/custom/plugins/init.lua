@@ -17,6 +17,20 @@ return {
         end
     },
 
+    -- override default configs
+    ["kyazdani42/nvim-tree.lua"] = {
+        override_options = overrides.nvimtree
+    },
+    ["nvim-treesitter/nvim-treesitter"] = {
+        override_options = overrides.treesitter
+    },
+    ["lukas-reineke/indent-blankline.nvim"] = {
+        override_options = overrides.blankline
+    },
+    ["williamboman/mason.nvim"] = {
+        override_options = overrides.mason
+    },
+
     --------------------------------------------- custom plugins ----------------------------------------------
 
     -- autoclose tags in html, jsx only
