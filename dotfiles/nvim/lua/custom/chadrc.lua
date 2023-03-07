@@ -1,13 +1,13 @@
 local M = {}
 
-M.plugins = require "custom.plugins"
+M.plugins = require("custom.plugins")
 
 M.ui = {
-    theme = "onedark",
-    theme_toggle = {},
-    transparency = true
+	theme = "onedark",
+	theme_toggle = {},
+	transparency = true,
 }
 
-M.mappings = require "custom.mappings"
+M.mappings = require("custom.mappings")
 
 return M
