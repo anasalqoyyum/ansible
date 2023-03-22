@@ -58,6 +58,16 @@ export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+# Java Stuff
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export ANDROID_HOME="$HOME/android"
+export GRADLE_HOME=/opt/gradle/gradle-7.6.1 # Might need to change this depending on your version
+export ANDROID_SDK_ROOT=${ANDROID_HOME}
+
+export PATH="$JAVA_HOME/bin:$PATH"
+export PATH="${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${PATH}"
+export PATH="${GRADLE_HOME}/bin:${PATH}"
+
 # Enable only if you prefer to use volta
 # export VOLTA_HOME="$HOME/.volta"
 # export PATH="$VOLTA_HOME/bin:$PATH"
