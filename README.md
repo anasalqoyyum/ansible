@@ -1,6 +1,6 @@
 # Personal Dev Environment Setup
 
-![Preview](https://i.imgur.com/M9Z3nNg.png):
+![Preview](https://i.imgur.com/M9Z3nNg.png)
 
 Perhaps can only be applied to WSL Ubuntu (or Unix in General)
 
