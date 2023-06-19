@@ -76,3 +76,8 @@ export PATH="${GRADLE_HOME}/bin:${PATH}"
 # curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
 # export PATH="${HOME}/.local/bin:${PATH}"
 # eval "$(zoxide init zsh)"
+
+alias ll="exa -l -g --icons --git"
+alias llt="exa -1 --icons --tree --git-ignore"
+alias search="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
+
