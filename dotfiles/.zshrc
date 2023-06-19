@@ -71,3 +71,8 @@ export PATH="${GRADLE_HOME}/bin:${PATH}"
 # Enable only if you prefer to use volta
 # export VOLTA_HOME="$HOME/.volta"
 # export PATH="$VOLTA_HOME/bin:$PATH"
+
+# Enable only if you prefer to use zoxide
+# curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+# export PATH="${HOME}/.local/bin:${PATH}"
+# eval "$(zoxide init zsh)"
