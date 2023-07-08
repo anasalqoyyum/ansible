@@ -1,4 +1,4 @@
-source ~/zsh-snap/znap.zsh
+# source ~/zsh-snap/znap.zsh
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -15,15 +15,17 @@ export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-plugins=(git z tmux)
+# Enable fzf
+# git clone https://github.com/joshskidmore/zsh-fzf-history-search ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-fzf-history-search
+plugins=(git tmux yarn dotenv zoxide zsh-syntax-highlighting zsh-autosuggestions zsh-fzf-history-search thefuck)
 
 # ZSH_TMUX_AUTOSTART=true
 # ZSH_TMUX_AUTOCONNECT=false
 
 source $ZSH/oh-my-zsh.sh
 
-znap source zsh-users/zsh-autosuggestions
-znap source zsh-users/zsh-syntax-highlighting
+# znap source zsh-users/zsh-autosuggestions
+# znap source zsh-users/zsh-syntax-highlighting
 # znap source marlonrichert/zsh-autocomplete
 
 # User configuration
@@ -38,8 +40,14 @@ alias yolo="find . -name 'node_modules' -type d -prune -print -exec sudo rm -rf 
 alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias t="tmux"
 
+alias ll="exa -l -g --icons --git"
+alias llt="exa -1 --icons --tree --git-ignore"
+alias search="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+export PATH="${HOME}/.local/bin:${PATH}"
 
 # Add Golang to $PATH
 export PATH="$PATH:/usr/local/go/bin"
@@ -71,13 +79,3 @@ export PATH="${GRADLE_HOME}/bin:${PATH}"
 # Enable only if you prefer to use volta
 # export VOLTA_HOME="$HOME/.volta"
 # export PATH="$VOLTA_HOME/bin:$PATH"
-
-# Enable only if you prefer to use zoxide
-# curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-# export PATH="${HOME}/.local/bin:${PATH}"
-# eval "$(zoxide init zsh)"
-
-alias ll="exa -l -g --icons --git"
-alias llt="exa -1 --icons --tree --git-ignore"
-alias search="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
-
