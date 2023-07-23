@@ -129,7 +129,7 @@ More details can be found here [ohmyzsh/wiki](https://github.com/ohmyzsh/ohmyzsh
 1. Download the package through with curl
 
    ```sh
-   curl -OL https://go.dev/dl/go1.20.1.linux-amd64.tar.gz
+   curl -OL https://go.dev/dl/go1.18.10.linux-amd64.tar.gz
    ```
 
 2. Do this steps
