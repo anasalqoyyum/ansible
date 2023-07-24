@@ -6,9 +6,9 @@
    cargo install --git https://github.com/MordechaiHadad/bob.git
    ```
 
-2. Run `bob install 0.8.1`
+2. Run `bob install 0.9.0`
 
-3. Run `bob use 0.8.1`
+3. Run `bob use 0.9.0`
 
 4. Add to `~/.zshrc`
 

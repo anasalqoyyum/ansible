@@ -1,25 +1,12 @@
+---@type MappingsTable
 local M = {}
 
 M.general = {
-	n = {
-		[";"] = {
-			":",
-			"command mode",
-			opts = {
-				nowait = true,
-			},
-		},
-	},
-
-	i = {
-		["jk"] = { "<ESC>", "escape vim" },
-	},
+  n = {
+    [";"] = { ":", "enter command mode", opts = { nowait = true } },
+  },
 }
 
-M.treesitter = {
-	n = {
-		["<leader>cu"] = { "<cmd> TSCaptureUnderCursor <CR>", "find media" },
-	},
-}
+-- more keybinds!
 
 return M
