@@ -18,7 +18,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Enable fzf
 # git clone https://github.com/joshskidmore/zsh-fzf-history-search ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-fzf-history-search
-plugins=(git tmux yarn dotenv zoxide zsh-syntax-highlighting zsh-autosuggestions zsh-fzf-history-search thefuck)
+plugins=(git tmux yarn dotenv zoxide zsh-syntax-highlighting zsh-autosuggestions zsh-fzf-history-search)
 
 # ZSH_TMUX_AUTOSTART=true
 # ZSH_TMUX_AUTOCONNECT=false
@@ -41,6 +41,7 @@ alias yolo="find . -name 'node_modules' -type d -prune -print -exec sudo rm -rf 
 alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias t="tmux"
 
+# Run `cargo install exa` to install exa
 alias ll="exa -l -g --icons --git"
 alias llt="exa -1 --icons --tree --git-ignore"
 alias search="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
