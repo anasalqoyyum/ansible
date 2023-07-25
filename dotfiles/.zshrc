@@ -42,7 +42,8 @@ alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias t="tmux"
 
 # Run `cargo install exa` to install exa
-alias ll="exa -l -g --icons --git"
+alias ll="exa -lg --icons --git"
+alias lla="exa -alg --icons --git"
 alias llt="exa -1 --icons --tree --git-ignore"
 alias search="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
 
