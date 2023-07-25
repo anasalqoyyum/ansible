@@ -30,22 +30,21 @@ source $ZSH/oh-my-zsh.sh
 # znap source marlonrichert/zsh-autocomplete
 
 # User configuration
-
 alias vs="code ."
 alias lg="lazygit"
 alias bat="batcat"
 alias exp="explorer.exe ."
 alias nv="nvim"
+alias vim="nvim"
 alias tkas="tmux kill-session -a"
 alias yolo="find . -name 'node_modules' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias t="tmux"
-
+alias search="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
 # Run `cargo install exa` to install exa
 alias ll="exa -lg --icons --git"
 alias lla="exa -alg --icons --git"
 alias llt="exa -1 --icons --tree --git-ignore"
-alias search="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -67,6 +66,31 @@ export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+# place this after nvm initialization!
+autoload -U add-zsh-hook
+
+load-nvmrc() {
+  local nvmrc_path
+  nvmrc_path="$(nvm_find_nvmrc)"
+
+  if [ -n "$nvmrc_path" ]; then
+    local nvmrc_node_version
+    nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      nvm install
+    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
+      nvm use
+    fi
+  elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
+    echo "Reverting to nvm default version"
+    nvm use default
+  fi
+}
+
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
+
 # Java Stuff
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 export ANDROID_HOME="$HOME/android"
@@ -76,6 +100,10 @@ export ANDROID_SDK_ROOT=${ANDROID_HOME}
 export PATH="$JAVA_HOME/bin:$PATH"
 export PATH="${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${PATH}"
 export PATH="${GRADLE_HOME}/bin:${PATH}"
+
+# Enable adb server access in wsl2
+# export WSL_HOST=$(tail -1 /etc/resolv.conf | cut -d' ' -f2)
+# export ADB_SERVER_SOCKET=tcp:$WSL_HOST:5037
 
 # Enable only if you prefer to use volta
 # export VOLTA_HOME="$HOME/.volta"

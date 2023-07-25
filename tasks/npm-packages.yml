@@ -37,3 +37,11 @@
   tags:
     - install
     - node
+
+- name: Install cross-env
+  npm:
+    name: cross-env
+    global: yes
+  tags:
+    - install
+    - node
