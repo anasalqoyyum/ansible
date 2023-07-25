@@ -1,0 +1,6 @@
+- name: Install go
+  shell: curl -OL https://go.dev/dl/go1.18.10.linux-amd64.tar.gz && tar -C /usr/local -xvf go1.18.10.linux-amd64.tar.gz
+  become: true
+  tags:
+    - install
+    - golang

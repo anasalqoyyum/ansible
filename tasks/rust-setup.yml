@@ -1,0 +1,11 @@
+- name: Install rust
+  shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  tags:
+    - install
+    - rust
+
+- name: Up rust
+  shell: source "$HOME/.cargo/env"
+  tags:
+    - install
+    - rust

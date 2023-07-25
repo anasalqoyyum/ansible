@@ -1,10 +1,5 @@
 - hosts: localhost
   tasks:
-    - name: Update apt
-      become: true
-      apt:
-        update_cache: true
-
     - name: Check if curl is installed
       command: which curl
       register: curl_check

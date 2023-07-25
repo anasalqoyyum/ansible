@@ -1,6 +1,6 @@
 - hosts: localhost
   vars:
-    source_key: "./.ssh/id_rsa"
+    source_key: './.ssh/id_rsa'
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
     personal: "{{ lookup('env', 'HOME') }}/personal"
   pre_tasks:
@@ -13,3 +13,25 @@
       tags:
         - install
         - core
+    - name: WSL config
+      copy:
+        src: 'conf/wsl.conf'
+        dest: '/etc/wsl.conf'
+        mode: 0600
+      become: true
+      tags:
+        - install
+        - core
+        - wsl
+  tasks:
+    - import_tasks: tasks/ssh.yml
+    - import_tasks: tasks/git-setup.yml
+    - import_tasks: tasks/core-setup.yml
+    - import_tasks: tasks/node-setup.yml
+    - import_tasks: tasks/go-setup.yml
+    - import_tasks: tasks/python-setup.yml
+    - import_tasks: tasks/rust-setup.yml
+    - import_tasks: tasks/npm-packages.yml
+    - import_tasks: tasks/zsh-setup.yml
+    - import_tasks: tasks/nvim-setup.yml
+    - import_tasks: tasks/dotfiles.yml

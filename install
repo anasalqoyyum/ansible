@@ -7,7 +7,7 @@ sudo apt-add-repository --yes --update ppa:ansible/ansible
 sudo apt install -y ansible
 
 # Run the test for now
-ansible-playbook test.yml
+# ansible-playbook test.yml
 
 # Run Ansible playbook
-# ansible-playbook local.yml
+ansible-playbook local.yml --ask-become-pass --skip-tags "git-ab"
