@@ -1,5 +1,6 @@
 - name: Installing stow
   apt: name=stow
+  become: true
   tags:
     - install
     - dotfiles
@@ -7,8 +8,8 @@
 
 - name: Copy dotfiles
   copy:
-    src: './dotfiles'
-    dest: "{{ lookup('env', 'HOME') }}/.dotfiles"
+    src: './dotfiles/'
+    dest: "{{ lookup('env', 'HOME') }}/.dotfiles/"
     mode: 0700
   tags:
     - install

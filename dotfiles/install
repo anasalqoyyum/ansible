@@ -9,6 +9,3 @@ do
     stow $folder
 done
 popd
-
-./stow
-popd

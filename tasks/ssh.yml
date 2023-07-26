@@ -23,7 +23,6 @@
     dest: '{{ dest_key }}.pub'
     mode: 0644
   tags:
-    - dotfiles
     - install
     - ssh
 

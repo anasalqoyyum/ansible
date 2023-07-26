@@ -10,7 +10,7 @@
   git_config:
     name: user.name
     scope: global
-    value: 'anasalqoyyum'
+    value: 'Anas Alqoyyum'
   tags:
     - git-personal
 
@@ -26,6 +26,6 @@
   git_config:
     name: user.name
     scope: global
-    value: 'anasalqoyyum'
+    value: 'Anas Alqoyyum'
   tags:
     - git-ab
