@@ -6,6 +6,13 @@
     - dotfiles
     - stow
 
+- name: Remove existing (if any) zshrc
+  shell: rm -f ~/.zshrc ~/.p10k.zsh
+  tags:
+    - install
+    - dotfiles
+    - stow
+
 - name: Copy dotfiles
   copy:
     src: './dotfiles/'

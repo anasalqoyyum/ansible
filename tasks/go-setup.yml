@@ -1,12 +1,15 @@
 - name: Install go
-  shell: curl -OL https://go.dev/dl/go1.18.10.linux-amd64.tar.gz && tar -C /usr/local -xvf go1.18.10.linux-amd64.tar.gz
-  become: true
+  get_url:
+    url: https://go.dev/dl/go1.18.10.linux-amd64.tar.gz
+    dest: /tmp/go.linux-amd64.tar.gz
+    mode: '0755'
+    force: 'yes'
   tags:
     - install
     - golang
 
 - name: Setup go
-  shell: tar -C /usr/local -xvf go1.18.10.linux-amd64.tar.gz
+  shell: tar -C /usr/local -xvf /tmp/go.linux-amd64.tar.gz
   become: true
   tags:
     - install

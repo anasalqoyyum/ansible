@@ -4,23 +4,19 @@
     - install
     - neovim
 
-- name: Clone Neovim
-  ansible.builtin.git:
-    repo: "https://github.com/neovim/neovim.git"
-    dest: "{{ lookup('env', 'HOME') }}/neovim"
-  tags:
-    - install
-    - neovim
-
-- name: Build neovim
-  shell: "cd {{ lookup('env', 'HOME') }}/neovim && make -j 20"
+- name: Download Neovim
+  get_url:
+    url: https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+    dest: /tmp/nvim.appimage
+    mode: '0755'
+    force: 'yes'
   tags:
     - install
     - neovim
 
 - name: Install neovim
+  shell: "cp /tmp/nvim.appimage /usr/local/bin/nvim.appimage && ln -s /usr/local/bin/nvim.appimage /usr/local/bin/nvim"
   become: true
-  shell: "cd {{ lookup('env', 'HOME') }}/neovim && make install"
   tags:
     - install
     - neovim

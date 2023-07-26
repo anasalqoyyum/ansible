@@ -16,8 +16,6 @@ export PATH="${HOME}/.local/bin:${PATH}"
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# Enable fzf
-# git clone https://github.com/joshskidmore/zsh-fzf-history-search ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-fzf-history-search
 plugins=(git tmux yarn dotenv zoxide zsh-syntax-highlighting zsh-autosuggestions zsh-fzf-history-search)
 
 # ZSH_TMUX_AUTOSTART=true
@@ -62,7 +60,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
-export NVM_DIR="$HOME/.config/nvm"
+export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 

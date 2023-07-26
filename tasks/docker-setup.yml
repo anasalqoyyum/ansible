@@ -1,11 +1,15 @@
 - name: Downloading docker
-  shell: curl -fsSL https://get.docker.com -o get-docker.sh
+  get_url:
+    url: https://get.docker.com
+    dest: /tmp/get-docker.sh
+    mode: '0755'
+    force: 'yes'
   tags:
     - install
     - docker
 
 - name: Install docker
-  shell: sh get-docker.sh
+  shell: sh /tmp/get-docker.sh
   become: true
   tags:
     - install
@@ -26,7 +30,7 @@
     - docker
 
 - name: Update iptables for compability
-  shell: sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
+  shell: update-alternatives --set iptables /usr/sbin/iptables-legacy
   become: true
   tags:
     - install

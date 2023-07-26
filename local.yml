@@ -1,8 +1,7 @@
 - hosts: localhost
   vars:
-    source_key: "./.ssh/id_rsa"
-    dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa"
-    personal: "{{ lookup('env', 'HOME') }}/personal"
+    source_key: "./.ssh/id_ed25519"
+    dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
   pre_tasks:
     - name: Update Apt
       become: true
@@ -35,4 +34,5 @@
     - import_tasks: tasks/zsh-setup.yml
     - import_tasks: tasks/docker-setup.yml
     - import_tasks: tasks/nvim-setup.yml
+    - import_tasks: tasks/lazygit-setup.yml
     - import_tasks: tasks/dotfiles.yml

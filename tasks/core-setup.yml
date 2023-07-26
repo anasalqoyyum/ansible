@@ -5,10 +5,15 @@
       [
         'build-essential',
         'bat',
+        'cmake',
         'curl',
+        'fuse',
         'fzf',
         'git',
         'libbz2-dev',
+        'libpthread-stubs0-dev',
+        'libtool',
+        'libtool-bin',
         'libffi-dev',
         'liblzma-dev',
         'libncursesw5-dev',
@@ -19,13 +24,16 @@
         'libxmlsec1-dev',
         'llvm',
         'make',
+        'pkg-config',
         'tldr',
         'tmux',
         'tk-dev',
         'ripgrep',
+        'unzip',
         'wget',
         'xz-utils',
         'zlib1g-dev',
+        'zoxide',
       ]
   tags:
     - install
