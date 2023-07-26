@@ -2,7 +2,7 @@
   git_config:
     name: user.email
     scope: global
-    value: 'muhanasalqoyyum@gmail.com'
+    value: "muhanasalqoyyum@gmail.com"
   tags:
     - git-personal
 
@@ -10,22 +10,22 @@
   git_config:
     name: user.name
     scope: global
-    value: 'Anas Alqoyyum'
+    value: "Anas Alqoyyum"
   tags:
     - git-personal
 
-- name: AB
+- name: Git AB
   git_config:
     name: user.email
     scope: global
-    value: 'anas@accelbyte.net'
+    value: "anas@accelbyte.net"
   tags:
     - git-ab
 
-- name: Git personal setup name
+- name: Git AB setup name
   git_config:
     name: user.name
     scope: global
-    value: 'Anas Alqoyyum'
+    value: "Anas Alqoyyum"
   tags:
     - git-ab
