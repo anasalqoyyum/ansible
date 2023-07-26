@@ -9,3 +9,9 @@
   tags:
     - install
     - node
+
+- name: Use the correct version of Node
+  shell: nvm use 18
+  tags:
+    - install
+    - node

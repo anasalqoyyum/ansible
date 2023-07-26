@@ -4,3 +4,10 @@
   tags:
     - install
     - golang
+
+- name: Setup go
+  shell: tar -C /usr/local -xvf go1.18.10.linux-amd64.tar.gz
+  become: true
+  tags:
+    - install
+    - golang

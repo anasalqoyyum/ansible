@@ -4,7 +4,7 @@
     - install
     - rust
 
-- name: Up rust
+- name: Use rust
   shell: source "$HOME/.cargo/env"
   tags:
     - install

@@ -5,7 +5,13 @@
     - python
 
 - name: Install correct version of Python
-  shell: pyenv install 3.11 && pyenv global 3.11
+  shell: pyenv install 3.11
+  tags:
+    - install
+    - python
+
+- name: Use the correct version of Python
+  shell: pyenv global 3.11
   tags:
     - install
     - python

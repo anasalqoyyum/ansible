@@ -1,0 +1,33 @@
+- name: Downloading docker
+  shell: curl -fsSL https://get.docker.com -o get-docker.sh
+  tags:
+    - install
+    - docker
+
+- name: Install docker
+  shell: sh get-docker.sh
+  become: true
+  tags:
+    - install
+    - docker
+
+- name: Set user to Docker Group
+  shell: usermod -aG docker $USER
+  become: true
+  tags:
+    - install
+    - docker
+
+- name: Install docker-compose
+  apt: name=docker-compose-plugin
+  become: true
+  tags:
+    - install
+    - docker
+
+- name: Update iptables for compability
+  shell: sudo update-alternatives --set iptables /usr/sbin/iptables-legacy
+  become: true
+  tags:
+    - install
+    - docker
