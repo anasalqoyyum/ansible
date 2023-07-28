@@ -16,12 +16,15 @@ export PATH="${HOME}/.local/bin:${PATH}"
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-plugins=(git tmux yarn dotenv zoxide zsh-syntax-highlighting zsh-autosuggestions zsh-fzf-history-search)
+plugins=(git tmux yarn dotenv zoxide zsh-syntax-highlighting zsh-autosuggestions)
+# zsh-fzf-history-search -> also available
 
 # ZSH_TMUX_AUTOSTART=true
 # ZSH_TMUX_AUTOCONNECT=false
 
 source $ZSH/oh-my-zsh.sh
+source /usr/share/doc/fzf/examples/key-bindings.zsh
+source /usr/share/doc/fzf/examples/completion.zsh
 
 # znap source zsh-users/zsh-autosuggestions
 # znap source zsh-users/zsh-syntax-highlighting
@@ -31,6 +34,7 @@ source $ZSH/oh-my-zsh.sh
 alias vs="code ."
 alias lg="lazygit"
 alias bat="batcat"
+alias fd="fdfind"
 alias exp="explorer.exe ."
 alias nv="nvim"
 alias vim="nvim"

@@ -4,7 +4,7 @@
   args:
     executable: /bin/bash
     chdir: "$HOME"
-    creates: "$HOME/.nvm/nvm.sh"  
+    creates: "$HOME/.nvm/nvm.sh"
   tags:
     - install
     - node

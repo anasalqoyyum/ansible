@@ -1,18 +1,17 @@
 - name: Register current lazygit version
-  shell: | 
+  shell: |
     curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*'
   register: lazygit_version
   tags:
     - install
     - lazygit
 
-
 - name: Download lazygit
   get_url:
     url: "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_{{ lazygit_version.stdout }}_Linux_x86_64.tar.gz"
     dest: /tmp/lazygit.tar.gz
-    mode: '0755'
-    force: 'yes'
+    mode: "0755"
+    force: "yes"
   become: true
   tags:
     - install

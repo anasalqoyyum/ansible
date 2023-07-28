@@ -15,7 +15,7 @@
 
 - name: Copy dotfiles
   copy:
-    src: './dotfiles/'
+    src: "./dotfiles/"
     dest: "{{ lookup('env', 'HOME') }}/.dotfiles/"
     mode: 0700
   tags:
