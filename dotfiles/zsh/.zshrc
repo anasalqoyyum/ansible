@@ -43,6 +43,7 @@ alias yolo="find . -name 'node_modules' -type d -prune -print -exec sudo rm -rf 
 alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias t="tmux"
 alias search="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
+alias p="pnpm"
 # Run `cargo install exa` to install exa
 alias ll="exa -lg --icons --git"
 alias lla="exa -alg --icons --git"
