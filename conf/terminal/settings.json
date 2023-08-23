@@ -42,8 +42,8 @@
   "profiles": {
     "defaults": {
       "backgroundImage": "desktopWallpaper",
-      "backgroundImageOpacity": 0.05,
-      "colorScheme": "One Half Dark",
+      "backgroundImageOpacity": 0.1,
+      "colorScheme": "One Dark",
       "cursorShape": "filledBox",
       "font": {
         "face": "JetBrainsMono Nerd Font",
@@ -53,7 +53,7 @@
     "list": [
       {
         "backgroundImage": "desktopWallpaper",
-        "colorScheme": "One Half Dark",
+        "colorScheme": "One Dark",
         "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
         "cursorShape": "filledBox",
         "font": {
@@ -65,10 +65,12 @@
         "name": "Windows PowerShell"
       },
       {
-        "colorScheme": "One Half Dark",
+        "colorScheme": {
+          "light": "One Dark"
+        },
         "commandline": "%SystemRoot%\\System32\\cmd.exe",
         "font": {
-          "face": "JetBrainsMono Nerd Font",
+          "face": "JetBrainsMono Nerd Font Mono",
           "size": 10.0
         },
         "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
@@ -82,9 +84,8 @@
         "source": "Windows.Terminal.Azure"
       },
       {
-        "backgroundImageOpacity": 0.05,
         "bellStyle": "none",
-        "colorScheme": "One Half Dark",
+        "colorScheme": "One Dark",
         "guid": "{51855cb2-8cce-5362-8f54-464b92b32386}",
         "hidden": false,
         "name": "Ubuntu",
@@ -142,25 +143,27 @@
       "yellow": "#C19C00"
     },
     {
+      "background": "#1E2127",
+      "black": "#1E2127",
+      "blue": "#61AFEF",
+      "brightBlack": "#5C6370",
+      "brightBlue": "#61AFEF",
+      "brightCyan": "#56B6C2",
+      "brightGreen": "#98C379",
+      "brightPurple": "#C678DD",
+      "brightRed": "#E06C75",
+      "brightWhite": "#FFFFFF",
+      "brightYellow": "#D19A66",
+      "cursorColor": "#FFFFFF",
+      "cyan": "#56B6C2",
+      "foreground": "#ABB2BF",
+      "green": "#98C379",
       "name": "One Dark",
-      "black": "#1e2127",
-      "red": "#e06c75",
-      "green": "#98c379",
-      "yellow": "#d19a66",
-      "blue": "#61afef",
-      "purple": "#c678dd",
-      "cyan": "#56b6c2",
-      "white": "#abb2bf",
-      "brightBlack": "#5c6370",
-      "brightRed": "#e06c75",
-      "brightGreen": "#98c379",
-      "brightYellow": "#d19a66",
-      "brightBlue": "#61afef",
-      "brightPurple": "#c678dd",
-      "brightCyan": "#56b6c2",
-      "brightWhite": "#ffffff",
-      "background": "#1e2127",
-      "foreground": "#abb2bf"
+      "purple": "#C678DD",
+      "red": "#E06C75",
+      "selectionBackground": "#FFFFFF",
+      "white": "#ABB2BF",
+      "yellow": "#D19A66"
     },
     {
       "background": "#282C34",
