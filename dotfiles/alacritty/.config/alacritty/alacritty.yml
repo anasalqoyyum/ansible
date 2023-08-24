@@ -9,51 +9,51 @@ window:
     x: 10
     y: 10
 
-# Spread additional padding evenly around the terminal content.
-dynamic_padding: true
+  # Spread additional padding evenly around the terminal content.
+  dynamic_padding: true
 
-# Window decorations
-#
-# Values for `decorations`:
-#     - full: Borders and title bar
-#     - none: Neither borders nor title bar
-#
-# Values for `decorations` (macOS only):
-#     - transparent: Title bar, transparent background and title bar buttons
-#     - buttonless: Title bar, transparent background and no title bar buttons
-decorations: full
+  # Window decorations
+  #
+  # Values for `decorations`:
+  #     - full: Borders and title bar
+  #     - none: Neither borders nor title bar
+  #
+  # Values for `decorations` (macOS only):
+  #     - transparent: Title bar, transparent background and title bar buttons
+  #     - buttonless: Title bar, transparent background and no title bar buttons
+  decorations: buttonless
 
-# Background opacity
-#
-# Window opacity as a floating point number from `0.0` to `1.0`.
-# The value `0.0` is completely transparent and `1.0` is opaque.
-#opacity: 1.0
+  # Background opacity
+  #
+  # Window opacity as a floating point number from `0.0` to `1.0`.
+  # The value `0.0` is completely transparent and `1.0` is opaque.
+  opacity: 1.0
 
-# Startup Mode (changes require restart)
-#
-# Values for `startup_mode`:
-#   - Windowed
-#   - Maximized
-#   - Fullscreen
-#
-# Values for `startup_mode` (macOS only):
-#   - SimpleFullscreen
-startup_mode: Windowed
+  # Startup Mode (changes require restart)
+  #
+  # Values for `startup_mode`:
+  #   - Windowed
+  #   - Maximized
+  #   - Fullscreen
+  #
+  # Values for `startup_mode` (macOS only):
+  #   - SimpleFullscreen
+  startup_mode: Maximized
 
-# Make `Option` key behave as `Alt` (macOS only):
-#   - OnlyLeft
-#   - OnlyRight
-#   - Both
-#   - None (default)
-option_as_alt: OnlyLeft
+  # Make `Option` key behave as `Alt` (macOS only):
+  #   - OnlyLeft
+  #   - OnlyRight
+  #   - Both
+  #   - None (default)
+  option_as_alt: OnlyLeft
 
 # Font configuration
 font:
   normal:
     family: JetBrainsMono Nerd Font
 
-# Point size
-size: 11.0
+  # Point size
+  size: 11.0
 
 # Colors (One Dark)
 colors:
