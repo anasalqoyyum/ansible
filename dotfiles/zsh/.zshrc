@@ -23,8 +23,8 @@ plugins=(git tmux yarn dotenv zoxide zsh-syntax-highlighting zsh-autosuggestions
 # ZSH_TMUX_AUTOCONNECT=false
 
 source $ZSH/oh-my-zsh.sh
-source /usr/share/doc/fzf/examples/key-bindings.zsh
-source /usr/share/doc/fzf/examples/completion.zsh
+# source /usr/share/doc/fzf/examples/key-bindings.zsh
+# source /usr/share/doc/fzf/examples/completion.zsh
 
 # znap source zsh-users/zsh-autosuggestions
 # znap source zsh-users/zsh-syntax-highlighting

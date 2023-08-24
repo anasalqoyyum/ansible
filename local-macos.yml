@@ -1,0 +1,28 @@
+- hosts: localhost
+  vars:
+    source_key: './.ssh/id_ed25519'
+    dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
+  pre_tasks:
+    - name: Check if brew is installed
+      command: which brew
+      register: brew_check
+      ignore_errors: true
+    - name: Install brew
+      become: true
+      shell: 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+      when: brew_check.rc != 0
+    - name: Check if git is installed
+      command: which git
+    - name: Touch .hushlogin
+      command: touch ~/.hushlogin
+  tasks:
+    - import_tasks: tasks/ssh.yml
+    - import_tasks: tasks/git-setup.yml
+    - import_tasks: tasks/core-brew-setup.yml
+    - import_tasks: tasks/node-setup.yml
+    - import_tasks: tasks/go-macos-setup.yml
+    - import_tasks: tasks/rust-setup.yml
+    - import_tasks: tasks/npm-packages.yml
+    - import_tasks: tasks/zsh-plugin-setup.yml
+    - import_tasks: tasks/nvim-setup.yml
+    - import_tasks: tasks/dotfiles.yml

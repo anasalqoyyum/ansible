@@ -1,7 +1,7 @@
 - name: Install ZSH
   apt: name=zsh
   become: true
-  tags: &tags_for_zsh_tasks ["install", "dotfiles", "zsh"]
+  tags: &tags_for_zsh_tasks ['install', 'dotfiles', 'zsh']
 
 - name: Register current user (workaround to change default shell)
   shell: whoami
@@ -9,37 +9,6 @@
   tags: *tags_for_zsh_tasks
 
 - name: Change shell to zsh
-  shell: "chsh -s $(which zsh) {{ current_user.stdout }}"
+  shell: 'chsh -s $(which zsh) {{ current_user.stdout }}'
   become: true
   tags: *tags_for_zsh_tasks
-
-- name: Check that the somefile.conf exists
-  stat:
-    path: "{{ lookup('env', 'HOME') }}/.oh-my-zsh"
-  register: oh_my_stats
-  tags: *tags_for_zsh_tasks
-
-- name: Oh-My-Zsh
-  shell: curl -L https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh > ~/.oh-my-installer && chmod +x ~/.oh-my-installer && ~/.oh-my-installer
-  tags: *tags_for_zsh_tasks
-  when: oh_my_stats.stat.exists == False
-
-- name: zsh-syntax-highlighting
-  shell: git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-  tags: *tags_for_zsh_tasks
-  when: oh_my_stats.stat.exists == False
-
-- name: zsh-autosuggestions
-  shell: git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-  tags: *tags_for_zsh_tasks
-  when: oh_my_stats.stat.exists == False
-
-- name: Powerlevel10k
-  shell: git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-  tags: *tags_for_zsh_tasks
-  when: oh_my_stats.stat.exists == False
-
-- name: fzf history
-  shell: git clone https://github.com/joshskidmore/zsh-fzf-history-search ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-fzf-history-search
-  tags: *tags_for_zsh_tasks
-  when: oh_my_stats.stat.exists == False

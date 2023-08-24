@@ -1,0 +1,16 @@
+- name: Install go
+  get_url:
+    url: https://go.dev/dl/go1.18.10.darwin-arm64.tar.gz
+    dest: /tmp/go.darwin-arm64.tar.gz
+    mode: '0755'
+    force: 'yes'
+  tags:
+    - install
+    - golang-macos
+
+- name: Setup go
+  shell: tar -C /usr/local -xvf /tmp/go.darwin-arm64.tar.gz
+  become: true
+  tags:
+    - install
+    - golang-macos

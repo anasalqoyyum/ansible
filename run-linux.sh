@@ -10,4 +10,4 @@ sudo apt install -y ansible
 # ansible-playbook test.yml
 
 # Run Ansible playbook
-ansible-playbook local.yml --ask-become-pass --skip-tags "git-ab,ssh"
+ansible-playbook local-linux.yml --ask-become-pass --skip-tags "macos-only,git-ab,ssh"

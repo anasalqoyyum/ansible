@@ -1,0 +1,26 @@
+- name: Install Core Packages With Brew
+  community.general.homebrew:
+    name: exa,fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,colima,lazygit,pyenv,spotify,visual-studio-code,google-chrome,firefox,alacritty,stow
+    state: present
+    update_homebrew: true
+  tags:
+    - install
+    - core-brew
+
+- name: Install nerd fonts
+  shell: 'brew tap homebrew/cask-fonts && brew install --cask font-jetbrains-mono-nerd-font'
+  tags:
+    - install
+    - core-brew
+
+- name: Install correct version of Python
+  shell: '/opt/homebrew/bin/pyenv install 3.11'
+  tags:
+    - install
+    - python-brew
+
+- name: Use the correct version of Python
+  shell: '/opt/homebrew/bin/pyenv global 3.11'
+  tags:
+    - install
+    - python-brew
