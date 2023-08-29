@@ -47,6 +47,12 @@ window:
   #   - None (default)
   option_as_alt: OnlyLeft
 
+  # Window title
+  title: Alacritty
+
+  # Allow terminal applications to change Alacritty's window title.
+  dynamic_title: false
+
 # Font configuration
 font:
   normal:
