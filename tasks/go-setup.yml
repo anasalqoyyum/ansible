@@ -2,8 +2,8 @@
   get_url:
     url: https://go.dev/dl/go1.18.10.linux-amd64.tar.gz
     dest: /tmp/go.linux-amd64.tar.gz
-    mode: "0755"
-    force: "yes"
+    mode: '0755'
+    force: 'yes'
   tags:
     - install
     - golang

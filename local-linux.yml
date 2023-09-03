@@ -37,3 +37,4 @@
     - import_tasks: tasks/nvim-setup.yml
     - import_tasks: tasks/lazygit-setup.yml
     - import_tasks: tasks/dotfiles.yml
+    - import_tasks: tasks/k9s-setup.yml
