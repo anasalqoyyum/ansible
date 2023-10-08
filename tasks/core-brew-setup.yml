@@ -1,8 +1,16 @@
 - name: Install Core Packages With Brew
   community.general.homebrew:
-    name: exa,fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,colima,lazygit,pyenv,spotify,visual-studio-code,google-chrome,firefox,alacritty,stow,k9s
+    name: exa,fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,colima,lazygit,pyenv,stow,k9s
     state: present
     update_homebrew: true
+  tags:
+    - install
+    - core-brew
+
+- name: Install Core Apps With Brew Cask
+  community.general.homebrew_cask:
+    name: spotify,visual-studio-code,google-chrome,firefox,alacritty,postman,authy,qbittorrent,vlc,bitwarden
+    state: present
   tags:
     - install
     - core-brew
