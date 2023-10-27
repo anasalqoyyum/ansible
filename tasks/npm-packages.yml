@@ -53,3 +53,11 @@
   tags:
     - install
     - node
+
+- name: Install wsl-open
+  npm:
+    name: wsl-open
+    global: yes
+  tags:
+    - install
+    - node

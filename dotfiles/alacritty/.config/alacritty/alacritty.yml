@@ -1,5 +1,8 @@
 # Configuration for Alacritty, the GPU enhanced terminal emulator.
 
+import:
+  - ~/.config/alacritty/themes/catppuccin-mocha.yml
+
 window:
   # Window padding (changes require restart)
   #
@@ -60,35 +63,6 @@ font:
 
   # Point size
   size: 11.0
-
-# Colors (One Dark)
-colors:
-  # Default colors
-  primary:
-    background: "0x1e2127"
-    foreground: "0xabb2bf"
-
-  # Normal colors
-  normal:
-    black: "0x1e2127"
-    red: "0xe06c75"
-    green: "0x98c379"
-    yellow: "0xd19a66"
-    blue: "0x61afef"
-    magenta: "0xc678dd"
-    cyan: "0x56b6c2"
-    white: "0xabb2bf"
-
-  # Bright colors
-  bright:
-    black: "0x5c6370"
-    red: "0xe06c75"
-    green: "0x98c379"
-    yellow: "0xd19a66"
-    blue: "0x61afef"
-    magenta: "0xc678dd"
-    cyan: "0x56b6c2"
-    white: "0xffffff"
 
 selection:
   # This string contains all characters that are used as separators for

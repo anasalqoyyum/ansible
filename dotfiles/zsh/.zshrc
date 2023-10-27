@@ -59,8 +59,6 @@ export PATH="$PATH:/usr/local/go/bin"
 # Add Rust to $PATH
 export PATH="$HOME/.cargo/bin:$PATH"
 
-export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
-
 # Loads pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
