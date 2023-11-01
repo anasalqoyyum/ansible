@@ -1,6 +1,6 @@
 - hosts: localhost
   vars:
-    source_key: './.ssh/id_ed25519'
+    source_key: "./.ssh/id_ed25519"
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
   pre_tasks:
     - name: Update Apt
@@ -14,8 +14,8 @@
         - core
     - name: WSL config
       copy:
-        src: 'conf/wsl.conf'
-        dest: '/etc/wsl.conf'
+        src: "conf/wsl.conf"
+        dest: "/etc/wsl.conf"
         mode: 0600
       become: true
       tags:
@@ -38,4 +38,5 @@
     - import_tasks: tasks/lazygit-setup.yml
     - import_tasks: tasks/dotfiles.yml
     - import_tasks: tasks/k9s-setup.yml
+    - import_tasks: tasks/k6-setup.yml
     - import_tasks: tasks/win32yank-setup.yml
