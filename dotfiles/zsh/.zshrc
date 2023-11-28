@@ -20,8 +20,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git tmux yarn zoxide zsh-syntax-highlighting zsh-autosuggestions)
 # zsh-fzf-history-search -> also available
 
-# ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_AUTOSTART=true
 # ZSH_TMUX_AUTOCONNECT=false
+ZSH_TMUX_DEFAULT_SESSION_NAME="main"
 
 source $ZSH/oh-my-zsh.sh
 # source /usr/share/doc/fzf/examples/key-bindings.zsh
