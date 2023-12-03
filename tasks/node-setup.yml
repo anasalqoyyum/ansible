@@ -17,7 +17,7 @@
     chdir: "{{ ansible_env.HOME }}"
     creates: "{{ ansible_env.HOME }}/.nvm/versions/{{ item }}"
   loop:
-    - 18
+    - 20
   tags:
     - install
     - node
