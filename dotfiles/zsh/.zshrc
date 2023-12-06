@@ -57,6 +57,8 @@ alias llt="exa -1 --icons --tree --git-ignore"
 
 # Add Golang to $PATH
 export PATH="$PATH:/usr/local/go/bin"
+export GOPATH="$HOME/go"
+export PATH="$PATH:$GOPATH/bin"
 
 # Add Rust to $PATH
 export PATH="$HOME/.cargo/bin:$PATH"
