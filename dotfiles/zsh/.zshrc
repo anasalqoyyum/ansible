@@ -65,7 +65,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 # Loads pyenv
 export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
 export NVM_DIR="$HOME/.nvm"
