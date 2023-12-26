@@ -1,7 +1,7 @@
 # Configuration for Alacritty, the GPU enhanced terminal emulator.
 
 import:
-  - ~/.config/alacritty/themes/catppuccin-mocha.yml
+  - ~/.config/alacritty/themes/one_dark.yaml
 
 window:
   # Window padding (changes require restart)

@@ -1,10 +1,15 @@
 return {
-  -- disable bufferline
+  -- disable bufferline and indentscope
   { "akinsho/bufferline.nvim", enabled = false },
+  { "echasnovski/mini.indentscope", enabled = false },
 
+  -- setup neo-tree
   {
     "nvim-neo-tree/neo-tree.nvim",
     opts = {
+      window = {
+        position = "current",
+      },
       filesystem = {
         filtered_items = {
           visible = true,
@@ -13,21 +18,19 @@ return {
     },
   },
 
+  -- add and setup onedark theme
   {
     "navarasu/onedark.nvim",
     opts = {
       style = "darker",
     },
   },
-
   {
     "LazyVim/LazyVim",
     opts = {
       colorscheme = "onedark",
     },
   },
-
-  { "echasnovski/mini.indentscope", enabled = false },
 
   -- add biome formatter and linter
   {
@@ -37,7 +40,6 @@ return {
       table.insert(opts.ensure_installed, "biome")
     end,
   },
-
   {
     "stevearc/conform.nvim",
     optional = true,
@@ -63,6 +65,7 @@ return {
     },
   },
 
+  -- setup funny dashboard
   {
     "nvimdev/dashboard-nvim",
     opts = function()
@@ -128,5 +131,24 @@ return {
 
       return opts
     end,
+  },
+
+  -- add multicursors plugins
+  {
+    "smoka7/multicursors.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "smoka7/hydra.nvim",
+    },
+    opts = {},
+    cmd = { "MCstart", "MCvisual", "MCclear", "MCpattern", "MCvisualPattern", "MCunderCursor" },
+    keys = {
+      {
+        mode = { "v", "n" },
+        "<Leader>m",
+        "<cmd>MCstart<cr>",
+        desc = "Start multi cursor mode",
+      },
+    },
   },
 }
