@@ -1,3 +1,25 @@
+- name: Check if nvim is installed
+  command: "which nvim"
+  register: nvim_check
+  ignore_errors: true
+  tags:
+    - git-personal
+    - git-ab
+
+- name: Set git core.editor to nvim if nvim exists, otherwise set to vim
+  command: "git config --global core.editor {{ 'nvim' if nvim_check.rc == 0 else 'vim' }}"
+  when: nvim_check.rc == 0
+  tags:
+    - git-personal
+    - git-ab
+
+- name: Git core editor debug
+  debug:
+    msg: "git core.editor is set to {{ 'nvim' if nvim_check.rc == 0 else 'vim' }}"
+  tags:
+    - git-personal
+    - git-ab
+
 - name: Git personal
   git_config:
     name: user.email
