@@ -2,8 +2,8 @@
   get_url:
     url: https://sh.rustup.rs
     dest: /tmp/sh.rustup.rs
-    mode: '0755'
-    force: 'yes'
+    mode: "0755"
+    force: "yes"
   tags:
     - install
     - rust
@@ -15,10 +15,20 @@
     - rust
 
 - name: Install exa
-  shell: '{{ ansible_env.HOME }}/.cargo/bin/cargo install exa'
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install exa"
   args:
     executable: /bin/bash
-    chdir: '{{ ansible_env.HOME }}'
+    chdir: "{{ ansible_env.HOME }}"
+  tags:
+    - install
+    - rust
+    - linux-only
+
+- name: Install mise
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install mise"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
   tags:
     - install
     - rust

@@ -1,6 +1,6 @@
 - name: Install Core Packages With Brew
   community.general.homebrew:
-    name: exa,fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,colima,lazygit,pyenv,stow,k9s,jq
+    name: exa,fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,colima,lazygit,pyenv,stow,k9s,jq,mise,k6
     state: present
     update_homebrew: true
   tags:
