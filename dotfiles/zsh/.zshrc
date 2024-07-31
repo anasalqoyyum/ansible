@@ -17,8 +17,8 @@ export XDG_CONFIG_HOME="$HOME/.config"
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-plugins=(git tmux yarn zoxide zsh-syntax-highlighting zsh-autosuggestions)
-# zsh-fzf-history-search -> also available
+plugins=(git tmux yarn mise zoxide zsh-syntax-highlighting zsh-autosuggestions)
+# zsh-fzf-history-search -> also available but innate fzf bindings should already working
 
 ZSH_TMUX_AUTOSTART=false
 # ZSH_TMUX_AUTOCONNECT=false
@@ -47,7 +47,6 @@ alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias t="tmux"
 alias search="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
 alias p="pnpm"
-# Run `cargo install exa` to install exa
 alias ll="exa -lg --icons --git"
 alias lla="exa -alg --icons --git"
 alias llt="exa -1 --icons --tree --git-ignore"
@@ -62,10 +61,6 @@ export PATH="$PATH:$GOPATH/bin"
 
 # Add Rust to $PATH
 export PATH="$HOME/.cargo/bin:$PATH"
-
-# Loads mise
-# Prefer using mise from now on
-echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
 
 # Loads pyenv
 export PYENV_ROOT="$HOME/.pyenv"
@@ -99,6 +94,9 @@ load-nvmrc() {
 
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
+
+# Loads pnpm completion
+source ~/completion-for-pnpm.zsh
 
 # Java Stuff
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
