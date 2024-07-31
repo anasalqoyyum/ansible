@@ -63,6 +63,10 @@ export PATH="$PATH:$GOPATH/bin"
 # Add Rust to $PATH
 export PATH="$HOME/.cargo/bin:$PATH"
 
+# Loads mise
+# Prefer using mise from now on
+echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
+
 # Loads pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
