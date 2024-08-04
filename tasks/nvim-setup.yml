@@ -19,6 +19,7 @@
 - name: Install neovim
   shell: "cp /tmp/nvim.appimage /usr/local/bin/nvim.appimage && ln -s /usr/local/bin/nvim.appimage /usr/local/bin/nvim"
   become: true
+  ignore_errors: true
   tags:
     - install
     - neovim
