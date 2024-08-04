@@ -35,20 +35,38 @@ return {
   -- add biome formatter and linter
   {
     "williamboman/mason.nvim",
-    opts = function(_, opts)
-      opts.ensure_installed = opts.ensure_installed or {}
-      table.insert(opts.ensure_installed, "biome")
-    end,
+    opts = {
+      ensure_installed = {
+        "biome",
+      },
+    },
+  },
+  -- add biome to lspconfig
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        biome = {
+          root_dir = function(fname)
+            return require("lspconfig.util").root_pattern("package.json", ".git", "biome.json")(fname)
+              or require("lspconfig.util").find_git_ancestor(fname)
+              or vim.loop.os_homedir()
+          end,
+          single_file_support = true,
+        },
+      },
+    },
   },
   {
     "stevearc/conform.nvim",
     optional = true,
     opts = {
       formatters_by_ft = {
-        ["javascript"] = { "biome" },
-        ["javascriptreact"] = { "biome" },
-        ["typescript"] = { "biome" },
-        ["typescriptreact"] = { "biome" },
+        ["javascript"] = { "prettier" },
+        ["javascriptreact"] = { "prettier" },
+        ["typescript"] = { "prettier" },
+        ["typescriptreact"] = { "prettier" },
+        ["astro"] = { "prettier" },
         ["vue"] = { "prettier" },
         ["css"] = { "prettier" },
         ["scss"] = { "prettier" },
@@ -64,6 +82,7 @@ return {
       },
     },
   },
+
 
   -- setup funny dashboard
   {
