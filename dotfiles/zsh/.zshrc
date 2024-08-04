@@ -35,7 +35,6 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 alias vs="code ."
 alias lg="lazygit"
-# TODO: Disable bat and fd alias if it's newer
 alias bat="batcat"
 alias fd="fdfind"
 alias exp="explorer.exe ."
@@ -47,9 +46,9 @@ alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias t="tmux"
 alias search="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
 alias p="pnpm"
-alias ll="exa -lg --icons --git"
-alias lla="exa -alg --icons --git"
-alias llt="exa -1 --icons --tree --git-ignore"
+alias ll="eza -lg --icons --git"
+alias lla="eza -alg --icons --git"
+alias llt="eza -1 --icons --tree --git-ignore"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
