@@ -22,6 +22,7 @@
     - import_tasks: tasks/node-setup.yml
     - import_tasks: tasks/go-macos-setup.yml
     - import_tasks: tasks/rust-setup.yml
+    - import_tasks: tasks/rust-tools-setup.yml
     - import_tasks: tasks/npm-packages.yml
     - import_tasks: tasks/zsh-plugin-setup.yml
     - import_tasks: tasks/nvim-setup.yml
