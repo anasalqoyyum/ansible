@@ -40,4 +40,5 @@
     - import_tasks: tasks/dotfiles.yml
     - import_tasks: tasks/k9s-setup.yml
     - import_tasks: tasks/k6-setup.yml
+    - import_tasks: tasks/biome-setup.yml
     - import_tasks: tasks/win32yank-setup.yml
