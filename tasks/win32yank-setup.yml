@@ -2,8 +2,8 @@
   get_url:
     url: https://github.com/equalsraf/win32yank/releases/download/v0.1.1/win32yank-x64.zip
     dest: /tmp/win32yank.zip
-    mode: "0755"
-    force: "yes"
+    mode: '0755'
+    force: 'yes'
   tags:
     - install
     - linux-only
@@ -32,10 +32,10 @@
     - install
     - linux-only
     - yank
-# NOTE: not needed because tmux-yank already does it
-# - name: Set yank config
-#   shell: sed -i '21i\set -g @override_copy_command "win32yank.exe -i"\n' ~/.tmux.conf
-#   tags:
-#     - install
-#     - linux-only
-#     - yank
+
+- name: Set yank config
+  shell: sed -i '21i\set -g @override_copy_command "win32yank.exe -i"\n' ~/.tmux.conf
+  tags:
+    - install
+    - linux-only
+    - yank

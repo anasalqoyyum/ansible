@@ -1,5 +1,3 @@
-# source ~/zsh-snap/znap.zsh
-
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -7,36 +5,143 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+if [[ -f "/opt/homebrew/bin/brew" ]] then
+  # If you're using macOS, you'll want this enabled
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+# Set the directory we want to store zinit and plugins
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+# Download Zinit, if it's not there yet
+if [ ! -d "$ZINIT_HOME" ]; then
+   mkdir -p "$(dirname $ZINIT_HOME)"
+   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+
+# Source/Load zinit
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Add in Powerlevel10k
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+# Remove "zi" alias for default zoxide alias to work
+zinit ice atload'unalias zi'
+
+# Add in zsh plugins
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+
+# Add in snippets
+zinit snippet OMZL::git.zsh
+zinit snippet OMZL::clipboard.zsh
+zinit snippet OMZL::directories.zsh
+zinit snippet OMZL::functions.zsh
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::aws
+zinit snippet OMZP::kubectl
+zinit snippet OMZP::kubectx
+zinit snippet OMZP::command-not-found
+zinit snippet OMZP::yarn
+zinit snippet OMZP::zoxide
+
+# Load completions
+autoload -Uz compinit && compinit
+zinit cdreplay -q
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Functions
+function sesh-sessions() {
+  {
+    exec </dev/tty
+    exec <&1
+    local session
+    session=$(sesh list -t -c | fzf --height 40% --reverse --border-label ' sesh ' --border --prompt '⚡  ')
+    zle reset-prompt > /dev/null 2>&1 || true
+    [[ -z "$session" ]] && return
+    sesh connect $session
+  }
+}
+function tms() {
+  # sesh connect "$(sesh list | fzf)"
+  sesh connect \"$(
+    sesh list --icons | fzf --height 40% --layout reverse --border \
+      --no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
+      --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
+      --bind 'tab:down,btab:up' \
+      --bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list --icons)' \
+      --bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t --icons)' \
+      --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -c --icons)' \
+      --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z --icons)' \
+      --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+      --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list --icons)' \
+  )\"
+}
+
+# Keybinds
+bindkey -e
+bindkey '^[[1;5D' backward-word
+bindkey '^[[1;5C' forward-word
+zle     -N             sesh-sessions
+bindkey -M emacs '\es' sesh-sessions
+bindkey -M vicmd '\es' sesh-sessions
+bindkey -M viins '\es' sesh-sessions
+
+# History
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+# Completion styling
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+## $PATH
+export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH="${HOME}/.local/bin:${PATH}"
 export XDG_CONFIG_HOME="$HOME/.config"
+# Add Golang
+export PATH="$PATH:/usr/local/go/bin"
+export GOPATH="$HOME/go"
+export PATH="$PATH:$GOPATH/bin"
+# Add Rust
+export PATH="$HOME/.cargo/bin:$PATH"
+# Add Java
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export ANDROID_HOME="$HOME/android"
+export GRADLE_HOME=/opt/gradle/gradle-7.6.1 # Might need to change this depending on your version
+export ANDROID_SDK_ROOT=${ANDROID_HOME}
+export PATH="$JAVA_HOME/bin:$PATH"
+export PATH="${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${PATH}"
+export PATH="${GRADLE_HOME}/bin:${PATH}"
+# Add Bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# Shell Integrations
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source ~/completion-for-pnpm.zsh
+eval "$(mise activate zsh)"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
-plugins=(git tmux yarn mise zoxide zsh-syntax-highlighting zsh-autosuggestions)
-# zsh-fzf-history-search -> also available but innate fzf bindings should already working
-
-ZSH_TMUX_AUTOSTART=false
-# ZSH_TMUX_AUTOCONNECT=false
-ZSH_TMUX_DEFAULT_SESSION_NAME="main"
-
-source $ZSH/oh-my-zsh.sh
-# source /usr/share/doc/fzf/examples/key-bindings.zsh
-# source /usr/share/doc/fzf/examples/completion.zsh
-
-# znap source zsh-users/zsh-autosuggestions
-# znap source zsh-users/zsh-syntax-highlighting
-# znap source marlonrichert/zsh-autocomplete
-
-# User configuration
+# Aliases
 alias vs="code ."
 alias lg="lazygit"
-alias bat="batcat"
-alias fd="fdfind"
 alias exp="explorer.exe ."
 alias nv="nvim"
 alias vim="nvim"
@@ -44,73 +149,21 @@ alias tkas="tmux kill-session -a"
 alias yolo="find . -name 'node_modules' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias t="tmux"
-alias search="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
+alias search="rg --files --hidden | fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
 alias p="pnpm"
 alias ll="eza -lg --icons --git"
 alias lla="eza -alg --icons --git"
 alias llt="eza -1 --icons --tree --git-ignore"
+if command -v batcat &>/dev/null; then
+  alias bat="batcat"
+fi
+if command -v fdfind &>/dev/null; then
+  alias fd="fdfind"
+fi
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# Add Golang to $PATH
-export PATH="$PATH:/usr/local/go/bin"
-export GOPATH="$HOME/go"
-export PATH="$PATH:$GOPATH/bin"
-
-# Add Rust to $PATH
-export PATH="$HOME/.cargo/bin:$PATH"
-
-# Loads pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# place this after nvm initialization!
-autoload -U add-zsh-hook
-
-load-nvmrc() {
-  local nvmrc_path
-  nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version
-    nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
-      nvm use > /dev/null 2>&1
-    fi
-  elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
-    nvm use default > /dev/null 2>&1
-  fi
-}
-
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
-
-# Loads pnpm completion
-source ~/completion-for-pnpm.zsh
-
-# Java Stuff
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-export ANDROID_HOME="$HOME/android"
-export GRADLE_HOME=/opt/gradle/gradle-7.6.1 # Might need to change this depending on your version
-export ANDROID_SDK_ROOT=${ANDROID_HOME}
-
-export PATH="$JAVA_HOME/bin:$PATH"
-export PATH="${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${PATH}"
-export PATH="${GRADLE_HOME}/bin:${PATH}"
-
-# Enable adb server access in wsl2
-# export WSL_HOST=$(tail -1 /etc/resolv.conf | cut -d' ' -f2)
-# export ADB_SERVER_SOCKET=tcp:$WSL_HOST:5037
-
-# Enable only if you prefer to use volta
-# export VOLTA_HOME="$HOME/.volta"
-# export PATH="$VOLTA_HOME/bin:$PATH"
+## Device specific
+# Aliases
+alias v="print -z --"
+# PATH
+export FLYCTL_INSTALL="$HOME/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"

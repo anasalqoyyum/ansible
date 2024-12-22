@@ -1,6 +1,6 @@
 - name: Install Core Packages With Brew
   community.general.homebrew:
-    name: fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,colima,lazygit,pyenv,stow,k9s,jq,k6,biome
+    name: fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,colima,lazygit,pyenv,stow,k9s,jq,k6,biome,fortune,cowsay
     state: present
     update_homebrew: true
   tags:
@@ -16,7 +16,7 @@
     - core-brew
 
 - name: Install nerd fonts
-  shell: "brew tap homebrew/cask-fonts && brew install --cask font-jetbrains-mono-nerd-font"
+  shell: 'brew tap homebrew/cask-fonts && brew install --cask font-jetbrains-mono-nerd-font'
   tags:
     - install
     - core-brew

@@ -1,6 +1,6 @@
 - hosts: localhost
   vars:
-    source_key: './.ssh/id_ed25519'
+    source_key: "./.ssh/id_ed25519"
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
   pre_tasks:
     - name: Check if brew is installed
@@ -24,6 +24,5 @@
     - import_tasks: tasks/rust-setup.yml
     - import_tasks: tasks/rust-tools-setup.yml
     - import_tasks: tasks/npm-packages.yml
-    - import_tasks: tasks/zsh-plugin-setup.yml
     - import_tasks: tasks/nvim-setup.yml
     - import_tasks: tasks/dotfiles.yml
