@@ -45,7 +45,6 @@ zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::command-not-found
 zinit snippet OMZP::yarn
-zinit snippet OMZP::zoxide
 
 # Load completions
 autoload -Uz compinit && compinit
@@ -137,6 +136,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source ~/completion-for-pnpm.zsh
 eval "$(mise activate zsh)"
+eval "$(zoxide init zsh)"
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # Aliases
@@ -148,7 +148,7 @@ alias vim="nvim"
 alias tkas="tmux kill-session -a"
 alias yolo="find . -name 'node_modules' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
-alias t="tmux"
+alias t="tmux new-session -A -s main"
 alias search="rg --files --hidden | fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
 alias p="pnpm"
 alias ll="eza -lg --icons --git"

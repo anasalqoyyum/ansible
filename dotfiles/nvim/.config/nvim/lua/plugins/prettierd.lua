@@ -30,7 +30,7 @@ local supported = {
 --- Checks if a Prettier config file exists for the given context
 ---@param ctx ConformCtx
 function M.has_config(ctx)
-  vim.fn.system({ "prettierd", "--find-config-path", ctx.filename })
+  vim.fn.system({ "prettier", "--find-config-path", ctx.filename })
   return vim.v.shell_error == 0
 end
 
@@ -45,7 +45,7 @@ function M.has_parser(ctx)
     return true
   end
   -- otherwise, check if a parser can be inferred
-  local ret = vim.fn.system({ "prettierd", "--file-info", ctx.filename })
+  local ret = vim.fn.system({ "prettier", "--file-info", ctx.filename })
   ---@type boolean, string?
   local ok, parser = pcall(function()
     return vim.fn.json_decode(ret).inferredParser
@@ -80,6 +80,11 @@ return {
           return M.has_parser(ctx) and (vim.g.lazyvim_prettier_needs_config ~= true or M.has_config(ctx))
         end,
       }
+      opts.formatters.prettierd = {
+        condition = function(_, ctx)
+          return M.has_parser(ctx) and (vim.g.lazyvim_prettier_needs_config ~= true or M.has_config(ctx))
+        end,
+      }
     end,
   },
 
@@ -94,4 +99,3 @@ return {
     end,
   },
 }
-
