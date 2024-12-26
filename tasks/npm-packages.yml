@@ -46,6 +46,14 @@
     - install
     - node
 
+- name: Install Bun
+  npm:
+    name: bun
+    global: yes
+  tags:
+    - install
+    - node
+
 - name: Install cross-env
   npm:
     name: cross-env
