@@ -66,7 +66,6 @@ function sesh-sessions() {
   }
 }
 function tms() {
-  # sesh connect "$(sesh list | fzf)"
   sesh connect \"$(
     sesh list --icons | fzf --height 40% --layout reverse --border \
       --no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
@@ -156,10 +155,17 @@ alias lla="eza -alg --icons --git"
 alias llt="eza -1 --icons --tree --git-ignore"
 if command -v batcat &>/dev/null; then
   alias bat="batcat"
+  if [ ! -e "$HOME/.local/bin/bat" ]; then
+    ln -s "$(which batcat)" "$HOME/.local/bin/bat"
+  fi
 fi
 if command -v fdfind &>/dev/null; then
   alias fd="fdfind"
+  if [ ! -e "$HOME/.local/bin/fd" ]; then
+    ln -s "$(which fdfind)" "$HOME/.local/bin/fd"
+  fi
 fi
+
 
 ## Device specific
 # Aliases
