@@ -10,8 +10,9 @@ For WSL Installation refer to: [WSL Install](https://learn.microsoft.com/en-us/w
 
 For Terminal
 
-- Use this one: [Windows Terminal](https://apps.microsoft.com/store/detail/windows-terminal/)
+- Use this one for Windows: [Windows Terminal](https://apps.microsoft.com/store/detail/windows-terminal/)
 - Alacritty also works: [Alacritty](https://alacritty.org/)
+- Ghostty is preferred on macOS: [Ghostty](https://ghostty.org/)
 
 ## How to run
 

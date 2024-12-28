@@ -11,13 +11,13 @@ return {
         DiagnosticUnderlineWarn = { undercurl = true },
         DiagnosticUnderlineInfo = { undercurl = true },
         DiagnosticUnderlineHint = { undercurl = true },
-      }
+      },
     },
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "onedark"
+      colorscheme = "onedark_vivid",
     },
   },
 
@@ -86,7 +86,7 @@ return {
           },
         },
         sections = {
-          { section = "keys",   gap = 1, padding = 2 },
+          { section = "keys", gap = 1, padding = 2 },
           { section = "startup" },
         },
       },

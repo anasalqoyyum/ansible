@@ -1,3 +1,14 @@
-[experimental]
-autoMemoryReclaim=dropcache
+# TODO: figure out why did i disable the "mirrored" option even though it's better, 100% forgot
+# Reason 1: it causes VPN ip not tunneled properly lol, need to use OVPN 2.47 
+## -> https://github.com/microsoft/WSL/issues/10879
+# Reason 2: also causing freaking docker port publish not working, update docker to 27.x and enable hostAddressLoopback
+## -> https://github.com/microsoft/WSL/issues/1 0494
+
+[wsl2]
+memory=8GB
 networkingMode=mirrored
+dnsTunneling=true
+
+[experimental]
+autoMemoryReclaim=gradual
+hostAddressLoopback=true
