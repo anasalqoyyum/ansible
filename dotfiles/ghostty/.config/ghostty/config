@@ -1,6 +1,6 @@
 # This should already the default from ghostty
 # font-family = JetBrainsMono Nerd Font
-font-size = 12
+font-size = 14
 
 window-padding-x = 10
 window-padding-y = 10

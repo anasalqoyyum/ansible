@@ -43,7 +43,22 @@ return {
     dependencies = {
       "smoka7/hydra.nvim",
     },
-    opts = {},
+    opts = {
+      hint_config = {
+        float_opts = {
+          border = "rounded",
+        },
+        position = "bottom-right",
+      },
+      generate_hints = {
+        normal = true,
+        insert = true,
+        extend = true,
+        config = {
+          column_count = 1,
+        },
+      },
+    },
     cmd = { "MCstart", "MCvisual", "MCclear", "MCpattern", "MCvisualPattern", "MCunderCursor" },
     keys = {
       {
