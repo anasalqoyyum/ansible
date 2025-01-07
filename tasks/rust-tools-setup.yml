@@ -1,43 +1,52 @@
 - name: Install cargo-binstall
-  shell: '{{ ansible_env.HOME }}/.cargo/bin/cargo install cargo-binstall'
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install cargo-binstall"
   args:
     executable: /bin/bash
-    chdir: '{{ ansible_env.HOME }}'
+    chdir: "{{ ansible_env.HOME }}"
   tags:
     - install
     - rust
 
 - name: Install eza
-  shell: '{{ ansible_env.HOME }}/.cargo/bin/cargo install eza'
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install eza"
   args:
     executable: /bin/bash
-    chdir: '{{ ansible_env.HOME }}'
+    chdir: "{{ ansible_env.HOME }}"
+  tags:
+    - install
+    - rust
+
+- name: Install typst-cli
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked typst-cli"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
   tags:
     - install
     - rust
 
 - name: Install usage-cli
-  shell: '{{ ansible_env.HOME }}/.cargo/bin/cargo install usage-cli'
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install usage-cli"
   args:
     executable: /bin/bash
-    chdir: '{{ ansible_env.HOME }}'
+    chdir: "{{ ansible_env.HOME }}"
   tags:
     - install
     - rust
     - mise
 
 - name: Install mise
-  shell: '{{ ansible_env.HOME }}/.cargo/bin/cargo install mise'
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install mise"
   args:
     executable: /bin/bash
-    chdir: '{{ ansible_env.HOME }}'
+    chdir: "{{ ansible_env.HOME }}"
   tags:
     - install
     - rust
     - mise
 
 - name: Install mise dev tools
-  shell: 'mise u -g node@20 go@1.22 python@3.11'
+  shell: "mise u -g node@20 go@1.22 python@3.11"
   tags:
     - install
     - rust
