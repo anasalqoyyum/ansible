@@ -144,7 +144,7 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Shell Integrations
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source ~/completion-for-pnpm.zsh
+source ~/.completion-for-pnpm.zsh
 eval "$(mise activate zsh)"
 eval "$(zoxide init zsh)"
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

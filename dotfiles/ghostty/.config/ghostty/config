@@ -3,14 +3,15 @@
 font-size = 14
 font-thicken = true
 
-window-padding-x = 10
-window-padding-y = 10
-window-decoration = false
-macos-titlebar-style = hidden
-
 # Force window to be maximized
 window-height = 10000
 window-width = 10000
+window-padding-x = 10
+window-padding-y = 10
+window-decoration = false
+
+macos-titlebar-style = hidden
+macos-option-as-alt = true
 
 # Needed to set cursor-style: block
 shell-integration = zsh
@@ -40,4 +41,3 @@ foreground = #abb2bf
 cursor-color = #d55fde
 selection-background = #d55fde
 selection-foreground = #abb2bf
-
