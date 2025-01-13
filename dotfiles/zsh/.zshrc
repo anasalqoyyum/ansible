@@ -141,6 +141,7 @@ export PATH="${GRADLE_HOME}/bin:${PATH}"
 # Add Bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+export BAT_THEME="OneHalfDark"
 
 # Shell Integrations
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

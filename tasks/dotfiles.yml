@@ -7,9 +7,14 @@
     - stow
     - linux-only
 
+- name: Delete the .dotfiles folder
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.dotfiles"
+    state: absent
+
 - name: Copy dotfiles
   copy:
-    src: './dotfiles/'
+    src: "./dotfiles/"
     dest: "{{ lookup('env', 'HOME') }}/.dotfiles/"
     mode: 0700
   tags:

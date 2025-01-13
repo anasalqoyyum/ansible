@@ -1,5 +1,5 @@
 os:
-  open: 'code {{filename}}'
-  edit: 'nvim {{filename}}'
+  open: "code {{filename}}"
+  edit: "nvim {{filename}}"
 gui:
-  nerdFontsVersion: '3'
+  nerdFontsVersion: "3"
