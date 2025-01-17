@@ -185,3 +185,4 @@ alias v="print -z --"
 # PATH
 export FLYCTL_INSTALL="$HOME/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
+export KUBE_EDITOR="nvim"
