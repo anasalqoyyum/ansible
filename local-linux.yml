@@ -16,7 +16,7 @@
       copy:
         src: "conf/wsl.conf"
         dest: "/etc/wsl.conf"
-        mode: 0600
+        mode: 0644
       become: true
       tags:
         - install
