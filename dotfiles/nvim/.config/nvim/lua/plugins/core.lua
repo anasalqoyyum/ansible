@@ -30,16 +30,34 @@ return {
     },
   },
 
+  -- {
+  --   "nvim-neo-tree/neo-tree.nvim",
+  --   opts = {
+  --     window = {
+  --       position = "right",
+  --     },
+  --   },
+  -- },
+
   {
     "nvim-neo-tree/neo-tree.nvim",
+    enabled = false,
+  },
+
+  {
+    "folke/snacks.nvim",
+    ---@type snacks.Config
     opts = {
-      window = {
-        position = "right",
+      picker = {
+        sources = {
+          explorer = {
+            layout = { layout = { position = "right" } },
+          },
+        },
       },
     },
   },
 
-  -- add multicursors plugins
   {
     "jake-stewart/multicursor.nvim",
     branch = "1.0",
