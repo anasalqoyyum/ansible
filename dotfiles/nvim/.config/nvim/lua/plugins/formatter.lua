@@ -1,11 +1,3 @@
----@diagnostic disable: inject-field
-if lazyvim_docs then
-  -- Enable the option to require a Prettier config file
-  -- If no prettier config file is found, the formatter will not be used
-  vim.g.lazyvim_prettier_needs_config = false
-end
-
----@alias ConformCtx {buf: number, filename: string, dirname: string}
 local M = {}
 
 local prettierSupported = {
@@ -27,6 +19,7 @@ local prettierSupported = {
   "yaml",
 }
 
+-- https://biomejs.dev/internals/language-support/
 local biomeSupported = {
   "astro",
   "css",
@@ -70,8 +63,20 @@ function M.has_parser(ctx)
   return ok and parser and parser ~= vim.NIL
 end
 
+--- Checks if the current buffer is supported by biome
+---@param ctx ConformCtx
+function M.biome_support(ctx)
+  local ft = vim.bo[ctx.buf].filetype --[[@as string]]
+  if vim.tbl_contains(biomeSupported, ft) then
+    return true
+  else
+    return false
+  end
+end
+
 M.has_config = LazyVim.memoize(M.has_config)
 M.has_parser = LazyVim.memoize(M.has_parser)
+M.biome_support = LazyVim.memoize(M.biome_support)
 
 return {
   {
@@ -98,7 +103,8 @@ return {
       opts.formatters = opts.formatters or {}
       opts.formatters.prettierd = {
         condition = function(_, ctx)
-          return M.has_parser(ctx) and (vim.g.lazyvim_prettier_needs_config ~= true or M.has_config(ctx))
+          return M.has_parser(ctx)
+            and (vim.g.lazyvim_prettier_needs_config ~= true or M.has_config(ctx) or not M.biome_support(ctx))
         end,
       }
       opts.formatters.biome = {
@@ -106,7 +112,6 @@ return {
           local prettierd_condition = opts.formatters.prettierd.condition(_, ctx)
           return not prettierd_condition
         end,
-        require_cwd = true,
       }
     end,
   },
