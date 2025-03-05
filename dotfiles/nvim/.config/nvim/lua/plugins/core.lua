@@ -54,6 +54,13 @@ return {
             layout = { layout = { position = "right" } },
           },
         },
+        ---@class snacks.picker.formatters.Config
+        formatters = {
+          file = {
+            filename_first = true,
+            truncate = 80,
+          },
+        },
       },
     },
   },
