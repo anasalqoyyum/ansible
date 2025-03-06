@@ -25,3 +25,12 @@
   tags:
     - install
     - ssh
+
+- name: Install ssh config
+  copy:
+    src: "./.ssh/config"
+    dest: "{{ lookup('env', 'HOME') }}/.ssh/config"
+    mode: 0600
+  tags:
+    - install
+    - ssh
