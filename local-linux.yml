@@ -26,6 +26,7 @@
     - import_tasks: tasks/ssh.yml
     - import_tasks: tasks/git-setup.yml
     - import_tasks: tasks/core-setup.yml
+    - import_tasks: tasks/linux-tools-setup.yml
     - import_tasks: tasks/node-setup.yml
     - import_tasks: tasks/go-setup.yml
     - import_tasks: tasks/python-setup.yml
@@ -34,7 +35,6 @@
     - import_tasks: tasks/npm-packages.yml
     - import_tasks: tasks/zsh-setup.yml
     - import_tasks: tasks/docker-setup.yml
-    - import_tasks: tasks/nvim-setup.yml
     - import_tasks: tasks/lazygit-setup.yml
     - import_tasks: tasks/dotfiles.yml
     - import_tasks: tasks/k9s-setup.yml

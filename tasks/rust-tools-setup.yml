@@ -51,3 +51,43 @@
     - install
     - rust
     - mise
+
+- name: Install zoxide
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked zoxide"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+  tags:
+    - install
+    - rust
+    - linux-only
+
+- name: Install ripgrep
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install ripgrep"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+  tags:
+    - install
+    - rust
+    - linux-only
+
+- name: Install fd
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install fd-find"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+  tags:
+    - install
+    - rust
+    - linux-only
+
+- name: Install bat
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked bat"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+  tags:
+    - install
+    - rust
+    - linux-only

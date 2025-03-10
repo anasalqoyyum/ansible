@@ -1,0 +1,91 @@
+# - name: Remove neovim
+#   shell: rm -rf ~/neovim && rm -rf ~/.config/nvim && rm -rf ~/.local/share/nvim
+#   tags:
+#     - install
+#     - neovim
+#     - linux-only
+
+- name: Download Neovim
+  get_url:
+    url: https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+    dest: /tmp/nvim.appimage
+    mode: "0755"
+    force: "yes"
+  tags:
+    - install
+    - neovim
+    - linux-only
+
+- name: Cleanup linking neovim
+  shell: "rm /usr/local/bin/nvim"
+  become: true
+  ignore_errors: true
+  tags:
+    - install
+    - nvim
+    - linux-only
+
+- name: Install neovim
+  shell: "cp /tmp/nvim.appimage /usr/local/bin/nvim.appimage && ln -s /usr/local/bin/nvim.appimage /usr/local/bin/nvim"
+  become: true
+  ignore_errors: true
+  tags:
+    - install
+    - neovim
+    - linux-only
+
+- name: Download tmux
+  get_url:
+    url: https://github.com/kiyoon/tmux-appimage/releases/latest/download/tmux.appimage
+    dest: /tmp/tmux.appimage
+    mode: "0755"
+    force: "yes"
+  tags:
+    - install
+    - tmux
+    - linux-only
+
+- name: Cleanup linking tmux
+  shell: "rm /usr/local/bin/tmux"
+  become: true
+  ignore_errors: true
+  tags:
+    - install
+    - tmux
+    - linux-only
+
+- name: Install tmux
+  shell: "cp /tmp/tmux.appimage /usr/local/bin/tmux.appimage && ln -s /usr/local/bin/tmux.appimage /usr/local/bin/tmux"
+  become: true
+  ignore_errors: true
+  tags:
+    - install
+    - tmux
+    - linux-only
+
+- name: Install fzf
+  get_url:
+    url: https://github.com/junegunn/fzf/releases/download/v0.60.3/fzf-0.60.3-linux_amd64.tar.gz
+    dest: /tmp/fzf-0.60.3-linux_amd64.tar.gz
+    mode: "0755"
+  tags:
+    - install
+    - fzf
+    - linux-only
+
+- name: Cleanup linking neovim
+  shell: "rm /usr/local/bin/nvim"
+  become: true
+  ignore_errors: true
+  tags:
+    - install
+    - nvim
+    - linux-only
+
+- name: Setup fzf
+  shell: "tar -C /tmp -xf /tmp/fzf-0.60.3-linux_amd64.tar.gz && install /tmp/fzf /usr/local/bin"
+  become: true
+  tags:
+    - install
+    - fzf
+    - linux-only
