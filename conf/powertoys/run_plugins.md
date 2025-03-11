@@ -1,0 +1,5 @@
+- [Tailwind](https://github.com/skttl/ptrun-tailwindcss)
+- [ChatGpt](https://github.com/ferraridavide/ChatGPTPowerToys)
+- [WebSearchShortcut](https://github.com/Daydreamer-riri/PowerToys-Run-WebSearchShortcut)
+- [CurrencyConverter](https://github.com/Advaith3600/PowerToys-Run-Currency-Converter)
+- [Clipboard Manager](https://github.com/CoreyHayward/PowerToys-Run-ClipboardManager)

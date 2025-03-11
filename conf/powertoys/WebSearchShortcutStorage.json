@@ -1,0 +1,36 @@
+{
+	"Google": {
+		"Url": "https://www.google.com/search?q=%s",
+		"SuggestionProvider": "Google",
+		"Keyword": "gg"
+	},
+	"Bing": {
+		"Url": "https://www.bing.com/search?q=%s",
+		"SuggestionProvider": "Bing",
+		"Keyword": "bb"
+	},
+	"GitHub": {
+		"Url": "https://www.github.com/search?q=%s",
+		"Keyword": "gh"
+	},
+	"YouTube": {
+		"Url": "https://www.youtube.com/results?search_query=%s",
+		"Keyword": "yt"
+	},
+	"ChatGPT": {
+		"Url": "https://chat.openai.com/?q=%s",
+		"Keyword": "gpt"
+	},
+	"DuckDuckGo": {
+		"Url": "https://duckduckgo.com/?q=%s",
+		"Keyword": "dd"
+	},
+	"Unduck": {
+		"Url": "https://unduck.link?q=%s",
+		"Keyword": "uu"
+	},
+	"T3Chat": {
+		"Url": "https://www.t3.chat/new?q=%s",
+		"Keyword": "t3"
+	}
+}
