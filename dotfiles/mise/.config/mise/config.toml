@@ -1,0 +1,7 @@
+[tools]
+node = "22"
+go = "1.22.5"
+python = "3.11"
+
+[settings]
+python.uv_venv_auto = true
