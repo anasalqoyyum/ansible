@@ -152,6 +152,7 @@ eval "$(zoxide init zsh)"
 
 # Aliases
 alias vs="code ."
+alias vc="cursor ."
 alias lg="lazygit"
 alias exp="explorer.exe ."
 alias nv="nvim"
