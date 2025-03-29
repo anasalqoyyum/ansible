@@ -1,6 +1,6 @@
 [tools]
 node = "22"
-go = "1.22.5"
+go = "1.23.7"
 python = "3.11"
 
 [settings]
