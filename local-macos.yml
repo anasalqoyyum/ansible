@@ -21,6 +21,7 @@
     - import_tasks: tasks/core-brew-setup.yml
     - import_tasks: tasks/node-setup.yml
     - import_tasks: tasks/go-macos-setup.yml
+    - import_tasks: tasks/python-setup.yml
     - import_tasks: tasks/rust-setup.yml
     - import_tasks: tasks/rust-tools-setup.yml
     - import_tasks: tasks/npm-packages.yml
