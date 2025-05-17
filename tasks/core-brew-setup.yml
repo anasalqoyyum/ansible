@@ -7,6 +7,15 @@
     - install
     - core-brew
 
+- name: Install yazi and its optional deps
+  community.general.homebrew:
+    name: yazi,ffmpeg,sevenzip,jq,poppler,fd,ripgrep,fzf,zoxide,resvg,imagemagick,font-symbols-only-nerd-font
+    state: present
+    update_homebrew: false
+  tags:
+    - install
+    - core-brew
+
 - name: Install Core Apps With Brew Cask
   community.general.homebrew_cask:
     name: spotify,visual-studio-code,google-chrome,firefox,alacritty,postman,qbittorrent,vlc,bitwarden,iina,yaak,raycast

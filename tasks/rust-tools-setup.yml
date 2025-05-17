@@ -100,3 +100,13 @@
     - install
     - rust
     - linux-only
+
+- name: Install yazi
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked yazi-fm yazi-cli"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+  tags:
+    - install
+    - rust
+    - linux-only
