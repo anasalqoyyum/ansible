@@ -1,6 +1,7 @@
+# Cursor and Zen is still missing
 - name: Install Core Packages With Brew
   community.general.homebrew:
-    name: fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,colima,lazygit,stow,k9s,jq,k6,biome,fortune,cowsay,ghostty,sesh
+    name: fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,colima,lazygit,stow,k9s,jq,k6,biome,fortune,cowsay,ghostty,sesh,ncdu
     state: present
     update_homebrew: true
   tags:
@@ -18,7 +19,7 @@
 
 - name: Install Core Apps With Brew Cask
   community.general.homebrew_cask:
-    name: spotify,visual-studio-code,google-chrome,firefox,alacritty,postman,qbittorrent,vlc,bitwarden,iina,yaak,raycast
+    name: spotify,visual-studio-code,google-chrome,firefox,alacritty,postman,qbittorrent,bitwarden,iina,yaak,raycast
     state: present
   tags:
     - install

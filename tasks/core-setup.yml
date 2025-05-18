@@ -24,6 +24,7 @@
         "libxmlsec1-dev",
         "llvm",
         "make",
+        "ncdu",
         "pkg-config",
         "tldr",
         "tk-dev",
