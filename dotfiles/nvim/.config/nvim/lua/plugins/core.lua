@@ -2,6 +2,11 @@ return {
   -- disable bufferline and indentscope
   { "akinsho/bufferline.nvim", enabled = false },
 
+  -- probably not needed on pure unix (so only WSL is needed due to slow clipboard)
+  {
+    "EtiamNullam/deferred-clipboard.nvim",
+  },
+
   -- add and setup onedark theme
   {
     "olimorris/onedarkpro.nvim",
@@ -17,7 +22,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "onedark_vivid",
+      colorscheme = "tokyonight-night",
     },
   },
 
@@ -28,20 +33,6 @@ return {
         file_icons = "mini",
       },
     },
-  },
-
-  -- {
-  --   "nvim-neo-tree/neo-tree.nvim",
-  --   opts = {
-  --     window = {
-  --       position = "right",
-  --     },
-  --   },
-  -- },
-
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    enabled = false,
   },
 
   {
@@ -58,7 +49,7 @@ return {
         formatters = {
           file = {
             filename_first = true,
-            truncate = 80,
+            truncate = 100,
           },
         },
       },
@@ -234,34 +225,35 @@ return {
               },
             },
             { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+            -- NOTE: modified by self
             { LazyVim.lualine.pretty_path({ modified_sign = " ●" }) },
           },
           lualine_x = {
             Snacks.profiler.status(),
-        -- stylua: ignore
-        {
-          function() return require("noice").api.status.command.get() end,
-          cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
-          color = function() return { fg = Snacks.util.color("Statement") } end,
-        },
-        -- stylua: ignore
-        {
-          function() return require("noice").api.status.mode.get() end,
-          cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-          color = function() return { fg = Snacks.util.color("Constant") } end,
-        },
-        -- stylua: ignore
-        {
-          function() return "  " .. require("dap").status() end,
-          cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
-          color = function() return { fg = Snacks.util.color("Debug") } end,
-        },
-        -- stylua: ignore
-        {
-          require("lazy.status").updates,
-          cond = require("lazy.status").has_updates,
-          color = function() return { fg = Snacks.util.color("Special") } end,
-        },
+            -- stylua: ignore
+            {
+              function() return require("noice").api.status.command.get() end,
+              cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+              color = function() return { fg = Snacks.util.color("Statement") } end,
+            },
+            -- stylua: ignore
+            {
+              function() return require("noice").api.status.mode.get() end,
+              cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+              color = function() return { fg = Snacks.util.color("Constant") } end,
+            },
+            -- stylua: ignore
+            {
+              function() return "  " .. require("dap").status() end,
+              cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
+              color = function() return { fg = Snacks.util.color("Debug") } end,
+            },
+            -- stylua: ignore
+            {
+              require("lazy.status").updates,
+              cond = require("lazy.status").has_updates,
+              color = function() return { fg = Snacks.util.color("Special") } end,
+            },
             {
               "diff",
               symbols = {

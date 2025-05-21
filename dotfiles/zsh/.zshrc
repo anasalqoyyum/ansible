@@ -173,19 +173,6 @@ alias p="pnpm"
 alias ll="eza -lg --icons --git"
 alias lla="eza -alg --icons --git"
 alias llt="eza -1 --icons --tree --git-ignore"
-if command -v batcat &>/dev/null; then
-  alias bat="batcat"
-  if [ ! -e "$HOME/.local/bin/bat" ]; then
-    ln -s "$(which batcat)" "$HOME/.local/bin/bat"
-  fi
-fi
-if command -v fdfind &>/dev/null; then
-  alias fd="fdfind"
-  if [ ! -e "$HOME/.local/bin/fd" ]; then
-    ln -s "$(which fdfind)" "$HOME/.local/bin/fd"
-  fi
-fi
-
 
 ## Device specific
 # Aliases
