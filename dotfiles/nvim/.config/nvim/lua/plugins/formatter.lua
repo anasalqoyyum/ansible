@@ -81,7 +81,7 @@ M.biome_support = LazyVim.memoize(M.biome_support)
 
 return {
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = { ensure_installed = { "prettierd", "prettier", "biome" } },
   },
 
