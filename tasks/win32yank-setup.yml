@@ -36,8 +36,9 @@
 - name: Set yank config
   blockinfile:
     path: ~/.tmux.conf
-    insertbefore: "^set-option -g prefix C-a"
+    insertbefore: "^set-option -g prefix"
     create: yes
+    marker: ""
     block: |
       # Win32yank clipboard configuration
       set -g @override_copy_command "win32yank -i"

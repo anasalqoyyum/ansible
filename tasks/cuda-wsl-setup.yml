@@ -1,0 +1,42 @@
+- name: Download CUDA repository pin file
+  become: true
+  get_url:
+    url: https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
+    dest: /etc/apt/preferences.d/cuda-repository-pin-600
+    mode: "0644"
+  tags:
+    - cuda-wsl
+
+- name: Download CUDA repository package
+  get_url:
+    url: https://developer.download.nvidia.com/compute/cuda/12.9.0/local_installers/cuda-repo-wsl-ubuntu-12-9-local_12.9.0-1_amd64.deb
+    dest: /tmp/cuda-repo-wsl-ubuntu-12-9-local_12.9.0-1_amd64.deb
+    mode: "0644"
+  tags:
+    - cuda-wsl
+
+- name: Install CUDA repository package
+  become: true
+  apt:
+    deb: /tmp/cuda-repo-wsl-ubuntu-12-9-local_12.9.0-1_amd64.deb
+    state: present
+  tags:
+    - cuda-wsl
+
+- name: Copy CUDA GPG key
+  become: true
+  copy:
+    src: /var/cuda-repo-wsl-ubuntu-12-9-local/cuda-*-keyring.gpg
+    dest: /usr/share/keyrings/
+    remote_src: yes
+  tags:
+    - cuda-wsl
+
+- name: Install CUDA toolkit
+  become: true
+  apt:
+    name: cuda-toolkit-12-9
+    state: present
+    update_cache: yes
+  tags:
+    - cuda-wsl

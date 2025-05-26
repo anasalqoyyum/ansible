@@ -13,6 +13,7 @@ return {
   {
     "yetone/avante.nvim",
     event = "VeryLazy",
+    lazy = true,
     version = false, -- Never set this value to "*"! Never!
     opts = {
       -- add any opts here
@@ -45,6 +46,9 @@ return {
         temperature = 0,
         max_tokens = 8192,
       },
+      selector = {
+        provider = "snacks",
+      },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     -- dynamically build it, taken from astronvim
@@ -69,6 +73,10 @@ return {
             -- required for Windows users
             use_absolute_path = true,
           },
+        },
+        keys = {
+          -- suggested keymap
+          { "<leader>P", "<cmd>PasteImage<cr>", desc = "Paste image from system clipboard" },
         },
       },
       {
