@@ -27,8 +27,8 @@
     - import_tasks: tasks/git-setup.yml
     - import_tasks: tasks/core-setup.yml
     - import_tasks: tasks/linux-tools-setup.yml
-    - import_tasks: tasks/node-setup.yml
-    - import_tasks: tasks/go-setup.yml
+    # - import_tasks: tasks/node-setup.yml
+    # - import_tasks: tasks/go-setup.yml
     - import_tasks: tasks/python-setup.yml
     - import_tasks: tasks/rust-setup.yml
     - import_tasks: tasks/rust-tools-setup.yml

@@ -10,6 +10,7 @@ return {
   -- add statusline/filename in top right
   {
     "b0o/incline.nvim",
+    event = "VeryLazy",
     config = function()
       local devicons = require("nvim-web-devicons")
       require("incline").setup({
@@ -48,8 +49,6 @@ return {
         end,
       })
     end,
-    -- Optional: Lazy load Incline
-    event = "VeryLazy",
   },
 
   -- add and setup onedark theme
@@ -64,6 +63,7 @@ return {
       },
     },
   },
+
   {
     "LazyVim/LazyVim",
     opts = {
@@ -104,6 +104,7 @@ return {
   {
     "zbirenbaum/copilot.lua",
     opts = {
+      model = "claude-3.5-sonnet",
       server = {
         type = "binary",
       },

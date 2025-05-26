@@ -34,8 +34,15 @@
     - yank
 
 - name: Set yank config
-  shell: sed -i '21i\set -g @override_copy_command "win32yank -i"\n' ~/.tmux.conf
+  blockinfile:
+    path: ~/.tmux.conf
+    insertbefore: "^set-option -g prefix C-a"
+    create: yes
+    block: |
+      # Win32yank clipboard configuration
+      set -g @override_copy_command "win32yank -i"
   tags:
     - install
     - linux-only
+    - dotfiles
     - yank
