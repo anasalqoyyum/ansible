@@ -71,14 +71,14 @@ return {
     },
   },
 
-  {
-    "ibhagwan/fzf-lua",
-    opts = {
-      files = {
-        file_icons = "mini",
-      },
-    },
-  },
+  -- {
+  --   "ibhagwan/fzf-lua",
+  --   opts = {
+  --     files = {
+  --       file_icons = "mini",
+  --     },
+  --   },
+  -- },
 
   {
     "folke/snacks.nvim",

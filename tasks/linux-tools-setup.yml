@@ -1,91 +1,89 @@
-# - name: Remove neovim
-#   shell: rm -rf ~/neovim && rm -rf ~/.config/nvim && rm -rf ~/.local/share/nvim
-#   tags:
-#     - install
-#     - neovim
-#     - linux-only
-
-- name: Download Neovim
+- name: Download Neovim AppImage
   get_url:
-    url: https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-    dest: /tmp/nvim.appimage
+    url: https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
+    dest: /usr/local/bin/nvim.appimage
     mode: "0755"
-    force: "yes"
+    force: true
+  become: true
   tags:
     - install
     - neovim
     - linux-only
 
-- name: Cleanup linking neovim
-  shell: "rm /usr/local/bin/nvim"
+- name: Create symbolic link for Neovim
+  file:
+    src: /usr/local/bin/nvim.appimage
+    dest: /usr/local/bin/nvim
+    state: link
+    force: true
   become: true
-  ignore_errors: true
-  tags:
-    - install
-    - nvim
-    - linux-only
-
-- name: Install neovim
-  shell: "cp /tmp/nvim.appimage /usr/local/bin/nvim.appimage && ln -s /usr/local/bin/nvim.appimage /usr/local/bin/nvim"
-  become: true
-  ignore_errors: true
   tags:
     - install
     - neovim
     - linux-only
 
-- name: Download tmux
+- name: Download tmux AppImage
   get_url:
     url: https://github.com/kiyoon/tmux-appimage/releases/latest/download/tmux.appimage
-    dest: /tmp/tmux.appimage
+    dest: /usr/local/bin/tmux.appimage
     mode: "0755"
-    force: "yes"
+    force: true
+  become: true
   tags:
     - install
     - tmux
     - linux-only
 
-- name: Cleanup linking tmux
-  shell: "rm /usr/local/bin/tmux"
+- name: Create symbolic link for tmux
+  file:
+    src: /usr/local/bin/tmux.appimage
+    dest: /usr/local/bin/tmux
+    state: link
+    force: true
   become: true
-  ignore_errors: true
   tags:
     - install
     - tmux
     - linux-only
 
-- name: Install tmux
-  shell: "cp /tmp/tmux.appimage /usr/local/bin/tmux.appimage && ln -s /usr/local/bin/tmux.appimage /usr/local/bin/tmux"
-  become: true
-  ignore_errors: true
+- name: Register current versions
+  uri:
+    url: "https://api.github.com/repos/{{ item.repo }}/releases/latest"
+    return_content: yes
+  register: version_responses
+  loop:
+    - { repo: "junegunn/fzf", name: "fzf" }
+    - { repo: "jesseduffield/lazygit", name: "lazygit" }
   tags:
     - install
-    - tmux
+    - fzf
+    - lazygit
     - linux-only
 
 - name: Install fzf
-  get_url:
-    url: https://github.com/junegunn/fzf/releases/download/v0.60.3/fzf-0.60.3-linux_amd64.tar.gz
-    dest: /tmp/fzf-0.60.3-linux_amd64.tar.gz
+  unarchive:
+    src: "https://github.com/junegunn/fzf/releases/latest/download/fzf-{{ (version_responses.results | selectattr('item.name', 'equalto', 'fzf') | first).json.tag_name | regex_replace('^v', '') }}-linux_amd64.tar.gz"
+    dest: /usr/local/bin
+    remote_src: true
     mode: "0755"
+    include:
+      - fzf
+  become: true
   tags:
     - install
     - fzf
     - linux-only
 
-- name: Cleanup linking neovim
-  shell: "rm /usr/local/bin/nvim"
-  become: true
-  ignore_errors: true
-  tags:
-    - install
-    - nvim
-    - linux-only
-
-- name: Setup fzf
-  shell: "tar -C /tmp -xf /tmp/fzf-0.60.3-linux_amd64.tar.gz && install /tmp/fzf /usr/local/bin"
+- name: Install lazygit
+  unarchive:
+    src: "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_{{ (version_responses.results | selectattr('item.name', 'equalto', 'lazygit') | first).json.tag_name | regex_replace('^v', '') }}_Linux_x86_64.tar.gz"
+    dest: /usr/local/bin
+    remote_src: true
+    mode: "0755"
+    include:
+      - lazygit
   become: true
   tags:
     - install
-    - fzf
+    - lazygit
     - linux-only
