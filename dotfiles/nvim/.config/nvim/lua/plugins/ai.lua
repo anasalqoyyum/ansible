@@ -41,10 +41,14 @@ return {
         auto_suggestions = false,
       },
       provider = "copilot",
-      copilot = {
-        model = "claude-3.5-sonnet",
-        temperature = 0,
-        max_tokens = 8192,
+      providers = {
+        copilot = {
+          model = "claude-3.5-sonnet",
+          extra_request_body = {
+            temperature = 0,
+            max_tokens = 8192,
+          },
+        },
       },
       selector = {
         provider = "snacks",
@@ -57,27 +61,27 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
-      {
-        -- support for image pasting
-        "HakonHarnes/img-clip.nvim",
-        event = "VeryLazy",
-        opts = {
-          -- recommended settings
-          default = {
-            embed_image_as_base64 = false,
-            prompt_for_file_name = false,
-            drag_and_drop = {
-              insert_mode = true,
-            },
-            -- required for Windows users
-            use_absolute_path = true,
-          },
-        },
-        keys = {
-          -- suggested keymap
-          { "<leader>P", "<cmd>PasteImage<cr>", desc = "Paste image from system clipboard" },
-        },
-      },
+      -- {
+      --   -- support for image pasting
+      --   "HakonHarnes/img-clip.nvim",
+      --   event = "VeryLazy",
+      --   opts = {
+      --     -- recommended settings
+      --     default = {
+      --       embed_image_as_base64 = false,
+      --       prompt_for_file_name = false,
+      --       drag_and_drop = {
+      --         insert_mode = true,
+      --       },
+      --       -- required for Windows users
+      --       use_absolute_path = true,
+      --     },
+      --   },
+      --   keys = {
+      --     -- suggested keymap
+      --     { "<leader>P", "<cmd>PasteImage<cr>", desc = "Paste image from system clipboard" },
+      --   },
+      -- },
       {
         -- Make sure to set this up properly if you have lazy=true
         "MeanderingProgrammer/render-markdown.nvim",
