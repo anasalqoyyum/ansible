@@ -1,3 +1,6 @@
+# Enable this for profiling zsh (also the one EOF)
+# zmodload zsh/zprof
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -19,40 +22,41 @@ if [ ! -d "$ZINIT_HOME" ]; then
    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 fi
 
+# Disable zinit aliases (for zoxide alias to work zi)
+declare -A ZINIT
+ZINIT[NO_ALIASES]=1
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
 # Add in Powerlevel10k
-zinit ice depth=1; zinit light romkatv/powerlevel10k
-# Remove "zi" alias for default zoxide alias to work
-if alias zi &>/dev/null; then
-  zinit ice atload'unalias zi'
-fi
+zinit ice lucid atload'source ~/.p10k.zsh' nocd depth=1
+zinit light romkatv/powerlevel10k
 
-# Add in zsh plugins
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
+# Add in zsh plugins (with wait for lucid)
+zinit wait lucid for \
+    Aloxaf/fzf-tab \
+ atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
+    zdharma-continuum/fast-syntax-highlighting \
+ blockf \
+    zsh-users/zsh-completions \
+ atload"!_zsh_autosuggest_start" \
+    zsh-users/zsh-autosuggestions
 
-# Add in snippets
-zinit snippet OMZL::git.zsh
-zinit snippet OMZL::clipboard.zsh
-zinit snippet OMZL::directories.zsh
-zinit snippet OMZL::functions.zsh
-zinit snippet OMZP::git
-zinit snippet OMZP::sudo
-zinit snippet OMZP::aws
-zinit snippet OMZP::kubectl
-zinit snippet OMZP::kubectx
-zinit snippet OMZP::command-not-found
-
-# Load completions
-autoload -Uz compinit && compinit
-zinit cdreplay -q
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# Add in snippets (with wait)
+zinit wait lucid for \
+    OMZL::clipboard.zsh \
+    OMZL::git.zsh \
+  atload"alias ll='eza -lg --icons --git'" \
+    OMZL::directories.zsh \
+    OMZL::functions.zsh \
+    OMZP::git \
+    OMZP::sudo \
+    OMZP::kubectl \
+    OMZP::kubectx \
+    OMZP::command-not-found \
+    OMZP::zoxide \
+    OMZP::fzf \
+    OMZP::mise
 
 # Functions
 function sesh-sessions() {
@@ -150,12 +154,9 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 export BAT_THEME="OneHalfDark"
 
-# Shell Integrations
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source ~/.completion-for-pnpm.zsh
-eval "$(mise activate zsh)"
-eval "$(zoxide init zsh)"
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+export FLYCTL_INSTALL="$HOME/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
+export KUBE_EDITOR="nvim"
 
 # Aliases
 alias vs="code ."
@@ -173,11 +174,12 @@ alias p="pnpm"
 alias ll="eza -lg --icons --git"
 alias lla="eza -alg --icons --git"
 alias llt="eza -1 --icons --tree --git-ignore"
-
-## Device specific
-# Aliases
+alias k="kubectl"
 alias v="print -z --"
-# PATH
-export FLYCTL_INSTALL="$HOME/.fly"
-export PATH="$FLYCTL_INSTALL/bin:$PATH"
-export KUBE_EDITOR="nvim"
+
+# Shell Integrations (Optional)
+# [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+# source ~/.completion-for-pnpm.zsh
+
+# Enable zsh profiling
+# zprof
