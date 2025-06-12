@@ -35,7 +35,7 @@ zinit light romkatv/powerlevel10k
 # Add in zsh plugins (with wait for lucid)
 zinit wait lucid for \
     Aloxaf/fzf-tab \
- atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
+ atinit"zicompinit; zicdreplay" \
     zdharma-continuum/fast-syntax-highlighting \
  blockf \
     zsh-users/zsh-completions \
@@ -56,7 +56,12 @@ zinit wait lucid for \
     OMZP::command-not-found \
     OMZP::zoxide \
     OMZP::fzf \
-    OMZP::mise
+    OMZP::mise \
+    OMZP::bun
+
+# pnpm completion
+zinit ice wait lucid atload"zpcdreplay" atclone"./zplug.zsh" atpull"%atclone"
+zinit light g-plane/pnpm-shell-completion
 
 # Functions
 function sesh-sessions() {
