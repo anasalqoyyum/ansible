@@ -2,6 +2,7 @@
 local M = {}
 
 local prettierSupported = {
+  "astro",
   "css",
   "graphql",
   "handlebars",
@@ -14,6 +15,7 @@ local prettierSupported = {
   "markdown",
   "markdown.mdx",
   "scss",
+  "svelte",
   "typescript",
   "typescriptreact",
   "vue",
@@ -22,7 +24,7 @@ local prettierSupported = {
 
 -- https://biomejs.dev/internals/language-support/
 local biomeSupported = {
-  "astro",
+  -- "astro",
   "css",
   "graphql",
   -- "html",
@@ -136,7 +138,7 @@ return {
       servers = {
         biome = {
           root_dir = function(fname)
-            return require("lspconfig.util").root_pattern("package.json", ".git", "biome.json")(fname)
+            return require("lspconfig.util").root_pattern("package.json", ".git", "biome.json", "biome.jsonc")(fname)
           end,
           single_file_support = true,
         },
