@@ -32,15 +32,20 @@ return {
         DiagnosticUnderlineInfo = { undercurl = true },
         DiagnosticUnderlineHint = { undercurl = true },
       },
+      options = {
+        transparency = true,
+      },
     },
   },
 
   {
     "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
     opts = {
       transparent = true,
+      styles = {
+        sidebars = "transparent",
+        floats = "transparent",
+      },
     },
   },
 
@@ -200,6 +205,15 @@ return {
             },
           },
           lualine_y = {
+            {
+              function()
+                local conform = require("conform")
+                local formatters = conform.list_formatters_to_run(0)
+                if formatters then
+                  return formatters[1].name
+                end
+              end,
+            },
             { "progress", separator = " ", padding = { left = 1, right = 0 } },
             { "location", padding = { left = 0, right = 1 } },
           },
