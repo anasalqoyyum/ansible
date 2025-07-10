@@ -25,8 +25,16 @@
     - install
     - core-brew
 
-- name: Install nerd fonts
-  shell: "brew tap homebrew/cask-fonts && brew install --cask font-jetbrains-mono-nerd-font"
+- name: Install jetbrains mono nerd fonts
+  shell: "brew install --cask font-jetbrains-mono-nerd-font"
   tags:
     - install
     - core-brew
+    - font
+
+- name: Install geist mono nerd fonts
+  shell: "brew install --cask font-geist-mono-nerd-font"
+  tags:
+    - install
+    - core-brew
+    - font

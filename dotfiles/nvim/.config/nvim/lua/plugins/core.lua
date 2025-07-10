@@ -36,6 +36,15 @@ return {
   },
 
   {
+    "folke/tokyonight.nvim",
+    lazy = false,
+    priority = 1000,
+    opts = {
+      transparent = true,
+    },
+  },
+
+  {
     "LazyVim/LazyVim",
     opts = {
       colorscheme = "tokyonight-night",
@@ -60,21 +69,18 @@ return {
           },
         },
       },
-    },
-  },
-
-  {
-    "zbirenbaum/copilot.lua",
-    opts = {
-      model = "claude-3.5-sonnet",
-      server = {
-        type = "binary",
+      image = {
+        enabled = true,
+        doc = {
+          enabled = true,
+          inline = true,
+        },
       },
     },
   },
 
   {
-    "snacks.nvim",
+    "folke/snacks.nvim",
     opts = {
       dashboard = {
         preset = {

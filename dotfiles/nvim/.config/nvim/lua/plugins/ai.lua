@@ -1,15 +1,20 @@
 local prefix = "<Leader>a"
 
 return {
-  -- debounce for reliable multi-line suggestions
   {
     "zbirenbaum/copilot.lua",
-    opts = function(_, opts)
-      opts.suggestion = opts.suggestion or {}
-      opts.suggestion.debounce = 200
-      return opts
-    end,
+    opts = {
+      -- copilot_model = "claude-3.5-sonnet",
+      server = {
+        type = "binary",
+      },
+      suggestion = {
+        -- debounce for reliable multi-line suggestions
+        debounce = 200, -- debounce time in milliseconds
+      },
+    },
   },
+
   {
     "yetone/avante.nvim",
     event = "VeryLazy",
@@ -53,6 +58,13 @@ return {
       selector = {
         provider = "snacks",
       },
+      input = {
+        provider = "snacks",
+        provider_opts = {
+          title = "Avante Input",
+          icon = " ",
+        },
+      },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     -- dynamically build it, taken from astronvim
@@ -61,6 +73,9 @@ return {
       "nvim-treesitter/nvim-treesitter",
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
+      "folke/snacks.nvim",
+      "zbirenbaum/copilot.lua",
+      "echasnovski/mini.icons",
       -- {
       --   -- support for image pasting
       --   "HakonHarnes/img-clip.nvim",
