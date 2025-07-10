@@ -1,5 +1,6 @@
 # This should already the default from ghostty
-# font-family = JetBrainsMono Nerd Font
+# JetBrains Mono Nerd Font is used by default
+font-family = GeistMono Nerd Font
 font-size = 14
 font-thicken = true
 
@@ -18,6 +19,6 @@ shell-integration = zsh
 shell-integration-features = no-cursor
 
 cursor-style = block
-background-opacity = 0.95
+background-opacity = 0.975
 background-blur = true
 theme = "tokyonight_night"
