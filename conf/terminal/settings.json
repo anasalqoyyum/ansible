@@ -51,6 +51,10 @@
 			"keys": "alt+shift+d"
 		},
 		{
+			"id": null,
+			"keys": "alt+enter"
+		},
+		{
 			"id": "User.duplicateTab",
 			"keys": "ctrl+alt+shift+d"
 		},
@@ -82,7 +86,7 @@
 				"face": "GeistMono Nerd Font",
 				"size": 12
 			},
-			"opacity": 95,
+			"opacity": 90,
 			"useAcrylic": true
 		},
 		"list": [
