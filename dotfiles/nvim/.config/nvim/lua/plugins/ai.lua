@@ -21,7 +21,6 @@ return {
     lazy = true,
     version = false, -- Never set this value to "*"! Never!
     opts = {
-      -- add any opts here
       mappings = {
         ask = prefix .. "<CR>",
         edit = prefix .. "e",
@@ -64,6 +63,9 @@ return {
           title = "Avante Input",
           icon = " ",
         },
+      },
+      hints = {
+        enabled = false,
       },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`

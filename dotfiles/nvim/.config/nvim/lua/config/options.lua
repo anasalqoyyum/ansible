@@ -6,3 +6,4 @@ vim.g.lazyvim_prettier_needs_config = true
 vim.g.snacks_animate = false
 vim.g.lazyvim_eslint_auto_format = false
 vim.g.lazyvim_picker = "snacks"
+vim.g.astro_typescript = "enable"

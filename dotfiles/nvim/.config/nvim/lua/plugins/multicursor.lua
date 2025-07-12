@@ -1,8 +1,8 @@
 return {
   -- multi-cursor
   {
-    event = "BufEnter",
     "mg979/vim-visual-multi",
+    event = "BufEnter",
   },
 
   -- {

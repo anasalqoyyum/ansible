@@ -5,6 +5,7 @@ return {
   -- probably not needed on pure unix (so only WSL is needed due to slow clipboard)
   {
     "EtiamNullam/deferred-clipboard.nvim",
+    event = "VeryLazy",
   },
 
   -- use jk for esc in insert mode
@@ -25,6 +26,7 @@ return {
   -- add and setup onedark theme
   {
     "olimorris/onedarkpro.nvim",
+    lazy = true,
     opts = {
       highlights = {
         DiagnosticUnderlineError = { undercurl = true },
@@ -78,7 +80,8 @@ return {
         enabled = true,
         doc = {
           enabled = true,
-          inline = true,
+          inline = false,
+          float = true,
         },
       },
     },
@@ -205,21 +208,16 @@ return {
             },
           },
           lualine_y = {
-            {
-              function()
-                local conform = require("conform")
-                local formatters = conform.list_formatters_to_run(0)
-                if formatters then
-                  return formatters[1].name
-                end
-              end,
-            },
             { "progress", separator = " ", padding = { left = 1, right = 0 } },
             { "location", padding = { left = 0, right = 1 } },
           },
           lualine_z = {
             function()
-              return " " .. os.date("%R")
+              local conform = require("conform")
+              local formatters = conform.list_formatters_to_run(0)
+              if formatters then
+                return formatters[1].name
+              end
             end,
           },
         },
