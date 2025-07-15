@@ -5,7 +5,7 @@ return {
     opts = {
       ensure_installed = {
         "tinymist",
-        "typstfmt",
+        "typstyle",
       },
     },
   },
@@ -27,7 +27,11 @@ return {
             return vim.fn.getcwd()
           end,
           --- See [Tinymist Server Configuration](https://github.com/Myriad-Dreamin/tinymist/blob/main/Configuration.md) for references.
-          settings = {},
+          settings = {
+            formatterMode = "typstyle",
+            exportPdf = "onType",
+            semanticTokens = "disable",
+          },
         },
       },
     },
