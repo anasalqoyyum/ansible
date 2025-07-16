@@ -81,3 +81,36 @@
     - install
     - core
     - gh-cli
+
+- name: Download HTTPie GPG key
+  become: true
+  get_url:
+    url: https://packages.httpie.io/deb/KEY.gpg
+    dest: /usr/share/keyrings/httpie.gpg
+    mode: '0644'
+  tags:
+    - install
+    - core
+    - httpie
+
+- name: Add HTTPie repository
+  become: true
+  apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/httpie.gpg] https://packages.httpie.io/deb ./"
+    state: present
+    filename: httpie
+  tags:
+    - install
+    - core
+    - httpie
+
+- name: Install HTTPie
+  become: true
+  apt:
+    name: httpie
+    state: present
+    update_cache: yes
+  tags:
+    - install
+    - core
+    - httpie

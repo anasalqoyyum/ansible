@@ -110,3 +110,13 @@
     - install
     - rust
     - linux-only
+
+- name: Install xh
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked xh"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+  tags:
+    - install
+    - rust
+    - linux-only
