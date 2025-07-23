@@ -2,11 +2,7 @@ return {
   {
     "saghen/blink.cmp",
     opts = {
-      snippets = {
-        expand = function(snippet, _)
-          return LazyVim.cmp.expand(snippet)
-        end,
-      },
+      snippets = { preset = "luasnip" },
       appearance = {
         -- sets the fallback highlight groups to nvim-cmp's highlight groups
         -- useful for when your theme doesn't support blink.cmp
@@ -92,6 +88,36 @@ return {
 
         -- manually set some due to it's not being picked up on macos lol
         ["<C-y>"] = { "select_and_accept" },
+      },
+    },
+  },
+
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      diagnostics = {
+        underline = true,
+        update_in_insert = false,
+        virtual_text = {
+          spacing = 4,
+          source = "if_many",
+          prefix = "󱓻 ",
+          -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
+          -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
+          -- prefix = "icons",
+        },
+        severity_sort = true,
+        signs = {
+          text = {
+            [vim.diagnostic.severity.ERROR] = LazyVim.config.icons.diagnostics.Error,
+            [vim.diagnostic.severity.WARN] = LazyVim.config.icons.diagnostics.Warn,
+            [vim.diagnostic.severity.HINT] = LazyVim.config.icons.diagnostics.Hint,
+            [vim.diagnostic.severity.INFO] = LazyVim.config.icons.diagnostics.Info,
+          },
+        },
+      },
+      inlay_hints = {
+        enabled = false,
       },
     },
   },

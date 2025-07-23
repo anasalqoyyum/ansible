@@ -1,3 +1,3 @@
 return {
-  { "wuelnerdotexe/vim-astro", event = "VeryLazy" },
+  { "wuelnerdotexe/vim-astro", event = "VeryLazy", enabled = false },
 }
