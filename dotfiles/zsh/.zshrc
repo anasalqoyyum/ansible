@@ -35,7 +35,7 @@ zinit light romkatv/powerlevel10k
 # Add in zsh plugins (with wait for lucid)
 zinit wait lucid for \
     Aloxaf/fzf-tab \
- atinit"zicompinit; zicdreplay" \
+ atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
     zdharma-continuum/fast-syntax-highlighting \
  blockf \
     zsh-users/zsh-completions \
@@ -108,13 +108,53 @@ function y() {
 }
 
 # Keybinds
+# Useful keybinds set by other plugins
+# CTRL+R to search history (fzf)
+# CTRL+T to search files and paste to commandline (fzf)
+# ALT+C to cd to the selected directory (fzf)
+
+# Emacs mode keybindings
 bindkey -e
-bindkey '^[[1;5D' backward-word
-bindkey '^[[1;5C' forward-word
+
+# [Ctrl-Delete] - delete whole forward-word
+bindkey -M emacs '^[[3;5~' kill-word
+bindkey -M viins '^[[3;5~' kill-word
+bindkey -M vicmd '^[[3;5~' kill-word
+
+# [Ctrl-RightArrow] - move forward one word
+bindkey -M emacs '^[[1;5C' forward-word
+bindkey -M viins '^[[1;5C' forward-word
+bindkey -M vicmd '^[[1;5C' forward-word
+# [Ctrl-LeftArrow] - move backward one word
+bindkey -M emacs '^[[1;5D' backward-word
+bindkey -M viins '^[[1;5D' backward-word
+bindkey -M vicmd '^[[1;5D' backward-word
+
+# [Home] - Go to beginning of line
+if [[ -n "${terminfo[khome]}" ]]; then
+  bindkey -M emacs "${terminfo[khome]}" beginning-of-line
+  bindkey -M viins "${terminfo[khome]}" beginning-of-line
+  bindkey -M vicmd "${terminfo[khome]}" beginning-of-line
+fi
+# [End] - Go to end of line
+if [[ -n "${terminfo[kend]}" ]]; then
+  bindkey -M emacs "${terminfo[kend]}"  end-of-line
+  bindkey -M viins "${terminfo[kend]}"  end-of-line
+  bindkey -M vicmd "${terminfo[kend]}"  end-of-line
+fi
+
+# sesh-sessions bindings (ALT+S)
 zle     -N             sesh-sessions
 bindkey -M emacs '\es' sesh-sessions
 bindkey -M vicmd '\es' sesh-sessions
 bindkey -M viins '\es' sesh-sessions
+
+# CTRL+X+E to edit the current command in editor
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\C-x\C-e' edit-command-line
+
+bindkey '\ew' kill-region # [Esc-w] - Kill from the cursor to the mark
 
 # History
 HISTSIZE=5000
@@ -161,7 +201,9 @@ export BAT_THEME="OneHalfDark"
 
 export FLYCTL_INSTALL="$HOME/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
+
 export KUBE_EDITOR="nvim"
+export EDITOR="nvim"
 
 # Aliases
 alias vs="code ."
