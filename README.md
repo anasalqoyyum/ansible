@@ -1,5 +1,14 @@
 # Personal Development Environment Setup
 
+<!--toc:start-->
+
+- [Personal Development Environment Setup](#personal-development-environment-setup)
+  - [Overview](#overview)
+  - [How to run](#how-to-run)
+  <!--toc:end-->
+
+## Overview
+
 | WSL Ubuntu                                 | macOS                                     |
 | ------------------------------------------ | ----------------------------------------- |
 | ![ubuntu](https://i.imgur.com/M9Z3nNg.png) | ![macos](https://i.imgur.com/tKqNgrm.png) |
