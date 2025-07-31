@@ -120,3 +120,12 @@
     - install
     - rust
     - linux-only
+
+- name: Install nightly
+  shell: "rustup toolchain install nightly"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+  tags:
+    - install
+    - rust

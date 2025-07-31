@@ -56,6 +56,7 @@ zinit wait lucid for \
     OMZP::command-not-found \
     OMZP::zoxide \
     OMZP::fzf \
+  atload"unalias y" \
     OMZP::yarn \
     OMZP::mise \
     OMZP::bun
