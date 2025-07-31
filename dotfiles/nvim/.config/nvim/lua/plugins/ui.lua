@@ -188,6 +188,7 @@ return {
         sources = {
           explorer = {
             layout = { layout = { position = "right" } },
+            auto_close = true,
           },
         },
         ---@class snacks.picker.formatters.Config
