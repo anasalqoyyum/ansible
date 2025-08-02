@@ -225,6 +225,7 @@ alias lla="eza -alg --icons --git"
 alias llt="eza -1 --icons --tree --git-ignore"
 alias k="kubectl"
 alias v="print -z --"
+alias dk="docker stop $(docker ps -aq) && docker rm $(docker ps -aq)"
 
 # Shell Integrations (Optional)
 # [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

@@ -10,6 +10,7 @@ return {
   {
     "olimorris/onedarkpro.nvim",
     lazy = true,
+    enabled = false,
     opts = {
       highlights = {
         DiagnosticUnderlineError = { undercurl = true },
@@ -21,6 +22,11 @@ return {
         transparency = true,
       },
     },
+  },
+
+  {
+    "catppuccin/nvim",
+    enabled = false,
   },
 
   {
