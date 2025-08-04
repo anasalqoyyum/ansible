@@ -108,6 +108,35 @@ function y() {
 	fi
 	rm -f -- "$tmp"
 }
+function dk() {
+  docker info > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    echo "Error: Cannot connect to the Docker daemon." >&2
+    echo "Please ensure OrbStack (or your Docker provider) is running." >&2
+    return 1
+  fi
+
+  local container_ids=$(docker ps -aq)
+
+  if [ -z "$container_ids" ]; then
+    echo "No Docker containers found to stop or remove."
+    return 0
+  fi
+
+  echo "Stopping and removing all Docker containers..."
+
+  if ! docker stop $container_ids; then
+    echo "Warning: Failed to stop some containers. Attempting to remove anyway." >&2
+  fi
+
+  # Remove containers
+  if ! docker rm $container_ids; then
+    echo "Error: Failed to remove some containers." >&2
+    return 1
+  fi
+
+  echo "Successfully stopped and removed all Docker containers."
+}
 
 # Keybinds
 # Useful keybinds set by other plugins
@@ -225,7 +254,6 @@ alias lla="eza -alg --icons --git"
 alias llt="eza -1 --icons --tree --git-ignore"
 alias k="kubectl"
 alias v="print -z --"
-alias dk="docker stop $(docker ps -aq) && docker rm $(docker ps -aq)"
 
 # Shell Integrations (Optional)
 # [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
