@@ -17,7 +17,6 @@ return {
     "mikavilpas/yazi.nvim",
     lazy = true, -- use `event = "VeryLazy"` for netrw replacement
     keys = {
-      -- NOTE: my mapping <leader>lf is soo good but in the LSP cluster
       {
         "<leader>fy",
         "<cmd>Yazi<cr>",
@@ -75,7 +74,11 @@ return {
     "Bekaboo/dropbar.nvim",
     event = { "BufReadPost", "BufNewFile" },
     config = function()
+      local dropbar_api = require("dropbar.api")
       vim.api.nvim_set_hl(0, "WinBar", { bg = "NONE" }) -- no background for dropbar
+      vim.keymap.set("n", "<Leader>s;", dropbar_api.pick, { desc = "Pick LSP Symbols" })
+      vim.keymap.set("n", "[;", dropbar_api.goto_context_start, { desc = "Go to start of current context" })
+      vim.keymap.set("n", "];", dropbar_api.select_next_context, { desc = "Select next context" })
     end,
   },
 
@@ -184,11 +187,14 @@ return {
     "folke/snacks.nvim",
     ---@type snacks.Config
     opts = {
+      explorer = {
+        replace_netrw = true,
+      },
       picker = {
         sources = {
           explorer = {
             layout = { layout = { position = "right" } },
-            auto_close = true,
+            -- auto_close = true,
           },
         },
         ---@class snacks.picker.formatters.Config
@@ -198,6 +204,10 @@ return {
             truncate = 100,
           },
         },
+        ---@class snacks.picker.matcher.Config
+        matcher = {
+          frecency = true,
+        },
       },
       image = {
         enabled = true,
@@ -206,6 +216,22 @@ return {
           inline = false,
           float = true,
         },
+      },
+    },
+    keys = {
+      {
+        "<leader>fs",
+        function()
+          Snacks.picker.smart()
+        end,
+        desc = "Smart Find Files",
+      },
+      {
+        "<leader>fm",
+        function()
+          Snacks.picker.buffers({ modified = true })
+        end,
+        desc = "Modified Buffers",
       },
     },
   },
