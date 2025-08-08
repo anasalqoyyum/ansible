@@ -17,11 +17,18 @@ Snacks.toggle({
 vim.keymap.del("n", "<leader>as")
 vim.keymap.del("n", "<leader>ad")
 
--- tabs
-vim.keymap.del("n", "<leader><tab>l")
-vim.keymap.del("n", "<leader><tab>o")
-vim.keymap.del("n", "<leader><tab>f")
+-- tabs (let's not disable this for now, and only disable new tab)
+-- vim.keymap.del("n", "<leader><tab>l")
+-- vim.keymap.del("n", "<leader><tab>o")
+-- vim.keymap.del("n", "<leader><tab>f")
 vim.keymap.del("n", "<leader><tab><tab>")
-vim.keymap.del("n", "<leader><tab>]")
-vim.keymap.del("n", "<leader><tab>d")
-vim.keymap.del("n", "<leader><tab>[")
+-- vim.keymap.del("n", "<leader><tab>]")
+-- vim.keymap.del("n", "<leader><tab>d")
+-- vim.keymap.del("n", "<leader><tab>[")
+
+-- git diffview
+vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Open Git Diff View" })
+vim.keymap.set("n", "<leader>gD", "<cmd>DiffviewClose<cr>", { desc = "Close Git Diff View" })
+vim.keymap.set("n", "<leader>gR", "<cmd>DiffviewRefresh<cr>", { desc = "Git Diff Refresh" })
+vim.keymap.set("n", "<leader>gL", "<cmd>DiffviewFileHistory<cr>", { desc = "Git Diff Log" })
+vim.keymap.set("n", "<leader>gF", "<cmd>DiffviewFileHistory %<cr>", { desc = "Git Diff Current File History" })

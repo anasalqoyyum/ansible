@@ -4,7 +4,7 @@
 
 - name: Install Core Packages With Brew
   community.general.homebrew:
-    name: fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,lazygit,stow,k9s,jq,k6,biome,fortune,cowsay,ghostty,sesh,ncdu,gh,xh,httpie
+    name: fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,lazygit,stow,k9s,jq,k6,biome,fortune,cowsay,ghostty,sesh,ncdu,gh,xh,httpie,diff-so-fancy
     state: present
     update_homebrew: true
   tags:
@@ -22,7 +22,7 @@
 
 - name: Install Core Apps With Brew Cask
   community.general.homebrew_cask:
-    name: spotify,visual-studio-code,google-chrome,alacritty,postman,qbittorrent,bitwarden,iina,bruno,raycast,orbstack,linearmouse,zen
+    name: spotify,visual-studio-code,google-chrome,alacritty,postman,qbittorrent,bitwarden,iina,bruno,raycast,orbstack,linearmouse,zen,httpie-desktop
     state: present
   tags:
     - install

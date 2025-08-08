@@ -3,3 +3,7 @@ os:
   edit: "nvim {{filename}}"
 gui:
   nerdFontsVersion: "3"
+git:
+  paging:
+    colorArg: always
+    pager: diff-so-fancy

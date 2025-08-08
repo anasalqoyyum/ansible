@@ -7,4 +7,23 @@ return {
       },
     },
   },
+
+  {
+    "sindrets/diffview.nvim",
+    event = "VeryLazy",
+    opts = {
+      enhanced_diff_hl = true,
+      use_icons = true,
+      view = {
+        default = {
+          winbar_info = false,
+        },
+      },
+      file_panel = {
+        win_config = {
+          position = "right",
+        },
+      },
+    },
+  },
 }
