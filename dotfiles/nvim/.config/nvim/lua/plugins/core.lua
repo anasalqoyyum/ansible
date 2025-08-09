@@ -3,13 +3,14 @@ return {
   { "akinsho/bufferline.nvim", enabled = false },
 
   -- probably not needed on pure unix (so only WSL is needed due to slow clipboard)
-  {
-    "EtiamNullam/deferred-clipboard.nvim",
-    event = "VeryLazy",
-    opts = {
-      lazy = true,
-    },
-  },
+  -- only needed when yanky.nvim enabled I guess
+  -- {
+  --   "EtiamNullam/deferred-clipboard.nvim",
+  --   event = "VeryLazy",
+  --   opts = {
+  --     lazy = true,
+  --   },
+  -- },
 
   -- use jk for esc in insert mode
   {

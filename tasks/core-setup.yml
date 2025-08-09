@@ -33,6 +33,8 @@
         "wslu",
         "xz-utils",
         "zlib1g-dev",
+        "pgcli",
+        "mycli",
       ]
   tags:
     - install
@@ -43,7 +45,7 @@
   file:
     path: /etc/apt/keyrings
     state: directory
-    mode: '0755'
+    mode: "0755"
   tags:
     - install
     - core
@@ -54,7 +56,7 @@
   get_url:
     url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
     dest: /etc/apt/keyrings/githubcli-archive-keyring.gpg
-    mode: '0644'
+    mode: "0644"
   tags:
     - install
     - core
@@ -87,7 +89,7 @@
   get_url:
     url: https://packages.httpie.io/deb/KEY.gpg
     dest: /usr/share/keyrings/httpie.gpg
-    mode: '0644'
+    mode: "0644"
   tags:
     - install
     - core

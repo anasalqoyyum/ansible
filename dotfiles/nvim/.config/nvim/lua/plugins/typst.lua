@@ -9,6 +9,7 @@ return {
       },
     },
   },
+
   -- add tinymist to lspconfig
   {
     "neovim/nvim-lspconfig",
@@ -32,6 +33,22 @@ return {
             exportPdf = "onType",
             semanticTokens = "disable",
           },
+          on_attach = function(client, bufnr)
+            vim.keymap.set("n", "<leader>bp", function()
+              client:exec_cmd({
+                title = "pin",
+                command = "tinymist.pinMain",
+                arguments = { vim.api.nvim_buf_get_name(0) },
+              }, { bufnr = bufnr })
+            end, { desc = "[T]inymist [P]in", noremap = true })
+            vim.keymap.set("n", "<leader>bu", function()
+              client:exec_cmd({
+                title = "unpin",
+                command = "tinymist.pinMain",
+                arguments = { vim.v.null },
+              }, { bufnr = bufnr })
+            end, { desc = "[T]inymist [U]npin", noremap = true })
+          end,
         },
       },
     },

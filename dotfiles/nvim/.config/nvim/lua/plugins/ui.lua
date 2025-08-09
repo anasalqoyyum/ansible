@@ -183,18 +183,48 @@ return {
     end,
   },
 
+  -- Oil and related plugins
+  {
+    "stevearc/oil.nvim",
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {
+      default_file_explorer = true,
+      view_options = {
+        show_hidden = true,
+      },
+      keymaps = {
+        ["<C-s>"] = false,
+        ["<C-v>"] = { "actions.select", opts = { vertical = true } },
+      },
+    },
+    -- Optional dependencies
+    dependencies = { { "echasnovski/mini.icons", opts = {} } },
+    -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+    lazy = false,
+  },
+  -- most of these plugins slow down oil.nvim on big repo, so we disable them for now
+  -- {
+  --   "benomahony/oil-git.nvim",
+  --   dependencies = { "stevearc/oil.nvim" },
+  -- },
+  -- {
+  --   "JezerM/oil-lsp-diagnostics.nvim",
+  --   dependencies = { "stevearc/oil.nvim" },
+  --   opts = {},
+  -- },
+
   {
     "folke/snacks.nvim",
     ---@type snacks.Config
     opts = {
       explorer = {
-        replace_netrw = true,
+        replace_netrw = false,
       },
       picker = {
         sources = {
           explorer = {
             layout = { layout = { position = "right" } },
-            -- auto_close = true,
           },
         },
         ---@class snacks.picker.formatters.Config

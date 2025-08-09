@@ -137,6 +137,20 @@ function dk() {
 
   echo "Successfully stopped and removed all Docker containers."
 }
+function proj() {
+  # Use fd to find only top-level directories in ~/repo and ~/work
+  local dir
+  dir=$(fd . ~/repo ~/work \
+    --type d \
+    --max-depth 1 \
+    --exclude '.*' \
+    | fzf --height=50% --layout=reverse)
+
+  if [[ -n "$dir" ]]; then
+    cd "$dir" || return
+    nvim .
+  fi
+}
 
 # Keybinds
 # Useful keybinds set by other plugins
@@ -247,12 +261,13 @@ alias tkas="tmux kill-session -a"
 alias yolo="find . -name 'node_modules' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias t="tmux new-session -A -s main"
-alias search="rg --files --hidden | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' | xargs nvim"
+alias search="rg --files --hidden | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' | xargs -r nvim"
 alias p="pnpm"
 alias ll="eza -lg --icons --git"
 alias lla="eza -alg --icons --git"
 alias llt="eza -1 --icons --tree --git-ignore"
 alias k="kubectl"
+# I forgot what this does
 alias v="print -z --"
 
 # Shell Integrations (Optional)

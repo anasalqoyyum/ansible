@@ -1,4 +1,3 @@
----@alias ConformCtx {buf: number, filename: string, dirname: string}
 local M = {}
 
 local prettierSupported = {
