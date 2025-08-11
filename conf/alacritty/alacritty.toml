@@ -1,9 +1,9 @@
-# This is for Windows alacritty configuration file.
+# This is for Windows alacritty configuration file. (so disable the terminal.shell if on non-windows)
 [terminal.shell]
 program = 'C:\Windows\System32\wsl.exe -d Ubuntu'
 args = ["--cd ~"]
 
-# Default colors
+# Default colors (tokyonight_night)
 [colors.primary]
 background = '#1a1b26'
 foreground = '#c0caf5'
@@ -44,7 +44,7 @@ index = 17
 color = '#db4b4b'
 
 [font]
-size = 14.0
+size = 13.0
 
 [font.normal]
 family = "GeistMono Nerd Font"
@@ -56,9 +56,12 @@ semantic_escape_chars = ''',│`|:"' ()[]{}<>	'''
 [window]
 blur = true
 decorations = "None"
+# Enable for macos
+# decorations = "Buttonless"
 dynamic_padding = true
 dynamic_title = false
 opacity = 0.99
+# Enable for macos (doesn't affect windows)
 option_as_alt = "OnlyLeft"
 startup_mode = "Maximized"
 title = "Alacritty"

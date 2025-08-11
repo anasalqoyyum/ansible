@@ -196,6 +196,7 @@ return {
       keymaps = {
         ["<C-s>"] = false,
         ["<C-v>"] = { "actions.select", opts = { vertical = true } },
+        ["q"] = { "actions.close", mode = "n" },
       },
     },
     -- Optional dependencies

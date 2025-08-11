@@ -18,6 +18,9 @@ return {
         default = {
           winbar_info = false,
         },
+        merge_tool = {
+          layout = "diff3_mixed",
+        },
       },
       file_panel = {
         win_config = {

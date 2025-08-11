@@ -27,4 +27,21 @@ return {
     event = { "CmdlineEnter" },
     ft = { "go", "gomod" },
   },
+
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "fredrikaverpil/neotest-golang",
+    },
+    opts = {
+      adapters = {
+        ["neotest-golang"] = {
+          -- as stated it's kinda wack so disable this if issues occurs -> https://fredrikaverpil.github.io/neotest-golang/config/#testify_enabled
+          testify_enabled = true,
+          testify_import_identifier = "^(suite)$",
+          testify_operand = "^(s|suite)$",
+        },
+      },
+    },
+  },
 }

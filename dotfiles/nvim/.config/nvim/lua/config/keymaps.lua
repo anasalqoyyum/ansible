@@ -2,6 +2,51 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+local DIFFVIEW_FILETYPES = {
+  "DiffviewFiles",
+  "DiffviewView",
+  "DiffviewFileHistory",
+}
+
+local function is_diffview_buffer(buf)
+  local ft = vim.bo[buf].filetype
+  local bt = vim.bo[buf].buftype
+  local name = vim.api.nvim_buf_get_name(buf)
+
+  for _, diff_ft in ipairs(DIFFVIEW_FILETYPES) do
+    if ft == diff_ft then
+      return true
+    end
+  end
+
+  if name:match("^diffview://") then
+    return true
+  end
+
+  if bt == "nofile" and name:match("Diffview") then
+    return true
+  end
+
+  return false
+end
+
+local function is_diffview_open()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if is_diffview_buffer(vim.api.nvim_win_get_buf(win)) then
+      return true
+    end
+  end
+  return false
+end
+
+local function toggle_diffview()
+  if is_diffview_open() then
+    vim.cmd("DiffviewClose")
+  else
+    vim.cmd("DiffviewOpen")
+  end
+end
+
 Snacks.toggle({
   name = "Git Blame Line",
   get = function()
@@ -10,14 +55,13 @@ Snacks.toggle({
   set = function(state)
     require("gitsigns").toggle_current_line_blame(state)
   end,
-}):map("<leader>uB")
+}):map("<leader>gu")
 
 -- remap split window below
 vim.keymap.set("n", "<leader>_", "<C-W>s", { desc = "Split Window Below", remap = true })
 
 -- git diffview
-vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Open Diff View" })
-vim.keymap.set("n", "<leader>gD", "<cmd>DiffviewClose<cr>", { desc = "Close Diff View" })
+vim.keymap.set("n", "<leader>gd", toggle_diffview, { desc = "Toggle Diff View" })
 vim.keymap.set("n", "<leader>gL", "<cmd>DiffviewFileHistory<cr>", { desc = "Diff Repo History" })
 vim.keymap.set("n", "<leader>gF", "<cmd>DiffviewFileHistory %<cr>", { desc = "Diff Current File History" })
 vim.keymap.set("n", "<leader>g.", "<Cmd>.DiffviewFileHistory --follow<CR>", { desc = "Diff Line history" })
