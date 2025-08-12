@@ -26,4 +26,14 @@ return {
       })
     end,
   },
+
+  {
+    "folke/which-key.nvim",
+    opts = {
+      spec = {
+        { "<leader>a", group = "ai" },
+        { "<leader>m", group = "multi-cursor", icon = "󰗧" },
+      },
+    },
+  },
 }

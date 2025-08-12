@@ -4,6 +4,7 @@
     name:
       [
         "build-essential",
+        "btop",
         "cmake",
         "cowsay",
         "curl",
