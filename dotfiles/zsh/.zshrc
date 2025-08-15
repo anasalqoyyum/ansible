@@ -137,7 +137,7 @@ function dk() {
 
   echo "Successfully stopped and removed all Docker containers."
 }
-function proj() {
+function pj() {
   # Use fd to find only top-level directories in ~/repo and ~/work
   local dir
   dir=$(fd . ~/repo ~/work \
