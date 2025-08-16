@@ -103,6 +103,12 @@ return {
       end
 
       opts.formatters = opts.formatters or {}
+      -- pretty much prefer prettierd over prettier (faster)
+      opts.formatters.prettier = {
+        condition = function(_, _)
+          return false
+        end,
+      }
       opts.formatters.prettierd = {
         condition = function(_, ctx)
           return M.has_parser(ctx)

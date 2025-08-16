@@ -1,6 +1,7 @@
 return {
   {
     "ray-x/go.nvim",
+    -- somewhat overkill for most usecase
     enabled = false,
     dependencies = {
       "ray-x/guihua.lua", -- optional

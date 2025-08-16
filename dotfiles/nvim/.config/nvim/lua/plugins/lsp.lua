@@ -1,15 +1,20 @@
 return {
+  -- prefer to use the newer one (and more maintaned source)
+  { "giuxtaposition/blink-cmp-copilot", enabled = false },
+
   {
     "saghen/blink.cmp",
+    dependencies = {
+      "fang2hou/blink-copilot",
+      opts = {
+        max_completions = 1, -- Global default for max completions
+        max_attempts = 2, -- Global default for max attempts
+      },
+    },
     opts = {
       snippets = { preset = "luasnip" },
       appearance = {
-        -- sets the fallback highlight groups to nvim-cmp's highlight groups
-        -- useful for when your theme doesn't support blink.cmp
-        -- will be removed in a future release, assuming themes add support
         use_nvim_cmp_as_default = false,
-        -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-        -- adjusts spacing to ensure icons are aligned
         nerd_font_variant = "mono",
       },
       completion = {
@@ -93,6 +98,12 @@ return {
         -- with blink.compat
         compat = {},
         default = { "lsp", "path", "snippets", "buffer" },
+        -- this is the newer copilot source
+        providers = {
+          copilot = {
+            module = "blink-copilot",
+          },
+        },
       },
 
       cmdline = {
@@ -134,7 +145,7 @@ return {
         ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
 
         -- manually set some due to it's not being picked up on macos lol
-        ["<C-y>"] = { "select_and_accept" },
+        ["<C-y>"] = { "select_and_accept", "fallback" },
       },
     },
   },
@@ -152,6 +163,7 @@ return {
           -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
           -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
           -- prefix = "icons",
+          -- prefix = ""
         },
         severity_sort = true,
         signs = {
