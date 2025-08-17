@@ -44,6 +44,10 @@ return {
       behaviour = {
         auto_suggestions = false,
       },
+      selection = {
+        enabled = true,
+        hint_display = "none",
+      },
       provider = "copilot",
       providers = {
         copilot = {
@@ -63,9 +67,6 @@ return {
           title = "Avante Input",
           icon = " ",
         },
-      },
-      hints = {
-        enabled = false,
       },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
