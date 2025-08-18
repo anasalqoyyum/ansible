@@ -2,14 +2,17 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 
-vim.g.lazyvim_prettier_needs_config = true
 vim.g.snacks_animate = false
+vim.g.lazyvim_prettier_needs_config = true
 vim.g.lazyvim_eslint_auto_format = false
-vim.g.lazyvim_blink_main = true
 vim.g.lazyvim_picker = "snacks"
-vim.g.astro_typescript = "enable"
+
+vim.g.lazyvim_blink_main = true -- this set blink to use main branch
+vim.g.lazyvim_python_lsp = "basedpyright" -- Set to "basedpyright" to use basedpyright instead of pyright.
+vim.g.astro_typescript = "enable" -- this need vim-astro
 
 vim.opt.swapfile = false -- disable swap files
+
 -- kinda broke whichkey
 -- vim.o.winborder = "rounded"
 

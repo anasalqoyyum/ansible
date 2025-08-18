@@ -10,6 +10,22 @@ function _G.get_oil_winbar()
   end
 end
 
+local function to_present_git(word)
+  if word == "added" then
+    return "Add"
+  end
+
+  if word == "changed" then
+    return "Change"
+  end
+
+  if word == "removed" then
+    return "Delete"
+  end
+
+  return word
+end
+
 return {
   {
     "folke/noice.nvim",
@@ -70,7 +86,7 @@ return {
             end
             for name, icon in pairs(icons) do
               if tonumber(signs[name]) and signs[name] > 0 then
-                table.insert(labels, { icon .. signs[name] .. " ", group = "Diff" .. name })
+                table.insert(labels, { icon .. signs[name] .. " ", group = "GitSigns" .. to_present_git(name) })
               end
             end
             if #labels > 0 then

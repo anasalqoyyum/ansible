@@ -21,4 +21,4 @@ shell-integration-features = no-cursor
 cursor-style = block
 background-opacity = 0.975
 background-blur = true
-theme = "vague"
+theme = "tokyonight_night"
