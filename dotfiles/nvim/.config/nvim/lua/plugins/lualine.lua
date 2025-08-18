@@ -38,13 +38,14 @@ return {
           globalstatus = vim.o.laststatus == 3,
           disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
           component_separators = { left = "|", right = "|" },
+          section_separators = "",
           -- section_separators = { left = "", right = "" },
         },
         sections = {
           lualine_a = { "mode" },
           lualine_b = { "branch" },
           lualine_c = {
-            LazyVim.lualine.root_dir({ icon = "󱉭" }),
+            -- LazyVim.lualine.root_dir({ icon = "󱉭" }),
             {
               "diagnostics",
               symbols = {

@@ -18,37 +18,20 @@ return {
       mc.setup()
       local set = vim.keymap.set
 
+      -- stylua: ignore start
       -- Add or skip cursor above/below the main cursor.
-      set({ "n", "v" }, "<leader>mk", function()
-        mc.lineAddCursor(-1)
-      end, { desc = "Add Cursor Above" })
-      set({ "n", "v" }, "<leader>mj", function()
-        mc.lineAddCursor(1)
-      end, { desc = "Add Cursor Below" })
-      set({ "n", "v" }, "<leader>m<up>", function()
-        mc.lineSkipCursor(-1)
-      end, { desc = "Skip Cursor Above" })
-      set({ "n", "v" }, "<leader>m<down>", function()
-        mc.lineSkipCursor(1)
-      end, { desc = "Skip Cursor Below" })
+      set({ "n", "v" }, "<leader>mk", function() mc.lineAddCursor(-1) end, { desc = "Add Cursor Above" })
+      set({ "n", "v" }, "<leader>mj", function() mc.lineAddCursor(1) end, { desc = "Add Cursor Below" })
+      set({ "n", "v" }, "<leader>m<up>", function() mc.lineSkipCursor(-1) end, { desc = "Skip Cursor Above" })
+      set({ "n", "v" }, "<leader>m<down>", function() mc.lineSkipCursor(1) end, { desc = "Skip Cursor Below" })
 
       -- Add or skip adding a new cursor by matching word/selection
-      set({ "n", "v" }, "<leader>mn", function()
-        mc.matchAddCursor(1)
-      end, { desc = "Add Next Selection" })
-      set({ "n", "v" }, "<C-n>", function()
-        mc.matchAddCursor(1)
-      end, { desc = "Add Next Selection" })
+      set({ "n", "v" }, "<leader>mn", function() mc.matchAddCursor(1) end, { desc = "Add Next Selection" })
+      set({ "n", "v" }, "<C-n>", function() mc.matchAddCursor(1) end, { desc = "Add Next Selection" })
 
-      set({ "n", "v" }, "<leader>ms", function()
-        mc.matchSkipCursor(1)
-      end, { desc = "Skip Next Selection" })
-      set({ "n", "v" }, "<leader>mN", function()
-        mc.matchAddCursor(-1)
-      end, { desc = "Add Previous Selection" })
-      set({ "n", "v" }, "<leader>mS", function()
-        mc.matchSkipCursor(-1)
-      end, { desc = "Skip Previous Selection" })
+      set({ "n", "v" }, "<leader>ms", function() mc.matchSkipCursor(1) end, { desc = "Skip Next Selection" })
+      set({ "n", "v" }, "<leader>mN", function() mc.matchAddCursor(-1) end, { desc = "Add Previous Selection" })
+      set({ "n", "v" }, "<leader>mS", function() mc.matchSkipCursor(-1) end, { desc = "Skip Previous Selection" })
 
       -- Add all matches in the document
       set({ "n", "v" }, "<leader>mA", mc.matchAllAddCursors, { desc = "Add All Selections" })
@@ -80,12 +63,9 @@ return {
       set("v", "M", mc.matchCursors, { desc = "Match Selections" })
 
       -- Rotate visual selection contents.
-      set("v", "<leader>mt", function()
-        mc.transposeCursors(1)
-      end, { desc = "Transpose Selections Forward" })
-      set("v", "<leader>mT", function()
-        mc.transposeCursors(-1)
-      end, { desc = "Transpose Selections Backward" })
+      set("v", "<leader>mt", function() mc.transposeCursors(1) end, { desc = "Transpose Selections Forward" })
+      set("v", "<leader>mT", function() mc.transposeCursors(-1) end, { desc = "Transpose Selections Backward" })
+      -- stylua: ignore end
 
       -- Jumplist support
       set({ "v", "n" }, "<c-i>", mc.jumpForward)

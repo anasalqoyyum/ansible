@@ -3,16 +3,16 @@
 	"$schema": "https://aka.ms/terminal-profiles-schema",
 	"actions": [
 		{
+			"command": "find",
+			"id": "User.find"
+		},
+		{
 			"command": {
 				"action": "splitPane",
 				"split": "auto",
 				"splitMode": "duplicate"
 			},
 			"id": "User.splitPane.A6751878"
-		},
-		{
-			"command": "find",
-			"id": "User.find"
 		},
 		{
 			"command": "duplicateTab",
@@ -39,32 +39,32 @@
 	"initialRows": 40,
 	"keybindings": [
 		{
-			"id": "User.paste",
-			"keys": "ctrl+v"
-		},
-		{
 			"id": "User.find",
 			"keys": "ctrl+shift+f"
+		},
+		{
+			"id": "User.paste",
+			"keys": "ctrl+v"
 		},
 		{
 			"id": "User.splitPane.A6751878",
 			"keys": "alt+shift+d"
 		},
 		{
-			"id": null,
-			"keys": "alt+enter"
-		},
-		{
 			"id": "User.duplicateTab",
 			"keys": "ctrl+alt+shift+d"
 		},
 		{
-			"id": "User.copy.644BA8F2",
-			"keys": "ctrl+c"
+			"id": null,
+			"keys": "alt+enter"
 		},
 		{
 			"id": null,
 			"keys": "ctrl+shift+d"
+		},
+		{
+			"id": "User.copy.644BA8F2",
+			"keys": "ctrl+c"
 		},
 		{
 			"id": null,
@@ -84,7 +84,7 @@
 			"cursorShape": "filledBox",
 			"font": {
 				"face": "GeistMono Nerd Font",
-				"size": 12
+				"size": 12.5
 			},
 			"opacity": 90,
 			"useAcrylic": true
@@ -138,6 +138,30 @@
 		]
 	},
 	"schemes": [
+		{
+			"name": "Vague",
+			"black": "#252530",
+			"red": "#d8647e",
+			"green": "#7fa563",
+			"yellow": "#f3be7c",
+			"blue": "#6e94b2",
+			"purple": "#bb9dbd",
+			"cyan": "#aeaed1",
+			"white": "#cdcdcd",
+			"brightBlack": "#606079",
+			"brightRed": "#e08398",
+			"brightGreen": "#99b782",
+			"brightYellow": "#f5cb96",
+			"brightBlue": "#8ba9c1",
+			"brightPurple": "#c9b1ca",
+			"brightCyan": "#bebeda",
+			"brightWhite": "#d7d7d7",
+
+			"background": "#141414",
+			"foreground": "#cdcdcd",
+			"selectionBackground": "#252530",
+			"cursorColor": "#cdcdcd"
+		},
 		{
 			"background": "#1E1E2E",
 			"black": "#45475A",

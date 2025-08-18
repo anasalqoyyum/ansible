@@ -74,7 +74,8 @@ return {
               end
             end
             if #labels > 0 then
-              table.insert(labels, { "┊ " })
+              -- table.insert(labels, { "┊ " })
+              table.insert(labels, { "| " })
             end
             return labels
           end
