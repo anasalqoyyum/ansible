@@ -241,4 +241,31 @@ return {
       },
     },
   },
+
+  -- I only use this for peeking definition
+  {
+    "nvimdev/lspsaga.nvim",
+    event = "LspAttach",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter", -- optional
+    },
+    opts = {
+      symbol_in_winbar = {
+        enable = false,
+      },
+      lightbulb = {
+        enable = false,
+        virtual_text = false, -- disable virtual text
+      },
+      ui = {
+        border = "rounded",
+        code_action = "",
+        diagnostic = "",
+        hover = "",
+        rename = "",
+        definition = "",
+        references = "",
+      },
+    },
+  },
 }

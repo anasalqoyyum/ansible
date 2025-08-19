@@ -48,6 +48,9 @@ return {
       require("vague").setup({
         transparent = false, -- enable transparency
         italic = false,
+        on_highlights = function(hl, c)
+          hl.SnacksIndentScope = { fg = c.string }
+        end,
       })
     end,
   },
