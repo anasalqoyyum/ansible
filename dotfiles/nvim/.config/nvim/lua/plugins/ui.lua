@@ -199,6 +199,14 @@ return {
         matcher = {
           frecency = true,
         },
+        win = {
+          input = {
+            keys = {
+              ["_"] = { "edit_split", mode = { "i", "n" } },
+              ["|"] = { "edit_vsplit", mode = { "i", "n" } },
+            },
+          },
+        },
       },
       image = {
         enabled = true,
