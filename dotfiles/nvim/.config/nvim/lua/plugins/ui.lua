@@ -200,10 +200,14 @@ return {
           frecency = true,
         },
         win = {
+          preview = {
+            wo = {
+              wrap = true,
+            },
+          },
           input = {
             keys = {
-              ["_"] = { "edit_split", mode = { "i", "n" } },
-              ["|"] = { "edit_vsplit", mode = { "i", "n" } },
+              ["<C-\\>"] = { "edit_vsplit", mode = { "i", "n" } },
             },
           },
         },
@@ -239,6 +243,7 @@ return {
     "folke/snacks.nvim",
     opts = {
       dashboard = {
+        enabled = false,
         preset = {
           header = [[
         ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣬⡛⣿⣿⣿⣯⢻
