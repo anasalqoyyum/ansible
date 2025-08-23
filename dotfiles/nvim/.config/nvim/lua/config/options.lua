@@ -10,6 +10,7 @@ vim.g.lazyvim_picker = "snacks"
 vim.g.lazyvim_blink_main = true -- this set blink to use main branch
 vim.g.lazyvim_python_lsp = "basedpyright" -- Set to "basedpyright" to use basedpyright instead of pyright.
 vim.g.astro_typescript = "enable" -- this need vim-astro
+vim.g.theme_transparency = true -- set to true if you want transparency
 
 vim.opt.swapfile = false -- disable swap files
 

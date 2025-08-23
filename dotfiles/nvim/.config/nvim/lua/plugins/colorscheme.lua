@@ -18,7 +18,7 @@ return {
         DiagnosticUnderlineHint = { undercurl = true },
       },
       options = {
-        transparency = true,
+        transparency = vim.g.theme_transparency,
       },
     },
   },
@@ -31,7 +31,7 @@ return {
   {
     "folke/tokyonight.nvim",
     opts = {
-      transparent = true,
+      transparent = vim.g.theme_transparency,
       styles = {
         sidebars = "transparent",
         floats = "transparent",
@@ -44,14 +44,25 @@ return {
     enabled = false,
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other plugins
-    config = function()
-      require("vague").setup({
-        transparent = false, -- enable transparency
+    opts = {
+      transparent = vim.g.theme_transparency, -- enable transparency
+      italic = false,
+      on_highlights = function(hl, c)
+        hl.SnacksIndentScope = { fg = c.string }
+      end,
+    },
+  },
+
+  {
+    "rose-pine/neovim",
+    enabled = false,
+    name = "rose-pine",
+    opts = {
+      styles = {
+        bold = true,
         italic = false,
-        on_highlights = function(hl, c)
-          hl.SnacksIndentScope = { fg = c.string }
-        end,
-      })
-    end,
+        transparency = vim.g.theme_transparency,
+      },
+    },
   },
 }

@@ -19,6 +19,6 @@ shell-integration = zsh
 shell-integration-features = no-cursor
 
 cursor-style = block
-background-opacity = 0.975
+background-opacity = 0.99
 background-blur = true
-theme = "tokyonight_night"
+theme = rose-pine

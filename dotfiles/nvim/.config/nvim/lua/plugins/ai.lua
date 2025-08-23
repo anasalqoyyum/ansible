@@ -51,7 +51,7 @@ return {
       provider = "copilot",
       providers = {
         copilot = {
-          model = "gpt-4.1",
+          model = "gpt-5",
           extra_request_body = {
             temperature = 0,
             max_tokens = 8192,
