@@ -32,6 +32,7 @@ return {
     opts = {
       spec = {
         { "<leader>a", group = "ai", mode = { "n", "v" } },
+        { "<leader>ao", group = "opencode", mode = { "n", "v" } },
         { "<leader>m", group = "multi-cursor", icon = "󰗧", mode = { "n", "v" } },
       },
     },

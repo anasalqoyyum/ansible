@@ -163,6 +163,27 @@ return {
         replace_netrw = false,
       },
       picker = {
+        layout = "select_reverse",
+        layouts = {
+          select_reverse = {
+            reverse = true,
+            preview = false,
+            layout = {
+              backdrop = false,
+              width = 0.5,
+              min_width = 80,
+              height = 0.4,
+              min_height = 3,
+              box = "vertical",
+              border = "rounded",
+              title = "{title}",
+              title_pos = "center",
+              { win = "preview", title = "{preview}", height = 0.4, border = "bottom" },
+              { win = "list", border = "none" },
+              { win = "input", height = 1, border = "top" },
+            },
+          },
+        },
         sources = {
           explorer = {
             layout = { layout = { position = "right" } },
