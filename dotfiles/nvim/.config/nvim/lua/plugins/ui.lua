@@ -100,10 +100,17 @@ return {
           return {
             { get_git_diff() },
             { (ft_icon or "") .. " ", guifg = ft_color, guibg = "none" },
-            { filename .. " ", gui = vim.bo[props.buf].modified and "bold,italic" or "bold" },
-            { modified or "", gui = "bold" },
+            {
+              filename .. " ",
+              gui = vim.bo[props.buf].modified and "bold,italic" or "bold",
+              group = vim.bo[props.buf].modified and "MatchParen" or "",
+            },
+            { modified or "", gui = "bold", group = "MatchParen" },
           }
         end,
+        window = {
+          zindex = 25,
+        },
       })
     end,
   },
@@ -114,7 +121,7 @@ return {
     config = function()
       local dropbar_api = require("dropbar.api")
       vim.api.nvim_set_hl(0, "WinBar", { bg = "NONE" }) -- no background for dropbar
-      vim.keymap.set("n", "<Leader>s;", dropbar_api.pick, { desc = "Pick LSP Symbols" })
+      vim.keymap.set("n", "<Leader>c;", dropbar_api.pick, { desc = "Pick LSP Symbols" })
       vim.keymap.set("n", "[;", dropbar_api.goto_context_start, { desc = "Go to start of current context" })
       vim.keymap.set("n", "];", dropbar_api.select_next_context, { desc = "Select next context" })
     end,
@@ -169,14 +176,13 @@ return {
             reverse = true,
             preview = false,
             layout = {
-              backdrop = false,
               width = 0.5,
               min_width = 80,
-              height = 0.4,
+              height = 0.5,
               min_height = 3,
               box = "vertical",
               border = "rounded",
-              title = "{title}",
+              title = "{title} {live} {flags}",
               title_pos = "center",
               { win = "preview", title = "{preview}", height = 0.4, border = "bottom" },
               { win = "list", border = "none" },
