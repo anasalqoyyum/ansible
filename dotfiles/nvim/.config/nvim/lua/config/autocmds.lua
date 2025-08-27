@@ -143,3 +143,14 @@ vim.api.nvim_create_user_command("FormatWithPrettier", function()
     end
   end
 end, {})
+
+-- prettify ts errors with rulebook
+-- vim.api.nvim_create_autocmd("Filetype", {
+--   pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+--   group = vim.api.nvim_create_augroup("rulebook.prettify-ts-error", { clear = true }),
+--   callback = function(ctx)
+--     vim.keymap.set("n", "<leader>rp", function()
+--       require("rulebook").prettifyError()
+--     end, { buffer = ctx.buf, desc = "Rulebook: Prettify TS Error" })
+--   end,
+-- })

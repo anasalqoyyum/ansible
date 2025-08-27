@@ -130,7 +130,7 @@ return {
             -- preselect = function(_)
             --   return not require("blink.cmp").snippet_active({ direction = 1 })
             -- end,
-            preselect = false,
+            --
             auto_insert = true,
           },
         },
@@ -266,6 +266,45 @@ return {
         rename = "",
         definition = "",
         references = "",
+      },
+    },
+  },
+
+  {
+    "chrisgrieser/nvim-rulebook",
+    enabled = false,
+    branch = "dev",
+    event = "LspAttach",
+    opts = {},
+    keys = {
+      {
+        "<leader>ri",
+        function()
+          require("rulebook").ignoreRule()
+        end,
+        desc = "Rulebook: Ignore diagnostic rule",
+      },
+      {
+        "<leader>rl",
+        function()
+          require("rulebook").lookupRule()
+        end,
+        desc = "Rulebook: Lookup diagnostic rule",
+      },
+      {
+        "<leader>ry",
+        function()
+          require("rulebook").yankDiagnosticCode()
+        end,
+        desc = "Rulebook: Yank diagnostic code",
+      },
+      {
+        "<leader>rf",
+        function()
+          require("rulebook").suppressFormatter()
+        end,
+        mode = { "n", "x" },
+        desc = "Rulebook: Suppress formatter",
       },
     },
   },

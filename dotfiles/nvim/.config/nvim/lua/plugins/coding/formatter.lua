@@ -137,6 +137,7 @@ return {
   },
 
   -- force enable biome in js
+  -- does this even needed???
   {
     "neovim/nvim-lspconfig",
     opts = {

@@ -6,17 +6,6 @@ return {
     },
   },
 
-  {
-    "folke/tokyonight.nvim",
-    opts = {
-      transparent = vim.g.theme_transparency,
-      styles = {
-        sidebars = "transparent",
-        floats = "transparent",
-      },
-    },
-  },
-
   -- add and setup onedark theme
   {
     "olimorris/onedarkpro.nvim",
@@ -40,17 +29,27 @@ return {
   },
 
   {
-    "vague2k/vague.nvim",
-    enabled = false,
+    "folke/tokyonight.nvim",
     opts = {
       transparent = vim.g.theme_transparency,
-      -- this is fixing the indentscope not highlighted
-      on_highlights = function(hl, c)
-        hl.SnacksIndentScope = { fg = c.special }
-      end,
-      style = {
-        strings = "none",
+      styles = {
+        sidebars = "transparent",
+        floats = "transparent",
       },
+    },
+  },
+
+  {
+    "vague2k/vague.nvim",
+    enabled = false,
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other plugins
+    opts = {
+      transparent = vim.g.theme_transparency, -- enable transparency
+      italic = false,
+      on_highlights = function(hl, c)
+        hl.SnacksIndentScope = { fg = c.string }
+      end,
     },
   },
 
@@ -60,17 +59,9 @@ return {
     name = "rose-pine",
     opts = {
       styles = {
+        bold = true,
+        italic = false,
         transparency = vim.g.theme_transparency,
-      },
-      -- kinda hate italic on variable (confuses me)
-      highlight_groups = {
-        String = { italic = false },
-        ["@variable"] = { italic = false },
-        ["@variable.builtin"] = { italic = false },
-        ["@variable.parameter"] = { italic = false },
-        ["@variable.parameter.builtin"] = { italic = false },
-        ["@parameter"] = { italic = false },
-        ["@property"] = { italic = false },
       },
     },
   },

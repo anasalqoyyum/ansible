@@ -2,16 +2,6 @@ return {
   -- disable bufferline and indentscope
   { "akinsho/bufferline.nvim", enabled = false },
 
-  -- probably not needed on pure unix (so only WSL is needed due to slow clipboard)
-  -- only needed when yanky.nvim enabled I guess
-  -- {
-  --   "EtiamNullam/deferred-clipboard.nvim",
-  --   event = "VeryLazy",
-  --   opts = {
-  --     lazy = true,
-  --   },
-  -- },
-
   -- use jk for esc in insert mode
   {
     "max397574/better-escape.nvim",
@@ -34,7 +24,18 @@ return {
         { "<leader>a", group = "ai", mode = { "n", "v" } },
         { "<leader>ao", group = "opencode", mode = { "n", "v" } },
         { "<leader>m", group = "multi-cursor", icon = "󰗧", mode = { "n", "v" } },
+        { "<leader>r", group = "rulebook", icon = " ", mode = { "n", "v" } },
       },
     },
   },
+
+  -- probably not needed on pure unix (so only WSL is needed due to slow clipboard)
+  -- only needed when yanky.nvim enabled I guess
+  -- {
+  --   "EtiamNullam/deferred-clipboard.nvim",
+  --   event = "VeryLazy",
+  --   opts = {
+  --     lazy = true,
+  --   },
+  -- },
 }
