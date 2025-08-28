@@ -137,15 +137,11 @@ return {
   },
 
   -- force enable biome in js
-  -- does this even needed???
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
         biome = {
-          root_dir = function(fname)
-            return require("lspconfig.util").root_pattern("package.json", ".git", "biome.json", "biome.jsonc")(fname)
-          end,
           single_file_support = true,
         },
       },
