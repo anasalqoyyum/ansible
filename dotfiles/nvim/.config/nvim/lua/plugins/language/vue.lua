@@ -35,6 +35,17 @@ return {
           enableForWorkspaceTypeScriptVersions = true,
         },
       })
+
+      -- table.insert(opts.servers.ts_ls.filetypes, "vue")
+      -- LazyVim.extend(opts.servers.ts_ls, "init_options.plugins", {
+      --   {
+      --     name = "@vue/typescript-plugin",
+      --     location = LazyVim.get_pkg_path("vue-language-server", "/node_modules/@vue/language-server"),
+      --     languages = { "vue" },
+      --     configNamespace = "typescript",
+      --     enableForWorkspaceTypeScriptVersions = true,
+      --   },
+      -- })
     end,
   },
 }

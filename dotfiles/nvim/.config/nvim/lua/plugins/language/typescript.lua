@@ -67,6 +67,15 @@ local typescript_keys = {
   },
 }
 
+local filetypes = {
+  "javascript",
+  "javascriptreact",
+  "javascript.jsx",
+  "typescript",
+  "typescriptreact",
+  "typescript.tsx",
+}
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -74,14 +83,7 @@ return {
       servers = {
         ts_ls = {
           enabled = false,
-          filetypes = {
-            "javascript",
-            "javascriptreact",
-            "javascript.jsx",
-            "typescript",
-            "typescriptreact",
-            "typescript.tsx",
-          },
+          filetypes = filetypes,
           keys = typescript_keys,
           settings = {
             typescript = {
@@ -97,14 +99,7 @@ return {
         },
         vtsls = {
           enabled = true,
-          filetypes = {
-            "javascript",
-            "javascriptreact",
-            "javascript.jsx",
-            "typescript",
-            "typescriptreact",
-            "typescript.tsx",
-          },
+          filetypes = filetypes,
           settings = {
             complete_function_calls = true,
             vtsls = {

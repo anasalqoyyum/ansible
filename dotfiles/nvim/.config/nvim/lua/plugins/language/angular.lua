@@ -44,6 +44,13 @@ return {
           enableForWorkspaceTypeScriptVersions = false,
         },
       })
+      -- LazyVim.extend(opts.servers.ts_ls, "init_options.plugins", {
+      --   {
+      --     name = "@angular/language-server",
+      --     location = LazyVim.get_pkg_path("angular-language-server", "/node_modules/@angular/language-server"),
+      --     enableForWorkspaceTypeScriptVersions = false,
+      --   },
+      -- })
     end,
   },
 }
