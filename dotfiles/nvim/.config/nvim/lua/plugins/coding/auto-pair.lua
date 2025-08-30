@@ -16,13 +16,31 @@ return {
     opts = {
       mappings = {
         enabled = true,
-        cmdline = false,
+        cmdline = true,
         disabled_filetypes = {},
-        pairs = {},
+        pairs = {
+          ["'"] = {
+            {
+              "'''",
+              when = function(ctx)
+                return ctx:text_before_cursor(2) == "''"
+              end,
+              languages = { "python" },
+            },
+            -- I always need this, so overwrite the default
+            -- https://github.com/Saghen/blink.pairs/blob/main/lua/blink/pairs/config/mappings.lua#L41-L53
+            {
+              "'",
+              enter = false,
+              space = false,
+            },
+          },
+        },
       },
       highlights = {
         enabled = true,
-        cmdline = false,
+        -- requires require('vim._extui').enable({}), otherwise has no effect
+        cmdline = true,
         groups = {
           "BlinkPairsOrange",
           "BlinkPairsPurple",
