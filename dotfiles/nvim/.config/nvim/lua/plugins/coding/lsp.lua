@@ -67,21 +67,38 @@ return {
               { "item_idx", "kind_icon", gap = 1 },
               { "label", "label_description", "kind", gap = 1 },
             },
+            -- honestly, the highlight is kinda useless if using theme that have blink.cmp support
             components = {
               kind_icon = {
                 text = function(ctx)
+                  -- fix tailwindcss not showing icon with color
+                  if ctx.kind == "Color" then
+                    return ctx.kind_icon .. " "
+                  end
+
                   local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
                   return kind_icon .. " "
                 end,
                 highlight = function(ctx)
+                  -- fix tailwindcss not showing icon with color
+                  if ctx.kind == "Color" then
+                    return { { group = ctx.kind_hl, priority = 20000 } }
+                  end
+
                   local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-                  return hl
+                  -- Set the highlight priority to 20000 to beat the cursorline's default priority of 10000
+                  return { { group = hl, priority = 20000 } }
                 end,
               },
               kind = {
                 highlight = function(ctx)
+                  -- fix tailwindcss not showing icon with color
+                  if ctx.kind == "Color" then
+                    return { { group = ctx.kind_hl, priority = 20000 } }
+                  end
+
                   local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-                  return hl
+                  return { { group = hl, priority = 20000 } }
                 end,
               },
               item_idx = {
@@ -89,8 +106,13 @@ return {
                   return ctx.idx == 10 and "0" or ctx.idx >= 10 and " " or tostring(ctx.idx)
                 end,
                 highlight = function(ctx)
+                  -- fix tailwindcss not showing icon with color
+                  if ctx.kind == "Color" then
+                    return { { group = ctx.kind_hl, priority = 20000 } }
+                  end
+
                   local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-                  return hl
+                  return { { group = hl, priority = 20000 } }
                 end,
               },
             },
@@ -130,7 +152,9 @@ return {
             -- preselect = function(_)
             --   return not require("blink.cmp").snippet_active({ direction = 1 })
             -- end,
-            --
+
+            -- absolutely faster with this disabled
+            preselect = false,
             auto_insert = true,
           },
         },
