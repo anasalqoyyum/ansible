@@ -18,7 +18,6 @@ return {
   {
     "yetone/avante.nvim",
     event = "VeryLazy",
-    lazy = true,
     version = false, -- Never set this value to "*"! Never!
     opts = {
       mappings = {
@@ -118,6 +117,7 @@ return {
   {
     "NickvanDyke/opencode.nvim",
     enabled = vim.fn.executable("opencode") == 1,
+    lazy = true,
     dependencies = {
       { "folke/snacks.nvim", opts = { input = { enabled = true } } },
     },

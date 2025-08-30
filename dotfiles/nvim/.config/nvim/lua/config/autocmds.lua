@@ -144,6 +144,25 @@ vim.api.nvim_create_user_command("FormatWithPrettier", function()
   end
 end, {})
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+  group = vim.api.nvim_create_augroup("neo-test.vitest", { clear = true }),
+  callback = function()
+    vim.api.nvim_set_keymap(
+      "n",
+      "<leader>tvr",
+      "<cmd>lua require('neotest').run.run({ vitestCommand = 'vitest --watch' })<cr>",
+      { desc = "Run Watch (Vitest)" }
+    )
+    vim.api.nvim_set_keymap(
+      "n",
+      "<leader>tvf",
+      "<cmd>lua require('neotest').run.run({ vim.fn.expand('%'), vitestCommand = 'vitest --watch' })<cr>",
+      { desc = "Run Watch File (Vitest)" }
+    )
+  end,
+})
+
 -- prettify ts errors with rulebook
 -- vim.api.nvim_create_autocmd("Filetype", {
 --   pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
