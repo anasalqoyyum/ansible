@@ -1,7 +1,23 @@
 return {
   {
-    "echasnovski/mini.pairs",
+    "nvim-mini/mini.pairs",
     enabled = false,
+    event = "VeryLazy",
+    opts = {
+      modes = { insert = true, command = true, terminal = false },
+      -- skip autopair when next character is one of these
+      skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
+      -- skip autopair when the cursor is inside these treesitter nodes
+      skip_ts = { "string" },
+      -- skip autopair when next character is closing pair
+      -- and there are more closing pairs than opening pairs
+      skip_unbalanced = true,
+      -- better deal with markdown code blocks
+      markdown = true,
+    },
+    config = function(_, opts)
+      LazyVim.mini.pairs(opts)
+    end,
   },
 
   {
@@ -27,12 +43,32 @@ return {
               end,
               languages = { "python" },
             },
-            -- I always need this, so overwrite the default
+            -- default behavior kinda weird it doesn't check if next char is single quote
             -- https://github.com/Saghen/blink.pairs/blob/main/lua/blink/pairs/config/mappings.lua#L41-L53
             {
               "'",
               enter = false,
               space = false,
+              when = function(ctx)
+                -- The `plaintex` filetype has no treesitter parser, so we can't disable this pair in math environments. Thus, disable this pair completely.
+                if ctx.ft == "plaintex" then
+                  return false
+                end
+
+                -- Allow if next char is a single quote
+                if ctx:text_after_cursor(1) == "'" then
+                  return true
+                end
+
+                -- Block if cursor is on a word character
+                if ctx.char_under_cursor:match("%w") then
+                  return false
+                end
+
+                -- Fallback: use treesitter blacklist
+                -- TODO: disable inside "" strings?
+                return ctx.ts:blacklist("singlequote").matches
+              end,
             },
           },
         },

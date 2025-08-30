@@ -10,6 +10,59 @@ local integrations = {
   lint = is_available("nvim-lint"),
 }
 
+-- A simple LSP status component for lualine that shows active LSPs, linters, and formatters
+local function lsp_status_simple()
+  return function()
+    local bufnr = 0
+    local all_tools = {}
+    local seen_tools = {}
+
+    -- Helper to normalize ruff variants
+    local function normalize_name(name)
+      return name:match("^ruff") and "ruff" or name
+    end
+
+    -- Add LSPs
+    for _, server in pairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+      local normalized = normalize_name(server.name)
+      if not seen_tools[normalized] then
+        table.insert(all_tools, normalized)
+        seen_tools[normalized] = true
+      end
+    end
+
+    -- Add linters (only if available and loaded)
+    if integrations.lint and package.loaded["lint"] then
+      local lint = require("lint")
+      local ft = vim.bo[bufnr].filetype
+      if lint.linters_by_ft[ft] then
+        for _, linter in ipairs(lint.linters_by_ft[ft]) do
+          local normalized = normalize_name(linter)
+          if not seen_tools[normalized] then
+            table.insert(all_tools, normalized)
+            seen_tools[normalized] = true
+          end
+        end
+      end
+    end
+
+    -- Add formatters (only if available and loaded)
+    if integrations.conform and package.loaded["conform"] then
+      local conform = require("conform")
+      local formatters = conform.list_formatters(0)
+      for _, formatter in ipairs(formatters) do
+        local normalized = normalize_name(formatter.name)
+        if not seen_tools[normalized] then
+          table.insert(all_tools, normalized)
+          seen_tools[normalized] = true
+        end
+      end
+    end
+
+    return #all_tools > 0 and table.concat(all_tools, " ") or ""
+  end
+end
+
 return {
   {
     "nvim-lualine/lualine.nvim",
@@ -74,11 +127,11 @@ return {
               color = function() return { fg = Snacks.util.color("Constant") } end,
             },
             -- stylua: ignore
-            -- {
-            --   function() return "  " .. require("dap").status() end,
-            --   cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
-            --   color = function() return { fg = Snacks.util.color("Debug") } end,
-            -- },
+            {
+              function() return "  " .. require("dap").status() end,
+              cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
+              color = function() return { fg = Snacks.util.color("Debug") } end,
+            },
             -- stylua: ignore
             -- {
             --   require("lazy.status").updates,
@@ -105,62 +158,16 @@ return {
             },
           },
           lualine_y = {
-            function()
-              local bufnr = 0
-              local all_tools = {}
-              local seen_tools = {}
-
-              -- Helper to normalize ruff variants
-              local function normalize_name(name)
-                return name:match("^ruff") and "ruff" or name
-              end
-
-              -- Add LSPs
-              for _, server in pairs(vim.lsp.get_clients({ bufnr = bufnr })) do
-                local normalized = normalize_name(server.name)
-                if not seen_tools[normalized] then
-                  table.insert(all_tools, normalized)
-                  seen_tools[normalized] = true
-                end
-              end
-
-              -- Add linters (only if available and loaded)
-              if integrations.lint and package.loaded["lint"] then
-                local lint = require("lint")
-                local ft = vim.bo[bufnr].filetype
-                if lint.linters_by_ft[ft] then
-                  for _, linter in ipairs(lint.linters_by_ft[ft]) do
-                    local normalized = normalize_name(linter)
-                    if not seen_tools[normalized] then
-                      table.insert(all_tools, normalized)
-                      seen_tools[normalized] = true
-                    end
-                  end
-                end
-              end
-
-              -- Add formatters (only if available and loaded)
-              if integrations.conform and package.loaded["conform"] then
-                local conform = require("conform")
-                local formatters = conform.list_formatters(0)
-                for _, formatter in ipairs(formatters) do
-                  local normalized = normalize_name(formatter.name)
-                  if not seen_tools[normalized] then
-                    table.insert(all_tools, normalized)
-                    seen_tools[normalized] = true
-                  end
-                end
-              end
-
-              return #all_tools > 0 and table.concat(all_tools, ",") or ""
-            end,
+            -- this one is missing formatter
+            -- { "lsp_status" },
+            { lsp_status_simple() },
           },
           lualine_z = {
             { "progress", separator = " ", padding = { left = 1, right = 0 } },
             { "location", padding = { left = 0, right = 1 } },
           },
         },
-        extensions = { "neo-tree", "lazy", "fzf" },
+        extensions = { "lazy", "avante", "oil", "aerial", "quickfix", "trouble" },
       }
 
       return opts

@@ -147,7 +147,7 @@ return {
       },
     },
     -- Optional dependencies
-    dependencies = { { "echasnovski/mini.icons", opts = {} } },
+    dependencies = { { "nvim-mini/mini.icons", opts = {} } },
     -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
     lazy = false,
   },
@@ -293,7 +293,8 @@ return {
             { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
             { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
             { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.dashboard.pick('live_grep')" },
-            { icon = " ", key = "b", desc = "File browser", action = function()  require("yazi").yazi(nil, vim.fn.getcwd()) end},
+            { icon = " ", key = "b", desc = "File browser", action = function() require("yazi").yazi(nil,
+                vim.fn.getcwd()) end },
             { icon = " ", key = "s", desc = "Restore Session", section = "session" },
             { icon = " ", key = "q", desc = "Quit", action = ":qa" },
           },
@@ -308,19 +309,9 @@ return {
     },
   },
 
-  {
-    "echasnovski/mini.icons",
-    opts = {
-      lsp = {
-        -- support blink cmp
-        copilot = { glyph = "", hl = "MiniIconsRed" },
-      },
-    },
-  },
-
   -- Filetype icons
   {
-    "echasnovski/mini.icons",
+    "nvim-mini/mini.icons",
     opts = {
       file = {
         [".eslintrc.js"] = { glyph = "󰱺", hl = "MiniIconsYellow" },
@@ -332,6 +323,10 @@ return {
         ["tsconfig.json"] = { glyph = "", hl = "MiniIconsAzure" },
         ["tsconfig.build.json"] = { glyph = "", hl = "MiniIconsAzure" },
         ["yarn.lock"] = { glyph = "", hl = "MiniIconsBlue" },
+      },
+      lsp = {
+        -- support blink cmp
+        copilot = { glyph = "", hl = "MiniIconsRed" },
       },
     },
   },

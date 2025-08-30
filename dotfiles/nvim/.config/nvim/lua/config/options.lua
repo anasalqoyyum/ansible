@@ -9,12 +9,13 @@ vim.g.lazyvim_picker = "snacks"
 
 vim.g.lazyvim_blink_main = true -- this set blink to use main branch
 vim.g.lazyvim_python_lsp = "basedpyright" -- Set to "basedpyright" to use basedpyright instead of pyright.
-vim.g.astro_typescript = "enable" -- this need vim-astro
+vim.g.lazyvim_rust_diagnostics = "bacon-ls" -- Set to "bacon-ls" to use bacon-ls instead of rust-analyzer.
+vim.g.astro_typescript = "enable" -- this needed for vim-astro
 vim.g.theme_transparency = false -- set to true if you want transparency
 
 vim.opt.swapfile = false -- disable swap files
 
--- kinda broke whichkey
+-- kinda broke whichkey (but nice rounded)
 -- vim.o.winborder = "rounded"
 
 -- Clipboard (from https://github.com/neovim/neovim/blob/master/runtime/autoload/provider/clipboard.vim)
