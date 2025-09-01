@@ -33,15 +33,30 @@
     - linux-only
     - yank
 
-- name: Set yank config
+- name: Set yank tmux config
   blockinfile:
     path: ~/.tmux.conf
-    insertbefore: "^set-option -g prefix"
+    insertbefore: "^set-option -g prefix C-a"
     create: yes
     marker: ""
     block: |
       # Win32yank clipboard configuration
       set -g @override_copy_command "win32yank -i"
+  tags:
+    - install
+    - linux-only
+    - dotfiles
+    - yank
+
+- name: Set yank tmux-thumbs config
+  blockinfile:
+    path: ~/.tmux.conf
+    insertafter: "^set-option -g prefix C-a"
+    create: yes
+    marker: ""
+    block: |
+      # Overriding it on wsl for tmux-thumbs
+      set -g @thumbs-command 'echo -n {} | win32yank -i'
   tags:
     - install
     - linux-only
