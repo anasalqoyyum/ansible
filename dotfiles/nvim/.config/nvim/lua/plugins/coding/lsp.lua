@@ -300,7 +300,14 @@ return {
     enabled = false,
     branch = "dev",
     event = "LspAttach",
-    opts = {},
+    opts = {
+      suppressFormatter = {
+        javascript = {
+          ignoreBlock = "// prettier-ignore",
+          location = "prevLine",
+        },
+      },
+    },
     keys = {
       {
         "<leader>ri",

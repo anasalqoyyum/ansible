@@ -1,7 +1,9 @@
 [tools]
 node = "22"
-go = "1.23"
+go = "1.25.0"
 python = "3.11"
 
 [settings]
 python.uv_venv_auto = true
+# This setting is used to allow change version based on the idiomatic version file (e.g .nvmrc).
+idiomatic_version_file_enable_tools = ["node"]
