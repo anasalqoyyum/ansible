@@ -10,7 +10,7 @@ set -g message-style "fg=#252530,bg=#aeaed1"
 
 set -g status-left "#[fg=#cdcdcd,bg=#252530]  #S "
 
-set -g status-right " #[fg=#252530,bg=#aeaed1] 󰥔 %I:%M "
+set -g status-right " #[fg=#252530,bg=#aeaed1] 󰥔 %H:%M "
 
 setw -g window-status-separator " "
 setw -g window-status-format "#[fg=#252530,bg=#d7d7d7] #I #[fg=#cdcdcd,bg=#252530] #W "
