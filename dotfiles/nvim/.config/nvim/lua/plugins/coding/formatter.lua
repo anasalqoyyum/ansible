@@ -118,7 +118,7 @@ return {
       opts.formatters.biome = {
         condition = function(_, ctx)
           local prettierd_condition = opts.formatters.prettierd.condition(_, ctx)
-          return not prettierd_condition
+          return not prettierd_condition and M.biome_support(ctx)
         end,
       }
     end,

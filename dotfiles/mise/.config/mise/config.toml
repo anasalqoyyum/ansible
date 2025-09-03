@@ -1,9 +1,33 @@
 [tools]
 node = "22"
-go = "1.25.0"
+bun = "latest"
+go = "prefix:1.25"
 python = "3.11"
+# Node Tools
+biome = { version = "latest", os = ["linux", "windows"] }
+# CLI Tools
+kubectl = { version = "latest", os = ["linux"] }
+k6 = { version = "latest", os = ["linux"] }
+k9s = { version = "latest", os = ["linux"] }
+bob = "latest"
+github-cli = { version = "latest", os = ["linux", "windows"] }
+docker-cli = { version = "latest", os = ["linux", "windows"] }
+docker-compose = { version = "latest", os = ["linux", "windows"] }
+opencode = { version = "latest", os = ["linux"] }
+httpie-go = "latest"
+# Go Tools
+air = "latest"
+"aqua:joshmedeski/sesh" = { version = "latest", os = ["linux"] }
+# Python Tools
+uv = "latest"
 
 [settings]
 python.uv_venv_auto = true
 # This setting is used to allow change version based on the idiomatic version file (e.g .nvmrc).
 idiomatic_version_file_enable_tools = ["node"]
+# experimental = true
+# lockfile = true
+
+[env]
+# Auto enable corepack for node versions that support it (>=16.9.0).
+MISE_NODE_COREPACK = true

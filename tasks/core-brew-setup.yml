@@ -4,7 +4,7 @@
 
 - name: Install Core Packages With Brew
   community.general.homebrew:
-    name: fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,lazygit,stow,k9s,jq,k6,biome,fortune,cowsay,ghostty,sesh,ncdu,gh,xh,httpie,diff-so-fancy,mycli,pgcli,btop
+    name: fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,lazygit,stow,k9s,jq,k6,biome,fortune,cowsay,ghostty,sesh,ncdu,gh,xh,diff-so-fancy,mycli,pgcli,btop
     state: present
     update_homebrew: true
   tags:
