@@ -323,10 +323,13 @@ return {
         ["tsconfig.json"] = { glyph = "", hl = "MiniIconsAzure" },
         ["tsconfig.build.json"] = { glyph = "", hl = "MiniIconsAzure" },
         ["yarn.lock"] = { glyph = "", hl = "MiniIconsBlue" },
+        ["mdx"] = { glyph = "󰍔", hl = "MiniIconsYellow" },
       },
       lsp = {
-        -- support blink cmp
         copilot = { glyph = "", hl = "MiniIconsRed" },
+      },
+      filetype = {
+        ["markdown.mdx"] = { glyph = "󰍔", hl = "MiniIconsYellow" },
       },
     },
   },
