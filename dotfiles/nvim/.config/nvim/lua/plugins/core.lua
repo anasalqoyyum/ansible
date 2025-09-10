@@ -69,13 +69,10 @@ return {
     },
   },
 
-  -- probably not needed on pure unix (so only WSL is needed due to slow clipboard)
-  -- only needed when yanky.nvim enabled I guess
-  -- {
-  --   "EtiamNullam/deferred-clipboard.nvim",
-  --   event = "VeryLazy",
-  --   opts = {
-  --     lazy = true,
-  --   },
-  -- },
+  -- fix slow clipboard in WSL (win32yank is also works but sometimes freeze on my work laptop)
+  {
+    "bkoropoff/clipipe",
+    enabled = vim.fn.has("wsl"),
+    opts = {},
+  },
 }

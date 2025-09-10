@@ -14,13 +14,13 @@ vim.g.astro_typescript = "enable" -- this needed for vim-astro
 vim.g.theme_transparency = false -- set to true if you want transparency
 
 vim.opt.swapfile = false -- disable swap files
+vim.opt.clipboard = "unnamedplus"
 
 -- kinda broke whichkey (but nice rounded)
 -- vim.o.winborder = "rounded"
 
 -- Clipboard (from https://github.com/neovim/neovim/blob/master/runtime/autoload/provider/clipboard.vim)
 -- pretty much placeholder for now, as it is working as expected currently
--- opt.clipboard = "unnamedplus"
 --
 -- if vim.fn.has("wsl") == 1 then
 --     local win32yank = "win32yank.exe"
