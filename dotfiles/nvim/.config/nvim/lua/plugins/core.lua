@@ -72,7 +72,7 @@ return {
   -- fix slow clipboard in WSL (win32yank is also works but sometimes freeze on my work laptop)
   {
     "bkoropoff/clipipe",
-    enabled = vim.fn.has("wsl"),
+    enabled = vim.fn.has("wsl") == 1,
     opts = {},
   },
 }
