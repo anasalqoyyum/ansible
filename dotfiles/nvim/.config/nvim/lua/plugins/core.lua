@@ -18,6 +18,12 @@ return {
   },
 
   {
+    "NMAC427/guess-indent.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = {},
+  },
+
+  {
     "folke/which-key.nvim",
     opts = {
       spec = {
@@ -26,7 +32,7 @@ return {
         { "<leader>m", group = "multi-cursor", icon = "󰗧", mode = { "n", "v" } },
         { "<leader>r", group = "rulebook", icon = " ", mode = { "n", "v" } },
         { "<leader>o", group = "overseer", icon = " ", mode = { "n" } },
-        { "<leader>n", group = "tips", icon = " ", mode = { "n" } },
+        { "<leader>T", group = "tips", icon = " ", mode = { "n" } },
       },
     },
   },
@@ -47,22 +53,22 @@ return {
     },
     keys = {
       {
-        "<leader>no",
+        "<leader>To",
         "<cmd>NeovimTips<cr>",
         desc = "Neovim tips",
       },
       {
-        "<leader>ne",
+        "<leader>Te",
         "<cmd>NeovimTipsEdit<cr>",
         desc = "Edit your Neovim tips",
       },
       {
-        "<leader>na",
+        "<leader>Ta",
         "<cmd>NeovimTipsAdd<cr>",
         desc = "Add your Neovim tip",
       },
       {
-        "<leader>nr",
+        "<leader>Tr",
         "<cmd>NeovimTipsRandom<cr>",
         desc = "Show random tip",
       },
