@@ -190,6 +190,17 @@ return {
     },
   },
 
+  -- if vtsls use nvim-vtsls, if ts_ls use typescript-tools.nvim
+  {
+    "yioneko/nvim-vtsls",
+    enabled = true,
+    ft = {
+      "javascript",
+      "typescript",
+      "javascriptreact",
+      "typescriptreact",
+    },
+  },
   {
     "pmizio/typescript-tools.nvim",
     enabled = false,

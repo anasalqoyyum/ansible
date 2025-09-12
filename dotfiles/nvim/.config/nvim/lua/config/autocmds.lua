@@ -163,6 +163,12 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+vim.api.nvim_create_user_command("TSRestart", function()
+  vim.cmd("write")
+  vim.cmd("edit")
+  vim.cmd("TSBufEnable highlight")
+end, {})
+
 -- prettify ts errors with rulebook
 -- vim.api.nvim_create_autocmd("Filetype", {
 --   pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
