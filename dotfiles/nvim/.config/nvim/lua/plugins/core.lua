@@ -33,6 +33,7 @@ return {
         { "<leader>r", group = "rulebook", icon = " ", mode = { "n", "v" } },
         { "<leader>o", group = "overseer", icon = " ", mode = { "n" } },
         { "<leader>T", group = "tips", icon = " ", mode = { "n" } },
+        { "<leader>i", group = "i18n", icon = "", mode = { "n" } },
       },
     },
   },
