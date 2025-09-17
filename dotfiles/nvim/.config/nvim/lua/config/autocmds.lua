@@ -169,6 +169,15 @@ vim.api.nvim_create_user_command("TSRestart", function()
   vim.cmd("TSBufEnable highlight")
 end, {})
 
+-- fix neotest-golang not detecting tests after treesitter update
+-- refer to: https://github.com/nvim-treesitter/nvim-treesitter/blob/master/lockfile.json
+vim.api.nvim_create_autocmd("User", {
+  pattern = "TSUpdate",
+  callback = function()
+    require("nvim-treesitter.parsers").go.install_info.revision = "5e73f476efafe5c768eda19bbe877f188ded6144"
+  end,
+})
+
 -- prettify ts errors with rulebook
 -- vim.api.nvim_create_autocmd("Filetype", {
 --   pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },

@@ -22,3 +22,6 @@ cursor-style = block
 theme = "tokyonight_night"
 # background-opacity = 0.99
 # background-blur = true
+
+# cmd+` to toggle quick terminal
+keybind = global:cmd+backquote=toggle_quick_terminal

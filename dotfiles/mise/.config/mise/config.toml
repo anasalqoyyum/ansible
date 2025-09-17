@@ -25,8 +25,8 @@ uv = "latest"
 python.uv_venv_auto = true
 # This setting is used to allow change version based on the idiomatic version file (e.g .nvmrc).
 idiomatic_version_file_enable_tools = ["node"]
-# experimental = true
-# lockfile = true
+experimental = true
+lockfile = true
 
 [env]
 # Auto enable corepack for node versions that support it (>=16.9.0).
