@@ -121,6 +121,15 @@
     - rust
     - linux-only
 
+- name: Install tree-sitter-cli
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked tree-sitter-cli"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+  tags:
+    - install
+    - rust
+
 - name: Install nightly
   shell: "rustup toolchain install nightly"
   args:
