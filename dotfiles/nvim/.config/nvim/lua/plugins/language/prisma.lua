@@ -5,6 +5,7 @@ return {
       ensure_installed = { "prisma" },
     },
   },
+
   {
     "neovim/nvim-lspconfig",
     opts = {

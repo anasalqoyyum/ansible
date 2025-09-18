@@ -1,3 +1,8 @@
+-- somehow always attached to any typescript files
+if true then
+  return {}
+end
+
 return {
   {
     "nvim-treesitter",
@@ -34,23 +39,23 @@ return {
   },
 
   -- Configure tsserver plugin
-  {
-    "neovim/nvim-lspconfig",
-    opts = function(_, opts)
-      LazyVim.extend(opts.servers.vtsls, "settings.vtsls.tsserver.globalPlugins", {
-        {
-          name = "@angular/language-server",
-          location = LazyVim.get_pkg_path("angular-language-server", "/node_modules/@angular/language-server"),
-          enableForWorkspaceTypeScriptVersions = false,
-        },
-      })
-      -- LazyVim.extend(opts.servers.ts_ls, "init_options.plugins", {
-      --   {
-      --     name = "@angular/language-server",
-      --     location = LazyVim.get_pkg_path("angular-language-server", "/node_modules/@angular/language-server"),
-      --     enableForWorkspaceTypeScriptVersions = false,
-      --   },
-      -- })
-    end,
-  },
+  -- {
+  --   "neovim/nvim-lspconfig",
+  --   opts = function(_, opts)
+  --     LazyVim.extend(opts.servers.vtsls, "settings.vtsls.tsserver.globalPlugins", {
+  --       {
+  --         name = "@angular/language-server",
+  --         location = LazyVim.get_pkg_path("angular-language-server", "/node_modules/@angular/language-server"),
+  --         enableForWorkspaceTypeScriptVersions = false,
+  --       },
+  --     })
+  --     LazyVim.extend(opts.servers.ts_ls, "init_options.plugins", {
+  --       {
+  --         name = "@angular/language-server",
+  --         location = LazyVim.get_pkg_path("angular-language-server", "/node_modules/@angular/language-server"),
+  --         enableForWorkspaceTypeScriptVersions = false,
+  --       },
+  --     })
+  --   end,
+  -- },
 }

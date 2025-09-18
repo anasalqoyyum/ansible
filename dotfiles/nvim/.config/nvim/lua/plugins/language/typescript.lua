@@ -74,6 +74,33 @@ local filetypes = {
   "typescript",
   "typescriptreact",
   "typescript.tsx",
+  "vue",
+}
+
+local tsPlugins = {
+  {
+    name = "@astrojs/ts-plugin",
+    location = LazyVim.get_pkg_path("astro-language-server", "/node_modules/@astrojs/ts-plugin"),
+    enableForWorkspaceTypeScriptVersions = true,
+  },
+  {
+    name = "@vue/typescript-plugin",
+    location = LazyVim.get_pkg_path("vue-language-server", "/node_modules/@vue/language-server"),
+    languages = { "vue" },
+    configNamespace = "typescript",
+    enableForWorkspaceTypeScriptVersions = true,
+  },
+  {
+    name = "typescript-svelte-plugin",
+    location = LazyVim.get_pkg_path("svelte-language-server", "/node_modules/typescript-svelte-plugin"),
+    enableForWorkspaceTypeScriptVersions = true,
+  },
+  -- enable if using angular
+  -- {
+  --   name = "@angular/language-server",
+  --   location = LazyVim.get_pkg_path("angular-language-server", "/node_modules/@angular/language-server"),
+  --   enableForWorkspaceTypeScriptVersions = false,
+  -- },
 }
 
 return {
@@ -96,6 +123,9 @@ return {
               completeFunctionCalls = true,
             },
           },
+          init_options = {
+            plugins = tsPlugins,
+          },
         },
         vtsls = {
           enabled = true,
@@ -110,6 +140,9 @@ return {
                 completion = {
                   enableServerSideFuzzyMatch = true,
                 },
+              },
+              tsserver = {
+                globalPlugins = tsPlugins,
               },
             },
             typescript = {
@@ -190,7 +223,7 @@ return {
     },
   },
 
-  -- if vtsls use nvim-vtsls, if ts_ls use typescript-tools.nvim
+  -- if vtsls use nvim-vtsls, if ts_ls use typescript-tools.nvim (choose one either ts_ls or typescript-tools)
   {
     "yioneko/nvim-vtsls",
     enabled = true,

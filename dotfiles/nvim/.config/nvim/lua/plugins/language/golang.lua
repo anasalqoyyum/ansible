@@ -33,6 +33,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     opts = { ensure_installed = { "go", "gomod", "gowork", "gosum" } },
   },
+
   {
     "neovim/nvim-lspconfig",
     opts = {
@@ -97,11 +98,13 @@ return {
       },
     },
   },
+
   -- Ensure Go tools are installed
   {
     "mason-org/mason.nvim",
     opts = { ensure_installed = { "goimports", "gofumpt" } },
   },
+
   {
     "nvimtools/none-ls.nvim",
     optional = true,
@@ -121,6 +124,7 @@ return {
       })
     end,
   },
+
   {
     "stevearc/conform.nvim",
     optional = true,
@@ -130,6 +134,7 @@ return {
       },
     },
   },
+
   {
     "mfussenegger/nvim-dap",
     optional = true,
@@ -144,6 +149,7 @@ return {
       },
     },
   },
+
   {
     "nvim-neotest/neotest",
     optional = true,
