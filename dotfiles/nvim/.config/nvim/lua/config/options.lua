@@ -3,15 +3,19 @@
 -- Add any additional options here
 
 vim.g.snacks_animate = false
-vim.g.lazyvim_prettier_needs_config = true
-vim.g.lazyvim_eslint_auto_format = false
+vim.g.lazyvim_prettier_needs_config = true -- need this due to biome support parent config
+vim.g.lazyvim_eslint_auto_format = false -- kinda not needed since already explicitly disabled
 vim.g.lazyvim_picker = "snacks"
 
 vim.g.lazyvim_blink_main = true -- this set blink to use main branch
 vim.g.lazyvim_python_lsp = "basedpyright" -- Set to "basedpyright" to use basedpyright instead of pyright.
 vim.g.lazyvim_rust_diagnostics = "bacon-ls" -- Set to "bacon-ls" to use bacon-ls instead of rust-analyzer.
-vim.g.astro_typescript = "enable" -- this needed for vim-astro
+vim.g.auto_pairs = "mini" -- set to "mini" or "blink"
+vim.g.typescript_lsp = "vtsls" -- set to "vtsls" or "ts_ls" or "typescript-tools"
+vim.g.typescript_linter = "biome" -- set to "biome" or "oxlint"
 vim.g.theme_transparency = false -- set to true if you want transparency
+
+vim.g.astro_typescript = "enable" -- this needed for vim-astro for ts capabilities
 
 vim.opt.swapfile = false -- disable swap files
 vim.opt.clipboard = "unnamedplus"

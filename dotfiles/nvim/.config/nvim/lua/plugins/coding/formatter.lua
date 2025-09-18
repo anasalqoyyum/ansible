@@ -135,16 +135,4 @@ return {
       table.insert(opts.sources, nls.builtins.formatting.biome)
     end,
   },
-
-  -- force enable biome in js
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        biome = {
-          single_file_support = true,
-        },
-      },
-    },
-  },
 }

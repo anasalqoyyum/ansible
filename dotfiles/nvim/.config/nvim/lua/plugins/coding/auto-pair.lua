@@ -1,7 +1,7 @@
 return {
   {
     "nvim-mini/mini.pairs",
-    enabled = false,
+    enabled = vim.g.auto_pairs == "mini",
     event = "VeryLazy",
     opts = {
       modes = { insert = true, command = true, terminal = false },
@@ -22,6 +22,7 @@ return {
 
   {
     "saghen/blink.pairs",
+    enabled = vim.g.auto_pairs == "blink",
     event = "VeryLazy",
     -- prefer build from source
     -- dependencies = "saghen/blink.download",

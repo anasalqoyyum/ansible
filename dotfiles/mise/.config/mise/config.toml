@@ -4,7 +4,8 @@ bun = "latest"
 go = "prefix:1.25"
 python = "3.11"
 # Node Tools
-biome = { version = "latest", os = ["linux", "windows"] }
+biome = { version = "latest" }
+oxlint = { version = "latest" }
 # CLI Tools
 kubectl = { version = "latest", os = ["linux"] }
 k6 = { version = "latest", os = ["linux"] }

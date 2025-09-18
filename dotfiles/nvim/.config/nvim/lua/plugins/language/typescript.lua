@@ -109,7 +109,7 @@ return {
     opts = {
       servers = {
         ts_ls = {
-          enabled = false,
+          enabled = vim.g.typescript_lsp == "ts_ls",
           filetypes = filetypes,
           keys = typescript_keys,
           settings = {
@@ -128,7 +128,7 @@ return {
           },
         },
         vtsls = {
-          enabled = true,
+          enabled = vim.g.typescript_lsp == "vtsls",
           filetypes = filetypes,
           settings = {
             complete_function_calls = true,
@@ -226,7 +226,7 @@ return {
   -- if vtsls use nvim-vtsls, if ts_ls use typescript-tools.nvim (choose one either ts_ls or typescript-tools)
   {
     "yioneko/nvim-vtsls",
-    enabled = true,
+    enabled = vim.g.typescript_lsp == "vtsls",
     ft = {
       "javascript",
       "typescript",
@@ -236,7 +236,7 @@ return {
   },
   {
     "pmizio/typescript-tools.nvim",
-    enabled = false,
+    enabled = vim.g.typescript_lsp == "typescript-tools",
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
     opts = {},
   },
@@ -244,29 +244,8 @@ return {
   -- better-type-hover
   {
     "Sebastian-Nielsen/better-type-hover",
+    enabled = vim.g.typescript_lsp == "ts_ls" or vim.g.typescript_lsp == "typescript-tools",
     ft = { "typescript", "typescriptreact" },
-    cond = function()
-      local Config = require("lazy.core.config")
-      local plugins = Config.plugins
-
-      -- If typescript-tools is enabled
-      if is_available("typescript-tools.nvim") then
-        return true
-      end
-      -- Check lspconfig servers for ts_ls or vtsls
-      local lsp = plugins["neovim/nvim-lspconfig"]
-      if lsp and lsp.opts and lsp.opts.servers then
-        local servers = lsp.opts.servers
-        local function server_enabled(name)
-          local s = servers[name]
-          return s and s.enabled ~= false
-        end
-        if server_enabled("ts_ls") then
-          return true
-        end
-      end
-      return false
-    end,
     opts = {},
   },
 
