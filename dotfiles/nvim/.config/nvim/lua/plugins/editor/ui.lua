@@ -146,7 +146,6 @@ return {
         ["q"] = { "actions.close", mode = "n" },
       },
     },
-    -- Optional dependencies
     dependencies = { { "nvim-mini/mini.icons", opts = {} } },
     -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
     lazy = false,
@@ -247,6 +246,9 @@ return {
           float = true,
         },
       },
+      notifier = {
+        enabled = false,
+      },
     },
     keys = {
       {
@@ -262,6 +264,12 @@ return {
           Snacks.picker.buffers({ modified = true })
         end,
         desc = "Modified Buffers",
+      },
+      -- needed since I disabled notifier.
+      {
+        "<leader>n",
+        "<cmd>Noice pick<cr>",
+        desc = "Notification History",
       },
     },
   },

@@ -163,7 +163,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- fix neotest-golang not detecting tests after treesitter update
+-- fix neotest-golang not detecting tests after treesitter main branch
 -- refer to: https://github.com/nvim-treesitter/nvim-treesitter/blob/master/lockfile.json
 vim.api.nvim_create_autocmd("User", {
   pattern = "TSUpdate",
