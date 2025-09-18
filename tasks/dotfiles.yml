@@ -11,6 +11,10 @@
   file:
     path: "{{ lookup('env', 'HOME') }}/.dotfiles"
     state: absent
+  tags:
+    - install
+    - dotfiles
+    - stow
 
 - name: Copy dotfiles
   copy:
