@@ -184,9 +184,10 @@ return {
         },
       },
 
-      cmdline = {
-        enabled = false,
-      },
+      -- let's try enabling it
+      -- cmdline = {
+      --   enabled = false,
+      -- },
 
       fuzzy = { implementation = "prefer_rust_with_warning" },
 
