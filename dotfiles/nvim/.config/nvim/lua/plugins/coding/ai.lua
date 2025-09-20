@@ -3,14 +3,27 @@ local prefix = "<Leader>a"
 return {
   {
     "zbirenbaum/copilot.lua",
+    dependencies = {
+      "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality (and still experimental)
+      init = function()
+        vim.g.copilot_nes_debounce = 500
+      end,
+    },
     opts = {
-      -- copilot_model = "claude-3.5-sonnet",
       server = {
         type = "binary",
       },
       suggestion = {
-        -- debounce for reliable multi-line suggestions
-        debounce = 200, -- debounce time in milliseconds
+        debounce = 200, -- debounce for reliable multi-line suggestions (in ms)
+      },
+      nes = {
+        enabled = true,
+        auto_trigger = true,
+        keymap = {
+          accept_and_goto = "<leader>p",
+          accept = false,
+          dismiss = "<ESC>",
+        },
       },
     },
   },
