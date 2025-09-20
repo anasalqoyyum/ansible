@@ -53,13 +53,7 @@
     - install
     - rust
     - mise
-
-- name: Install mise dev tools
-  shell: "mise u -g node@22 go@1.25.0 python@3.11"
-  tags:
-    - install
-    - rust
-    - mise
+    - linux-only
 
 - name: Install zoxide
   shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked zoxide"

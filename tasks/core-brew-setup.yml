@@ -1,10 +1,10 @@
-# Cursor is still missing (linearmouse can be replaced with scroll-reverser)
-# orbstack can be replaced with colima
+# linearmouse can be replaced with scroll-reverser
+# orbstack can be replaced with colima (but orbstack is better)
 # xh and httpie is interchangebable
 
 - name: Install Core Packages With Brew
   community.general.homebrew:
-    name: fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,lazygit,stow,k9s,jq,k6,fortune,cowsay,ghostty,sesh,ncdu,gh,xh,diff-so-fancy,mycli,pgcli,btop
+    name: fzf,neovim,zoxide,bat,fd,ripgrep,tmux,tldr,docker,docker-compose,kubectl,lazygit,stow,k9s,jq,k6,fortune,cowsay,ghostty,sesh,ncdu,gh,xh,diff-so-fancy,mycli,pgcli,btop,mise
     state: present
     update_homebrew: true
   tags:
@@ -22,7 +22,7 @@
 
 - name: Install Core Apps With Brew Cask
   community.general.homebrew_cask:
-    name: spotify,visual-studio-code,google-chrome,alacritty,postman,qbittorrent,bitwarden,iina,bruno,raycast,orbstack,linearmouse,zen,httpie-desktop
+    name: spotify,visual-studio-code,google-chrome,alacritty,postman,qbittorrent,bitwarden,iina,bruno,raycast,orbstack,linearmouse,zen,httpie-desktop,cursor
     state: present
   tags:
     - install

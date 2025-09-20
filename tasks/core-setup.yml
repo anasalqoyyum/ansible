@@ -5,6 +5,7 @@
       [
         "build-essential",
         "btop",
+        "clang",
         "cmake",
         "cowsay",
         "curl",
@@ -12,6 +13,7 @@
         "fortune",
         "git",
         "libbz2-dev",
+        "libclang-dev",
         "libpthread-stubs0-dev",
         "libtool",
         "libtool-bin",
