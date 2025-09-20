@@ -54,7 +54,7 @@
   "neovim-tips": { "branch": "master", "commit": "a4e731b5cc6c8214549eec963f6d546175b0cee1" },
   "noice.nvim": { "branch": "main", "commit": "0427460c2d7f673ad60eb02b35f5e9926cf67c59" },
   "nui.nvim": { "branch": "main", "commit": "de740991c12411b663994b2860f1a4fd0937c130" },
-  "nvim-dap": { "branch": "master", "commit": "11b97cbeef18d136f5a9897baacad5fc60367110" },
+  "nvim-dap": { "branch": "master", "commit": "7367cec8e8f7a0b1e4566af9a7ef5959d11206a7" },
   "nvim-dap-go": { "branch": "main", "commit": "b4421153ead5d726603b02743ea40cf26a51ed5f" },
   "nvim-dap-python": { "branch": "master", "commit": "bfe572e4458e0ac876b9539a1e9f301c72db8ea0" },
   "nvim-dap-ui": { "branch": "master", "commit": "cf91d5e2d07c72903d052f5207511bf7ecdb7122" },
@@ -94,5 +94,5 @@
   "vim-dadbod-completion": { "branch": "master", "commit": "a8dac0b3cf6132c80dc9b18bef36d4cf7a9e1fe6" },
   "vim-dadbod-ui": { "branch": "master", "commit": "e8b53c0f3aa6e6127ac2a2d2071d9aade6c6e373" },
   "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" },
-  "yazi.nvim": { "branch": "main", "commit": "f0173e4133b46c2503bf6582e799fd82708c28fe" }
+  "yazi.nvim": { "branch": "main", "commit": "82bb7a88537448f0247208085e50dd882e868d06" }
 }

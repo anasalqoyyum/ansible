@@ -13,14 +13,14 @@ return {
       server = {
         type = "binary",
       },
-      suggestion = {
-        debounce = 200, -- debounce for reliable multi-line suggestions (in ms)
-      },
+      -- suggestion = {
+      --   debounce = 200, -- debounce for reliable multi-line suggestions (in ms)
+      -- },
       nes = {
-        enabled = true,
+        enabled = false,
         auto_trigger = true,
         keymap = {
-          accept_and_goto = "<leader>p",
+          accept_and_goto = "<M-y>",
           accept = false,
           dismiss = "<ESC>",
         },
