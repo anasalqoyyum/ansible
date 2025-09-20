@@ -1,3 +1,6 @@
+-- local util = require("lspconfig.util")
+-- local auto_format = vim.g.lazyvim_eslint_auto_format == nil or vim.g.lazyvim_eslint_auto_format
+
 -- sync this with oxlint or biome from nvim-lspconfig due to I need to force run oxlint or biome
 -- ref: https://github.com/neovim/nvim-lspconfig/blob/master/lsp/biome.lua
 local function force_linter_to_run(bufnr)
@@ -19,12 +22,20 @@ local oxlint_settings = {
   typeAware = true,
 }
 
--- local auto_format = vim.g.lazyvim_eslint_auto_format == nil or vim.g.lazyvim_eslint_auto_format
-
 return {
   {
     "mason-org/mason.nvim",
-    opts = { ensure_installed = { "oxlint", "biome" } },
+    opts = { ensure_installed = { "oxlint", "biome", "eslint-lsp", "eslint_d" } },
+  },
+
+  {
+    "mfussenegger/nvim-lint",
+    opts = {
+      linters_by_ft = {
+        javascript = { "eslint_d" },
+        typescript = { "eslint_d" },
+      },
+    },
   },
 
   -- enable either biome or oxlint linter
@@ -56,6 +67,7 @@ return {
 
             on_dir(force_linter_to_run(bufnr))
           end,
+          workspace_required = false,
         },
         oxlint = {
           enabled = vim.g.typescript_linter == "oxlint",
@@ -73,6 +85,7 @@ return {
           init_options = {
             settings = oxlint_settings,
           },
+          workspace_required = false,
         },
         eslint = {
           settings = {

@@ -7,6 +7,9 @@
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
 
+-- needed for eslint_d to work
+vim.env.ESLINT_D_PPID = vim.fn.getpid()
+
 local formatter_data = {
   prettierd = {
     ".prettierrc",

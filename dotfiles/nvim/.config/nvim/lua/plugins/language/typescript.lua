@@ -1,8 +1,3 @@
-local function is_available(plugin)
-  local lazy_config_avail, lazy_config = pcall(require, "lazy.core.config")
-  return lazy_config_avail and lazy_config.spec.plugins[plugin] ~= nil
-end
-
 local inlay_hints_settings = {
   includeInlayEnumMemberValueHints = true,
   includeInlayFunctionLikeReturnTypeHints = true,
@@ -95,12 +90,11 @@ local tsPlugins = {
     location = LazyVim.get_pkg_path("svelte-language-server", "/node_modules/typescript-svelte-plugin"),
     enableForWorkspaceTypeScriptVersions = true,
   },
-  -- enable if using angular
-  -- {
-  --   name = "@angular/language-server",
-  --   location = LazyVim.get_pkg_path("angular-language-server", "/node_modules/@angular/language-server"),
-  --   enableForWorkspaceTypeScriptVersions = false,
-  -- },
+  {
+    name = "@angular/language-server",
+    location = LazyVim.get_pkg_path("angular-language-server", "/node_modules/@angular/language-server"),
+    enableForWorkspaceTypeScriptVersions = false,
+  },
 }
 
 return {
@@ -108,6 +102,25 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        tsgo = {
+          enabled = vim.g.typescript_lsp == "tsgo",
+          filetypes = filetypes,
+          keys = typescript_keys,
+          settings = {
+            typescript = {
+              inlayHints = inlay_hints_settings,
+            },
+            javascript = {
+              inlayHints = inlay_hints_settings,
+            },
+            completions = {
+              completeFunctionCalls = true,
+            },
+          },
+          init_options = {
+            plugins = tsPlugins,
+          },
+        },
         ts_ls = {
           enabled = vim.g.typescript_lsp == "ts_ls",
           filetypes = filetypes,
