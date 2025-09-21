@@ -11,7 +11,8 @@ return {
       },
     },
     opts = {
-      snippets = { preset = "luasnip" },
+      -- let's use builtin blink snippets (if want luasnip then enable lazy extras)
+      -- snippets = { preset = "luasnip" },
       appearance = {
         use_nvim_cmp_as_default = false,
         nerd_font_variant = "mono",
@@ -239,29 +240,16 @@ return {
     },
   },
 
-  -- I only use this for peeking definition
   {
-    "nvimdev/lspsaga.nvim",
-    event = "LspAttach",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter", -- optional
-    },
+    "rmagatti/goto-preview",
+    dependencies = { "rmagatti/logger.nvim" },
+    event = "BufEnter",
+    config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
     opts = {
-      symbol_in_winbar = {
-        enable = false,
-      },
-      lightbulb = {
-        enable = false,
-        virtual_text = false, -- disable virtual text
-      },
-      ui = {
-        border = "rounded",
-        code_action = "",
-        diagnostic = "",
-        hover = "",
-        rename = "",
-        definition = "",
-        references = "",
+      default_mappings = true,
+      vim_ui_input = false,
+      references = {
+        provider = "snacks",
       },
     },
   },

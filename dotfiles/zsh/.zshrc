@@ -151,6 +151,29 @@ function pj() {
     nvim .
   fi
 }
+yank() {
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    # macOS
+    pbcopy
+  elif [[ "$(uname -s)" == "Linux" ]]; then
+    # Linux / WSL
+    if command -v win32yank >/dev/null 2>&1; then
+      win32yank -i
+    elif command -v xclip >/dev/null 2>&1; then
+      xclip -selection clipboard
+    elif command -v xsel >/dev/null 2>&1; then
+      xsel --clipboard --input
+    elif command -v wl-copy >/dev/null 2>&1; then
+      wl-copy
+    else
+      echo "No clipboard utility found (install win32yank, xclip, xsel, or wl-clipboard)" >&2
+      return 1
+    fi
+  else
+    echo "Unsupported system: $(uname -s)" >&2
+    return 1
+  fi
+}
 
 # Keybinds
 # Useful keybinds set by other plugins

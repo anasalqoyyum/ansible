@@ -76,10 +76,6 @@ vim.keymap.set("n", "<leader>-", "<CMD>Oil --float<CR>", { desc = "Open parent d
 vim.keymap.del("n", "<leader>as")
 vim.keymap.del("n", "<leader>ad")
 
--- lspsaga
-vim.keymap.set("n", "<leader>cp", "<Cmd>Lspsaga peek_definition<cr>", { desc = "Peek Definition" })
-vim.keymap.set("n", "<leader>cP", "<Cmd>Lspsaga peek_type_definition<cr>", { desc = "Peek Type Definition" })
-
 -- tabs (let's not disable this for now)
 -- vim.keymap.del("n", "<leader><tab><tab>")
 -- vim.keymap.del("n", "<leader><tab>l")

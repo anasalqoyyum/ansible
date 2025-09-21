@@ -2,7 +2,7 @@
 node = "22"
 bun = "latest"
 go = "prefix:1.25"
-python = "3.11"
+python = "3.13"
 # Node Tools
 biome = { version = "latest" }
 oxlint = { version = "latest" }
@@ -24,6 +24,8 @@ uv = "latest"
 
 [settings]
 python.uv_venv_auto = true
+python.uv_venv_create_args = ["--seed"]
+pipx.uvx = true
 # This setting is used to allow change version based on the idiomatic version file (e.g .nvmrc).
 idiomatic_version_file_enable_tools = ["node"]
 experimental = true

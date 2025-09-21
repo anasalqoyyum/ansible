@@ -22,6 +22,21 @@ local oxlint_settings = {
   typeAware = true,
 }
 
+local eslint_config_files = {
+  ".eslintrc",
+  ".eslintrc.js",
+  ".eslintrc.cjs",
+  ".eslintrc.yaml",
+  ".eslintrc.yml",
+  ".eslintrc.json",
+  "eslint.config.js",
+  "eslint.config.mjs",
+  "eslint.config.cjs",
+  "eslint.config.ts",
+  "eslint.config.mts",
+  "eslint.config.cts",
+}
+
 return {
   {
     "mason-org/mason.nvim",
@@ -34,6 +49,17 @@ return {
       linters_by_ft = {
         javascript = { "eslint_d" },
         typescript = { "eslint_d" },
+      },
+      linters = {
+        -- using eslint_d only when eslint config file is present
+        eslint_d = {
+          condition = function(ctx)
+            return vim.fs.find(eslint_config_files, {
+              path = ctx.filename,
+              upward = true,
+            })[1]
+          end,
+        },
       },
     },
   },
