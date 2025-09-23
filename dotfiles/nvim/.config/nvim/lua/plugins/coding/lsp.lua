@@ -1,6 +1,5 @@
 return {
   -- prefer to use the newer one (and more maintaned source)
-  { "giuxtaposition/blink-cmp-copilot", enabled = false },
   {
     "saghen/blink.cmp",
     dependencies = {

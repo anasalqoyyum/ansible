@@ -46,10 +46,6 @@ return {
   {
     "mfussenegger/nvim-lint",
     opts = {
-      linters_by_ft = {
-        javascript = { "eslint_d" },
-        typescript = { "eslint_d" },
-      },
       linters = {
         -- using eslint_d only when eslint config file is present
         eslint_d = {

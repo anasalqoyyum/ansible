@@ -50,19 +50,6 @@ return {
     },
   },
 
-  {
-    "mikavilpas/yazi.nvim",
-    lazy = true, -- use `event = "VeryLazy"` for netrw replacement
-    keys = {
-      {
-        "<leader>fy",
-        "<cmd>Yazi<cr>",
-        desc = "Open Yazi (file manager)",
-      },
-    },
-    opts = {},
-  },
-
   -- add statusline/filename in top right
   {
     "b0o/incline.nvim",

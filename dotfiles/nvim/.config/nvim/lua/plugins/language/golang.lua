@@ -155,6 +155,7 @@ return {
     optional = true,
     dependencies = {
       "fredrikaverpil/neotest-golang",
+      branch = "fix/testify-",
     },
     opts = {
       adapters = {

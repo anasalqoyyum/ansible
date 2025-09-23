@@ -16,6 +16,7 @@ docker-cli = { version = "latest", os = ["linux", "windows"] }
 docker-compose = { version = "latest", os = ["linux", "windows"] }
 opencode = { version = "latest", os = ["linux"] }
 httpie-go = "latest"
+lazydocker = "latest"
 # Go Tools
 air = "latest"
 "aqua:joshmedeski/sesh" = { version = "latest", os = ["linux"] }

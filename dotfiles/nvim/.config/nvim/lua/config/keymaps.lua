@@ -76,6 +76,20 @@ vim.keymap.set("n", "<leader>-", "<CMD>Oil --float<CR>", { desc = "Open parent d
 vim.keymap.del("n", "<leader>as")
 vim.keymap.del("n", "<leader>ad")
 
+-- lsp peek definition
+vim.keymap.set(
+  "n",
+  "<leader>cp",
+  "<cmd>lua require('goto-preview').goto_preview_definition()<CR>",
+  { noremap = true, desc = "Peek Definition" }
+)
+vim.keymap.set(
+  "n",
+  "<leader>cP",
+  "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>",
+  { noremap = true, desc = "Peek Type Definition" }
+)
+
 -- tabs (let's not disable this for now)
 -- vim.keymap.del("n", "<leader><tab><tab>")
 -- vim.keymap.del("n", "<leader><tab>l")

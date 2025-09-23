@@ -166,15 +166,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- fix neotest-golang not detecting tests after treesitter main branch
--- refer to: https://github.com/nvim-treesitter/nvim-treesitter/blob/master/lockfile.json
-vim.api.nvim_create_autocmd("User", {
-  pattern = "TSUpdate",
-  callback = function()
-    require("nvim-treesitter.parsers").go.install_info.revision = "5e73f476efafe5c768eda19bbe877f188ded6144"
-  end,
-})
-
 -- Create overrides to fix astro-ls not applying edits (because it doesn't follow the spec)
 local orig_apply_text_document_edit = vim.lsp.util.apply_text_document_edit
 vim.lsp.util.apply_text_document_edit = function(text_document_edit, index, position_encoding)
