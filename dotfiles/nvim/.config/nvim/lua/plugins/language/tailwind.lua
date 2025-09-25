@@ -11,6 +11,18 @@ return {
           -- to fully override the default_config, change the below
           -- filetypes = {}
         },
+        cssls = {
+          -- Enable (broadcasting) snippet capability for completion
+          capabilities = {
+            textDocument = {
+              completion = {
+                completionItem = {
+                  snippetSupport = true,
+                },
+              },
+            },
+          },
+        },
       },
       setup = {
         tailwindcss = function(_, opts)

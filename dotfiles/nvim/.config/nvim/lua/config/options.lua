@@ -21,7 +21,7 @@ vim.opt.swapfile = false -- disable swap files
 vim.opt.clipboard = "unnamedplus"
 
 -- kinda broke whichkey (but nice rounded)
--- vim.o.winborder = "rounded"
+vim.o.winborder = "rounded"
 
 -- Clipboard (from https://github.com/neovim/neovim/blob/master/runtime/autoload/provider/clipboard.vim)
 -- pretty much placeholder for now, as it is working as expected currently
