@@ -2,33 +2,6 @@ local prefix = "<Leader>a"
 
 return {
   {
-    "zbirenbaum/copilot.lua",
-    dependencies = {
-      "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality (and still experimental)
-      init = function()
-        vim.g.copilot_nes_debounce = 500
-      end,
-    },
-    opts = {
-      server = {
-        type = "binary",
-      },
-      suggestion = {
-        debounce = 300, -- debounce for reliable multi-line suggestions (in ms)
-      },
-      nes = {
-        enabled = false,
-        auto_trigger = true,
-        keymap = {
-          accept_and_goto = "<M-y>",
-          accept = false,
-          dismiss = "<ESC>",
-        },
-      },
-    },
-  },
-
-  {
     "yetone/avante.nvim",
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!

@@ -14,6 +14,7 @@ vim.g.auto_pairs = "mini" -- set to "mini" or "blink"
 vim.g.typescript_lsp = "vtsls" -- set to "vtsls" or "ts_ls" or "typescript-tools"
 vim.g.typescript_linter = "biome" -- set to "biome" or "oxlint"
 vim.g.theme_transparency = false -- set to true if you want transparency
+vim.g.copilot_flavor = "lua" -- set to "native" or "lua", prefer lua since native needs node 22.x
 
 vim.g.astro_typescript = "enable" -- this needed for vim-astro for ts capabilities
 
@@ -21,7 +22,7 @@ vim.opt.swapfile = false -- disable swap files
 vim.opt.clipboard = "unnamedplus"
 
 -- kinda broke whichkey (but nice rounded)
-vim.o.winborder = "rounded"
+-- vim.o.winborder = "rounded"
 
 -- Clipboard (from https://github.com/neovim/neovim/blob/master/runtime/autoload/provider/clipboard.vim)
 -- pretty much placeholder for now, as it is working as expected currently

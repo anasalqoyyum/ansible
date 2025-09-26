@@ -1,5 +1,4 @@
 return {
-  -- prefer to use the newer one (and more maintaned source)
   {
     "saghen/blink.cmp",
     dependencies = {
@@ -147,11 +146,6 @@ return {
         },
       },
 
-      -- let's try enabling it
-      -- cmdline = {
-      --   enabled = false,
-      -- },
-
       fuzzy = { implementation = "prefer_rust_with_warning" },
 
       keymap = {
@@ -165,6 +159,14 @@ return {
         ["<CR>"] = { "accept", "fallback" },
         ["<Tab>"] = {
           function(cmp)
+            if vim.b[vim.api.nvim_get_current_buf()].nes_state then
+              cmp.hide()
+              return (
+                require("copilot-lsp.nes").apply_pending_nes()
+                and require("copilot-lsp.nes").walk_cursor_end_edit()
+              )
+            end
+
             if cmp.snippet_active() then
               return cmp.accept()
             else
