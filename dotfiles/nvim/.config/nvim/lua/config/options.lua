@@ -15,6 +15,7 @@ vim.g.typescript_lsp = "vtsls" -- set to "vtsls" or "ts_ls" or "typescript-tools
 vim.g.typescript_linter = "biome" -- set to "biome" or "oxlint"
 vim.g.theme_transparency = false -- set to true if you want transparency
 vim.g.copilot_flavor = "lua" -- set to "native" or "lua", prefer lua since native needs node 22.x
+vim.g.ai_chat = "opencode" -- set to "avante" or "opencode"
 
 vim.g.astro_typescript = "enable" -- this needed for vim-astro for ts capabilities
 
