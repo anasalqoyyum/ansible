@@ -10,6 +10,7 @@ return {
     event = "BufReadPost",
     dependencies = {
       "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality (and still experimental)
+      enabled = vim.g.ai_chat ~= "sidekick",
       init = function()
         vim.g.copilot_nes_debounce = 500
         vim.keymap.set("n", "<tab>", function()
@@ -64,6 +65,17 @@ return {
       filetypes = {
         markdown = true,
         help = true,
+      },
+    },
+  },
+
+  -- copilot-language-server
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        -- copilot.lua only works with its own copilot lsp server
+        copilot = { enabled = false },
       },
     },
   },

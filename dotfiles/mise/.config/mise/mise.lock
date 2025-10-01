@@ -1,3 +1,19 @@
+[[tools.air]]
+version = "1.62.0"
+backend = "aqua:air-verse/air"
+
+[[tools."aqua:joshmedeski/sesh"]]
+version = "2.17.1"
+backend = "aqua:joshmedeski/sesh"
+
+[[tools.biome]]
+version = "2.2.4"
+backend = "aqua:biomejs/biome"
+
+[[tools.bob]]
+version = "4.1.2"
+backend = "aqua:MordechaiHadad/bob"
+
 [[tools.bun]]
 version = "1.2.22"
 backend = "core:bun"
@@ -5,3 +21,67 @@ backend = "core:bun"
 [tools.bun.platforms.linux-x64]
 checksum = "blake3:bf32acffd6e77803ba760caf8d2909389da01c95613b81fe155fe87e2a8f8004"
 size = 39256266
+
+[[tools.docker-cli]]
+version = "28.3.3"
+backend = "aqua:docker/cli"
+
+[[tools.docker-compose]]
+version = "2.39.2"
+backend = "aqua:docker/compose"
+
+[[tools.github-cli]]
+version = "2.78.0"
+backend = "aqua:cli/cli"
+
+[[tools.go]]
+version = "1.25.0"
+backend = "core:go"
+
+[[tools.httpie-go]]
+version = "0.7.0"
+backend = "aqua:nojima/httpie-go"
+
+[[tools.k6]]
+version = "1.2.3"
+backend = "aqua:grafana/k6"
+
+[[tools.k9s]]
+version = "0.50.9"
+backend = "aqua:derailed/k9s"
+
+[[tools.kubectl]]
+version = "1.34.0"
+backend = "aqua:kubernetes/kubernetes/kubectl"
+
+[[tools.lazydocker]]
+version = "0.24.1"
+backend = "aqua:jesseduffield/lazydocker"
+
+[[tools.node]]
+version = "22.19.0"
+backend = "core:node"
+
+[[tools."npm:@github/copilot"]]
+version = "0.0.331"
+backend = "npm:@github/copilot"
+
+[[tools."npm:opencode-ai"]]
+version = "0.13.7"
+backend = "npm:opencode-ai"
+
+[[tools.oxlint]]
+version = "1.16.0"
+backend = "aqua:oxc-project/oxc/oxlint"
+
+[[tools.python]]
+version = "3.13.7"
+backend = "core:python"
+
+[[tools.trivy]]
+version = "0.66.0"
+backend = "aqua:aquasecurity/trivy"
+
+[[tools.uv]]
+version = "0.8.15"
+backend = "aqua:astral-sh/uv"

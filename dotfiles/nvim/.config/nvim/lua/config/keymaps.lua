@@ -72,10 +72,6 @@ vim.keymap.set("n", "<leader>gR", "<cmd>DiffviewRefresh<cr>", { desc = "Git Diff
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 vim.keymap.set("n", "<leader>-", "<CMD>Oil --float<CR>", { desc = "Open parent directory (float)" })
 
--- avante toggle suggestion and debug
-vim.keymap.del("n", "<leader>as")
-vim.keymap.del("n", "<leader>ad")
-
 -- lsp peek definition
 vim.keymap.set(
   "n",

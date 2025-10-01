@@ -14,19 +14,24 @@ bob = "latest"
 github-cli = { version = "latest", os = ["linux", "windows"] }
 docker-cli = { version = "latest", os = ["linux", "windows"] }
 docker-compose = { version = "latest", os = ["linux", "windows"] }
-opencode = { version = "latest", os = ["linux"] }
 httpie-go = "latest"
 lazydocker = "latest"
+trivy = "latest"
 # Go Tools
 air = "latest"
 "aqua:joshmedeski/sesh" = { version = "latest", os = ["linux"] }
 # Python Tools
 uv = "latest"
+# Node Tools
+"npm:opencode-ai" = { version = "latest", os = ["linux", "macos"] }
+"npm:@github/copilot" = { version = "latest", os = ["linux", "macos"] }
 
 [settings]
 python.uv_venv_auto = true
 python.uv_venv_create_args = ["--seed"]
 pipx.uvx = true
+# Always use bun since I jump around a lot between node versions.
+npm.bun = true
 # This setting is used to allow change version based on the idiomatic version file (e.g .nvmrc).
 idiomatic_version_file_enable_tools = ["node"]
 experimental = true
@@ -35,3 +40,4 @@ lockfile = true
 [env]
 # Auto enable corepack for node versions that support it (>=16.9.0).
 MISE_NODE_COREPACK = true
+

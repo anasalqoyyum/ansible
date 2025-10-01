@@ -159,7 +159,7 @@ return {
         ["<CR>"] = { "accept", "fallback" },
         ["<Tab>"] = {
           function(cmp)
-            if vim.b[vim.api.nvim_get_current_buf()].nes_state then
+            if vim.g.ai_chat ~= "sidekick" and vim.b[vim.api.nvim_get_current_buf()].nes_state then
               cmp.hide()
               return (
                 require("copilot-lsp.nes").apply_pending_nes()
@@ -174,6 +174,7 @@ return {
             end
           end,
           "snippet_forward",
+          LazyVim.cmp.map({ "ai_nes", "ai_accept" }),
           "fallback",
         },
         ["<S-Tab>"] = { "snippet_backward", "fallback" },
@@ -243,8 +244,7 @@ return {
 
   {
     "rmagatti/goto-preview",
-    dependencies = { "rmagatti/logger.nvim" },
-    event = "BufEnter",
+    event = "VeryLazy",
     config = true, -- necessary as per https://github.com/rmagatti/goto-preview/issues/88
     opts = {
       default_mappings = true,

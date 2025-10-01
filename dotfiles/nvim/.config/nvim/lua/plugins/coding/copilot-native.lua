@@ -2,6 +2,11 @@ if vim.g.copilot_flavor ~= "native" then
   return {}
 end
 
+if not vim.lsp.inline_completion then
+  LazyVim.error("You need Neovim >= 0.12 to use the `ai.copilot-native` extra.")
+  return {}
+end
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -24,6 +29,15 @@ return {
             },
           },
         },
+      },
+      setup = {
+        copilot = function()
+          vim.lsp.inline_completion.enable()
+          -- Accept inline suggestions or next edits
+          LazyVim.cmp.actions.ai_accept = function()
+            return vim.lsp.inline_completion.get()
+          end
+        end,
       },
     },
   },
