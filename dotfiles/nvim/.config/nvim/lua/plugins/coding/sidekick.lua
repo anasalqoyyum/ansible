@@ -38,12 +38,35 @@ return {
         desc = "Sidekick Toggle",
       },
       {
-        "<leader>an",
+        "<leader>as",
         function()
-          require("sidekick.cli").select_tool()
+          require("sidekick.cli").select()
         end,
-        mode = { "n" },
-        desc = "Sidekick New Tool",
+        desc = "Select CLI",
+      },
+      {
+        "<leader>at",
+        function()
+          require("sidekick.cli").send({ msg = "{this}" })
+        end,
+        mode = { "x", "n" },
+        desc = "Send This",
+      },
+      {
+        "<leader>av",
+        function()
+          require("sidekick.cli").send({ msg = "{selection}" })
+        end,
+        mode = { "x" },
+        desc = "Send Visual Selection",
+      },
+      {
+        "<leader>ap",
+        function()
+          require("sidekick.cli").prompt()
+        end,
+        mode = { "n", "x" },
+        desc = "Sidekick Select Prompt",
       },
       {
         "<c-.>",
@@ -52,14 +75,6 @@ return {
         end,
         mode = { "n", "x", "i", "t" },
         desc = "Sidekick Switch Focus",
-      },
-      {
-        "<leader>ap",
-        function()
-          require("sidekick.cli").select_prompt()
-        end,
-        desc = "Sidekick Ask Prompt",
-        mode = { "n", "v" },
       },
     },
   },

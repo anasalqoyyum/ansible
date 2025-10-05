@@ -1,14 +1,4 @@
 return {
-  -- multi-cursor
-  -- {
-  --   "mg979/vim-visual-multi",
-  --   event = "VeryLazy",
-  --   init = function()
-  --     vim.g.VM_mouse_mappings = 1
-  --     vim.g.VM_default_mappings = 0
-  --   end,
-  -- },
-
   {
     "jake-stewart/multicursor.nvim",
     branch = "1.0",

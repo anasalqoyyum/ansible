@@ -334,13 +334,4 @@ return {
     event = "VeryLazy",
     opts = {},
   },
-
-  -- {
-  --   "ibhagwan/fzf-lua",
-  --   opts = {
-  --     files = {
-  --       file_icons = "mini",
-  --     },
-  --   },
-  -- },
 }

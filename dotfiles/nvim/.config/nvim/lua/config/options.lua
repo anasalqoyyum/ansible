@@ -15,7 +15,7 @@ vim.g.typescript_lsp = "vtsls" -- set to "vtsls" or "ts_ls" or "typescript-tools
 vim.g.typescript_linter = "biome" -- set to "biome" or "oxlint"
 vim.g.theme_transparency = false -- set to true if you want transparency
 vim.g.copilot_flavor = "lua" -- set to "native" or "lua", prefer lua since native needs node 22.x
-vim.g.ai_chat = "sidekick" -- set to "avante" or "opencode"
+vim.g.ai_chat = "sidekick" -- set to "avante" or "sidekick"
 
 vim.g.astro_typescript = "enable" -- this needed for vim-astro for ts capabilities
 
@@ -27,6 +27,7 @@ vim.opt.clipboard = "unnamedplus"
 
 -- Clipboard (from https://github.com/neovim/neovim/blob/master/runtime/autoload/provider/clipboard.vim)
 -- pretty much placeholder for now, as it is working as expected currently
+-- can also use https://github.com/bkoropoff/clipipe (but slow startup)
 --
 -- if vim.fn.has("wsl") == 1 then
 --     local win32yank = "win32yank.exe"
