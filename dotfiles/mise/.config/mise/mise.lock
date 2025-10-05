@@ -22,6 +22,10 @@ backend = "core:bun"
 checksum = "blake3:bf32acffd6e77803ba760caf8d2909389da01c95613b81fe155fe87e2a8f8004"
 size = 39256266
 
+[tools.bun.platforms.macos-arm64]
+checksum = "blake3:ec41528ae2badd9c5d41cefe2c463a307c46d9b5f0ccf157d6f406890340833e"
+size = 22178114
+
 [[tools.docker-cli]]
 version = "28.3.3"
 backend = "aqua:docker/cli"
@@ -62,6 +66,11 @@ backend = "aqua:jesseduffield/lazydocker"
 version = "22.19.0"
 backend = "core:node"
 
+[tools.node.platforms.macos-arm64]
+checksum = "sha256:c59006db713c770d6ec63ae16cb3edc11f49ee093b5c415d667bb4f436c6526d"
+size = 47739366
+url = "https://nodejs.org/dist/v22.19.0/node-v22.19.0-darwin-arm64.tar.gz"
+
 [[tools."npm:@github/copilot"]]
 version = "0.0.331"
 backend = "npm:@github/copilot"
@@ -81,6 +90,11 @@ backend = "core:python"
 [[tools.trivy]]
 version = "0.66.0"
 backend = "aqua:aquasecurity/trivy"
+
+[tools.trivy.platforms.macos-arm64]
+checksum = "sha256:964bb69fc0e652891b38514fed4ee31de004a58ac22ea2a23c6891728bb6b6eb"
+size = 44311024
+url = "https://github.com/aquasecurity/trivy/releases/download/v0.66.0/trivy_0.66.0_macOS-ARM64.tar.gz"
 
 [[tools.uv]]
 version = "0.8.15"
