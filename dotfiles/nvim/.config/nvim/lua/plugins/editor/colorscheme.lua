@@ -62,6 +62,9 @@ return {
       on_highlights = function(hl, c)
         -- slightly brighter visual selection
         hl.Visual.bg = "#2d3f6f"
+        -- Visual selection should match visual mode color, but more saturated
+        -- hl.Visual = { bg = "#2d213d" }
+
         -- Keep visual for popup/picker highlights
         hl.PmenuSel = { bg = hl.Visual.bg }
         hl.SnacksPickerCursorLine = { bg = hl.Visual.bg }
@@ -70,9 +73,6 @@ return {
 
         -- Use bg.dark from storm (not night) for the cursor line background to make it more subtle
         hl.CursorLine = { bg = "#1f2335" }
-
-        -- Visual selection should match visual mode color, but more saturated
-        hl.Visual = { bg = "#2d213d" }
 
         -- Make TS context dimmer and color line numbers
         hl.TreesitterContext = { bg = "#272d45" }
