@@ -130,7 +130,9 @@ return {
     optional = true,
     opts = {
       formatters_by_ft = {
-        go = { "goimports", "gofumpt" },
+        -- goimports overhead is stupid slow. https://github.com/mvdan/gofumpt?tab=readme-ov-file#frequently-asked-questions
+        -- go = { "goimports", "gofumpt" },
+        go = { "gofumpt" },
       },
     },
   },

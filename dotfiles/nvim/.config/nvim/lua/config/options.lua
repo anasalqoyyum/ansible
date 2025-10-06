@@ -16,6 +16,7 @@ vim.g.typescript_linter = "biome" -- set to "biome" or "oxlint"
 vim.g.theme_transparency = false -- set to true if you want transparency
 vim.g.copilot_flavor = "lua" -- set to "native" or "lua", prefer lua since native needs node 22.x
 vim.g.ai_chat = "sidekick" -- set to "avante" or "sidekick"
+vim.g.sidekick_nes = false -- set to false stupidly distracting
 
 vim.g.astro_typescript = "enable" -- this needed for vim-astro for ts capabilities
 
