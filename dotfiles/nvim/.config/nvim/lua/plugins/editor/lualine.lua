@@ -167,7 +167,7 @@ return {
             { "location", padding = { left = 0, right = 1 } },
           },
         },
-        extensions = { "lazy", "avante", "oil", "aerial", "quickfix", "trouble" },
+        extensions = { "lazy", "avante", "oil", "quickfix", "trouble" },
       }
 
       return opts

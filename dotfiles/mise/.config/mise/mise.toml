@@ -25,6 +25,7 @@ uv = "latest"
 # Node Tools
 "npm:opencode-ai" = { version = "latest", os = ["linux", "macos"] }
 "npm:@github/copilot" = { version = "latest", os = ["linux", "macos"] }
+"npm:@frostoven/squoosh-cli" = { version = "latest" }
 
 [settings]
 python.uv_venv_auto = true
