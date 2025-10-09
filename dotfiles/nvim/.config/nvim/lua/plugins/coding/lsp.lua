@@ -2,10 +2,16 @@ return {
   {
     "saghen/blink.cmp",
     dependencies = {
-      "fang2hou/blink-copilot",
-      opts = {
-        max_completions = 1, -- Global default for max completions
-        max_attempts = 2, -- Global default for max attempts
+      {
+        "fang2hou/blink-copilot",
+        opts = {
+          max_completions = 1, -- Global default for max completions
+          max_attempts = 2, -- Global default for max attempts
+        },
+      },
+      {
+        "xzbdmw/colorful-menu.nvim",
+        opts = {},
       },
     },
     opts = {
@@ -25,12 +31,22 @@ return {
         menu = {
           draw = {
             treesitter = { "lsp" },
+            -- We don't need label_description now because label and label_description are already
+            -- combined together in label by colorful-menu.nvim.
             columns = {
               { "item_idx", "kind_icon", gap = 1 },
-              { "label", "label_description", "kind", gap = 1 },
+              { "label", "kind", gap = 1 },
             },
-            -- honestly, the highlight is kinda useless if using theme that have blink.cmp support
+            -- honestly, the highlight is kinda useless if using theme that have blink.cmp support (basically replacing)
             components = {
+              label = {
+                text = function(ctx)
+                  return require("colorful-menu").blink_components_text(ctx)
+                end,
+                highlight = function(ctx)
+                  return require("colorful-menu").blink_components_highlight(ctx)
+                end,
+              },
               kind_icon = {
                 text = function(ctx)
                   -- fix tailwindcss not showing icon with color
