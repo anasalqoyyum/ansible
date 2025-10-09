@@ -30,6 +30,14 @@ return {
       { "<tab>", LazyVim.cmp.map({ "ai_nes" }, "<tab>"), mode = { "n" }, expr = true },
       { "<leader>a", "", desc = "+ai", mode = { "n", "v" } },
       {
+        "<c-.>",
+        function()
+          require("sidekick.cli").toggle({ name = "opencode", focus = true })
+        end,
+        desc = "Sidekick Toggle",
+        mode = { "n", "t", "i", "x" },
+      },
+      {
         "<leader>aa",
         function()
           require("sidekick.cli").toggle({ name = "opencode", focus = true })
@@ -53,6 +61,13 @@ return {
         desc = "Send This",
       },
       {
+        "<leader>af",
+        function()
+          require("sidekick.cli").send({ msg = "{file}" })
+        end,
+        desc = "Send File",
+      },
+      {
         "<leader>av",
         function()
           require("sidekick.cli").send({ msg = "{selection}" })
@@ -67,14 +82,6 @@ return {
         end,
         mode = { "n", "x" },
         desc = "Sidekick Select Prompt",
-      },
-      {
-        "<c-.>",
-        function()
-          require("sidekick.cli").focus()
-        end,
-        mode = { "n", "x", "i", "t" },
-        desc = "Sidekick Switch Focus",
       },
     },
   },
