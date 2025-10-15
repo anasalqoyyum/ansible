@@ -15,11 +15,7 @@
                                 "to": [
                                     {
                                         "key_code": "left_shift",
-                                        "modifiers": [
-                                            "left_command",
-                                            "left_control",
-                                            "left_option"
-                                        ]
+                                        "modifiers": ["left_command", "left_control", "left_option"]
                                     }
                                 ],
                                 "to_if_alone": [{ "key_code": "escape" }],
@@ -29,14 +25,7 @@
                                 "description": "Avoid starting sysdiagnose with the built-in macOS shortcut cmd+shift+option+ctrl+,",
                                 "from": {
                                     "key_code": "comma",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "command",
-                                            "shift",
-                                            "option",
-                                            "control"
-                                        ]
-                                    }
+                                    "modifiers": { "mandatory": ["command", "shift", "option", "control"] }
                                 },
                                 "to": [],
                                 "type": "basic"
@@ -45,14 +34,7 @@
                                 "description": "Avoid starting sysdiagnose with the built-in macOS shortcut cmd+shift+option+ctrl+.",
                                 "from": {
                                     "key_code": "period",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "command",
-                                            "shift",
-                                            "option",
-                                            "control"
-                                        ]
-                                    }
+                                    "modifiers": { "mandatory": ["command", "shift", "option", "control"] }
                                 },
                                 "to": [],
                                 "type": "basic"
@@ -61,14 +43,7 @@
                                 "from": {
                                     "description": "Avoid starting sysdiagnose with the built-in macOS shortcut cmd+shift+option+ctrl+/",
                                     "key_code": "slash",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "command",
-                                            "shift",
-                                            "option",
-                                            "control"
-                                        ]
-                                    }
+                                    "modifiers": { "mandatory": ["command", "shift", "option", "control"] }
                                 },
                                 "to": [],
                                 "type": "basic"
@@ -80,11 +55,7 @@
                         "manipulators": [
                             {
                                 "from": { "key_code": "print_screen" },
-                                "to": [
-                                    {
-                                        "shell_command": "open -a screenshot.app"
-                                    }
-                                ],
+                                "to": [{ "shell_command": "open -a screenshot.app" }],
                                 "type": "basic"
                             }
                         ]
@@ -95,14 +66,7 @@
                             {
                                 "from": {
                                     "key_code": "k",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "left_control",
-                                            "left_option"
-                                        ]
-                                    }
+                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
                                 },
                                 "to": [{ "key_code": "up_arrow" }],
                                 "type": "basic"
@@ -110,14 +74,7 @@
                             {
                                 "from": {
                                     "key_code": "h",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "left_control",
-                                            "left_option"
-                                        ]
-                                    }
+                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
                                 },
                                 "to": [{ "key_code": "left_arrow" }],
                                 "type": "basic"
@@ -125,14 +82,7 @@
                             {
                                 "from": {
                                     "key_code": "j",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "left_control",
-                                            "left_option"
-                                        ]
-                                    }
+                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
                                 },
                                 "to": [{ "key_code": "down_arrow" }],
                                 "type": "basic"
@@ -140,14 +90,7 @@
                             {
                                 "from": {
                                     "key_code": "l",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "left_control",
-                                            "left_option"
-                                        ]
-                                    }
+                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
                                 },
                                 "to": [{ "key_code": "right_arrow" }],
                                 "type": "basic"
@@ -155,14 +98,7 @@
                             {
                                 "from": {
                                     "key_code": "semicolon",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "left_control",
-                                            "left_option"
-                                        ]
-                                    }
+                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
                                 },
                                 "to": [
                                     {
@@ -178,54 +114,33 @@
                         "description": "Hyper+U → PageUp, Hyper+D → PageDown, Hyper+A → Ctrl+A (for tmux)",
                         "manipulators": [
                             {
-                                "type": "basic",
                                 "from": {
                                     "key_code": "u",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "left_control",
-                                            "left_option"
-                                        ]
-                                    }
+                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
                                 },
-                                "to": [{ "key_code": "page_up" }]
+                                "to": [{ "key_code": "page_up" }],
+                                "type": "basic"
                             },
                             {
-                                "type": "basic",
                                 "from": {
                                     "key_code": "d",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "left_control",
-                                            "left_option"
-                                        ]
-                                    }
+                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
                                 },
-                                "to": [{ "key_code": "page_down" }]
+                                "to": [{ "key_code": "page_down" }],
+                                "type": "basic"
                             },
                             {
-                                "type": "basic",
                                 "from": {
                                     "key_code": "a",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_shift",
-                                            "left_command",
-                                            "left_control",
-                                            "left_option"
-                                        ]
-                                    }
+                                    "modifiers": { "mandatory": ["left_shift", "left_command", "left_control", "left_option"] }
                                 },
                                 "to": [
                                     {
                                         "key_code": "a",
                                         "modifiers": ["control"]
                                     }
-                                ]
+                                ],
+                                "type": "basic"
                             }
                         ]
                     }
@@ -237,4 +152,3 @@
         }
     ]
 }
-

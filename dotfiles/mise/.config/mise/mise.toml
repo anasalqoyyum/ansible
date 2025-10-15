@@ -3,6 +3,8 @@ node = "22"
 bun = "latest"
 go = "prefix:1.25"
 python = "3.13"
+java = "21"
+kotlin = "latest"
 # Node Tools
 biome = { version = "latest" }
 oxlint = { version = "latest" }
@@ -26,6 +28,10 @@ uv = "latest"
 "npm:opencode-ai" = { version = "latest", os = ["linux", "macos"] }
 "npm:@github/copilot" = { version = "latest", os = ["linux", "macos"] }
 "npm:@frostoven/squoosh-cli" = { version = "latest" }
+# To setup typescript-plugin
+"npm:@astrojs/ts-plugin" = { version = "latest" }
+"npm:@vue/typescript-plugin" = { version = "latest" }
+"npm:typescript-svelte-plugin" = { version = "latest" }
 
 [settings]
 python.uv_venv_auto = true

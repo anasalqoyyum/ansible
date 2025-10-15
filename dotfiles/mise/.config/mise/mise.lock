@@ -46,6 +46,15 @@ backend = "core:go"
 version = "0.7.0"
 backend = "aqua:nojima/httpie-go"
 
+[[tools.java]]
+version = "21.0.2"
+backend = "core:java"
+
+[tools.java.platforms.macos-arm64]
+checksum = "sha256:b3d588e16ec1e0ef9805d8a696591bd518a5cea62567da8f53b5ce32d11d22e4"
+size = 197537405
+url = "https://download.java.net/java/GA/jdk21.0.2/f2283984656d49d69e91c558476027ac/13/GPL/openjdk-21.0.2_macos-aarch64_bin.tar.gz"
+
 [[tools.k6]]
 version = "1.2.3"
 backend = "aqua:grafana/k6"
@@ -53,6 +62,10 @@ backend = "aqua:grafana/k6"
 [[tools.k9s]]
 version = "0.50.9"
 backend = "aqua:derailed/k9s"
+
+[[tools.kotlin]]
+version = "2.2.20"
+backend = "asdf:kotlin"
 
 [[tools.kubectl]]
 version = "1.34.0"
@@ -71,6 +84,10 @@ checksum = "sha256:c59006db713c770d6ec63ae16cb3edc11f49ee093b5c415d667bb4f436c65
 size = 47739366
 url = "https://nodejs.org/dist/v22.19.0/node-v22.19.0-darwin-arm64.tar.gz"
 
+[[tools."npm:@astrojs/ts-plugin"]]
+version = "1.10.5"
+backend = "npm:@astrojs/ts-plugin"
+
 [[tools."npm:@frostoven/squoosh-cli"]]
 version = "0.9.1"
 backend = "npm:@frostoven/squoosh-cli"
@@ -79,9 +96,17 @@ backend = "npm:@frostoven/squoosh-cli"
 version = "0.0.331"
 backend = "npm:@github/copilot"
 
+[[tools."npm:@vue/typescript-plugin"]]
+version = "3.1.1"
+backend = "npm:@vue/typescript-plugin"
+
 [[tools."npm:opencode-ai"]]
 version = "0.14.6"
 backend = "npm:opencode-ai"
+
+[[tools."npm:typescript-svelte-plugin"]]
+version = "0.3.50"
+backend = "npm:typescript-svelte-plugin"
 
 [[tools.oxlint]]
 version = "1.16.0"

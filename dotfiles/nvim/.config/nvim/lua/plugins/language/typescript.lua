@@ -251,13 +251,32 @@ return {
     "pmizio/typescript-tools.nvim",
     enabled = vim.g.typescript_lsp == "typescript-tools",
     dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-    opts = {},
+    opts = {
+      settings = {
+        expose_as_code_action = "all",
+        tsserver_plugin = {
+          "@astrojs/ts-plugin",
+          "@vue/typescript-plugin",
+          "typescript-svelte-plugin",
+        },
+        tsserver_file_preferences = {
+          includeInlayEnumMemberValueHints = true,
+          includeInlayFunctionLikeReturnTypeHints = true,
+          includeInlayFunctionParameterTypeHints = true,
+          includeInlayParameterNameHints = "literals",
+          includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+          includeInlayPropertyDeclarationTypeHints = true,
+          includeInlayVariableTypeHints = false,
+          includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+        },
+      },
+    },
   },
 
   -- better-type-hover
   {
     "Sebastian-Nielsen/better-type-hover",
-    enabled = vim.g.typescript_lsp == "ts_ls" or vim.g.typescript_lsp == "typescript-tools",
+    enabled = false or vim.g.typescript_lsp == "ts_ls" or vim.g.typescript_lsp == "typescript-tools",
     ft = { "typescript", "typescriptreact" },
     opts = {},
   },
