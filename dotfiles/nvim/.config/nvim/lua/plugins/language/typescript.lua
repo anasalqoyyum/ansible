@@ -273,14 +273,6 @@ return {
     },
   },
 
-  -- better-type-hover
-  {
-    "Sebastian-Nielsen/better-type-hover",
-    enabled = false or vim.g.typescript_lsp == "ts_ls" or vim.g.typescript_lsp == "typescript-tools",
-    ft = { "typescript", "typescriptreact" },
-    opts = {},
-  },
-
   -- broken on yarn berry without node-linker lol
   {
     "nvim-neotest/neotest",
