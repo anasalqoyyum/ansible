@@ -2,6 +2,10 @@
 version = "1.62.0"
 backend = "aqua:air-verse/air"
 
+[[tools.amp]]
+version = "0.0.1760587291-gab1037"
+backend = "npm:@sourcegraph/amp"
+
 [[tools."aqua:joshmedeski/sesh"]]
 version = "2.17.1"
 backend = "aqua:joshmedeski/sesh"
@@ -91,10 +95,6 @@ backend = "npm:@astrojs/ts-plugin"
 [[tools."npm:@frostoven/squoosh-cli"]]
 version = "0.9.1"
 backend = "npm:@frostoven/squoosh-cli"
-
-[[tools."npm:@github/copilot"]]
-version = "0.0.331"
-backend = "npm:@github/copilot"
 
 [[tools."npm:@vue/typescript-plugin"]]
 version = "3.1.1"

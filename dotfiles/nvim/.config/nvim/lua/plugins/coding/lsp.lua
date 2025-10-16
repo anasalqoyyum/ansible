@@ -127,12 +127,13 @@ return {
         },
         list = {
           selection = {
-            -- preselect = function(_)
-            --   return not require("blink.cmp").snippet_active({ direction = 1 })
-            -- end,
+            -- ghost text is great and only enable if <CR> is not mapped
+            preselect = function(_)
+              return not require("blink.cmp").snippet_active({ direction = 1 })
+            end,
 
-            -- absolutely faster with this disabled
-            preselect = false,
+            -- absolutely faster with this disabled (only use if <CR> is used to accept)
+            -- preselect = false,
             auto_insert = true,
           },
         },
@@ -172,7 +173,8 @@ return {
         ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
         ["<C-e>"] = { "hide", "fallback" },
 
-        ["<CR>"] = { "accept", "fallback" },
+        -- see the list commpletion above for why this is disabled
+        -- ["<CR>"] = { "accept", "fallback" },
         ["<Tab>"] = {
           function(cmp)
             if vim.g.ai_chat ~= "sidekick" and vim.b[vim.api.nvim_get_current_buf()].nes_state then
