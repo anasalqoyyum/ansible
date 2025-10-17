@@ -6,11 +6,13 @@ return {
   -- copilot-language-server (disabled in blink tho)
   {
     "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        copilot = {},
-      },
-    },
+    opts = function(_, opts)
+      local sk = LazyVim.opts("sidekick.nvim") ---@type sidekick.Config|{}
+      if vim.tbl_get(sk, "nes", "enabled") ~= false then
+        opts.servers = opts.servers or {}
+        opts.servers.copilot = opts.servers.copilot or {}
+      end
+    end,
   },
 
   {
@@ -51,6 +53,13 @@ return {
           require("sidekick.cli").select()
         end,
         desc = "Select CLI",
+      },
+      {
+        "<leader>ad",
+        function()
+          require("sidekick.cli").close()
+        end,
+        desc = "Detach a CLI Session",
       },
       {
         "<leader>at",
