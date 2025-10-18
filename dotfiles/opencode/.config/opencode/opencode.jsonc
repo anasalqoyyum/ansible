@@ -3,5 +3,10 @@
 	"theme": "tokyonight",
 	"model": "github-copilot/claude-haiku-4.5",
 	// managed by mise
-	"autoupdate": false
+	"autoupdate": false,
+	"permission": {
+		"edit": "allow",
+		"bash": "allow",
+		"webfetch": "allow"
+	}
 }

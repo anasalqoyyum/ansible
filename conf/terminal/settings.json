@@ -3,10 +3,6 @@
 	"$schema": "https://aka.ms/terminal-profiles-schema",
 	"actions": [
 		{
-			"command": "find",
-			"id": "User.find"
-		},
-		{
 			"command": {
 				"action": "splitPane",
 				"split": "auto",
@@ -15,8 +11,8 @@
 			"id": "User.splitPane.A6751878"
 		},
 		{
-			"command": "duplicateTab",
-			"id": "User.duplicateTab"
+			"command": "find",
+			"id": "User.find"
 		},
 		{
 			"command": {
@@ -26,15 +22,12 @@
 			"id": "User.sendInput.F8A79DCB"
 		},
 		{
-			"command": "paste",
-			"id": "User.paste"
+			"command": "duplicateTab",
+			"id": "User.duplicateTab"
 		},
 		{
-			"command": {
-				"action": "sendInput",
-				"input": "\u001b[46;5u"
-			},
-			"id": "User.sendInput.3B9D7849"
+			"command": "paste",
+			"id": "User.paste"
 		},
 		{
 			"command": {
@@ -46,12 +39,18 @@
 		{
 			"command": {
 				"action": "sendInput",
+				"input": "\u001b[46;5u"
+			},
+			"id": "User.sendInput.3B9D7849"
+		},
+		{
+			"command": {
+				"action": "sendInput",
 				"input": "\u001b[13;2u"
 			},
 			"id": "User.sendInput.8882FD6D"
 		}
 	],
-	"confirmCloseAllTabs": false,
 	"copyFormatting": "none",
 	"copyOnSelect": true,
 	"defaultProfile": "{7022f64d-590c-49c6-8668-181a711f57b2}",
@@ -64,10 +63,6 @@
 			"keys": "ctrl+period"
 		},
 		{
-			"id": "User.sendInput.F8A79DCB",
-			"keys": "ctrl+enter"
-		},
-		{
 			"id": "User.find",
 			"keys": "ctrl+shift+f"
 		},
@@ -76,28 +71,32 @@
 			"keys": "ctrl+v"
 		},
 		{
-			"id": "User.sendInput.8882FD6D",
-			"keys": "shift+enter"
+			"id": "User.sendInput.F8A79DCB",
+			"keys": "ctrl+enter"
 		},
 		{
 			"id": "User.splitPane.A6751878",
 			"keys": "alt+shift+d"
 		},
 		{
-			"id": "User.duplicateTab",
-			"keys": "ctrl+alt+shift+d"
+			"id": "User.sendInput.8882FD6D",
+			"keys": "shift+enter"
 		},
 		{
 			"id": null,
 			"keys": "alt+enter"
 		},
 		{
-			"id": null,
-			"keys": "ctrl+shift+d"
+			"id": "User.duplicateTab",
+			"keys": "ctrl+alt+shift+d"
 		},
 		{
 			"id": "User.copy.644BA8F2",
 			"keys": "ctrl+c"
+		},
+		{
+			"id": null,
+			"keys": "ctrl+shift+d"
 		},
 		{
 			"id": null,
@@ -117,6 +116,11 @@
 			"cursorShape": "filledBox",
 			"font": {
 				"face": "GeistMono Nerd Font",
+				"features": {
+					"calt": 0,
+					"liga": 0,
+					"dlig": 0
+				},
 				"size": 12.5
 			},
 			"intenseTextStyle": "all",
@@ -369,5 +373,6 @@
 		}
 	],
 	"showTabsInTitlebar": true,
-	"themes": []
+	"themes": [],
+	"warning.confirmCloseAllTabs": false
 }

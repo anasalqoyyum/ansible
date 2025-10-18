@@ -3,6 +3,8 @@
 font-family = GeistMono Nerd Font
 font-size = 14
 font-thicken = true
+# Disabled ligatures
+font-feature = -liga, -calt, -dlig
 
 # Force window to be maximized
 window-height = 10000
