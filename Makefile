@@ -12,3 +12,8 @@ sync-dotfiles-linux:
 
 sync-dotfiles-macos:
 	ansible-playbook local-macos.yml --tags "dotfiles" --skip-tags "linux-only" --ask-become-pass
+
+# Target: remove all .DS_Store files recursively
+clean-dsstore:
+	find . -name ".DS_Store" -type f -delete
+	@echo "🧹 Cleaned up all .DS_Store files."

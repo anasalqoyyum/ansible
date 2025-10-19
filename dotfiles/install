@@ -1,11 +1,18 @@
 #!/usr/bin/env zsh
 # I am using zsh instead of bash. I was having some troubles using bash with
-# arrays.  Didn't want to investigate, so I just did zsh
+# arrays. Didn't want to investigate, so I just did zsh
+
 pushd $DOTFILES
+
+# 🧹 Clean up .DS_Store files before stowing
+echo "Cleaning up .DS_Store files..."
+find . -name ".DS_Store" -type f -delete
+
 for folder in $(echo $STOW_FOLDERS | sed "s/,/ /g")
 do
     echo "stow $folder"
     stow -D $folder
     stow --adopt $folder
 done
+
 popd
