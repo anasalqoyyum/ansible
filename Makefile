@@ -4,7 +4,7 @@ DOTFILES_DEST := $(HOME_DIR)/.dotfiles/
 
 .PHONY: sync-dotfiles-local
 
-sync-dotfiles-local:
+copy-local:
 	cp -r $(DOTFILES_DEST)* $(DOTFILES_SRC)
 
 sync-dotfiles-linux:
