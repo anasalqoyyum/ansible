@@ -132,6 +132,12 @@ return {
         ["<C-v>"] = { "actions.select", opts = { vertical = true } },
         ["q"] = { "actions.close", mode = "n" },
       },
+      -- give me back the rounded borders
+      float = { border = "rounded" },
+      confirmation = { border = "rounded" },
+      progress = { border = "rounded" },
+      ssh = { border = "rounded" },
+      keymaps_help = { border = "rounded" },
     },
     dependencies = { { "nvim-mini/mini.icons", opts = {} } },
     -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.

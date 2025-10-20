@@ -23,7 +23,7 @@ vim.opt.list = false -- disable whitespace characters
 vim.opt.clipboard = "unnamedplus"
 
 -- kinda broke lazy package manager and flash.nvim border (but nice rounded)
-vim.o.winborder = "rounded"
+-- vim.o.winborder = "rounded"
 
 -- Clipboard (from https://github.com/neovim/neovim/blob/master/runtime/autoload/provider/clipboard.vim)
 -- pretty much placeholder for now, as it is working as expected currently
