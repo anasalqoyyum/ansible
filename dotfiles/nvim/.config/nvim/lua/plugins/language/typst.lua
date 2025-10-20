@@ -10,6 +10,13 @@ return {
     },
   },
 
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = { "typst" },
+    },
+  },
+
   -- add tinymist to lspconfig
   {
     "neovim/nvim-lspconfig",
@@ -22,37 +29,67 @@ return {
       ---@type lspconfig.options
       servers = {
         tinymist = {
+          keys = {
+            {
+              "<leader>cP",
+              function()
+                local buf_name = vim.api.nvim_buf_get_name(0)
+                local file_name = vim.fn.fnamemodify(buf_name, ":t")
+                LazyVim.lsp.execute({
+                  command = "tinymist.pinMain",
+                  arguments = { buf_name },
+                })
+                LazyVim.info("Tinymist: Pinned " .. file_name)
+              end,
+              desc = "Pin main file",
+            },
+          },
+          workspace_required = false,
           --- See [Tinymist Server Configuration](https://github.com/Myriad-Dreamin/tinymist/blob/main/Configuration.md) for references.
           settings = {
             formatterMode = "typstyle",
-            exportPdf = "onType",
-            semanticTokens = "disable",
+            -- exportPdf = "onType", -- disable for now due to weirdness with module
+            -- semanticTokens = "disable", -- disable for now due to lazyvim not using it
           },
-          on_attach = function(client, bufnr)
-            vim.keymap.set("n", "<leader>bp", function()
-              client:exec_cmd({
-                title = "pin",
-                command = "tinymist.pinMain",
-                arguments = { vim.api.nvim_buf_get_name(0) },
-              }, { bufnr = bufnr })
-            end, { desc = "[T]inymist [P]in", noremap = true })
-            vim.keymap.set("n", "<leader>bu", function()
-              client:exec_cmd({
-                title = "unpin",
-                command = "tinymist.pinMain",
-                arguments = { vim.v.null },
-              }, { bufnr = bufnr })
-            end, { desc = "[T]inymist [U]npin", noremap = true })
-          end,
         },
       },
     },
   },
 
   {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        typst = { "typstyle", lsp_format = "prefer" },
+      },
+    },
+  },
+
+  {
     "chomosuke/typst-preview.nvim",
-    ft = "typst",
-    version = "1.*",
-    opts = {},
+    cmd = { "TypstPreview", "TypstPreviewToggle", "TypstPreviewUpdate" },
+    keys = {
+      {
+        "<leader>cp",
+        ft = "typst",
+        "<cmd>TypstPreviewToggle<cr>",
+        desc = "Toggle Typst Preview",
+      },
+    },
+    opts = {
+      dependencies_bin = {
+        tinymist = "tinymist",
+      },
+    },
+  },
+
+  {
+    "folke/ts-comments.nvim",
+    opts = {
+      lang = {
+        typst = { "// %s", "/* %s */" },
+      },
+    },
   },
 }
