@@ -167,7 +167,6 @@ return {
         layouts = {
           select_reverse = {
             reverse = true,
-            preview = false,
             layout = {
               width = 0.5,
               min_width = 80,
@@ -307,6 +306,15 @@ return {
           { section = "recent_files", cwd = true, padding = 2 },
           { section = "startup" },
         },
+      },
+    },
+  },
+
+  {
+    "folke/trouble.nvim",
+    opts = {
+      win = {
+        size = 0.15,
       },
     },
   },
