@@ -12,11 +12,11 @@ vim.g.lazyvim_rust_diagnostics = "bacon-ls" -- Set to "bacon-ls" to use bacon-ls
 vim.g.auto_pairs = "mini" -- set to "mini" or "blink"
 vim.g.typescript_lsp = "vtsls" -- set to "vtsls" or "ts_ls" or "typescript-tools"
 vim.g.typescript_linter = "biome" -- set to "biome" or "oxlint"
+vim.g.eslint_flavor = "eslint_d" -- set to "eslint_d" or "eslint"
 vim.g.theme_transparency = false -- set to true if you want transparency
 vim.g.copilot_flavor = "lua" -- set to "native" or "lua", prefer lua since native needs node 22.x
 vim.g.ai_chat = "sidekick" -- set to "avante" or "sidekick"
 vim.g.sidekick_nes = false -- set to false stupidly distracting
-vim.g.astro_typescript = "enable" -- this needed for vim-astro for ts capabilities
 
 vim.opt.swapfile = false -- disable swap files
 vim.opt.list = false -- disable whitespace characters

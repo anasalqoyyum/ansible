@@ -1,35 +1,5 @@
 return {
   {
-    "ray-x/go.nvim",
-    -- somewhat overkill for most usecase
-    enabled = false,
-    dependencies = {
-      "ray-x/guihua.lua", -- optional
-      "nvim-treesitter/nvim-treesitter",
-      "neovim/nvim-lspconfig",
-    },
-    opts = {}, -- by default lsp_cfg = false
-    -- opts = { lsp_cfg = true } -- use go.nvim will setup gopls
-    config = function(_, opts)
-      require("go").setup(opts)
-      local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
-      vim.api.nvim_create_autocmd("BufWritePre", {
-        pattern = "*.go",
-        callback = function()
-          require("go.format").goimports()
-        end,
-        group = format_sync_grp,
-      })
-
-      local gopls_cfg = require("go.lsp").config()
-      vim.lsp.config.gopls = gopls_cfg
-      vim.lsp.enable("gopls")
-    end,
-    event = { "CmdlineEnter" },
-    ft = { "go", "gomod" },
-  },
-
-  {
     "nvim-treesitter/nvim-treesitter",
     opts = { ensure_installed = { "go", "gomod", "gowork", "gosum" } },
   },
@@ -124,6 +94,23 @@ return {
       })
     end,
   },
+
+  -- Add linting (let's not enabled this for now due to using old go version in project)
+  -- {
+  --   "mfussenegger/nvim-lint",
+  --   optional = true,
+  --   dependencies = {
+  --     {
+  --       "mason-org/mason.nvim",
+  --       opts = { ensure_installed = { "golangci-lint" } },
+  --     },
+  --   },
+  --   opts = {
+  --     linters_by_ft = {
+  --       go = { "golangcilint" },
+  --     },
+  --   },
+  -- },
 
   {
     "stevearc/conform.nvim",

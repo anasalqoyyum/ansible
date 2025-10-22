@@ -1,6 +1,4 @@
 return {
-  { "wuelnerdotexe/vim-astro", event = "VeryLazy", enabled = false },
-
   {
     "nvim-treesitter/nvim-treesitter",
     opts = { ensure_installed = { "astro", "css" } },

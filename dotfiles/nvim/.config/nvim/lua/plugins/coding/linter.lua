@@ -17,6 +17,20 @@ local function force_linter_to_run(bufnr)
   return project_root
 end
 
+--[[
+Example valid oxlint_settings (assuming defaults, buffer = 12, and git dir = /home/whoami/projects/myapp):
+
+{
+  run = "onType",
+  enable = true,
+  configPath = ".oxlintrc.json",
+  workingDirectory = { mode = "location" },
+  workspaceFolder = {
+    uri = "file:///home/whoami/projects/myapp",
+    name = "myapp",
+  },
+}
+]]
 local oxlint_settings = {
   run = "onType", -- or "onSave"
   typeAware = true,
@@ -46,14 +60,22 @@ return {
   {
     "mfussenegger/nvim-lint",
     opts = {
+      linters_by_ft = {
+        javascript = { "eslint_d" },
+        typescript = { "eslint_d" },
+        javascriptreact = { "eslint_d" },
+        typescriptreact = { "eslint_d" },
+      },
+      ---@type table<string,table>
       linters = {
         -- using eslint_d only when eslint config file is present
         eslint_d = {
           condition = function(ctx)
-            return vim.fs.find(eslint_config_files, {
+            local config_found = vim.fs.find(eslint_config_files, {
               path = ctx.filename,
               upward = true,
             })[1]
+            return vim.g.eslint_flavor == "eslint_d" and config_found ~= nil
           end,
         },
       },
@@ -110,6 +132,7 @@ return {
           workspace_required = false,
         },
         eslint = {
+          enabled = vim.g.eslint_flavor == "eslint",
           settings = {
             -- helps eslint find the eslintrc when it's placed in a subfolder instead of the cwd root
             workingDirectories = { mode = "auto" },

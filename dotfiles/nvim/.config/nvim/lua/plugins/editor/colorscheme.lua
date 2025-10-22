@@ -62,6 +62,9 @@ return {
       on_highlights = function(hl, c)
         -- slightly brighter visual selection
         hl.Visual.bg = "#2d3f6f"
+
+        -- similar to VSCode Tokyo Night Dark
+        -- hl.Visual.bg = "#2a2f41"
         -- Visual selection should match visual mode color, but more saturated
         -- hl.Visual = { bg = "#2d213d" }
 
