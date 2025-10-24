@@ -166,7 +166,9 @@ return {
         layouts = {
           select_reverse = {
             reverse = true,
+            -- hidden = { "preview" },
             layout = {
+              backdrop = false,
               width = 0.5,
               min_width = 80,
               height = 0.5,

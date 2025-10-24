@@ -1,6 +1,13 @@
 os:
-  open: "code {{filename}}"
+  open: "nvim {{filename}}"
   edit: "nvim {{filename}}"
+git:
+  paging:
+    colorArg: always
+    pager: diff-so-fancy
+  pagers:
+    - pager: diff-so-fancy
+    - pager: delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
 gui:
   nerdFontsVersion: "3"
   # tokyo night theme
@@ -55,8 +62,3 @@ gui:
   #     - "#d8647e"
   #   defaultFgColor:
   #     - "#cdcdcd"
-git:
-  paging:
-    colorArg: always
-    pager: diff-so-fancy
-    # pager: delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
