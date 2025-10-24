@@ -60,7 +60,7 @@ window:
 # Font configuration
 font:
   normal:
-    family: JetBrainsMono Nerd Font
+    family: GoogleSansCode Nerd Font
 
   # Point size
   size: 14.0

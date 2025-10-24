@@ -10,7 +10,7 @@ args = ["--cd ~"]
 size = 13.0
 
 [font.normal]
-family = "GeistMono Nerd Font"
+family = "GoogleSansCode Nerd Font"
 
 [selection]
 save_to_clipboard = true
