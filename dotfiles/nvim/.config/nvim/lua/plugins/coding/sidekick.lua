@@ -26,6 +26,15 @@ return {
           return true
         end
       end
+      Snacks.toggle({
+        name = "Sidekick NES",
+        get = function()
+          return require("sidekick.nes").enabled
+        end,
+        set = function(state)
+          require("sidekick.nes").enable(state)
+        end,
+      }):map("<leader>uN")
     end,
     keys = {
       -- nes is also useful in normal mode

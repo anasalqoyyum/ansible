@@ -78,6 +78,10 @@ return {
             trim_whitespaces = false, -- Remove leading/trailing whitespace from each line
             tabstop = 4, -- Number of spaces per tab when expanding tabs
           },
+          show_related = {
+            enabled = true, -- Enable displaying related diagnostics
+            max_count = 3, -- Maximum number of related diagnostics to show per diagnostic
+          },
           override_open_float = true, -- Automatically disable diagnostics when opening diagnostic float windows (somehow doesn't work?)
         },
 
@@ -114,6 +118,16 @@ return {
         end,
       })
     end,
+    keys = {
+      {
+        "<leader>uW",
+        function()
+          require("tiny-inline-diagnostic").toggle()
+        end,
+        desc = "Toggle Inline Diagnostics",
+        mode = "n",
+      },
+    },
   },
 
   {
