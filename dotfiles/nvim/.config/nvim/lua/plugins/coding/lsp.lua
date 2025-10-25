@@ -8,23 +8,39 @@ return {
         virtual_text = {
           spacing = 4,
           source = "if_many",
-          prefix = "",
+          prefix = "•",
+
           -- only shows virtual text for the current line
-          current_line = true,
+          -- current_line = true,
+
+          -- only show virtual text above a certain severity
+          -- severity = { min = vim.diagnostic.severity.WARN },
 
           -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
           -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
           -- prefix = "icons",
+
+          -- Square
+          -- prefix = "",
+
+          -- Circle bigger
           -- prefix = ""
         },
         severity_sort = true,
         signs = {
           text = {
-            [vim.diagnostic.severity.ERROR] = " ",
-            [vim.diagnostic.severity.WARN] = " ",
-            [vim.diagnostic.severity.HINT] = " ",
-            [vim.diagnostic.severity.INFO] = " ",
+            [vim.diagnostic.severity.INFO] = "▍",
+            [vim.diagnostic.severity.ERROR] = "▍",
+            [vim.diagnostic.severity.WARN] = "▍",
+            [vim.diagnostic.severity.HINT] = "▍",
+            --     [vim.diagnostic.severity.ERROR] = " ",
+            --     [vim.diagnostic.severity.WARN] = " ",
+            --     [vim.diagnostic.severity.HINT] = " ",
+            --     [vim.diagnostic.severity.INFO] = " ",
           },
+        },
+        float = {
+          border = "rounded",
         },
       },
       inlay_hints = {
