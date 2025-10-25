@@ -61,12 +61,10 @@ return {
       end,
       on_highlights = function(hl, c)
         -- slightly brighter visual selection
-        hl.Visual.bg = "#2d3f6f"
+        -- hl.Visual.bg = "#2d3f6f"
 
         -- similar to VSCode Tokyo Night Dark
-        -- hl.Visual.bg = "#2a2f41"
-        -- Visual selection should match visual mode color, but more saturated
-        -- hl.Visual = { bg = "#2d213d" }
+        hl.Visual.bg = "#2a2f41"
 
         -- Keep visual for popup/picker highlights
         hl.PmenuSel = { bg = hl.Visual.bg }
@@ -81,9 +79,9 @@ return {
         hl.TreesitterContext = { bg = "#272d45" }
         hl.TreesitterContextLineNumber = { fg = c.fg_gutter, bg = "#272d45" }
 
-        -- More subtle snacks indent colors
-        hl.SnacksIndent = { fg = "#1f202e" }
-        hl.SnacksIndentScope = hl.LineNr
+        -- Super Subtle snacks indent colors
+        hl.SnacksIndent = { fg = "#1f2233" }
+        hl.SnacksIndentScope = { fg = "#2e3248" }
 
         -- brighter blue for search, washes out txt less
         hl.Search.bg = "#2c52b3"
@@ -130,8 +128,6 @@ return {
   {
     "vague2k/vague.nvim",
     enabled = false,
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other plugins
     opts = {
       transparent = vim.g.theme_transparency, -- enable transparency
       italic = false,

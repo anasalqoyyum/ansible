@@ -1,3 +1,5 @@
+local tiny_inline_diagnostic_disabled = false
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -5,10 +7,14 @@ return {
       diagnostics = {
         underline = true,
         update_in_insert = false,
+        -- check if tiny-inline-diagnostic is enabled (since that thing is disabling virtual_text)
         virtual_text = {
           spacing = 4,
-          source = "if_many",
           prefix = "•",
+          source = true,
+
+          -- only shows source if there are multiple sources
+          -- source = "if_many",
 
           -- only shows virtual text for the current line
           -- current_line = true,
@@ -29,10 +35,10 @@ return {
         severity_sort = true,
         signs = {
           text = {
-            [vim.diagnostic.severity.INFO] = "▍",
             [vim.diagnostic.severity.ERROR] = "▍",
             [vim.diagnostic.severity.WARN] = "▍",
             [vim.diagnostic.severity.HINT] = "▍",
+            [vim.diagnostic.severity.INFO] = "▍",
             --     [vim.diagnostic.severity.ERROR] = " ",
             --     [vim.diagnostic.severity.WARN] = " ",
             --     [vim.diagnostic.severity.HINT] = " ",
@@ -47,6 +53,67 @@ return {
         enabled = false,
       },
     },
+  },
+
+  -- multi-line inline diagnostics is pretty neat (for JS with multiple linters)
+  {
+    "rachartier/tiny-inline-diagnostic.nvim",
+    enabled = not vim.g.use_builtin_lsp_diagnostics,
+    event = "VeryLazy",
+    priority = 1000,
+    config = function()
+      require("tiny-inline-diagnostic").setup({
+        preset = "simple",
+        transparent_bg = false,
+        transparent_cursorline = true,
+
+        options = {
+          show_source = {
+            enabled = true, -- Enable showing source names
+            if_many = false, -- Only show source if multiple sources exist for the same diagnostic
+          },
+          multilines = {
+            enabled = true, -- Enable support for multiline diagnostic messages
+            always_show = true, -- Always show messages on all lines of multiline diagnostics
+            trim_whitespaces = false, -- Remove leading/trailing whitespace from each line
+            tabstop = 4, -- Number of spaces per tab when expanding tabs
+          },
+          override_open_float = true, -- Automatically disable diagnostics when opening diagnostic float windows (somehow doesn't work?)
+        },
+
+        -- signs and blends both replace preset settings
+        signs = {
+          left = "",
+          right = "",
+          diag = "•",
+          arrow = "    ",
+          up_arrow = "    ",
+          vertical = " │",
+          vertical_end = " └",
+        },
+        blend = {
+          factor = 0.1, -- similar to lsp-builtin virtual_text color bg
+        },
+      })
+
+      vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostics
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "SidekickNesHide",
+        callback = function()
+          if tiny_inline_diagnostic_disabled then
+            tiny_inline_diagnostic_disabled = false
+            require("tiny-inline-diagnostic").enable()
+          end
+        end,
+      })
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "SidekickNesShow",
+        callback = function()
+          tiny_inline_diagnostic_disabled = true
+          require("tiny-inline-diagnostic").disable()
+        end,
+      })
+    end,
   },
 
   {

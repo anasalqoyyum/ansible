@@ -115,4 +115,12 @@ return {
       },
     },
   },
+
+  {
+    "nvim-mini/mini.bracketed",
+    event = "VeryLazy",
+    opts = {
+      comment = { suffix = "r", options = {} }, -- conflicted with previous/next class in TS files
+    },
+  },
 }

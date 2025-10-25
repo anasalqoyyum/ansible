@@ -17,6 +17,7 @@ vim.g.theme_transparency = false -- set to true if you want transparency
 vim.g.copilot_flavor = "lua" -- set to "native" or "lua", prefer lua since native needs node 22.x
 vim.g.ai_chat = "sidekick" -- set to "avante" or "sidekick"
 vim.g.sidekick_nes = false -- set to false stupidly distracting
+vim.g.use_builtin_lsp_diagnostics = false -- set to true to use built-in LSP diagnostics instead of tiny-inline-diagnostic.nvim
 
 vim.opt.swapfile = false -- disable swap files
 vim.opt.list = false -- disable whitespace characters
