@@ -9,6 +9,7 @@ return {
   -- add and setup onedark theme
   {
     "olimorris/onedarkpro.nvim",
+    lazy = true,
     enabled = false,
     opts = {
       highlights = {
@@ -24,12 +25,35 @@ return {
   },
 
   {
+    "rebelot/kanagawa.nvim",
+    lazy = true,
+    enabled = false,
+    opts = {},
+  },
+
+  {
+    "sainnhe/gruvbox-material",
+    lazy = true,
+    enabled = false,
+    config = function()
+      vim.g.gruvbox_material_background = "hard"
+      vim.g.gruvbox_material_transparent_background = false
+      vim.g.gruvbox_material_enable_bold = true
+      vim.g.gruvbox_material_enable_italic = true
+      vim.g.gruvbox_material_float_style = "dim"
+    end,
+    opts = {},
+  },
+
+  {
     "catppuccin/nvim",
+    lazy = true,
     enabled = false,
   },
 
   {
     "folke/tokyonight.nvim",
+    lazy = true,
     opts = {
       transparent = vim.g.theme_transparency,
       styles = {
@@ -54,10 +78,6 @@ return {
         c.diff.add = "#182f23"
         -- Make deletes more saturated
         c.diff.delete = "#4d1919"
-
-        -- If night style, make bg_dark very slightly less dark
-        c.bg_dark = "#171821"
-        c.bg_statusline = c.bg_dark
       end,
       on_highlights = function(hl, c)
         -- slightly brighter visual selection
@@ -127,6 +147,7 @@ return {
 
   {
     "vague2k/vague.nvim",
+    lazy = true,
     enabled = false,
     opts = {
       transparent = vim.g.theme_transparency, -- enable transparency
@@ -139,6 +160,7 @@ return {
 
   {
     "rose-pine/neovim",
+    lazy = true,
     enabled = false,
     name = "rose-pine",
     opts = {
