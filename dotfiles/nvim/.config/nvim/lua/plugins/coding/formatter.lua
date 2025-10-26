@@ -23,19 +23,19 @@ local prettierSupported = {
 
 -- https://biomejs.dev/internals/language-support/
 local biomeSupported = {
-  -- "astro",
+  "astro",
   "css",
   "graphql",
-  -- "html",
+  "html",
   "javascript",
   "javascriptreact",
   "json",
   "jsonc",
   -- "markdown",
-  -- "svelte",
+  "svelte",
   "typescript",
   "typescriptreact",
-  -- "vue",
+  "vue",
   -- "yaml",
 }
 
