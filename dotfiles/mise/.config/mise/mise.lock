@@ -117,6 +117,10 @@ backend = "npm:typescript-svelte-plugin"
 version = "1.16.0"
 backend = "aqua:oxc-project/oxc/oxlint"
 
+[[tools.prettier]]
+version = "3.6.2"
+backend = "npm:prettier"
+
 [[tools.python]]
 version = "3.13.7"
 backend = "core:python"

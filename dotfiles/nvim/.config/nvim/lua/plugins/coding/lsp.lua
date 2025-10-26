@@ -145,17 +145,18 @@ return {
 
   {
     "chrisgrieser/nvim-rulebook",
-    enabled = false,
-    branch = "dev",
-    event = "LspAttach",
-    opts = {
-      suppressFormatter = {
-        javascript = {
-          ignoreBlock = "// prettier-ignore",
-          location = "prevLine",
-        },
-      },
-    },
+    event = "VeryLazy",
+    opts = function()
+      vim.api.nvim_create_autocmd("Filetype", {
+        pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+        group = vim.api.nvim_create_augroup("rulebook.prettify-ts-error", { clear = true }),
+        callback = function(ctx)
+          vim.keymap.set("n", "<leader>rp", function()
+            require("rulebook").prettifyError()
+          end, { buffer = ctx.buf, desc = "Rulebook: Prettify TS error" })
+        end,
+      })
+    end,
     keys = {
       {
         "<leader>ri",
