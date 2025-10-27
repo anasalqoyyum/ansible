@@ -154,7 +154,7 @@ function pj() {
     nvim .
   fi
 }
-yank() {
+function yank() {
   if [[ "$(uname -s)" == "Darwin" ]]; then
     # macOS
     pbcopy
@@ -176,6 +176,9 @@ yank() {
     echo "Unsupported system: $(uname -s)" >&2
     return 1
   fi
+}
+function giraph() {
+  git log -n "${1:-20}" --oneline --graph --decorate --color
 }
 
 # Keybinds
@@ -251,6 +254,8 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH="${HOME}/.local/bin:${PATH}"
 export XDG_CONFIG_HOME="$HOME/.config"
+# Set default git config location
+export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
 # Add Golang
 export PATH="$PATH:/usr/local/go/bin"
 export GOPATH="$HOME/go"

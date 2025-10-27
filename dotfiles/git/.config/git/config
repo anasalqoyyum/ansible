@@ -1,0 +1,64 @@
+[alias]
+  # Fetch and rebase from the default branch (e.g., main/master)
+  fomo = "!zsh -c 'branch=$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed \"s@^origin/@@\") && git fetch origin $branch && git rebase origin/$branch --autostash'"
+  # Add all changes, stash them, then clear all stashes (dangerous)
+  nuke = "!git add --all && git stash && git stash clear"
+
+[branch]
+  sort = "-committerdate"
+
+[user]
+	name = "Anas Alqoyyum"
+	email = "muhanasalqoyyum@gmail.com"
+
+[core]
+	editor = nvim
+  pager = "diff-so-fancy | less --tabs=4 -RF"
+  ; fsmonitor = true
+
+[init]
+	defaultBranch = master
+
+[pull]
+	rebase = true
+
+[fetch]
+  prune = true
+  ; writeCommitGraph = true
+
+[rebase]
+  updateRefs = true
+
+[rerere]
+  enabled = true
+
+[interactive]
+  diffFilter = "diff-so-fancy --patch"
+
+[includeIf "gitdir:~/work/"]
+  path = "~/.config/git/work_config"
+
+[filter "lfs"]
+  clean = "git-lfs clean -- %f"
+  process = "git-lfs filter-process"
+  required = true
+  smudge = "git-lfs smudge -- %f"
+
+[delta]
+  minus-style                   = syntax "#37222c"
+  minus-non-emph-style          = syntax "#37222c"
+  minus-emph-style              = syntax "#713137"
+  minus-empty-line-marker-style = syntax "#37222c"
+  line-numbers-minus-style      = "#914c54"
+  plus-style                    = syntax "#20303b"
+  plus-non-emph-style           = syntax "#20303b"
+  plus-emph-style               = syntax "#2c5a66"
+  plus-empty-line-marker-style  = syntax "#20303b"
+  line-numbers-plus-style       = "#449dab"
+  line-numbers-zero-style       = "#3b4261"
+
+; [tag]
+;   gpgSign = true
+
+; [gpg]
+;   format = "ssh"
