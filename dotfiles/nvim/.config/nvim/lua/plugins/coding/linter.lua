@@ -51,6 +51,23 @@ local eslint_config_files = {
   "eslint.config.cts",
 }
 
+-- Override eslint_d parser to handle missing config file error and clean output (e.g when React not in settings)
+local eslint_d = require("lint").linters.eslint_d
+eslint_d.parser = function(output, bufnr)
+  if string.find(output, "Error: Could not find config file") then
+    return {}
+  end
+
+  local json_start, json_end = output:find("%b[]")
+  local clean_output = json_start and output:sub(json_start, json_end) or output
+
+  local result = require("lint.linters.eslint").parser(clean_output, bufnr)
+  for _, d in ipairs(result) do
+    d.source = "eslint_d"
+  end
+  return result
+end
+
 return {
   {
     "mason-org/mason.nvim",
