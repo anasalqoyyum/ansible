@@ -256,18 +256,19 @@ export PATH="${HOME}/.local/bin:${PATH}"
 export XDG_CONFIG_HOME="$HOME/.config"
 # Set default git config location
 export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
-# Add Golang
+# Add Golang (managed by mise)
 export PATH="$PATH:/usr/local/go/bin"
 export GOPATH="$HOME/go"
 export PATH="$PATH:$GOPATH/bin"
 # Add Rust
 export PATH="$HOME/.cargo/bin:$PATH"
-# Add Java
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+# Add Java (managed by mise)
+# export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+# export PATH="$JAVA_HOME/bin:$PATH"
+# Add Android Tools
 export ANDROID_HOME="$HOME/android"
 export GRADLE_HOME=/opt/gradle/gradle-7.6.1 # Might need to change this depending on your version
 export ANDROID_SDK_ROOT=${ANDROID_HOME}
-export PATH="$JAVA_HOME/bin:$PATH"
 export PATH="${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${PATH}"
 export PATH="${GRADLE_HOME}/bin:${PATH}"
 # Add Bun
