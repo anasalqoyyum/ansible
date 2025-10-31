@@ -105,6 +105,7 @@ return {
   {
     "Bekaboo/dropbar.nvim",
     event = { "BufReadPost", "BufNewFile" },
+    enabled = false,
     config = function()
       local dropbar_api = require("dropbar.api")
       vim.api.nvim_set_hl(0, "WinBar", { bg = "NONE" }) -- no background for dropbar
@@ -117,6 +118,11 @@ return {
   -- Oil and related plugins
   {
     "stevearc/oil.nvim",
+    dependencies = {
+      { "nvim-mini/mini.icons", opts = {} },
+    },
+    -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+    lazy = false,
     ---@module 'oil'
     ---@type oil.SetupOpts
     opts = {
@@ -124,9 +130,9 @@ return {
       view_options = {
         show_hidden = true,
       },
-      win_options = {
-        winbar = "%!v:lua.get_oil_winbar()",
-      },
+      -- win_options = {
+      --   winbar = "%!v:lua.get_oil_winbar()",
+      -- },
       keymaps = {
         ["<C-s>"] = false,
         ["<C-v>"] = { "actions.select", opts = { vertical = true } },
@@ -139,20 +145,7 @@ return {
       ssh = { border = "rounded" },
       keymaps_help = { border = "rounded" },
     },
-    dependencies = { { "nvim-mini/mini.icons", opts = {} } },
-    -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
-    lazy = false,
   },
-  -- most of these plugins slow down oil.nvim on big repo, so we disable them for now
-  -- {
-  --   "benomahony/oil-git.nvim",
-  --   dependencies = { "stevearc/oil.nvim" },
-  -- },
-  -- {
-  --   "JezerM/oil-lsp-diagnostics.nvim",
-  --   dependencies = { "stevearc/oil.nvim" },
-  --   opts = {},
-  -- },
 
   {
     "folke/snacks.nvim",

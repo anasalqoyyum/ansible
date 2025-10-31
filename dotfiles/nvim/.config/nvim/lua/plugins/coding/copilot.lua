@@ -79,7 +79,7 @@ return {
     },
   },
 
-  -- add ai_accept action
+  -- add ai_accept action (and hide during cmp menu)
   {
     "zbirenbaum/copilot.lua",
     opts = function()
@@ -94,7 +94,6 @@ return {
       vim.api.nvim_create_autocmd("User", {
         pattern = "BlinkCmpMenuOpen",
         callback = function()
-          require("copilot.suggestion").dismiss()
           vim.b.copilot_suggestion_hidden = true
         end,
       })

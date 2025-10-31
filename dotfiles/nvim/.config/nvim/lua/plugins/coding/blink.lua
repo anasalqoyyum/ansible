@@ -211,6 +211,8 @@ return {
         ["<C-f>"] = { "scroll_documentation_down", "fallback" },
 
         ["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
+        ["<C-u>"] = { "scroll_signature_up", "fallback" },
+        ["<C-d>"] = { "scroll_signature_down", "fallback" },
 
         -- manually set some due to it's not being picked up on macos lol
         ["<C-y>"] = { "select_and_accept", "fallback" },
