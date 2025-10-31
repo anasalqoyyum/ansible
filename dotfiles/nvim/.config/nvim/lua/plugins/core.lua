@@ -21,4 +21,27 @@ return {
       },
     },
   },
+
+  {
+    "chrisgrieser/nvim-early-retirement",
+    event = "VeryLazy",
+    opts = {},
+  },
+
+  -- may or may not broke the lsp
+  {
+    "zeioth/garbage-day.nvim",
+    dependencies = "neovim/nvim-lspconfig",
+    enabled = false,
+    event = "VeryLazy",
+    opts = {
+      excluded_lsp_clients = {
+        "copilot",
+        "null-ls",
+        "jdtls",
+        "marksman",
+        "lua_ls",
+      },
+    },
+  },
 }
