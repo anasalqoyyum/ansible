@@ -41,10 +41,9 @@ return {
         type = "binary",
       },
       suggestion = {
-        enabled = false,
+        enabled = not vim.g.use_completion_ai_source,
         auto_trigger = true,
         hide_during_completion = true,
-        debounce = 300, -- debounce for reliable multi-line suggestions (in ms)
         keymap = {
           accept = false, -- handled by nvim-cmp / blink.cmp
           next = "<M-]>",
@@ -91,6 +90,21 @@ return {
           return true
         end
       end
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "BlinkCmpMenuOpen",
+        callback = function()
+          require("copilot.suggestion").dismiss()
+          vim.b.copilot_suggestion_hidden = true
+        end,
+      })
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "BlinkCmpMenuClose",
+        callback = function()
+          vim.b.copilot_suggestion_hidden = false
+        end,
+      })
     end,
   },
 }

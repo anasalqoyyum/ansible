@@ -1,12 +1,16 @@
+local default = { "copilot", "lsp", "path", "snippets", "buffer" }
+local sources = vim.g.use_completion_ai_source and default or { "lsp", "path", "snippets", "buffer" }
+
 return {
   {
     "saghen/blink.cmp",
     dependencies = {
       {
         "fang2hou/blink-copilot",
+        enabled = vim.g.use_completion_ai_source,
         opts = {
-          max_completions = 1, -- Global default for max completions
-          max_attempts = 2, -- Global default for max attempts
+          max_completions = 3, -- Global default for max completions
+          max_attempts = 4, -- Global default for max attempts
         },
       },
       {
@@ -146,15 +150,16 @@ return {
         -- adding any nvim-cmp sources here will enable them
         -- with blink.compat
         compat = {},
-        default = { "copilot", "lsp", "path", "snippets", "buffer" },
+        default = sources,
         -- this is the newer copilot source
         providers = {
-          copilot = {
+          copilot = vim.g.use_completion_ai_source and {
             name = "copilot",
             module = "blink-copilot",
             score_offset = 100,
             async = true,
-          },
+          } or nil,
+
           snippets = {
             should_show_items = function(ctx)
               return ctx.trigger.initial_kind ~= "trigger_character"

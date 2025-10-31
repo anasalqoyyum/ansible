@@ -85,12 +85,3 @@ vim.keymap.set(
   "<cmd>lua require('goto-preview').goto_preview_type_definition()<CR>",
   { noremap = true, desc = "Peek Type Definition" }
 )
-
--- tabs (let's not disable this for now)
--- vim.keymap.del("n", "<leader><tab><tab>")
--- vim.keymap.del("n", "<leader><tab>l")
--- vim.keymap.del("n", "<leader><tab>o")
--- vim.keymap.del("n", "<leader><tab>f")
--- vim.keymap.del("n", "<leader><tab>]")
--- vim.keymap.del("n", "<leader><tab>d")
--- vim.keymap.del("n", "<leader><tab>[")
