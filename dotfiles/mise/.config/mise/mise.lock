@@ -51,6 +51,15 @@ backend = "aqua:cli/cli"
 version = "1.25.0"
 backend = "core:go"
 
+[[tools.golangci-lint]]
+version = "2.6.0"
+backend = "aqua:golangci/golangci-lint"
+
+[tools.golangci-lint.platforms.linux-x64]
+checksum = "sha256:4eeff6a6b8c3d3b5b8e7ba2773f765fe1000979c1ccf50941b25ea13b7c7c1cb"
+size = 14404512
+url = "https://github.com/golangci/golangci-lint/releases/download/v2.6.0/golangci-lint-2.6.0-linux-amd64.tar.gz"
+
 [[tools.httpie-go]]
 version = "0.7.0"
 backend = "aqua:nojima/httpie-go"

@@ -24,6 +24,7 @@ amp = "latest"
 # Go Tools
 air = "latest"
 "aqua:joshmedeski/sesh" = { version = "latest", os = ["linux"] }
+golangci-lint = "latest"
 # Python Tools
 uv = "latest"
 # Node Tools
