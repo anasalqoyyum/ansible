@@ -132,3 +132,12 @@
   tags:
     - install
     - rust
+
+- name: Install rust-analyzer
+  shell: "rustup component add rust-analyzer"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+  tags:
+    - install
+    - rust
