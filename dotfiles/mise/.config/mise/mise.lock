@@ -115,7 +115,7 @@ version = "3.1.1"
 backend = "npm:@vue/typescript-plugin"
 
 [[tools."npm:opencode-ai"]]
-version = "0.15.30"
+version = "1.0.18"
 backend = "npm:opencode-ai"
 
 [[tools."npm:typescript-svelte-plugin"]]

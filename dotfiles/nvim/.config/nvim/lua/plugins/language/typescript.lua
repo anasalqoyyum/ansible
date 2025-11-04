@@ -1,3 +1,22 @@
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
+  group = vim.api.nvim_create_augroup("neo-test.vitest", { clear = true }),
+  callback = function()
+    vim.api.nvim_set_keymap(
+      "n",
+      "<leader>tvr",
+      "<cmd>lua require('neotest').run.run({ vitestCommand = 'vitest --watch' })<cr>",
+      { desc = "Run Watch (Vitest)" }
+    )
+    vim.api.nvim_set_keymap(
+      "n",
+      "<leader>tvf",
+      "<cmd>lua require('neotest').run.run({ vim.fn.expand('%'), vitestCommand = 'vitest --watch' })<cr>",
+      { desc = "Run Watch File (Vitest)" }
+    )
+  end,
+})
+
 local inlay_hints_settings = {
   includeInlayEnumMemberValueHints = true,
   includeInlayFunctionLikeReturnTypeHints = true,
@@ -290,29 +309,6 @@ return {
         },
       },
     },
-    config = function(_, opts)
-      local neotest = require("neotest")
-      neotest.setup(opts)
-
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
-        group = vim.api.nvim_create_augroup("neo-test.vitest", { clear = true }),
-        callback = function()
-          vim.api.nvim_set_keymap(
-            "n",
-            "<leader>tvr",
-            "<cmd>lua require('neotest').run.run({ vitestCommand = 'vitest --watch' })<cr>",
-            { desc = "Run Watch (Vitest)" }
-          )
-          vim.api.nvim_set_keymap(
-            "n",
-            "<leader>tvf",
-            "<cmd>lua require('neotest').run.run({ vim.fn.expand('%'), vitestCommand = 'vitest --watch' })<cr>",
-            { desc = "Run Watch File (Vitest)" }
-          )
-        end,
-      })
-    end,
   },
 
   {
