@@ -148,9 +148,29 @@ return {
   },
 
   {
+    "saghen/blink.indent",
+    enabled = vim.g.use_blink_indent,
+    --- @module 'blink.indent'
+    --- @type blink.indent.Config
+    opts = {
+      static = {
+        char = "│",
+        highlights = { "BlinkIndent" },
+      },
+      scope = {
+        char = "│",
+        highlights = { "BlinkIndentScope" },
+      },
+    },
+  },
+
+  {
     "folke/snacks.nvim",
     ---@type snacks.Config
     opts = {
+      indent = {
+        enabled = not vim.g.use_blink_indent,
+      },
       explorer = {
         replace_netrw = false,
       },

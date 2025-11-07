@@ -94,13 +94,13 @@ version = "0.24.1"
 backend = "aqua:jesseduffield/lazydocker"
 
 [[tools.node]]
-version = "22.19.0"
+version = "24.11.0"
 backend = "core:node"
 
-[tools.node.platforms.macos-arm64]
-checksum = "sha256:c59006db713c770d6ec63ae16cb3edc11f49ee093b5c415d667bb4f436c6526d"
-size = 47739366
-url = "https://nodejs.org/dist/v22.19.0/node-v22.19.0-darwin-arm64.tar.gz"
+[tools.node.platforms.linux-x64]
+checksum = "sha256:b3c071cdf47aab867c3b2aa287257df12ec5d7c962bf922b32fd33226c4295fd"
+size = 58899117
+url = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-linux-x64.tar.gz"
 
 [[tools."npm:@astrojs/ts-plugin"]]
 version = "1.10.5"
@@ -115,7 +115,7 @@ version = "3.1.1"
 backend = "npm:@vue/typescript-plugin"
 
 [[tools."npm:opencode-ai"]]
-version = "1.0.18"
+version = "1.0.39"
 backend = "npm:opencode-ai"
 
 [[tools."npm:typescript-svelte-plugin"]]

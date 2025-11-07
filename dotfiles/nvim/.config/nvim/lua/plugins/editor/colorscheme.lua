@@ -103,6 +103,9 @@ return {
         hl.SnacksIndent = { fg = "#1f2233" }
         hl.SnacksIndentScope = { fg = "#2e3248" }
 
+        hl.BlinkIndent = { fg = "#1f2233" }
+        hl.BlinkIndentScope = { fg = "#2e3248" }
+
         -- brighter blue for search, washes out txt less
         hl.Search.bg = "#2c52b3"
 
