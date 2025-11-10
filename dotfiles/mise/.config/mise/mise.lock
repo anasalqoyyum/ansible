@@ -3,12 +3,21 @@ version = "1.62.0"
 backend = "aqua:air-verse/air"
 
 [[tools.amp]]
-version = "0.0.1760587291-gab1037"
+version = "0.0.1762675282-gac8d42"
 backend = "npm:@sourcegraph/amp"
 
 [[tools."aqua:joshmedeski/sesh"]]
 version = "2.17.1"
 backend = "aqua:joshmedeski/sesh"
+
+[[tools.aws-cli]]
+version = "2.31.32"
+backend = "aqua:aws/aws-cli"
+
+[tools.aws-cli.platforms.linux-x64]
+checksum = "blake3:8f623ff9f1e286fde29a5b30e09662d1574cc2a75c3c095acc21b58ad8b4ac3b"
+size = 62327284
+url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.31.32.zip"
 
 [[tools.biome]]
 version = "2.3.0"

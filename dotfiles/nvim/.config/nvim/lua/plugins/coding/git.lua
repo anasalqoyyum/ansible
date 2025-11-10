@@ -76,5 +76,5 @@ return {
     },
   },
 
-  { "akinsho/git-conflict.nvim", event = "VeryLazy", opts = {} },
+  { "akinsho/git-conflict.nvim", opts = {} },
 }

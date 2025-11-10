@@ -3,8 +3,8 @@ node = "24"
 bun = "latest"
 go = "prefix:1.25"
 python = "3.13"
-java = "21"
-kotlin = "latest"
+java = { version = "21", os = ["linux"] }
+kotlin = { version = "latest", os = ["linux"] }
 # Node Tools
 biome = { version = "latest" }
 prettier = { version = "latest" }
@@ -15,12 +15,13 @@ k6 = { version = "latest", os = ["linux"] }
 k9s = { version = "latest", os = ["linux"] }
 bob = "latest"
 github-cli = { version = "latest", os = ["linux", "windows"] }
-docker-cli = { version = "latest", os = ["linux", "windows"] }
-docker-compose = { version = "latest", os = ["linux", "windows"] }
+docker-cli = { version = "latest", os = ["linux"] }
+docker-compose = { version = "latest", os = ["linux"] }
 httpie-go = "latest"
 lazydocker = "latest"
 trivy = "latest"
 amp = "latest"
+aws-cli = "latest"
 # Go Tools
 air = "latest"
 "aqua:joshmedeski/sesh" = { version = "latest", os = ["linux"] }
@@ -49,4 +50,3 @@ lockfile = true
 [env]
 # Auto enable corepack for node versions that support it (>=16.9.0).
 MISE_NODE_COREPACK = true
-
