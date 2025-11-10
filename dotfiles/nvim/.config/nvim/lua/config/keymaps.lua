@@ -68,10 +68,6 @@ vim.keymap.set("n", "<leader>g.", "<Cmd>.DiffviewFileHistory --follow<CR>", { de
 vim.keymap.set("v", "<leader>gv", "<Esc><Cmd>'<,'>DiffviewFileHistory --follow<CR>", { desc = "Diff Range history" })
 vim.keymap.set("n", "<leader>gR", "<cmd>DiffviewRefresh<cr>", { desc = "Git Diff Refresh" })
 
--- oil.nvim
-vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-vim.keymap.set("n", "<leader>-", "<CMD>Oil --float<CR>", { desc = "Open parent directory (float)" })
-
 -- lsp peek definition
 vim.keymap.set(
   "n",

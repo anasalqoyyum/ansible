@@ -78,13 +78,17 @@ return {
         c.diff.add = "#182f23"
         -- Make deletes more saturated
         c.diff.delete = "#4d1919"
+        -- Darken the statusline a bit
+        c.bg_statusline = "#080A11"
       end,
       on_highlights = function(hl, c)
         -- slightly brighter visual selection
         -- hl.Visual.bg = "#2d3f6f"
 
         -- similar to VSCode Tokyo Night Dark
-        hl.Visual.bg = "#2a2f41"
+        -- hl.Visual.bg = "#2a2f41"
+        -- Use a darker visual to contrast with the lighter cursor line
+        hl.Visual.bg = "#1A1E30"
 
         -- Keep visual for popup/picker highlights
         hl.PmenuSel = { bg = hl.Visual.bg }
@@ -93,7 +97,9 @@ return {
         hl.SnacksPickerPreviewCursorLine = hl.SnacksPickerCursorLine
 
         -- Use bg.dark from storm (not night) for the cursor line background to make it more subtle
-        hl.CursorLine = { bg = "#1f2335" }
+        -- hl.CursorLine = { bg = "#1f2335" }
+        -- Use dimmer for transparent background
+        hl.CursorLine = { bg = "#10131D" }
 
         -- Make TS context dimmer and color line numbers
         hl.TreesitterContext = { bg = "#272d45" }

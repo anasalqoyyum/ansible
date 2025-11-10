@@ -13,13 +13,14 @@ vim.g.auto_pairs = "mini" -- set to "mini" or "blink"
 vim.g.typescript_lsp = "vtsls" -- set to "vtsls" or "ts_ls" or "typescript-tools"
 vim.g.typescript_linter = "biome" -- set to "biome" or "oxlint"
 vim.g.eslint_flavor = "eslint_d" -- set to "eslint_d" or "eslint"
-vim.g.theme_transparency = false -- set to true if you want transparency
+vim.g.theme_transparency = true -- set to true if you want transparency
 vim.g.copilot_flavor = "lua" -- set to "native" or "lua", prefer lua since native needs node 22.x
 vim.g.ai_chat = "sidekick" -- set to "avante" or "sidekick"
 vim.g.sidekick_nes = false -- set to false stupidly distracting
 vim.g.use_builtin_lsp_diagnostics = false -- set to true to use built-in LSP diagnostics instead of tiny-inline-diagnostic.nvim
 vim.g.use_completion_ai_source = false -- set to true to enable AI source in completion (Blink, Copilot, etc.) otherwise inline copilot
 vim.g.use_blink_indent = true -- set to true to enable blink indent guides
+vim.g.use_oil = false -- set to true to use oil.nvim for file browsing (otherwise, fyler)
 
 vim.opt.swapfile = false -- disable swap files
 vim.opt.list = false -- disable whitespace characters

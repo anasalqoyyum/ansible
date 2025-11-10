@@ -19,6 +19,11 @@ checksum = "blake3:8f623ff9f1e286fde29a5b30e09662d1574cc2a75c3c095acc21b58ad8b4a
 size = 62327284
 url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.31.32.zip"
 
+[tools.aws-cli.platforms.macos-arm64]
+checksum = "blake3:9a2341baa6df545d5db1c9622d4d98e1eedeacabba02b5bbe8338e8d3741b305"
+size = 48340047
+url = "https://awscli.amazonaws.com/AWSCLIV2-2.31.32.pkg"
+
 [[tools.biome]]
 version = "2.3.0"
 backend = "aqua:biomejs/biome"
@@ -110,6 +115,11 @@ backend = "core:node"
 checksum = "sha256:b3c071cdf47aab867c3b2aa287257df12ec5d7c962bf922b32fd33226c4295fd"
 size = 58899117
 url = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-linux-x64.tar.gz"
+
+[tools.node.platforms.macos-arm64]
+checksum = "sha256:0be2ab2816a4fa02d1acff014a434f29f56d8d956f5af6a98b70ced6c5f4d201"
+size = 51168984
+url = "https://nodejs.org/dist/v24.11.0/node-v24.11.0-darwin-arm64.tar.gz"
 
 [[tools."npm:@astrojs/ts-plugin"]]
 version = "1.10.5"

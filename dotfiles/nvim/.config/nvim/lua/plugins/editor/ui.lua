@@ -115,9 +115,36 @@ return {
     end,
   },
 
+  {
+    "A7Lavinraj/fyler.nvim",
+    enabled = not vim.g.use_oil,
+    lazy = false,
+    dependencies = { "nvim-mini/mini.icons" },
+    opts = {
+      views = {
+        finder = {
+          default_explorer = true,
+          icon = {
+            directory_collapsed = " ",
+            directory_empty = " ",
+            directory_expanded = " ",
+          },
+        },
+      },
+    },
+    keys = {
+      {
+        "-",
+        "<cmd>Fyler<cr>",
+        desc = "Open parent directory",
+      },
+    },
+  },
+
   -- Oil and related plugins
   {
     "stevearc/oil.nvim",
+    enabled = vim.g.use_oil,
     dependencies = {
       { "nvim-mini/mini.icons", opts = {} },
     },
@@ -144,6 +171,13 @@ return {
       progress = { border = "rounded" },
       ssh = { border = "rounded" },
       keymaps_help = { border = "rounded" },
+    },
+    keys = {
+      {
+        "-",
+        "<cmd>Oil<cr>",
+        desc = "Open parent directory",
+      },
     },
   },
 
@@ -199,6 +233,7 @@ return {
         sources = {
           explorer = {
             layout = { layout = { position = "right" } },
+            auto_close = true,
             actions = {
               safe_delete = function(picker)
                 local selected = picker:selected({ fallback = true })
