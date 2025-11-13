@@ -57,6 +57,9 @@
   line-numbers-plus-style       = "#449dab"
   line-numbers-zero-style       = "#3b4261"
 
+[url "ssh://git@bitbucket.org/"]
+  insteadOf = https://bitbucket.org/
+
 ; [tag]
 ;   gpgSign = true
 
