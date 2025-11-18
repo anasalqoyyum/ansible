@@ -84,11 +84,15 @@ return {
       on_highlights = function(hl, c)
         -- slightly brighter visual selection
         -- hl.Visual.bg = "#2d3f6f"
-
         -- similar to VSCode Tokyo Night Dark
         -- hl.Visual.bg = "#2a2f41"
         -- Use a darker visual to contrast with the lighter cursor line
-        hl.Visual.bg = "#1A1E30"
+        hl.Visual.bg = "#121621"
+
+        -- Use bg.dark from storm (not night) for the cursor line background to make it more subtle
+        -- hl.CursorLine = { bg = "#1f2335" }
+        -- Use dimmer for transparent background
+        hl.CursorLine = { bg = "#10131D" }
 
         -- Keep visual for popup/picker highlights
         hl.PmenuSel = { bg = hl.Visual.bg }
@@ -96,14 +100,9 @@ return {
         hl.SnacksPickerListCursorLine = hl.SnacksPickerCursorLine
         hl.SnacksPickerPreviewCursorLine = hl.SnacksPickerCursorLine
 
-        -- Use bg.dark from storm (not night) for the cursor line background to make it more subtle
-        -- hl.CursorLine = { bg = "#1f2335" }
-        -- Use dimmer for transparent background
-        hl.CursorLine = { bg = "#10131D" }
-
         -- Make TS context dimmer and color line numbers
-        hl.TreesitterContext = { bg = "#272d45" }
-        hl.TreesitterContextLineNumber = { fg = c.fg_gutter, bg = "#272d45" }
+        hl.TreesitterContext = { bg = "#1e202e" }
+        hl.TreesitterContextLineNumber = { fg = c.fg_gutter, bg = "#1e202e" }
 
         -- Super Subtle snacks indent colors
         hl.SnacksIndent = { fg = "#1f2233" }

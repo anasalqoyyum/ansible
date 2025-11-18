@@ -75,26 +75,6 @@ return {
     opts = { ensure_installed = { "goimports", "gofumpt" } },
   },
 
-  {
-    "nvimtools/none-ls.nvim",
-    optional = true,
-    dependencies = {
-      {
-        "mason-org/mason.nvim",
-        opts = { ensure_installed = { "gomodifytags", "impl" } },
-      },
-    },
-    opts = function(_, opts)
-      local nls = require("null-ls")
-      opts.sources = vim.list_extend(opts.sources or {}, {
-        nls.builtins.code_actions.gomodifytags,
-        nls.builtins.code_actions.impl,
-        nls.builtins.formatting.goimports,
-        nls.builtins.formatting.gofumpt,
-      })
-    end,
-  },
-
   -- Add linting (let's not enabled this for now due to using old go version in project)
   -- {
   --   "mfussenegger/nvim-lint",
