@@ -145,6 +145,14 @@ backend = "npm:typescript-svelte-plugin"
 version = "1.16.0"
 backend = "aqua:oxc-project/oxc/oxlint"
 
+[[tools."pipx:mycli"]]
+version = "1.41.1"
+backend = "pipx:mycli"
+
+[[tools."pipx:pgcli"]]
+version = "4.3.0"
+backend = "pipx:pgcli"
+
 [[tools.prettier]]
 version = "3.6.2"
 backend = "npm:prettier"

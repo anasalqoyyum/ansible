@@ -28,6 +28,8 @@ air = "latest"
 golangci-lint = "latest"
 # Python Tools
 uv = "latest"
+"pipx:pgcli" = { version = "latest", os = ["linux"] }
+"pipx:mycli" = { version = "latest", os = ["linux"] }
 # Node Tools
 "npm:opencode-ai" = { version = "latest", os = ["linux", "macos"] }
 "npm:@frostoven/squoosh-cli" = { version = "latest" }

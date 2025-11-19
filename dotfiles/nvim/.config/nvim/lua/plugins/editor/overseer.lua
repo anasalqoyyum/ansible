@@ -1,6 +1,7 @@
 return {
   {
-    "stevearc/overseer.nvim",
+    -- use my own fork until my PR is merged (containing npm fixes)
+    "anasalqoyyum/overseer.nvim",
     cmd = {
       "OverseerOpen",
       "OverseerClose",
