@@ -49,6 +49,9 @@ local function find_closest_config_file(config_names, current_file)
   return nil -- No config file found
 end
 
+-- remove wrap and spell autocmd
+vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
+
 vim.api.nvim_create_user_command("Format", function()
   local conform = require("conform")
   local formatters = conform.list_formatters(0)
