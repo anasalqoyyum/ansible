@@ -146,7 +146,28 @@ return {
   {
     "chrisgrieser/nvim-rulebook",
     event = "VeryLazy",
-    opts = function()
+    config = function()
+      require("rulebook").setup({ ---@diagnostic disable-line: missing-fields
+        ruleDocs = {
+          fallback = "https://t3.chat/new?q=Explain%20the%20following%20diagnostic%20error%3A%20%s",
+          -- oxlint = "https://oxc.rs/docs/rules/%s",
+
+          -- To use `fallback` instead of the builtin rule docs, overwrite the
+          -- builtin one with `false`.
+          typescript = not vim.g.use_ai_to_lookup_rulebook,
+          biome = not vim.g.use_ai_to_lookup_rulebook,
+          eslint = not vim.g.use_ai_to_lookup_rulebook,
+        },
+        ignoreComments = {
+          eslint_d = {
+            comment = "// eslint-disable-next-line %s",
+            location = "prevLine",
+            docs = "https://eslint.org/docs/latest/use/configure/rules#using-configuration-comments-1",
+            multiRuleIgnore = true,
+          },
+        },
+      })
+
       vim.api.nvim_create_autocmd("Filetype", {
         pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
         group = vim.api.nvim_create_augroup("rulebook.prettify-ts-error", { clear = true }),
