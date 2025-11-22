@@ -1,6 +1,6 @@
 # In a way, I don't know how to properly document this file. It's a PowerShell profile file that I use to configure my PowerShell environment. 
 # It's a mix of things that I've found useful over time. 
-# Other things installed: mise, uv, starship, PowerToys CommandNotFound module, Chocolatey, scoop
+# Other things installed: mise, starship, PowerToys CommandNotFound module, Chocolatey, scoop, btop, gh, neofetch, wslcompact
 
 Invoke-Expression (&starship init powershell)
 $ENV:STARSHIP_CONFIG = "$HOME\starship.toml"
