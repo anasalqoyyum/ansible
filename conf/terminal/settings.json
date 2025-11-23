@@ -63,32 +63,32 @@
       "keys": "ctrl+period"
     },
     {
-      "id": "User.sendInput.F8A79DCB",
-      "keys": "ctrl+enter"
+      "id": "User.find",
+      "keys": "ctrl+shift+f"
     },
     {
       "id": "User.paste",
       "keys": "ctrl+v"
     },
     {
-      "id": "User.find",
-      "keys": "ctrl+shift+f"
-    },
-    {
-      "id": "User.sendInput.8882FD6D",
-      "keys": "shift+enter"
+      "id": "User.sendInput.F8A79DCB",
+      "keys": "ctrl+enter"
     },
     {
       "id": "User.splitPane.A6751878",
       "keys": "alt+shift+d"
     },
     {
-      "id": "User.duplicateTab",
-      "keys": "ctrl+alt+shift+d"
+      "id": "User.sendInput.8882FD6D",
+      "keys": "shift+enter"
     },
     {
       "id": null,
       "keys": "alt+enter"
+    },
+    {
+      "id": "User.duplicateTab",
+      "keys": "ctrl+alt+shift+d"
     },
     {
       "id": "User.copy.644BA8F2",
@@ -170,7 +170,8 @@
         "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
         "hidden": false,
         "name": "PowerShell",
-        "source": "Windows.Terminal.PowershellCore"
+        "source": "Windows.Terminal.PowershellCore",
+        "suppressApplicationTitle": true
       },
       {
         "guid": "{16e2280b-a085-5ee0-af48-ee7a98dc5b9b}",
@@ -190,7 +191,8 @@
         "hidden": false,
         "icon": "C:\\Program Files\\Git\\mingw64\\share\\git\\git-for-windows.ico",
         "name": "Git Bash",
-        "startingDirectory": "%USERPROFILE%"
+        "startingDirectory": "%USERPROFILE%",
+        "suppressApplicationTitle": true
       }
     ]
   },
