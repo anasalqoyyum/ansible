@@ -38,7 +38,7 @@ return {
     },
     opts = {
       server = {
-        type = "binary",
+        type = vim.fn.has("win32") ~= 0 and "nodejs" or "binary",
       },
       suggestion = {
         enabled = not vim.g.use_completion_ai_source,

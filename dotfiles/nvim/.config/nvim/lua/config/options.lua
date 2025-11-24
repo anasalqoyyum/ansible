@@ -19,9 +19,9 @@ vim.g.ai_chat = "sidekick" -- set to "avante" or "sidekick"
 vim.g.sidekick_nes = false -- set to false stupidly distracting
 vim.g.use_builtin_lsp_diagnostics = false -- set to true to use built-in LSP diagnostics instead of tiny-inline-diagnostic.nvim
 vim.g.use_completion_ai_source = false -- set to true to enable AI source in completion (Blink, Copilot, etc.) otherwise inline copilot
-vim.g.use_blink_indent = false -- set to true to enable blink indent guides
-vim.g.use_oil = false -- set to true to use oil.nvim for file browsing (otherwise, fyler)
-vim.g.use_ai_to_lookup_rulebook = true -- set to true to use AI to lookup rules in the code (for rulebook)
+vim.g.use_blink_indent = true -- set to true to enable blink indent guides
+vim.g.use_oil = true -- set to true to use oil.nvim for file browsing (otherwise, fyler)
+vim.g.use_ai_to_lookup_rulebook = false -- set to true to use AI to lookup rules in the code (for rulebook)
 
 vim.opt.swapfile = false -- disable swap files
 vim.opt.list = false -- disable whitespace characters
