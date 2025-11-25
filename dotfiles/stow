@@ -1,11 +1,18 @@
 #!/usr/bin/env zsh
 
+# Stow wrapper that auto-discovers dotfile folders and calls install script
+# Usage: ./stow [--verbose] [--dry-run]
+
 if [[ -z $STOW_FOLDERS ]]; then
-    STOW_FOLDERS="lazygit,nvim,tmux,zsh,alacritty,ghostty,mise,yazi,opencode,karabiner,git"
+    # Auto-discover: find all directories (excluding hidden and special folders)
+    STOW_FOLDERS=$(find "${DOTFILES:=$HOME/.dotfiles}" -mindepth 1 -maxdepth 1 -type d \
+        -not -name '.*' \
+        -not -name '__pycache__' \
+        -exec basename {} \; | sort | tr '\n' ',' | sed 's/,$//')
 fi
 
 if [[ -z $DOTFILES ]]; then
     DOTFILES=$HOME/.dotfiles
 fi
 
-STOW_FOLDERS=$STOW_FOLDERS DOTFILES=$DOTFILES $DOTFILES/install
+STOW_FOLDERS=$STOW_FOLDERS DOTFILES=$DOTFILES "$DOTFILES/install" "$@"

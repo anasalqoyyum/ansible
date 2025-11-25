@@ -7,27 +7,52 @@
     - stow
     - linux-only
 
-- name: Delete the .dotfiles folder
+- name: Ensure .dotfiles directory exists
   file:
     path: "{{ lookup('env', 'HOME') }}/.dotfiles"
-    state: absent
+    state: directory
+    mode: '0700'
   tags:
     - install
     - dotfiles
     - stow
 
-- name: Copy dotfiles
-  copy:
+- name: Sync dotfiles from repo (idempotent)
+  ansible.posix.synchronize:
     src: "./dotfiles/"
     dest: "{{ lookup('env', 'HOME') }}/.dotfiles/"
-    mode: 0700
+    delete: yes
+    recursive: yes
+    checksum: yes
+    rsync_opts:
+      - "--exclude=.git"
+      - "--exclude=.gitignore"
+      - "--exclude=*.log"
+      - "--delete-excluded"
+  delegate_to: localhost
   tags:
     - install
     - dotfiles
     - stow
 
-- name: Stow dotfiles
+- name: Make scripts executable
+  file:
+    path: "{{ lookup('env', 'HOME') }}/.dotfiles/{{ item }}"
+    mode: '0755'
+  loop:
+    - 'install'
+    - 'stow'
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Run stow to create symlinks
   shell: cd $HOME/.dotfiles && ./stow
+  register: stow_output
+  changed_when: 
+    - "'LINK' in stow_output.stdout"
+    - "'UNLINK' in stow_output.stdout"
   tags:
     - install
     - dotfiles

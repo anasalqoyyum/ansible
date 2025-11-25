@@ -1,18 +1,130 @@
 #!/usr/bin/env zsh
-# I am using zsh instead of bash. I was having some troubles using bash with
-# arrays. Didn't want to investigate, so I just did zsh
 
-pushd $DOTFILES
+# Dotfiles installer with auto-discovery, logging, and error handling
+# Usage: DOTFILES=~/.dotfiles ./install [--verbose] [--dry-run]
 
-# 🧹 Clean up .DS_Store files before stowing
-echo "Cleaning up .DS_Store files..."
-find . -name ".DS_Store" -type f -delete
+DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+LOG_FILE="$DOTFILES/.stow.log"
+DRY_RUN=false
+VERBOSE=false
 
-for folder in $(echo $STOW_FOLDERS | sed "s/,/ /g")
-do
-    echo "stow $folder"
-    stow -D $folder
-    stow --adopt $folder
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        --verbose)
+            VERBOSE=true
+            shift
+            ;;
+        *)
+            shift
+            ;;
+    esac
 done
 
-popd
+# Initialize log file
+{
+    echo "=== Stow run: $(date '+%Y-%m-%d %H:%M:%S') ==="
+    echo "Dotfiles location: $DOTFILES"
+    echo "Dry run: $DRY_RUN"
+    echo ""
+} >> "$LOG_FILE"
+
+echo "📦 Starting dotfiles installation..."
+echo "   Location: $DOTFILES"
+
+# Cleanup .DS_Store files before stowing
+echo "🧹 Cleaning up .DS_Store files..."
+find "$DOTFILES" -name ".DS_Store" -type f -delete
+
+# Auto-discover folders: find all directories (excluding hidden and non-directories)
+if [[ -z $STOW_FOLDERS ]]; then
+    STOW_FOLDERS=$(find "$DOTFILES" -mindepth 1 -maxdepth 1 -type d \
+        -not -name '.*' \
+        -not -name '__pycache__' \
+        -exec basename {} \; | sort | tr '\n' ',' | sed 's/,$//')
+    
+    if [[ -z $STOW_FOLDERS ]]; then
+        echo "❌ No dotfile folders found in $DOTFILES"
+        exit 1
+    fi
+fi
+
+echo "📂 Auto-discovered folders: $STOW_FOLDERS"
+echo ""
+
+cd "$DOTFILES" || exit 1
+
+# Build stow flags
+# Use -d to specify stow directory explicitly
+STOW_FLAGS="-R -d ."  # Restow with explicit current directory as dotfiles dir
+if [[ "$DRY_RUN" == true ]]; then
+    STOW_FLAGS="$STOW_FLAGS -n"  # Dry run
+fi
+if [[ "$VERBOSE" == true ]]; then
+    STOW_FLAGS="$STOW_FLAGS -v"  # Verbose (can be repeated)
+fi
+
+# Track failures
+failed_folders=()
+success_count=0
+
+# Stow each folder
+for folder in $(echo "$STOW_FOLDERS" | sed "s/,/ /g"); do
+    if [[ ! -d "$DOTFILES/$folder" ]]; then
+        echo "⚠️  Skipping $folder (directory not found)"
+        continue
+    fi
+    
+    echo -n "🔗 Stowing $folder... "
+    
+    # Build command: stow -R -d . [-n] [-v] folder
+    cmd="stow -R -d . $folder"
+    if [[ "$DRY_RUN" == true ]]; then
+        cmd="$cmd -n"
+    fi
+    if [[ "$VERBOSE" == true ]]; then
+        cmd="$cmd -v"
+    fi
+    
+    if eval "$cmd" >> "$LOG_FILE" 2>&1; then
+        echo "✓"
+        ((success_count++))
+    else
+        echo "✗ FAILED"
+        failed_folders+=("$folder")
+        {
+            echo ""
+            echo "ERROR stowing $folder at $(date '+%Y-%m-%d %H:%M:%S'):"
+            eval "$cmd" 2>&1 || true
+            echo ""
+        } >> "$LOG_FILE"
+    fi
+done
+
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Summary
+if [[ ${#failed_folders[@]} -eq 0 ]]; then
+    echo "✅ All $success_count folders stowed successfully"
+    {
+        echo "✅ Completed successfully at $(date '+%Y-%m-%d %H:%M:%S')"
+        echo ""
+    } >> "$LOG_FILE"
+    exit 0
+else
+    echo "❌ Stowing completed with errors:"
+    printf "   • %s\n" "${failed_folders[@]}"
+    echo ""
+    echo "   Check log: $LOG_FILE"
+    {
+        echo "❌ Failed with ${#failed_folders[@]} folder(s) at $(date '+%Y-%m-%d %H:%M:%S')"
+        echo "Failed folders: ${failed_folders[*]}"
+        echo ""
+    } >> "$LOG_FILE"
+    exit 1
+fi

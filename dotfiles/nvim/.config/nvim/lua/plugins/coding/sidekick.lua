@@ -73,7 +73,7 @@ return {
       {
         "<leader>at",
         function()
-          require("sidekick.cli").send({ msg = "{this}" })
+          require("sidekick.cli").send({ name = "opencode", msg = "{this}" })
         end,
         mode = { "x", "n" },
         desc = "Send This",
@@ -81,14 +81,14 @@ return {
       {
         "<leader>af",
         function()
-          require("sidekick.cli").send({ msg = "{file}" })
+          require("sidekick.cli").send({ name = "opencode", msg = "{file}" })
         end,
         desc = "Send File",
       },
       {
         "<leader>av",
         function()
-          require("sidekick.cli").send({ msg = "{selection}" })
+          require("sidekick.cli").send({ name = "opencode", msg = "{selection}" })
         end,
         mode = { "x" },
         desc = "Send Visual Selection",
