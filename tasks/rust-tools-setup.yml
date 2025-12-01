@@ -66,14 +66,13 @@
     - linux-only
 
 - name: Install ripgrep
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install ripgrep"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install ripgrep --features 'pcre2'"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
   tags:
     - install
     - rust
-    - linux-only
 
 - name: Install fd
   shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install fd-find"
