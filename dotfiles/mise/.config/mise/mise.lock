@@ -202,6 +202,15 @@ backend = "npm:prettier"
 version = "3.13.7"
 backend = "core:python"
 
+[[tools.starship]]
+version = "1.24.1"
+backend = "aqua:starship/starship"
+
+[tools.starship.platforms.linux-x64]
+checksum = "sha256:44a729c34aea5b0451fba49108cdc5ef6b1ae68db65e7623cc244a52efcd23d1"
+size = 5025658
+url = "https://github.com/starship/starship/releases/download/v1.24.1/starship-x86_64-unknown-linux-musl.tar.gz"
+
 [[tools.trivy]]
 version = "0.67.2"
 backend = "aqua:aquasecurity/trivy"

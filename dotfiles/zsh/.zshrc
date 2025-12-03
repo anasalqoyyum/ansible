@@ -4,13 +4,19 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# fi
 
-if [[ -f "/opt/homebrew/bin/brew" ]] then
+if [[ -f "/opt/homebrew/bin/brew" ]]; then
   # If you're using macOS, you'll want this enabled
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+  # Lazy-load Homebrew environment instead of using eval
+  export HOMEBREW_PREFIX="/opt/homebrew"
+  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+  export HOMEBREW_REPOSITORY="/opt/homebrew"
+  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}"
+  export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:"
+  export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 fi
 
 # Set true color support
@@ -32,8 +38,14 @@ ZINIT[NO_ALIASES]=1
 source "${ZINIT_HOME}/zinit.zsh"
 
 # Add in Powerlevel10k
-zinit ice lucid atload'source ~/.p10k.zsh' nocd depth=1
-zinit light romkatv/powerlevel10k
+# zinit ice lucid atload'source ~/.p10k.zsh' nocd depth=1
+# zinit light romkatv/powerlevel10k
+
+# Add in Starship prompt
+zinit ice as"command" from"gh-r" \
+  atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+  atpull"%atclone" src"init.zsh"
+zinit light starship/starship
 
 # Add in zsh plugins (with wait for lucid)
 zinit wait lucid for \
@@ -45,27 +57,27 @@ zinit wait lucid for \
  atload"!_zsh_autosuggest_start" \
     zsh-users/zsh-autosuggestions
 
-# Add in snippets (with wait)
+# Add in snippets (with wait) - core plugins for immediate use
 zinit wait lucid for \
-    OMZL::clipboard.zsh \
     OMZL::git.zsh \
   atload"alias ll='eza -lg --icons --git'" \
     OMZL::directories.zsh \
     OMZL::functions.zsh \
     OMZP::git \
-    OMZP::sudo \
-    OMZP::kubectl \
-    OMZP::kubectx \
-    OMZP::command-not-found \
     OMZP::zoxide \
     OMZP::fzf \
+    OMZP::mise
+
+# Defer package manager plugins to load later (less frequently needed on startup)
+zinit wait'2' lucid for \
   atload"unalias y" \
     OMZP::yarn \
-    OMZP::mise \
-    OMZP::bun
+    OMZP::bun \
+    OMZP::kubectl \
+    OMZP::kubectx
 
-# pnpm completion
-zinit ice wait lucid atload"zpcdreplay" atclone"./zplug.zsh" atpull"%atclone"
+# pnpm completion - defer to load later
+zinit ice wait'2' lucid atload"zpcdreplay" atclone"./zplug.zsh" atpull"%atclone"
 zinit light g-plane/pnpm-shell-completion
 
 # Functions
@@ -155,10 +167,10 @@ function pj() {
   fi
 }
 function yank() {
-  if [[ "$(uname -s)" == "Darwin" ]]; then
+  if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS
     pbcopy
-  elif [[ "$(uname -s)" == "Linux" ]]; then
+  elif [[ "$OSTYPE" == "linux"* ]]; then
     # Linux / WSL
     if command -v win32yank >/dev/null 2>&1; then
       win32yank -i
@@ -173,7 +185,7 @@ function yank() {
       return 1
     fi
   else
-    echo "Unsupported system: $(uname -s)" >&2
+    echo "Unsupported system: $OSTYPE" >&2
     return 1
   fi
 }
@@ -231,7 +243,7 @@ bindkey '\C-x\C-e' edit-command-line
 bindkey '\ew' kill-region # [Esc-w] - Kill from the cursor to the mark
 
 # History
-HISTSIZE=5000
+HISTSIZE=50000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
@@ -250,37 +262,35 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-## $PATH
-export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH="${HOME}/.local/bin:${PATH}"
-export XDG_CONFIG_HOME="$HOME/.config"
-# Set default git config location
-export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
-# Add Golang (managed by mise)
-export PATH="$PATH:/usr/local/go/bin"
-export GOPATH="$HOME/go"
-export PATH="$PATH:$GOPATH/bin"
-# Add Rust
-export PATH="$HOME/.cargo/bin:$PATH"
-# Add Java (managed by mise)
-# export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-# export PATH="$JAVA_HOME/bin:$PATH"
-# Add Android Tools
 export ANDROID_HOME="$HOME/android"
 export GRADLE_HOME=/opt/gradle/gradle-7.6.1 # Might need to change this depending on your version
 export ANDROID_SDK_ROOT=${ANDROID_HOME}
-export PATH="${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${PATH}"
-export PATH="${GRADLE_HOME}/bin:${PATH}"
-# Add Bun
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-export BAT_THEME="OneHalfDark"
-
 export FLYCTL_INSTALL="$HOME/.fly"
-export PATH="$FLYCTL_INSTALL/bin:$PATH"
-
+export GOPATH="$HOME/go"
+export XDG_CONFIG_HOME="$HOME/.config"
+export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
+export BAT_THEME="OneHalfDark"
 export KUBE_EDITOR="nvim"
 export EDITOR="nvim"
+
+typeset -U path  # Ensures unique entries
+path=(
+  "$HOME/bin"
+  "${HOME}/.local/bin"
+  "${HOME}/.cargo/bin"
+  "/usr/local/go/bin"
+  "${HOME}/go/bin"
+  "${ANDROID_HOME}/cmdline-tools/latest/bin"
+  "${ANDROID_HOME}/platform-tools"
+  "${ANDROID_HOME}/tools"
+  "${ANDROID_HOME}/tools/bin"
+  "${GRADLE_HOME}/bin"
+  "${BUN_INSTALL}/bin"
+  "${FLYCTL_INSTALL}/bin"
+  "/usr/local/bin"
+  $path
+)
 
 # Aliases
 alias vs="code ."
@@ -296,7 +306,7 @@ alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias t="tmux new-session -A -s main"
 alias search="rg --files --hidden | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' | xargs -r nvim"
 alias p="pnpm"
-alias ll="eza -lg --icons --git"
+alias l="eza -lg --icons --git"
 alias lla="eza -alg --icons --git"
 alias llt="eza -1 --icons --tree --git-ignore"
 alias k="kubectl"

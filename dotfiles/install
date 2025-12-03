@@ -82,7 +82,7 @@ for folder in $(echo "$STOW_FOLDERS" | sed "s/,/ /g"); do
     echo -n "🔗 Stowing $folder... "
     
     # Build command: stow -R -d . [-n] [-v] folder
-    cmd="stow -R -d . $folder"
+    cmd="stow -R --adopt -d . $folder"
     if [[ "$DRY_RUN" == true ]]; then
         cmd="$cmd -n"
     fi

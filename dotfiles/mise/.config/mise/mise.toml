@@ -22,6 +22,7 @@ lazydocker = "latest"
 trivy = "latest"
 amp = "latest"
 aws-cli = "latest"
+starship = "latest"
 # Go Tools
 air = "latest"
 "aqua:joshmedeski/sesh" = { version = "latest", os = ["linux"] }
