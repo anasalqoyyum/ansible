@@ -83,7 +83,7 @@ size = 18174787
 url = "https://github.com/cli/cli/releases/download/v2.83.1/gh_2.83.1_linux_amd64.tar.gz"
 
 [[tools.go]]
-version = "1.25.0"
+version = "1.25.4"
 backend = "core:go"
 
 [[tools.golangci-lint]]
@@ -175,7 +175,7 @@ version = "3.1.5"
 backend = "npm:@vue/typescript-plugin"
 
 [[tools."npm:opencode-ai"]]
-version = "1.0.122"
+version = "1.0.129"
 backend = "npm:opencode-ai"
 
 [[tools."npm:typescript-svelte-plugin"]]
@@ -210,6 +210,11 @@ backend = "aqua:starship/starship"
 checksum = "sha256:44a729c34aea5b0451fba49108cdc5ef6b1ae68db65e7623cc244a52efcd23d1"
 size = 5025658
 url = "https://github.com/starship/starship/releases/download/v1.24.1/starship-x86_64-unknown-linux-musl.tar.gz"
+
+[tools.starship.platforms.macos-arm64]
+checksum = "sha256:877e6b18d8f826167ca6b6f2ff00ebac2477fa1924c06b89befe524840ffc726"
+size = 3865881
+url = "https://github.com/starship/starship/releases/download/v1.24.1/starship-aarch64-apple-darwin.tar.gz"
 
 [[tools.trivy]]
 version = "0.67.2"
