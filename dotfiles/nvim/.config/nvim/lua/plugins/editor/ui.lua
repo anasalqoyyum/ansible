@@ -131,6 +131,11 @@ return {
           },
         },
       },
+      hooks = {
+        on_rename = function(src_path, destination_path)
+          Snacks.rename.on_rename_file(src_path, destination_path)
+        end,
+      },
     },
     keys = {
       {
@@ -163,6 +168,7 @@ return {
       keymaps = {
         ["<C-s>"] = false,
         ["<C-v>"] = { "actions.select", opts = { vertical = true } },
+        ["<C-r>"] = "actions.refresh",
         ["q"] = { "actions.close", mode = "n" },
       },
       -- give me back the rounded borders
@@ -175,7 +181,7 @@ return {
     keys = {
       {
         "-",
-        "<cmd>Oil<cr>",
+        "<cmd>Oil --float<cr>",
         desc = "Open parent directory",
       },
     },
@@ -289,6 +295,7 @@ return {
       notifier = {
         enabled = false,
       },
+      rename = { enabled = true },
     },
     keys = {
       {
