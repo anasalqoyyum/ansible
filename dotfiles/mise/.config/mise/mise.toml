@@ -52,3 +52,4 @@ lockfile = true
 [env]
 # Auto enable corepack for node versions that support it (>=16.9.0).
 MISE_NODE_COREPACK = true
+STARSHIP_LOG = 'error'

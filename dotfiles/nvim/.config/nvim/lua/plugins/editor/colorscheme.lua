@@ -87,7 +87,7 @@ return {
         -- similar to VSCode Tokyo Night Dark
         -- hl.Visual.bg = "#2a2f41"
         -- Use a darker visual to contrast with the lighter cursor line
-        hl.Visual.bg = "#121621"
+        hl.Visual.bg = "#191e2d"
 
         -- Use bg.dark from storm (not night) for the cursor line background to make it more subtle
         -- hl.CursorLine = { bg = "#1f2335" }

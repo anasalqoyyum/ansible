@@ -3,7 +3,6 @@
 
 # Inserts a blank line between shell prompts
 add_newline = true
-command_timeout = 100
 
 format = """
 $username\
@@ -12,10 +11,11 @@ $directory\
 $git_branch\
 $git_state\
 $git_status\
-$cmd_duration\
 $python\
 $line_break\
 $character"""
+
+right_format = """$cmd_duration"""
 
 [directory]
 style = "blue"
