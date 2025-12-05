@@ -309,6 +309,7 @@ alias p="pnpm"
 alias l="eza -lg --icons --git"
 alias lla="eza -alg --icons --git"
 alias llt="eza -1 --icons --tree --git-ignore"
+alias rgf="rg --fixed-strings"
 alias k="kubectl"
 # I forgot what this does
 alias v="print -z --"

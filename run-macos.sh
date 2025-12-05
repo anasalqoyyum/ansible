@@ -43,4 +43,4 @@ fi
 # ansible-playbook test.yml
 
 # Run Ansible playbook
-ansible-playbook local-macos.yml --ask-become-pass --skip-tags "linux-only,git-ab,ssh"
+ansible-playbook local-macos.yml --ask-become-pass --skip-tags "linux-only,ssh"

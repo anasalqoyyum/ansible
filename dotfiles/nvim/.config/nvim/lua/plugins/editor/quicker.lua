@@ -5,6 +5,15 @@ return {
     ---@module "quicker"
     ---@type quicker.SetupOptions
     opts = {
+      borders = {
+        vert = "│",
+        strong_header = "─",
+        strong_cross = "┼",
+        strong_end = "┤",
+        soft_header = "╌",
+        soft_cross = "╎",
+        soft_end = "┆",
+      },
       keys = {
         {
           ">",
@@ -22,5 +31,11 @@ return {
         },
       },
     },
+  },
+
+  {
+    "kevinhwang91/nvim-bqf",
+    event = "FileType qf",
+    opts = {},
   },
 }
