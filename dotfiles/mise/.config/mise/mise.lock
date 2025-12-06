@@ -83,7 +83,7 @@ size = 18174787
 url = "https://github.com/cli/cli/releases/download/v2.83.1/gh_2.83.1_linux_amd64.tar.gz"
 
 [[tools.go]]
-version = "1.25.4"
+version = "1.25.0"
 backend = "core:go"
 
 [[tools.golangci-lint]]
@@ -202,19 +202,14 @@ backend = "npm:prettier"
 version = "3.13.7"
 backend = "core:python"
 
-[[tools.starship]]
-version = "1.24.1"
-backend = "aqua:starship/starship"
+[[tools.television]]
+version = "0.13.12"
+backend = "aqua:alexpasmantier/television"
 
-[tools.starship.platforms.linux-x64]
-checksum = "sha256:44a729c34aea5b0451fba49108cdc5ef6b1ae68db65e7623cc244a52efcd23d1"
-size = 5025658
-url = "https://github.com/starship/starship/releases/download/v1.24.1/starship-x86_64-unknown-linux-musl.tar.gz"
-
-[tools.starship.platforms.macos-arm64]
-checksum = "sha256:877e6b18d8f826167ca6b6f2ff00ebac2477fa1924c06b89befe524840ffc726"
-size = 3865881
-url = "https://github.com/starship/starship/releases/download/v1.24.1/starship-aarch64-apple-darwin.tar.gz"
+[tools.television.platforms.linux-x64]
+checksum = "sha256:bfa007178e874b52b34cadf274300b94016a2f8c19d93ce3656f294768bac981"
+size = 4089534
+url = "https://github.com/alexpasmantier/television/releases/download/0.13.12/tv-0.13.12-x86_64-unknown-linux-musl.tar.gz"
 
 [[tools.trivy]]
 version = "0.67.2"
