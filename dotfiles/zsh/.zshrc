@@ -49,8 +49,7 @@ zinit light starship/starship
 
 # Add in zsh plugins (with wait for lucid)
 zinit wait lucid for \
-    Aloxaf/fzf-tab \
- atinit"zicompinit; zicdreplay" \
+ atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
     zdharma-continuum/fast-syntax-highlighting \
  blockf \
     zsh-users/zsh-completions \
@@ -65,7 +64,6 @@ zinit wait lucid for \
     OMZL::functions.zsh \
     OMZP::git \
     OMZP::zoxide \
-    OMZP::fzf \
     OMZP::mise
 
 # Defer package manager plugins to load later (less frequently needed on startup)
@@ -73,6 +71,8 @@ zinit wait'2' lucid for \
   atload"unalias y" \
     OMZP::yarn \
     OMZP::bun \
+    OMZP::fzf \
+    Aloxaf/fzf-tab \
     OMZP::kubectl \
     OMZP::kubectx
 

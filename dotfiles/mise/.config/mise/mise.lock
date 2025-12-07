@@ -83,7 +83,7 @@ size = 18174787
 url = "https://github.com/cli/cli/releases/download/v2.83.1/gh_2.83.1_linux_amd64.tar.gz"
 
 [[tools.go]]
-version = "1.25.0"
+version = "1.25.4"
 backend = "core:go"
 
 [[tools.golangci-lint]]
@@ -210,6 +210,11 @@ backend = "aqua:alexpasmantier/television"
 checksum = "sha256:bfa007178e874b52b34cadf274300b94016a2f8c19d93ce3656f294768bac981"
 size = 4089534
 url = "https://github.com/alexpasmantier/television/releases/download/0.13.12/tv-0.13.12-x86_64-unknown-linux-musl.tar.gz"
+
+[tools.television.platforms.macos-arm64]
+checksum = "sha256:86a4791c336a65774352710ff842b4babae89c3592e343dba0d1a3a72499d416"
+size = 3565255
+url = "https://github.com/alexpasmantier/television/releases/download/0.13.12/tv-0.13.12-aarch64-apple-darwin.tar.gz"
 
 [[tools.trivy]]
 version = "0.67.2"
