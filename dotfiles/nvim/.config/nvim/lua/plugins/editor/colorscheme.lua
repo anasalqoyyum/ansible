@@ -149,6 +149,8 @@ return {
         hl.LspReferenceWrite = { bg = c.bg_highlight }
         hl.LspReferenceText = { bg = c.bg_highlight }
         hl.LspReferenceRead = { bg = c.bg_highlight }
+        hl.MiniCursorword = { bg = "#232a3b" }
+        hl.MiniCursorwordCurrent = { bg = "#232a3b" }
       end,
     },
   },

@@ -123,4 +123,16 @@ return {
       comment = { suffix = "r", options = {} }, -- conflicted with previous/next class in TS files
     },
   },
+
+  {
+    "nvim-mini/mini.cmdline",
+    event = "VeryLazy",
+    opts = {
+      autocomplete = {
+        enable = false,
+      },
+    },
+  },
+
+  { "nvim-mini/mini.cursorword", event = "VeryLazy", opts = {} },
 }

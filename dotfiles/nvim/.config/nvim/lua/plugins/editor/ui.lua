@@ -29,6 +29,7 @@ end
 return {
   {
     "folke/noice.nvim",
+    event = "VeryLazy",
     opts = {
       presets = {
         lsp_doc_border = true,
@@ -208,9 +209,10 @@ return {
     "folke/snacks.nvim",
     ---@type snacks.Config
     opts = {
-      indent = {
-        enabled = not vim.g.use_blink_indent,
-      },
+      indent = { enabled = not vim.g.use_blink_indent },
+      words = { enabled = false },
+      notifier = { enabled = false },
+      rename = { enabled = true },
       explorer = {
         replace_netrw = false,
       },
@@ -292,10 +294,6 @@ return {
           float = false,
         },
       },
-      notifier = {
-        enabled = false,
-      },
-      rename = { enabled = true },
     },
     keys = {
       {
