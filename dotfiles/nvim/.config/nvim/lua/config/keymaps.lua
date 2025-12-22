@@ -2,6 +2,9 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+local lsp_restart = require("custom.lsp-restart")
+local yank = require("custom.yank")
+
 local DIFFVIEW_FILETYPES = {
   "DiffviewFiles",
   "DiffviewView",
@@ -103,3 +106,33 @@ Snacks.toggle({
     end
   end,
 }):map("<leader>uH")
+
+vim.keymap.set("n", "<leader>cL", function()
+  lsp_restart.restart_lsp()
+end, { desc = "[L]SP Restart" })
+
+vim.keymap.set("n", "<leader>ya", function()
+  yank.yank_path(yank.get_buffer_absolute(), "absolute")
+end, { desc = "[Y]ank [A]bsolute path to clipboard" })
+
+vim.keymap.set("n", "<leader>yr", function()
+  yank.yank_path(yank.get_buffer_cwd_relative(), "relative")
+end, { desc = "[Y]ank [R]elative path to clipboard" })
+
+vim.keymap.set("v", "<leader>ya", function()
+  yank.yank_visual_with_path(yank.get_buffer_absolute(), "absolute")
+end, { desc = "[Y]ank selection with [A]bsolute path" })
+
+vim.keymap.set("v", "<leader>yr", function()
+  yank.yank_visual_with_path(yank.get_buffer_cwd_relative(), "relative")
+end, { desc = "[Y]ank selection with [R]elative path" })
+
+--[[ Git diff (vscode-diff)
+vim.keymap.set('n', '<leader>dd', '<cmd>:CodeDiff<cr>', { desc = 'Git [d]iff' })
+vim.keymap.set('n', '<leader>do', function()
+  local remotes_output = vim.fn.system 'git remote'
+  local upstream_exists = remotes_output:find 'upstream' ~= nil
+  local remote = upstream_exists and 'upstream' or 'origin'
+  vim.cmd(':CodeDiff ' .. remote .. '/main HEAD')
+end, { desc = 'Git [d]iff against upstream/main or origin/main' })
+--]]
