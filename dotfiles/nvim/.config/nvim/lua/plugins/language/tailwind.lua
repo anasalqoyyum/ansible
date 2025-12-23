@@ -4,6 +4,7 @@ return {
     opts = {
       servers = {
         tailwindcss = {
+          -- TODO: Stupidly blocking somehow on SCSS (or when needing preprocessor), investigate later
           enabled = false,
           -- exclude a filetype from the default_config
           filetypes_exclude = { "markdown" },

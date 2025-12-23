@@ -76,5 +76,14 @@ return {
     },
   },
 
+  {
+    "esmuellert/vscode-diff.nvim",
+    enabled = false,
+    dependencies = { "MunifTanjim/nui.nvim" },
+    cmd = "CodeDiff",
+    branch = "next",
+    opts = {},
+  },
+
   { "akinsho/git-conflict.nvim", opts = {} },
 }

@@ -273,6 +273,7 @@ export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
 export BAT_THEME="OneHalfDark"
 export KUBE_EDITOR="nvim"
 export EDITOR="nvim"
+export STARSHIP_LOG="error"
 
 typeset -U path  # Ensures unique entries
 path=(
