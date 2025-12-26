@@ -20,9 +20,12 @@ docker-compose = { version = "latest", os = ["linux"] }
 httpie-go = "latest"
 lazydocker = "latest"
 trivy = "latest"
-amp = "latest"
 aws-cli = "latest"
 television = "latest"
+# AI Tools
+opencode = "latest"
+amp = "latest"
+claude = "latest"
 # Go Tools
 air = "latest"
 "aqua:joshmedeski/sesh" = { version = "latest", os = ["linux"] }
@@ -32,7 +35,6 @@ uv = "latest"
 "pipx:pgcli" = { version = "latest", os = ["linux"] }
 "pipx:mycli" = { version = "latest", os = ["linux"] }
 # Node Tools
-"npm:opencode-ai" = { version = "latest", os = ["linux", "macos"] }
 "npm:@frostoven/squoosh-cli" = { version = "latest" }
 # To setup typescript-plugin
 "npm:@astrojs/ts-plugin" = { version = "latest" }
