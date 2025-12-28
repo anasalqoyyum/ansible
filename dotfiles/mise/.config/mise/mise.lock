@@ -108,14 +108,22 @@ backend = "npm:@frostoven/squoosh-cli"
 version = "3.2.1"
 backend = "npm:@vue/typescript-plugin"
 
+[[tools."npm:oxlint"]]
+version = "1.35.0"
+backend = "npm:oxlint"
+
+[[tools."npm:oxlint-tsgolint"]]
+version = "0.10.0"
+backend = "npm:oxlint-tsgolint"
+
 [[tools."npm:typescript-svelte-plugin"]]
 version = "0.3.50"
 backend = "npm:typescript-svelte-plugin"
 
 [[tools.opencode]]
-version = "1.0.203"
+version = "1.0.204"
 backend = "aqua:sst/opencode"
-"platforms.macos-arm64" = { checksum = "blake3:acba7967ac543d1c3d5fa671d40c0d367fc2db10179190cf31d617506376789f", url = "https://github.com/sst/opencode/releases/download/v1.0.203/opencode-darwin-arm64.zip"}
+"platforms.macos-arm64" = { checksum = "sha256:1575a075bb625a3d650c78ed1e24de2dcc90c1e6cfa65b28bcb7e4564332ff0b", url = "https://github.com/sst/opencode/releases/download/v1.0.204/opencode-darwin-arm64.zip"}
 
 [[tools.oxlint]]
 version = "1.16.0"

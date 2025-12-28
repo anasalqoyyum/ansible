@@ -5,10 +5,6 @@ go = "prefix:1.25"
 python = "3.13"
 java = { version = "21", os = ["linux"] }
 kotlin = { version = "latest", os = ["linux"] }
-# Node Tools
-biome = { version = "latest" }
-prettier = { version = "latest" }
-oxlint = { version = "latest" }
 # CLI Tools
 kubectl = { version = "latest", os = ["linux"] }
 k6 = { version = "latest", os = ["linux"] }
@@ -35,6 +31,11 @@ uv = "latest"
 "pipx:pgcli" = { version = "latest", os = ["linux"] }
 "pipx:mycli" = { version = "latest", os = ["linux"] }
 # Node Tools
+biome = { version = "latest" }
+prettier = { version = "latest" }
+"npm:oxlint" = { version = "latest" }
+"npm:oxlint-tsgolint" = { version = "latest" }
+# Npm Tools
 "npm:@frostoven/squoosh-cli" = { version = "latest" }
 # To setup typescript-plugin
 "npm:@astrojs/ts-plugin" = { version = "latest" }
