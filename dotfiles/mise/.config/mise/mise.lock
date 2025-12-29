@@ -4,7 +4,7 @@ backend = "aqua:air-verse/air"
 "platforms.macos-arm64" = { checksum = "sha256:97ed13fa4e5541cf0b50b66448b831e610a0705d7f760ca8a84c86da9a317422", url = "https://github.com/air-verse/air/releases/download/v1.63.4/air_1.63.4_darwin_arm64.tar.gz"}
 
 [[tools.amp]]
-version = "0.0.1766814227-gd4c17f"
+version = "0.0.1766937678-g9acadc"
 backend = "npm:@sourcegraph/amp"
 
 [[tools."aqua:joshmedeski/sesh"]]
@@ -146,9 +146,9 @@ version = "3.13.11"
 backend = "core:python"
 
 [[tools.television]]
-version = "0.14.2"
+version = "0.14.3"
 backend = "aqua:alexpasmantier/television"
-"platforms.macos-arm64" = { checksum = "sha256:3a1e4b1599c74245a0459cb05e4621dade4aa922a9e7c0a22b60f33d26cd1c18", url = "https://github.com/alexpasmantier/television/releases/download/0.14.2/tv-0.14.2-aarch64-apple-darwin.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:42894b3407b9e1ba1537a81e9fa2878c8a24d8ccabde5e199b7649f682f76e14", url = "https://github.com/alexpasmantier/television/releases/download/0.14.3/tv-0.14.3-x86_64-unknown-linux-musl.tar.gz"}
 
 [[tools.trivy]]
 version = "0.68.2"

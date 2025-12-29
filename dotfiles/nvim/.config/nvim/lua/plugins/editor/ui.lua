@@ -51,6 +51,35 @@ return {
     },
   },
 
+  {
+    "mistweaverco/bafa.nvim",
+    event = "VeryLazy",
+    opts = {
+      ui = {
+        title = {
+          text = "",
+        },
+        icons = {
+          diagnostics = {
+            Error = " ",
+            Warn = " ",
+            Info = " ",
+            Hint = " ",
+          },
+        },
+      },
+    },
+    keys = {
+      {
+        "<leader>bb",
+        function()
+          require("bafa.ui").toggle()
+        end,
+        desc = "Toggle Buffer List",
+      },
+    },
+  },
+
   -- add statusline/filename in top right
   {
     "b0o/incline.nvim",
