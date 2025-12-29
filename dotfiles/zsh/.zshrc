@@ -190,7 +190,21 @@ function yank() {
   fi
 }
 function giraph() {
-  git log -n "${1:-20}" --oneline --graph --decorate --color
+   git log -n "${1:-20}" --oneline --graph --decorate --color
+}
+function oil() {
+   # Open an SSH connection through Neovim Oil file manager
+   # Select a host via fzf
+   local host=$(grep 'Host\>' ~/.ssh/config | sed 's/^Host //' | grep -v '\*' | fzf --cycle --layout=reverse)
+
+   if [ -z "$host" ]; then
+      return 0
+   fi
+
+   # Get user from host name
+   local user=$(ssh -G "$host" | grep '^user\>' | sed 's/^user //')
+
+   nvim "oil-ssh://${user}@${host}/"
 }
 
 # Keybinds
