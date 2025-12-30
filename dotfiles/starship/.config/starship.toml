@@ -11,11 +11,12 @@ $directory\
 $git_branch\
 $git_state\
 $git_status\
-$python\
 $line_break\
 $character"""
 
-right_format = """$cmd_duration"""
+right_format = """
+$python\
+$cmd_duration"""
 
 [directory]
 style = "blue"
