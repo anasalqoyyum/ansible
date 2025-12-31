@@ -9,9 +9,7 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        vue_ls = {
-          root_markers = { "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "bun.lockb", "bun.lock", { ".git" } },
-        },
+        vue_ls = {},
         vtsls = {},
       },
     },
