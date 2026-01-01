@@ -21,6 +21,29 @@ local prettierSupported = {
   "yaml",
 }
 
+-- Should be similar to prettier supported filetypes but oxfmt does not support astro (due to plugin not supported yet)
+-- https://oxc.rs/docs/guide/usage/formatter.html#supported-languages
+local oxfmtSupported = {
+  -- "astro",
+  "css",
+  "graphql",
+  "handlebars",
+  "html",
+  "javascript",
+  "javascriptreact",
+  "json",
+  "jsonc",
+  "less",
+  "markdown",
+  "markdown.mdx",
+  "scss",
+  "toml",
+  "typescript",
+  "typescriptreact",
+  "vue",
+  "yaml",
+}
+
 -- https://biomejs.dev/internals/language-support/
 local biomeSupported = {
   "astro",
@@ -81,12 +104,13 @@ M.has_parser = LazyVim.memoize(M.has_parser)
 M.biome_support = LazyVim.memoize(M.biome_support)
 
 return {
+  -- oxfmt is installed through mise temporarily
+  -- PR: https://github.com/mason-org/mason-registry/pull/12767
   {
     "mason-org/mason.nvim",
     opts = { ensure_installed = { "prettierd", "prettier", "biome" } },
   },
 
-  -- conform
   {
     "stevearc/conform.nvim",
     optional = true,
@@ -100,6 +124,10 @@ return {
       for _, ft in ipairs(biomeSupported) do
         opts.formatters_by_ft[ft] = opts.formatters_by_ft[ft] or {}
         table.insert(opts.formatters_by_ft[ft], "biome")
+      end
+      for _, ft in ipairs(oxfmtSupported) do
+        opts.formatters_by_ft[ft] = opts.formatters_by_ft[ft] or {}
+        table.insert(opts.formatters_by_ft[ft], "oxfmt")
       end
 
       opts.formatters = opts.formatters or {}
@@ -118,7 +146,14 @@ return {
       opts.formatters.biome = {
         condition = function(_, ctx)
           local prettierd_condition = opts.formatters.prettierd.condition(_, ctx)
-          return not prettierd_condition and M.biome_support(ctx)
+          return not prettierd_condition and M.biome_support(ctx) and (vim.g.typescript_linter == "biome")
+        end,
+      }
+      opts.formatters.oxfmt = {
+        condition = function(_, ctx)
+          return not opts.formatters.prettierd.condition(_, ctx)
+            and not opts.formatters.biome.condition(_, ctx)
+            and (vim.g.typescript_linter == "oxlint")
         end,
       }
     end,

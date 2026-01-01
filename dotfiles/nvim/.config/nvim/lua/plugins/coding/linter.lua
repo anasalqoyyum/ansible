@@ -34,6 +34,7 @@ Example valid oxlint_settings (assuming defaults, buffer = 12, and git dir = /ho
 local oxlint_settings = {
   run = "onType", -- or "onSave"
   typeAware = true,
+  fixKind = "all",
 }
 
 local eslint_config_files = {
@@ -52,6 +53,8 @@ local eslint_config_files = {
 }
 
 -- Override eslint_d parser to handle missing config file error and clean output (e.g when React not in settings)
+-- Note: this is needed because eslint_d returns non-zero exit code when config file is missing
+-- Might not be needed anymore after: https://github.com/mfussenegger/nvim-lint/pull/851
 local eslint_d = require("lint").linters.eslint_d
 eslint_d.parser = function(output, bufnr)
   if string.find(output, "Error: Could not find config file") then

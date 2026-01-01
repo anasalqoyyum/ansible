@@ -81,6 +81,7 @@ vim.api.nvim_create_user_command("Format", function()
 end, {})
 
 vim.api.nvim_create_user_command("FormatWithLsp", function()
+  vim.notify("Formatted with lsp", vim.log.levels.INFO)
   require("conform").format({ async = false, lsp_format = "prefer" })
 end, {})
 
@@ -107,6 +108,7 @@ vim.api.nvim_create_user_command("FormatWithBiome", function()
     end
   end
 
+  vim.notify("Formatted with biome", vim.log.levels.INFO)
   conform.format({ async = false, lsp_format = "never", formatters = { "biome" } })
 
   if prevBiomeCondition == false then
@@ -140,6 +142,7 @@ vim.api.nvim_create_user_command("FormatWithPrettier", function()
     end
   end
 
+  vim.notify("Formatted with prettierd", vim.log.levels.INFO)
   conform.format({ async = false, lsp_format = "never", formatters = { "prettierd" } })
 
   if prevPrettierCondition == false then
@@ -150,6 +153,42 @@ vim.api.nvim_create_user_command("FormatWithPrettier", function()
   end
 end, {})
 
+vim.api.nvim_create_user_command("FormatWithOxfmt", function()
+  local conform = require("conform")
+  local formatters = conform.list_all_formatters()
+  local prevOxfmtCondition = nil
+  for _, formatter in ipairs(formatters) do
+    local is_oxfmt = formatter.name == "oxfmt"
+    if is_oxfmt then
+      prevOxfmtCondition = formatter.available
+      break
+    end
+  end
+
+  if prevOxfmtCondition == nil then
+    vim.notify("Oxfmt formatter not found", vim.log.levels.WARN)
+    return
+  end
+
+  if prevOxfmtCondition == false then
+    conform.formatters.oxfmt.condition = function()
+      return true
+    end
+  end
+
+  vim.notify("Formatted with oxfmt", vim.log.levels.INFO)
+  conform.format({ async = false, lsp_format = "never", formatters = { "oxfmt" } })
+
+  if prevOxfmtCondition == false then
+    -- Reset the condition to the previous state after formatting
+    conform.formatters.oxfmt.condition = function()
+      return prevOxfmtCondition
+    end
+  end
+end, {})
+
+-- Auto rename files when moved in oil.nvim
+-- https://github.com/folke/snacks.nvim/blob/main/docs/rename.md
 vim.api.nvim_create_autocmd("User", {
   pattern = "OilActionsPost",
   callback = function(event)

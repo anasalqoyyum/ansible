@@ -108,6 +108,10 @@ backend = "npm:@frostoven/squoosh-cli"
 version = "3.2.1"
 backend = "npm:@vue/typescript-plugin"
 
+[[tools."npm:oxfmt"]]
+version = "0.21.0"
+backend = "npm:oxfmt"
+
 [[tools."npm:oxlint"]]
 version = "1.35.0"
 backend = "npm:oxlint"

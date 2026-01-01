@@ -35,6 +35,7 @@ biome = { version = "latest" }
 prettier = { version = "latest" }
 "npm:oxlint" = { version = "latest" }
 "npm:oxlint-tsgolint" = { version = "latest" }
+"npm:oxfmt" = { version = "latest" }
 # Npm Tools
 "npm:@frostoven/squoosh-cli" = { version = "latest" }
 # To setup typescript-plugin
