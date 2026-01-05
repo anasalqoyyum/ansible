@@ -1,12 +1,13 @@
 {
-	"$schema": "https://opencode.ai/config.json",
-	"theme": "ayu",
-	"model": "github-copilot/claude-haiku-4.5",
-	// managed by mise
-	"autoupdate": false,
-	"permission": {
-		"edit": "allow",
-		"bash": "allow",
-		"webfetch": "allow"
-	}
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "ayu",
+  "model": "github-copilot/claude-haiku-4.5",
+  // managed by mise
+  "autoupdate": false,
+  "permission": {
+    "edit": "allow",
+    "bash": "allow",
+    "webfetch": "allow",
+  },
+  "mcp": {},
 }
