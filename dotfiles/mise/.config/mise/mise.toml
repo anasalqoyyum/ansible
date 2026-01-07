@@ -38,6 +38,7 @@ prettier = { version = "latest" }
 "npm:oxfmt" = { version = "latest" }
 # Npm Tools
 "npm:@frostoven/squoosh-cli" = { version = "latest" }
+"npm:@hubspot/cli" = { version = "latest" }
 # To setup typescript-plugin
 "npm:@astrojs/ts-plugin" = { version = "latest" }
 "npm:@vue/typescript-plugin" = { version = "latest" }

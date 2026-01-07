@@ -104,6 +104,10 @@ backend = "npm:@astrojs/ts-plugin"
 version = "0.9.1"
 backend = "npm:@frostoven/squoosh-cli"
 
+[[tools."npm:@hubspot/cli"]]
+version = "7.11.2"
+backend = "npm:@hubspot/cli"
+
 [[tools."npm:@vue/typescript-plugin"]]
 version = "3.2.1"
 backend = "npm:@vue/typescript-plugin"
@@ -125,9 +129,9 @@ version = "0.3.50"
 backend = "npm:typescript-svelte-plugin"
 
 [[tools.opencode]]
-version = "1.1.2"
+version = "1.1.4"
 backend = "aqua:sst/opencode"
-"platforms.linux-x64" = { checksum = "sha256:d4d311e856233d39edc3a9e6115b39273050e0aa297df0cbdaf6131f7b7e5e2b", url = "https://github.com/anomalyco/opencode/releases/download/v1.1.2/opencode-linux-x64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:68b64dc2989e53c0c7751a294548392310c789470ad963be6613943efa590b8f", url = "https://github.com/anomalyco/opencode/releases/download/v1.1.4/opencode-linux-x64.tar.gz"}
 
 [[tools.oxlint]]
 version = "1.16.0"

@@ -87,7 +87,7 @@ return {
         -- similar to VSCode Tokyo Night Dark
         -- hl.Visual.bg = "#2a2f41"
         -- Use a darker visual to contrast with the lighter cursor line
-        hl.Visual.bg = "#191e2d"
+        hl.Visual.bg = "#1a1e2d"
 
         -- Use bg.dark from storm (not night) for the cursor line background to make it more subtle
         -- hl.CursorLine = { bg = "#1f2335" }
@@ -100,9 +100,9 @@ return {
         hl.SnacksPickerListCursorLine = hl.SnacksPickerCursorLine
         hl.SnacksPickerPreviewCursorLine = hl.SnacksPickerCursorLine
 
-        -- Make TS context dimmer and color line numbers
-        hl.TreesitterContext = { bg = "#1e202e" }
-        hl.TreesitterContextLineNumber = { fg = c.fg_gutter, bg = "#1e202e" }
+        -- Make TS context dimmer and color line numbers (this color because it goes with terminal color)
+        hl.TreesitterContext = { bg = "#080a11" }
+        hl.TreesitterContextLineNumber = { fg = c.fg_gutter, bg = "#080a11" }
 
         -- Super Subtle snacks indent colors
         hl.SnacksIndent = { fg = "#1f2233" }

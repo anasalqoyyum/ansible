@@ -1,7 +1,7 @@
 # This should already the default from ghostty
 # JetBrains Mono Nerd Font is used by default
 font-family = GoogleSansCode Nerd Font
-font-size = 14
+font-size = 15
 font-thicken = true
 # Disabled ligatures
 font-feature = -liga, -calt, -dlig

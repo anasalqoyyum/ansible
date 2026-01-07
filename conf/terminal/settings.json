@@ -63,32 +63,32 @@
       "keys": "ctrl+period"
     },
     {
-      "id": "User.find",
-      "keys": "ctrl+shift+f"
+      "id": "User.sendInput.F8A79DCB",
+      "keys": "ctrl+enter"
     },
     {
       "id": "User.paste",
       "keys": "ctrl+v"
     },
     {
-      "id": "User.sendInput.F8A79DCB",
-      "keys": "ctrl+enter"
-    },
-    {
-      "id": "User.splitPane.A6751878",
-      "keys": "alt+shift+d"
+      "id": "User.find",
+      "keys": "ctrl+shift+f"
     },
     {
       "id": "User.sendInput.8882FD6D",
       "keys": "shift+enter"
     },
     {
-      "id": null,
-      "keys": "alt+enter"
+      "id": "User.splitPane.A6751878",
+      "keys": "alt+shift+d"
     },
     {
       "id": "User.duplicateTab",
       "keys": "ctrl+alt+shift+d"
+    },
+    {
+      "id": null,
+      "keys": "alt+enter"
     },
     {
       "id": "User.copy.644BA8F2",
@@ -121,7 +121,7 @@
           "dlig": 0,
           "liga": 0
         },
-        "size": 12.5
+        "size": 14
       },
       "intenseTextStyle": "all",
       "useAcrylic": true
@@ -162,6 +162,7 @@
         "hidden": false,
         "icon": "ms-appx:///ProfileIcons/{9acb9455-ca41-5af7-950f-6bca1bc9722f}.png",
         "name": "Ubuntu",
+        "pathTranslationStyle": "wsl",
         "scrollbarState": "hidden",
         "startingDirectory": "~"
       },
@@ -191,6 +192,7 @@
         "hidden": false,
         "icon": "C:\\Program Files\\Git\\mingw64\\share\\git\\git-for-windows.ico",
         "name": "Git Bash",
+        "pathTranslationStyle": "mingw",
         "startingDirectory": "%USERPROFILE%",
         "suppressApplicationTitle": true
       }
@@ -405,6 +407,7 @@
       "yellow": "#F3BE7C"
     }
   ],
+  "showTabsFullscreen": true,
   "showTabsInTitlebar": true,
   "themes": [],
   "warning.confirmCloseAllTabs": false
