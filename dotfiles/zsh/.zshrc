@@ -70,6 +70,7 @@ zinit wait lucid for \
 zinit wait'2' lucid for \
   atload"unalias y" \
     OMZP::yarn \
+  atload"export PATH=\"$HOME/.bun/bin:$PATH\"" \
     OMZP::bun \
     OMZP::fzf \
     Aloxaf/fzf-tab \
@@ -206,6 +207,15 @@ function oil() {
 
    nvim "oil-ssh://${user}@${host}/"
 }
+function c() {
+  local bun_bin="$HOME/.bun/bin/opencode"
+
+  if [[ -x "$bun_bin" ]]; then
+    command "$bun_bin" "$@"
+  else
+    command opencode "$@"
+  fi
+}
 
 # Keybinds
 # Useful keybinds set by other plugins
@@ -301,7 +311,6 @@ path=(
   "${ANDROID_HOME}/tools"
   "${ANDROID_HOME}/tools/bin"
   "${GRADLE_HOME}/bin"
-  "${BUN_INSTALL}/bin"
   "${FLYCTL_INSTALL}/bin"
   "/usr/local/bin"
   $path

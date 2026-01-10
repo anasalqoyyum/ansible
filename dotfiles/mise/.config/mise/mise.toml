@@ -20,8 +20,6 @@ aws-cli = "latest"
 television = "latest"
 # AI Tools
 opencode = "latest"
-amp = "latest"
-claude = "latest"
 # Go Tools
 air = "latest"
 "aqua:joshmedeski/sesh" = { version = "latest", os = ["linux"] }

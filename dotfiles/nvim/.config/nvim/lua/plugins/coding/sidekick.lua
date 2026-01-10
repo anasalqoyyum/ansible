@@ -35,6 +35,16 @@ return {
           require("sidekick.nes").enable(state)
         end,
       }):map("<leader>uN")
+
+      return {
+        cli = {
+          win = {
+            keys = {
+              prompt = { "<c-o>", "prompt", mode = "t", desc = "insert prompt or context" },
+            },
+          },
+        },
+      }
     end,
     keys = {
       -- nes is also useful in normal mode

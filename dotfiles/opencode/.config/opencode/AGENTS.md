@@ -48,3 +48,20 @@ Git operations should **only be performed when explicitly requested by the user*
 ### Best Practice:
 
 Always ask for permission before performing any git operations unless the user has explicitly stated what they want done
+
+## Code Build and Execution
+
+### Build & Execution
+
+- Do NOT run build scripts (e.g. `build`, `compile`, `bundle`, `release`).
+- Do NOT run commands that produce production artifacts.
+
+### Allowed Commands
+
+- Type checking is allowed (e.g. `tsc --noEmit`, `mypy`, `pyright`).
+- Linting, formatting, and static analysis are allowed.
+- Tests that do not trigger a build step are allowed.
+
+### Intent
+
+Agents should focus on code correctness and safety without generating build outputs or modifying release artifacts. (Use LSP if possible)
