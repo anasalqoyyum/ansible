@@ -62,6 +62,7 @@ return {
   -- Markdown preview
   {
     "iamcco/markdown-preview.nvim",
+    enabled = false,
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     build = function()
       require("lazy").load({ plugins = { "markdown-preview.nvim" } })
@@ -82,6 +83,7 @@ return {
 
   {
     "MeanderingProgrammer/render-markdown.nvim",
+    enabled = false,
     opts = {
       code = {
         sign = false,

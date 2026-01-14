@@ -1,6 +1,6 @@
 return {
   {
-    "stevearc/overseer.nvim",
+    "anasalqoyyum/overseer.nvim",
     cmd = {
       "OverseerOpen",
       "OverseerClose",

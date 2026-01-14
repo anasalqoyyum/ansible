@@ -3,7 +3,8 @@
 # set bell-style none
 bind 'set bell-style none'
 
-alias vim = "nvim"
+alias vim="nvim"
 
 export STARSHIP_CONFIG=$HOME/starship.toml
 eval "$(starship init bash)"
+eval "$(mise activate bash | sed 's|eval "$(mise hook-env -s bash)";|& export PATH="$(/usr/bin/cygpath -u -p "$PATH")";|')"
