@@ -53,6 +53,7 @@ Always ask for permission before performing any git operations unless the user h
 
 ### Build & Execution
 
+- Do NOT run any dev or production start commands.
 - Do NOT run build scripts (e.g. `build`, `compile`, `bundle`, `release`).
 - Do NOT run commands that produce production artifacts.
 

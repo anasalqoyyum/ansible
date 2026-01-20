@@ -24,7 +24,7 @@
 
 - name: Install Core Apps With Brew Cask
   community.general.homebrew_cask:
-    name: spotify,visual-studio-code,google-chrome,postman,qbittorrent,bitwarden,iina,bruno,raycast,orbstack,linearmouse,zen,httpie-desktop,cursor,karabiner-elements,parsec,upscayl,ghostty,windscribe,whatsapp,discord,obs,obsidian
+    name: spotify,visual-studio-code,google-chrome,postman,qbittorrent,bitwarden,iina,bruno,raycast,orbstack,linearmouse,zen,httpie-desktop,cursor,karabiner-elements,parsec,upscayl,ghostty,windscribe,whatsapp,discord,obs,obsidian,localsend
     state: present
   tags:
     - install
