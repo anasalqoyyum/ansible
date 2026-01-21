@@ -85,27 +85,28 @@ vim.keymap.set(
   { noremap = true, desc = "Peek Type Definition" }
 )
 
--- Toggle syntax highlighting and related render features
-Snacks.toggle({
-  name = "Highlighting",
-  get = function()
-    -- Check current buffer Treesitter highlight status and render-markdown state
-    local ts_on = vim.b.ts_highlight
-    local render_on = require("render-markdown").get()
-    return ts_on and render_on
-  end,
-  set = function(state)
-    if state then
-      vim.treesitter.start()
-      require("treesitter-context").enable()
-      require("render-markdown").set(true)
-    else
-      vim.treesitter.stop()
-      require("treesitter-context").disable()
-      require("render-markdown").set(false)
-    end
-  end,
-}):map("<leader>uH")
+-- -- Toggle syntax highlighting and related render features
+-- Disabled since render-markdown is not being used currently
+-- Snacks.toggle({
+--   name = "Highlighting",
+--   get = function()
+--     -- Check current buffer Treesitter highlight status and render-markdown state
+--     local ts_on = vim.b.ts_highlight
+--     local render_on = require("render-markdown").get()
+--     return ts_on and render_on
+--   end,
+--   set = function(state)
+--     if state then
+--       vim.treesitter.start()
+--       require("treesitter-context").enable()
+--       require("render-markdown").set(true)
+--     else
+--       vim.treesitter.stop()
+--       require("treesitter-context").disable()
+--       require("render-markdown").set(false)
+--     end
+--   end,
+-- }):map("<leader>uH")
 
 vim.keymap.set("n", "<leader>cL", function()
   lsp_restart.restart_lsp()

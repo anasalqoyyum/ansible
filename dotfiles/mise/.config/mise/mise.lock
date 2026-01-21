@@ -28,9 +28,9 @@ backend = "aqua:MordechaiHadad/bob"
 "platforms.macos-arm64" = { checksum = "blake3:5f4723d8f852ad1c0fb29aab12ef337727ef4f5c0ef8bae501daf53e7526511f", url = "https://github.com/MordechaiHadad/bob/releases/download/v4.1.6/bob-macos-arm.zip"}
 
 [[tools.bun]]
-version = "1.3.5"
+version = "1.3.6"
 backend = "core:bun"
-"platforms.macos-arm64" = { checksum = "blake3:d6e8946d187a53db13d4ef54b390adfe521111ed64daa6967132430cb8b2ee58"}
+"platforms.linux-x64" = { checksum = "blake3:dddfffe2a80a43b4a71b1a72dcf48f2b1be308e43e2047b18839412f11adcb9e"}
 
 [[tools.claude]]
 version = "2.0.76"
@@ -129,9 +129,9 @@ version = "0.3.50"
 backend = "npm:typescript-svelte-plugin"
 
 [[tools.opencode]]
-version = "1.1.12"
+version = "1.1.28"
 backend = "aqua:sst/opencode"
-"platforms.linux-x64" = { checksum = "sha256:7a216e05b4f51abcf5501ac67e0db6cf601d0af13feb8e35bcb5430fa2fd0e01", url = "https://github.com/anomalyco/opencode/releases/download/v1.1.12/opencode-linux-x64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:8c707150eb656384ac331f722f8f9fc7de9317db28c72b5a4de0c1243fb0356c", url = "https://github.com/anomalyco/opencode/releases/download/v1.1.28/opencode-linux-x64.tar.gz"}
 
 [[tools.oxlint]]
 version = "1.16.0"

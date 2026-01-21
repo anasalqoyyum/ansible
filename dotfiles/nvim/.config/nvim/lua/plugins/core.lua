@@ -13,11 +13,13 @@ return {
     opts = {
       spec = {
         { "<leader>a", group = "ai", mode = { "n", "v" } },
+        { "<leader>h", group = "haunt", icon = "󱙝", mode = { "n" } },
         { "<leader>m", group = "multi-cursor", icon = "󰗧", mode = { "n", "v" } },
         { "<leader>r", group = "rulebook", icon = " ", mode = { "n", "v" } },
         { "<leader>o", group = "overseer", icon = " ", mode = { "n" } },
         { "<leader>T", group = "tips", icon = " ", mode = { "n" } },
         { "<leader>i", group = "i18n", icon = "", mode = { "n" } },
+        { "<leader>y", group = "yank", icon = "", mode = { "n", "v" } },
       },
     },
   },

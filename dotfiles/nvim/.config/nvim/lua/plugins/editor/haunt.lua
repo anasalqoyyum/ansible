@@ -1,0 +1,75 @@
+return {
+  "TheNoeTrevino/haunt.nvim",
+  ---@class HauntConfig
+  opts = {
+    sign = "󱙝",
+    sign_hl = "DiagnosticInfo",
+    virt_text_hl = "HauntAnnotation",
+    annotation_prefix = " 󰆉 ",
+    line_hl = nil,
+    virt_text_pos = "eol",
+    data_dir = nil,
+    picker_keys = {
+      delete = { key = "d", mode = { "n" } },
+      edit_annotation = { key = "a", mode = { "n" } },
+    },
+  },
+  init = function()
+    local haunt = require("haunt.api")
+    local haunt_picker = require("haunt.picker")
+    local map = vim.keymap.set
+    local prefix = "<leader>h"
+
+    -- annotations
+    map("n", prefix .. "a", function()
+      haunt.annotate()
+    end, { desc = "Annotate" })
+
+    map("n", prefix .. "t", function()
+      haunt.toggle_annotation()
+    end, { desc = "Toggle Annotation" })
+
+    map("n", prefix .. "T", function()
+      haunt.toggle_all_lines()
+    end, { desc = "Toggle All Annotations" })
+
+    map("n", prefix .. "d", function()
+      haunt.delete()
+    end, { desc = "Delete Bookmark" })
+
+    map("n", prefix .. "C", function()
+      haunt.clear_all()
+    end, { desc = "Delete All Bookmarks" })
+
+    -- move
+    map("n", prefix .. "p", function()
+      haunt.prev()
+    end, { desc = "Previous Bookmark" })
+    map("n", prefix .. "n", function()
+      haunt.next()
+    end, { desc = "Next Bookmark" })
+
+    -- picker
+    map("n", prefix .. "l", function()
+      haunt_picker.show()
+    end, { desc = "Show Picker" })
+
+    -- quickfix
+    map("n", prefix .. "q", function()
+      haunt.to_quickfix()
+    end, { desc = "Send All Bookmarks to Quickfix" })
+
+    map("n", prefix .. "Q", function()
+      haunt.to_quickfix({ current_buffer = true })
+    end, { desc = "Send Bookmarks to Quickfix" })
+
+    -- yank
+    map("n", prefix .. "y", function()
+      haunt.yank_locations({ current_buffer = true })
+    end, { desc = "Yank Bookmarks" })
+
+    map("n", prefix .. "Y", function()
+      haunt.yank_locations()
+    end, { desc = "Yank All Bookmarks" })
+  end,
+}
