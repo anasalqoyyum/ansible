@@ -138,14 +138,14 @@ return {
           workspace_required = false,
         },
         oxlint = {
-          enabled = vim.g.typescript_linter == "oxlint",
+          -- enabled = vim.g.typescript_linter == "oxlint",
           root_dir = function(bufnr, on_dir)
-            -- NOTE: WE ALSO DON'T CARE about this since we need oxlint to lint without config
-            -- local fname = vim.api.nvim_buf_get_name(bufnr)
-            -- local root_markers = util.insert_package_json({ ".oxlintrc.json" }, "oxlint", fname)
-            -- on_dir(vim.fs.dirname(vim.fs.find(root_markers, { path = fname, upward = true })[1]))
+            local fname = vim.api.nvim_buf_get_name(bufnr)
+            local root_markers = util.insert_package_json({ ".oxlintrc.json" }, "oxlint", fname)
+            on_dir(vim.fs.dirname(vim.fs.find(root_markers, { path = fname, upward = true })[1]))
 
-            on_dir(force_linter_to_run(bufnr))
+            -- fallback to force linter to run even without config (only enable if oxlint need to run globally)
+            -- on_dir(force_linter_to_run(bufnr))
           end,
           settings = oxlint_settings,
           -- INFO: we need this to make server start with correct params
@@ -153,7 +153,8 @@ return {
           init_options = {
             settings = oxlint_settings,
           },
-          workspace_required = false,
+          -- set to false to allow linting even without workspace folder (e.g if ran globally)
+          workspace_required = true,
         },
         eslint = {
           enabled = vim.g.eslint_flavor == "eslint",

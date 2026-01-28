@@ -85,5 +85,5 @@ return {
     opts = {},
   },
 
-  { "akinsho/git-conflict.nvim", opts = {} },
+  { "akinsho/git-conflict.nvim", enabled = false, opts = {} },
 }
