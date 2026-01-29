@@ -1,4 +1,4 @@
--- local util = require("lspconfig.util")
+local util = require("lspconfig.util")
 -- local auto_format = vim.g.lazyvim_eslint_auto_format == nil or vim.g.lazyvim_eslint_auto_format
 
 -- sync this with oxlint or biome from nvim-lspconfig due to I need to force run oxlint or biome
