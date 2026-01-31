@@ -4,7 +4,7 @@ bun = "latest"
 go = "prefix:1.25"
 python = "3.13"
 java = { version = "21", os = ["linux"] }
-kotlin = { version = "latest", os = ["linux"] }
+kotlin = { version = "2.3", os = ["linux"] }
 # CLI Tools
 kubectl = { version = "latest", os = ["linux"] }
 k6 = { version = "latest", os = ["linux"] }

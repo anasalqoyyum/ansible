@@ -114,42 +114,63 @@ return {
       ---@type vim.lsp.Config
       servers = {
         biome = {
-          enabled = vim.g.typescript_linter == "biome",
           root_dir = function(bufnr, on_dir)
-            -- NOTE: WE DON'T CARE about this since we need biome to lint without config (and biome can resolve it by itself)
+            if vim.g.typescript_linter == "biome" then
+              return on_dir(force_linter_to_run(bufnr))
+            end
+
+            -- The project root is where the LSP can be started from
+            -- As stated in the documentation above, this LSP supports monorepos and simple projects.
+            -- We select then from the project root, which is identified by the presence of a package
+            -- manager lock file.
+            local root_markers = {
+              "package-lock.json",
+              "yarn.lock",
+              "pnpm-lock.yaml",
+              "bun.lockb",
+              "bun.lock",
+              "deno.lock",
+            }
+            -- Give the root markers equal priority by wrapping them in a table
+            root_markers = vim.fn.has("nvim-0.11.3") == 1 and { root_markers, { ".git" } }
+              or vim.list_extend(root_markers, { ".git" })
+
+            -- We fallback to the current working directory if no project root is found
+            local project_root = vim.fs.root(bufnr, root_markers) or vim.fn.getcwd()
+
             -- We know that the buffer is using Biome if it has a config file
             -- in its directory tree.
-            -- local filename = vim.api.nvim_buf_get_name(bufnr)
-            -- local biome_config_files = { "biome.json", "biome.jsonc" }
-            -- biome_config_files = util.insert_package_json(biome_config_files, "biome", filename)
-            -- local is_buffer_using_biome = vim.fs.find(biome_config_files, {
-            --   path = filename,
-            --   type = "file",
-            --   limit = 1,
-            --   upward = true,
-            --   stop = vim.fs.dirname(project_root),
-            -- })[1]
-            -- if not is_buffer_using_biome then
-            --   return
-            -- end
+            local filename = vim.api.nvim_buf_get_name(bufnr)
+            local biome_config_files = { "biome.json", "biome.jsonc" }
+            biome_config_files = util.insert_package_json(biome_config_files, "biomejs", filename)
+            local is_buffer_using_biome = vim.fs.find(biome_config_files, {
+              path = filename,
+              type = "file",
+              limit = 1,
+              upward = true,
+              stop = vim.fs.dirname(project_root),
+            })[1]
+            if not is_buffer_using_biome then
+              return
+            end
 
-            on_dir(force_linter_to_run(bufnr))
+            on_dir(project_root)
           end,
-          workspace_required = false,
+          workspace_required = true,
         },
         oxlint = {
-          -- enabled = vim.g.typescript_linter == "oxlint",
           root_dir = function(bufnr, on_dir)
+            if vim.g.typescript_linter == "oxlint" then
+              return on_dir(force_linter_to_run(bufnr))
+            end
+
             local fname = vim.api.nvim_buf_get_name(bufnr)
             local root_markers = util.insert_package_json({ ".oxlintrc.json" }, "oxlint", fname)
             on_dir(vim.fs.dirname(vim.fs.find(root_markers, { path = fname, upward = true })[1]))
-
-            -- fallback to force linter to run even without config (only enable if oxlint need to run globally)
-            -- on_dir(force_linter_to_run(bufnr))
           end,
           settings = oxlint_settings,
           -- INFO: we need this to make server start with correct params
-          -- https://github.com/oxc-project/oxc/blob/main/crates/oxc_language_server/src/main.rs#L89-L95
+          -- https://github.com/oxc-project/oxc/tree/main/crates/oxc_language_server#workspace-options
           init_options = {
             settings = oxlint_settings,
           },

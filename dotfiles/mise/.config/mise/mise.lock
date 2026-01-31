@@ -1,26 +1,26 @@
 [[tools.air]]
-version = "1.63.4"
+version = "1.64.4"
 backend = "aqua:air-verse/air"
-"platforms.macos-arm64" = { checksum = "sha256:97ed13fa4e5541cf0b50b66448b831e610a0705d7f760ca8a84c86da9a317422", url = "https://github.com/air-verse/air/releases/download/v1.63.4/air_1.63.4_darwin_arm64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:29c03b8a6380de09d9aeeace5ffed183670dd4d8fb9f72ed4900aafa6f837ca5", url = "https://github.com/air-verse/air/releases/download/v1.64.4/air_1.64.4_linux_amd64.tar.gz"}
 
 [[tools.amp]]
 version = "0.0.1766937678-g9acadc"
 backend = "npm:@sourcegraph/amp"
 
 [[tools."aqua:joshmedeski/sesh"]]
-version = "2.20.0"
+version = "2.21.0"
 backend = "aqua:joshmedeski/sesh"
-"platforms.macos-arm64" = { checksum = "sha256:1ab224c875ac2ad4c008e92bf05076b727e2ca91ed1f05a57d4fee985ac2eada", url = "https://github.com/joshmedeski/sesh/releases/download/v2.20.0/sesh_Darwin_arm64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:825fac38d5128a9761848eafd0465dbdcd020e781b9e38424b099d2b5f30fa2c", url = "https://github.com/joshmedeski/sesh/releases/download/v2.21.0/sesh_Linux_x86_64.tar.gz"}
 
 [[tools.aws-cli]]
-version = "2.32.24"
+version = "2.33.12"
 backend = "aqua:aws/aws-cli"
-"platforms.macos-arm64" = { checksum = "blake3:8da4320d153cfb1fbd66dccda8f9b7ef11273ec370d35a4c2d6bbc9c85323ade", url = "https://awscli.amazonaws.com/AWSCLIV2-2.32.24.pkg"}
+"platforms.linux-x64" = { checksum = "blake3:50bce8653654d211111a7537331e26047c3ede9a1cbf1612b7858c4a130005d9", url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.33.12.zip"}
 
 [[tools.biome]]
-version = "2.3.10"
+version = "2.3.13"
 backend = "aqua:biomejs/biome"
-"platforms.macos-arm64" = { checksum = "blake3:225771c714cc6dac2b7bf3556cf85d7c70a845d1b7b6f5619b5bc9ca51b60416", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.10/biome-darwin-arm64"}
+"platforms.linux-x64" = { checksum = "sha256:9ba930dad8cb4db73827a9cf048bd49d65f533272ae7f88926cc7a388c5c2c80", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.3.13/biome-linux-x64"}
 
 [[tools.bob]]
 version = "4.1.6"
@@ -28,38 +28,38 @@ backend = "aqua:MordechaiHadad/bob"
 "platforms.macos-arm64" = { checksum = "blake3:5f4723d8f852ad1c0fb29aab12ef337727ef4f5c0ef8bae501daf53e7526511f", url = "https://github.com/MordechaiHadad/bob/releases/download/v4.1.6/bob-macos-arm.zip"}
 
 [[tools.bun]]
-version = "1.3.7"
+version = "1.3.8"
 backend = "core:bun"
-"platforms.macos-arm64" = { checksum = "blake3:45fa14a1df8c88dfbdd340080a4ef74425e339a9c5868ce405cbbd94df719e54"}
+"platforms.linux-x64" = { checksum = "blake3:8c77d1399200f47907b9b74909692a98a3dc8c62c953cf9ab778f0a8a0a828ac"}
 
 [[tools.claude]]
 version = "2.0.76"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools.docker-cli]]
-version = "29.1.3"
+version = "29.2.0"
 backend = "aqua:docker/cli"
-"platforms.macos-arm64" = { checksum = "blake3:412d148e0a64b4523a2e02e8b002726352932a27b7f2a8a46e48d792a69f419b", url = "https://download.docker.com/mac/static/stable/aarch64/docker-29.1.3.tgz"}
+"platforms.linux-x64" = { checksum = "blake3:510aecf722fd5fe931021de35dd467bface025dfc806b916a75614c499dd495f", url = "https://download.docker.com/linux/static/stable/x86_64/docker-29.2.0.tgz"}
 
 [[tools.docker-compose]]
-version = "5.0.1"
+version = "5.0.2"
 backend = "aqua:docker/compose"
-"platforms.macos-arm64" = { checksum = "sha256:74ddfae9ca673e11babe45b0945fe825c0fb1f16e56f9772b4ee7a2a9d00bf19", url = "https://github.com/docker/compose/releases/download/v5.0.1/docker-compose-darwin-aarch64"}
+"platforms.linux-x64" = { checksum = "sha256:2d880f723d3da7c779c54fdaea91a842fca8af55d1397f1ed8d7cbab3dd7af67", url = "https://github.com/docker/compose/releases/download/v5.0.2/docker-compose-linux-x86_64"}
 
 [[tools.github-cli]]
-version = "2.83.2"
+version = "2.86.0"
 backend = "aqua:cli/cli"
-"platforms.macos-arm64" = { checksum = "sha256:ba3e0396ebbc8da17256144ddda503e4e79c8b502166335569f8390d6b75fa8d", url = "https://github.com/cli/cli/releases/download/v2.83.2/gh_2.83.2_macOS_arm64.zip"}
+"platforms.linux-x64" = { checksum = "sha256:f3b08bd6a28420cc2229b0a1a687fa25f2b838d3f04b297414c1041ca68103c7", url = "https://github.com/cli/cli/releases/download/v2.86.0/gh_2.86.0_linux_amd64.tar.gz"}
 
 [[tools.go]]
-version = "1.25.5"
+version = "1.25.6"
 backend = "core:go"
-"platforms.macos-arm64" = { checksum = "sha256:bed8ebe824e3d3b27e8471d1307f803fc6ab8e1d0eb7a4ae196979bd9b801dd3", url = "https://dl.google.com/go/go1.25.5.darwin-arm64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:f022b6aad78e362bcba9b0b94d09ad58c5a70c6ba3b7582905fababf5fe0181a", url = "https://dl.google.com/go/go1.25.6.linux-amd64.tar.gz"}
 
 [[tools.golangci-lint]]
-version = "2.7.2"
+version = "2.8.0"
 backend = "aqua:golangci/golangci-lint"
-"platforms.macos-arm64" = { checksum = "sha256:6ce86a00e22b3709f7b994838659c322fdc9eae09e263db50439ad4f6ec5785c", url = "https://github.com/golangci/golangci-lint/releases/download/v2.7.2/golangci-lint-2.7.2-darwin-arm64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:7048bc6b25c9515ed092c83f9fa8709ca97937ead52d9ff317a143299ee97a50", url = "https://github.com/golangci/golangci-lint/releases/download/v2.8.0/golangci-lint-2.8.0-linux-amd64.tar.gz"}
 
 [[tools.httpie-go]]
 version = "0.7.0"
@@ -70,12 +70,14 @@ version = "21.0.2"
 backend = "core:java"
 
 [[tools.k6]]
-version = "1.4.2"
+version = "1.5.0"
 backend = "aqua:grafana/k6"
+"platforms.linux-x64" = { checksum = "sha256:5ec7c7800ffedac41b9346c55fa7a4a73b4711b0d05d7226f1b8494748878263", url = "https://github.com/grafana/k6/releases/download/v1.5.0/k6-v1.5.0-linux-amd64.tar.gz"}
 
 [[tools.k9s]]
-version = "0.50.16"
+version = "0.50.18"
 backend = "aqua:derailed/k9s"
+"platforms.linux-x64" = { checksum = "sha256:0b697ed4aa80997f7de4deeed6f1fba73df191b28bf691b1f28d2f45fa2a9e9b", url = "https://github.com/derailed/k9s/releases/download/v0.50.18/k9s_Linux_amd64.tar.gz"}
 
 [[tools.kotlin]]
 version = "2.3.0"
@@ -87,14 +89,14 @@ backend = "aqua:kubernetes/kubernetes/kubectl"
 "platforms.macos-arm64" = { checksum = "sha256:cf699c56340dc775230fde4ef84237d27563ea6ef52164c7d078072b586c3918", url = "https://dl.k8s.io/v1.35.0/bin/darwin/arm64/kubectl"}
 
 [[tools.lazydocker]]
-version = "0.24.3"
+version = "0.24.4"
 backend = "aqua:jesseduffield/lazydocker"
-"platforms.macos-arm64" = { checksum = "sha256:685d1b24048f9958fbc7f5a7efea9c26d81a6164f432883079993253460e4879", url = "https://github.com/jesseduffield/lazydocker/releases/download/v0.24.3/lazydocker_0.24.3_Darwin_arm64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:c47e6f4b61debde5422183c7eb446a704a92c58b4c35bbd128c722d8bf269a86", url = "https://github.com/jesseduffield/lazydocker/releases/download/v0.24.4/lazydocker_0.24.4_Linux_x86_64.tar.gz"}
 
 [[tools.node]]
-version = "24.12.0"
+version = "24.13.0"
 backend = "core:node"
-"platforms.macos-arm64" = { checksum = "sha256:319f221adc5e44ff0ed57e8a441b2284f02b8dc6fc87b8eb92a6a93643fd8080", url = "https://nodejs.org/dist/v24.12.0/node-v24.12.0-darwin-arm64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:6223aad1a81f9d1e7b682c59d12e2de233f7b4c37475cd40d1c89c42b737ffa8", url = "https://nodejs.org/dist/v24.13.0/node-v24.13.0-linux-x64.tar.gz"}
 
 [[tools."npm:@astrojs/ts-plugin"]]
 version = "1.10.6"
@@ -109,19 +111,19 @@ version = "7.11.2"
 backend = "npm:@hubspot/cli"
 
 [[tools."npm:@vue/typescript-plugin"]]
-version = "3.2.1"
+version = "3.2.4"
 backend = "npm:@vue/typescript-plugin"
 
 [[tools."npm:oxfmt"]]
-version = "0.21.0"
+version = "0.27.0"
 backend = "npm:oxfmt"
 
 [[tools."npm:oxlint"]]
-version = "1.35.0"
+version = "1.42.0"
 backend = "npm:oxlint"
 
 [[tools."npm:oxlint-tsgolint"]]
-version = "0.10.0"
+version = "0.11.4"
 backend = "npm:oxlint-tsgolint"
 
 [[tools."npm:typescript-svelte-plugin"]]
@@ -129,16 +131,16 @@ version = "0.3.50"
 backend = "npm:typescript-svelte-plugin"
 
 [[tools.opencode]]
-version = "1.1.39"
+version = "1.1.47"
 backend = "aqua:sst/opencode"
-"platforms.macos-arm64" = { checksum = "sha256:0aa84425000d848a2f9ea34a0c898fd168cb539bfd0979aea8d9265d086d3295", url = "https://github.com/anomalyco/opencode/releases/download/v1.1.39/opencode-darwin-arm64.zip"}
+"platforms.linux-x64" = { checksum = "sha256:f87592cdbab12d0cc598876a36a573986e8d19dd59ba6b15d9d1fb039af5d57a", url = "https://github.com/anomalyco/opencode/releases/download/v1.1.47/opencode-linux-x64.tar.gz"}
 
 [[tools.oxlint]]
 version = "1.16.0"
 backend = "aqua:oxc-project/oxc/oxlint"
 
 [[tools."pipx:mycli"]]
-version = "1.42.0"
+version = "1.48.0"
 backend = "pipx:mycli"
 
 [[tools."pipx:pgcli"]]
@@ -146,7 +148,7 @@ version = "4.4.0"
 backend = "pipx:pgcli"
 
 [[tools.prettier]]
-version = "3.7.4"
+version = "3.8.1"
 backend = "npm:prettier"
 
 [[tools.python]]
@@ -154,16 +156,16 @@ version = "3.13.11"
 backend = "core:python"
 
 [[tools.television]]
-version = "0.14.3"
+version = "0.15.0"
 backend = "aqua:alexpasmantier/television"
-"platforms.linux-x64" = { checksum = "sha256:42894b3407b9e1ba1537a81e9fa2878c8a24d8ccabde5e199b7649f682f76e14", url = "https://github.com/alexpasmantier/television/releases/download/0.14.3/tv-0.14.3-x86_64-unknown-linux-musl.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:55052da38bb83f4af57c5d2ea48144bee605b867f79885623bd4e673e598891b", url = "https://github.com/alexpasmantier/television/releases/download/0.15.0/tv-0.15.0-x86_64-unknown-linux-musl.tar.gz"}
 
 [[tools.trivy]]
-version = "0.68.2"
+version = "0.69.0"
 backend = "aqua:aquasecurity/trivy"
-"platforms.macos-arm64" = { checksum = "sha256:dfbe15ffe47426dad9fd3e0d52aeacf3dbbb25ca5dbc66049f5920834435988d", url = "https://github.com/aquasecurity/trivy/releases/download/v0.68.2/trivy_0.68.2_macOS-ARM64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:fff5813d6888fa6f8bd40042a08c4f072b3e65aec9f13dd9ab1d7b26146ad046", url = "https://github.com/aquasecurity/trivy/releases/download/v0.69.0/trivy_0.69.0_Linux-64bit.tar.gz"}
 
 [[tools.uv]]
-version = "0.9.18"
+version = "0.9.28"
 backend = "aqua:astral-sh/uv"
-"platforms.macos-arm64" = { checksum = "sha256:dc3bee4abbb3bac267a3985a23ea7617d19d41ff381dbaf560ba415ad65af68f", url = "https://github.com/astral-sh/uv/releases/download/0.9.18/uv-aarch64-apple-darwin.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:83cd032167b6b97ac94830608efe11159b3d485654e39fdb0bf84718ef236afe", url = "https://github.com/astral-sh/uv/releases/download/0.9.28/uv-x86_64-unknown-linux-musl.tar.gz"}

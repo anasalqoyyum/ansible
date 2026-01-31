@@ -69,6 +69,14 @@ function M.has_config(ctx)
   return vim.v.shell_error == 0
 end
 
+function M.oxfmt_has_config(ctx)
+  local config_found = vim.fs.find(".oxfmtrc.json", {
+    path = ctx.filename,
+    upward = true,
+  })[1]
+  return config_found ~= nil
+end
+
 --- Checks if a parser can be inferred for the given context:
 --- * If the filetype is in the supported list, return true
 --- * Otherwise, check if a parser can be inferred
@@ -99,9 +107,19 @@ function M.biome_support(ctx)
   end
 end
 
+function M.oxfmt_support(ctx)
+  local ft = vim.bo[ctx.buf].filetype --[[@as string]]
+  if vim.tbl_contains(oxfmtSupported, ft) then
+    return true
+  else
+    return false
+  end
+end
+
 M.has_config = LazyVim.memoize(M.has_config)
 M.has_parser = LazyVim.memoize(M.has_parser)
 M.biome_support = LazyVim.memoize(M.biome_support)
+M.oxfmt_support = LazyVim.memoize(M.oxfmt_support)
 
 return {
   -- oxfmt is installed through mise temporarily
@@ -139,21 +157,20 @@ return {
       }
       opts.formatters.prettierd = {
         condition = function(_, ctx)
-          return M.has_parser(ctx)
-            and (vim.g.lazyvim_prettier_needs_config ~= true or M.has_config(ctx) or not M.biome_support(ctx))
+          return M.has_parser(ctx) and (vim.g.lazyvim_prettier_needs_config ~= true or M.has_config(ctx))
+        end,
+      }
+      opts.formatters.oxfmt = {
+        condition = function(_, ctx)
+          local prettierd_condition = opts.formatters.prettierd.condition(_, ctx)
+          return M.oxfmt_support(ctx) and not prettierd_condition and M.oxfmt_has_config(ctx)
         end,
       }
       opts.formatters.biome = {
         condition = function(_, ctx)
           local prettierd_condition = opts.formatters.prettierd.condition(_, ctx)
-          return not prettierd_condition and M.biome_support(ctx) and (vim.g.typescript_linter == "biome")
-        end,
-      }
-      opts.formatters.oxfmt = {
-        condition = function(_, ctx)
-          return not opts.formatters.prettierd.condition(_, ctx)
-            and not opts.formatters.biome.condition(_, ctx)
-            and (vim.g.typescript_linter == "oxlint")
+          local oxfmt_condition = opts.formatters.oxfmt.condition(_, ctx)
+          return not prettierd_condition and not oxfmt_condition and M.biome_support(ctx)
         end,
       }
     end,
