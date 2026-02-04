@@ -36,6 +36,11 @@ backend = "core:bun"
 version = "2.0.76"
 backend = "npm:@anthropic-ai/claude-code"
 
+[[tools.codex]]
+version = "0.94.0"
+backend = "aqua:openai/codex"
+"platforms.linux-x64" = { checksum = "sha256:250d8b449835a8765950292b5e40c3ec6585fe6ad9bd428e4a741fda5ca3285b", url = "https://github.com/openai/codex/releases/download/rust-v0.94.0/codex-x86_64-unknown-linux-musl.zst"}
+
 [[tools.docker-cli]]
 version = "29.2.0"
 backend = "aqua:docker/cli"

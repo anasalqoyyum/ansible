@@ -65,4 +65,5 @@ Always ask for permission before performing any git operations unless the user h
 
 ### Intent
 
-Agents should focus on code correctness and safety without generating build outputs or modifying release artifacts. (Use LSP if possible)
+- Agents should focus on code correctness and safety without generating build outputs or modifying release artifacts. (Use LSP if possible)
+- Agents shouldn't perform any write actions against generated files. Especially if explicitly stated in the files as comment to NOT modify them. Reading should be allowed and if there's any error found then report it to the user.

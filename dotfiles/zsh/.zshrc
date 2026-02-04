@@ -216,6 +216,13 @@ function c() {
     command opencode "$@"
   fi
 }
+function cserve() {
+  local pass=""
+  if [[ -f ~/.config/opencode-server/server_password ]]; then
+    pass=$(cat ~/.config/opencode-server/server_password)
+  fi
+  OPENCODE_SERVER_PASSWORD="$pass" opencode serve --hostname 0.0.0.0 --port 4096 
+}
 
 # Keybinds
 # Useful keybinds set by other plugins
@@ -344,3 +351,4 @@ alias v="print -z --"
 
 # Enable zsh profiling
 # zprof
+
