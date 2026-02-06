@@ -8,11 +8,37 @@
     - install
     - ssh
 
+- name: Check private key source
+  stat:
+    path: "{{ source_key }}"
+  register: private_key_source
+  tags:
+    - install
+    - ssh
+
+- name: Check public key source
+  stat:
+    path: "{{ source_key }}.pub"
+  register: public_key_source
+  tags:
+    - install
+    - ssh
+
+- name: Check SSH config source
+  stat:
+    path: "./.ssh/config"
+  register: ssh_config_source
+  tags:
+    - install
+    - ssh
+
 - name: Install ssh key
   copy:
     src: "{{ source_key }}"
     dest: "{{ dest_key }}"
     mode: 0600
+  no_log: true
+  when: private_key_source.stat.exists
   tags:
     - install
     - ssh
@@ -22,6 +48,7 @@
     src: "{{ source_key }}.pub"
     dest: "{{ dest_key }}.pub"
     mode: 0644
+  when: public_key_source.stat.exists
   tags:
     - install
     - ssh
@@ -31,6 +58,15 @@
     src: "./.ssh/config"
     dest: "{{ lookup('env', 'HOME') }}/.ssh/config"
     mode: 0600
+  when: ssh_config_source.stat.exists
+  tags:
+    - install
+    - ssh
+
+- name: Notify when SSH key source is missing
+  debug:
+    msg: "Skipping SSH key copy; set ANSIBLE_SOURCE_SSH_KEY or provide {{ source_key }}"
+  when: not private_key_source.stat.exists
   tags:
     - install
     - ssh

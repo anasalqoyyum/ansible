@@ -6,7 +6,34 @@
 
 - name: Install Core Packages With Brew
   community.general.homebrew:
-    name: fzf,neovim,zoxide,bat,fd,tmux,tldr,docker,docker-compose,kubectl,lazygit,stow,k9s,jq,k6,fortune,cowsay,sesh,ncdu,gh,xh,diff-so-fancy,mycli,pgcli,btop,mise,tw93/tap/mole
+    name:
+      - fzf
+      - neovim
+      - zoxide
+      - bat
+      - fd
+      - tmux
+      - tldr
+      - docker
+      - docker-compose
+      - kubectl
+      - lazygit
+      - stow
+      - k9s
+      - jq
+      - k6
+      - fortune
+      - cowsay
+      - sesh
+      - ncdu
+      - gh
+      - xh
+      - diff-so-fancy
+      - mycli
+      - pgcli
+      - btop
+      - mise
+      - tw93/tap/mole
     state: present
     update_homebrew: true
   tags:
@@ -15,7 +42,18 @@
 
 - name: Install yazi and its optional deps
   community.general.homebrew:
-    name: yazi,ffmpeg,sevenzip,jq,poppler,fd,fzf,zoxide,resvg,imagemagick,font-symbols-only-nerd-font
+    name:
+      - yazi
+      - ffmpeg
+      - sevenzip
+      - jq
+      - poppler
+      - fd
+      - fzf
+      - zoxide
+      - resvg
+      - imagemagick
+      - font-symbols-only-nerd-font
     state: present
     update_homebrew: false
   tags:
@@ -24,21 +62,42 @@
 
 - name: Install Core Apps With Brew Cask
   community.general.homebrew_cask:
-    name: spotify,visual-studio-code,google-chrome,postman,qbittorrent,bitwarden,iina,bruno,raycast,orbstack,linearmouse,zen,httpie-desktop,cursor,karabiner-elements,parsec,upscayl,ghostty,windscribe,whatsapp,discord,obs,obsidian,localsend
+    name:
+      - spotify
+      - visual-studio-code
+      - google-chrome
+      - postman
+      - qbittorrent
+      - bitwarden
+      - iina
+      - bruno
+      - raycast
+      - orbstack
+      - linearmouse
+      - zen
+      - httpie-desktop
+      - cursor
+      - karabiner-elements
+      - parsec
+      - upscayl
+      - ghostty
+      - windscribe
+      - whatsapp
+      - discord
+      - obs
+      - obsidian
+      - localsend
     state: present
   tags:
     - install
     - core-brew
 
-- name: Install jetbrains mono nerd fonts
-  shell: "brew install --cask font-jetbrains-mono-nerd-font"
-  tags:
-    - install
-    - core-brew
-    - font
-
-- name: Install geist mono nerd fonts
-  shell: "brew install --cask font-geist-mono-nerd-font"
+- name: Install nerd fonts
+  community.general.homebrew_cask:
+    name:
+      - font-jetbrains-mono-nerd-font
+      - font-geist-mono-nerd-font
+    state: present
   tags:
     - install
     - core-brew

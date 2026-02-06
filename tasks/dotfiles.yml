@@ -1,11 +1,25 @@
-- name: Installing stow
-  apt: name=stow
+- name: Install stow on Linux
+  apt:
+    name: stow
+    state: present
   become: true
+  when: ansible_system == "Linux"
   tags:
     - install
     - dotfiles
     - stow
     - linux-only
+
+- name: Install stow on macOS
+  community.general.homebrew:
+    name: stow
+    state: present
+  when: ansible_system == "Darwin"
+  tags:
+    - install
+    - dotfiles
+    - stow
+    - macos-only
 
 - name: Ensure .dotfiles directory exists
   file:
@@ -48,11 +62,11 @@
     - stow
 
 - name: Run stow to create symlinks
-  shell: cd $HOME/.dotfiles && ./stow
+  command: ./stow
+  args:
+    chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
   register: stow_output
-  changed_when: 
-    - "'LINK' in stow_output.stdout"
-    - "'UNLINK' in stow_output.stdout"
+  changed_when: false
   tags:
     - install
     - dotfiles

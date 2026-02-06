@@ -1,2 +1,14 @@
-# truly macos moment
+# macOS
 .DS_Store
+
+# local secrets
+.vault_pass
+.vault_pass.*
+
+# ansible artifacts
+*.retry
+*.retry.txt
+.ansible/
+
+# local planning artifacts
+.opencode/

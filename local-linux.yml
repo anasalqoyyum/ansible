@@ -1,8 +1,18 @@
 - hosts: localhost
+  gather_facts: true
   vars:
-    source_key: "./.ssh/id_ed25519"
+    source_key: "{{ lookup('env', 'ANSIBLE_SOURCE_SSH_KEY') | default('./.ssh/id_ed25519', true) }}"
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
   pre_tasks:
+    - name: Ensure host is Linux
+      ansible.builtin.assert:
+        that:
+          - ansible_system == "Linux"
+        fail_msg: "local-linux.yml should only run on Linux/WSL hosts."
+      tags:
+        - install
+        - core
+
     - name: Update Apt
       become: true
       apt:
@@ -18,6 +28,7 @@
         dest: "/etc/wsl.conf"
         mode: 0644
       become: true
+      when: "'microsoft' in (ansible_kernel | lower)"
       tags:
         - install
         - core
@@ -29,8 +40,11 @@
     - import_tasks: tasks/linux-tools-setup.yml
     - import_tasks: tasks/rust-setup.yml
     - import_tasks: tasks/rust-tools-setup.yml
+    - import_tasks: tasks/node-setup.yml
     - import_tasks: tasks/npm-packages.yml
     - import_tasks: tasks/zsh-setup.yml
     - import_tasks: tasks/docker-setup.yml
     - import_tasks: tasks/dotfiles.yml
     - import_tasks: tasks/win32yank-setup.yml
+    - import_tasks: tasks/cuda-wsl-setup.yml
+      when: "'microsoft' in (ansible_kernel | lower)"

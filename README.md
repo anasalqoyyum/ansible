@@ -1,35 +1,67 @@
 # Personal Development Environment Setup
 
-<!--toc:start-->
+Ansible playbooks for bootstrapping a personal setup on:
 
-- [Personal Development Environment Setup](#personal-development-environment-setup)
-  - [Overview](#overview)
-  - [How to run](#how-to-run)
-  <!--toc:end-->
+- WSL/Linux (`local-linux.yml`)
+- macOS (`local-macos.yml`)
 
-## Overview
+## Quick Start
 
-| WSL Ubuntu                                 | macOS                                     |
-| ------------------------------------------ | ----------------------------------------- |
-| ![ubuntu](https://i.imgur.com/M9Z3nNg.png) | ![macos](https://i.imgur.com/tKqNgrm.png) |
+- Linux/WSL: `bash run-linux.sh`
+- macOS: `bash run-macos.sh`
 
-Perhaps can only be applied to WSL Ubuntu (or Unix in General) and macOS
+Both scripts install Ansible (if missing), install required collections from `requirements.yml`, and run the matching playbook.
 
-For WSL Installation refer to: [WSL Install](https://learn.microsoft.com/en-us/windows/wsl/install)
+## Validation Workflow
 
-For Terminal
+Run these before applying bigger changes:
 
-- Use this one for Windows: [Windows Terminal](https://apps.microsoft.com/store/detail/windows-terminal/)
-- Alacritty also works: [Alacritty](https://alacritty.org/)
-- Ghostty is preferred on macOS: [Ghostty](https://ghostty.org/)
+- `make bootstrap-collections`
+- `make syntax-check`
+- `make lint`
 
-## How to run
+If lint is missing locally, install it with `python -m pip install ansible-lint`.
 
-1. Run the script according to your OS -> might change in the future but this will do for now
+Optional dry-run checks:
 
-- `run-linux.sh` for linux
-- `run-macos.sh` for macOS
+- Linux/WSL: `make check-linux`
+- macOS: `make check-macos`
 
-2. **(OPTIONAL)** You can modify the playbook accordingly. Example: you might want to commented out the `tasks/git-setup.yml` because it contain my personal Github information
+Convenience targets:
 
-3. Grab a Coffee ☕️, since it's gonna take a while. Cheers!!!
+- Linux validation bundle: `make validate-linux`
+- macOS validation bundle: `make validate-macos`
+
+## Useful Playbook Commands
+
+- Linux dotfiles only: `ansible-playbook -i localhost, local-linux.yml --tags "dotfiles" --ask-become-pass`
+- macOS dotfiles only: `ansible-playbook -i localhost, local-macos.yml --tags "dotfiles" --ask-become-pass`
+- Skip SSH copy tasks: add `--skip-tags "ssh"`
+
+## Security Notes
+
+- Do not commit private keys or local secrets.
+- SSH key copy is optional and controlled by tag `ssh`.
+- To provide a custom key path, set:
+
+```bash
+export ANSIBLE_SOURCE_SSH_KEY="$HOME/.ssh/id_ed25519"
+```
+
+If the key source path does not exist, the SSH key copy step is skipped with a warning.
+
+## Repo Structure
+
+- Main playbooks: `local-linux.yml`, `local-macos.yml`
+- Tasks: `tasks/*.yml`
+- Dotfiles source: `dotfiles/`
+- Validation and helper commands: `Makefile`
+
+## Dotfiles Sync Helpers
+
+- Sync local dotfiles back into this repo: `make copy-local`
+- Clean `.DS_Store` files: `make clean-dsstore`
+
+## Reference
+
+- WSL setup docs: https://learn.microsoft.com/en-us/windows/wsl/install

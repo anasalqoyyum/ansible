@@ -1,0 +1,12 @@
+profile: basic
+exclude_paths:
+  - dotfiles/
+warn_list:
+  - experimental
+skip_list:
+  - command-instead-of-shell
+  - fqcn[action-core]
+  - name[casing]
+  - no-changed-when
+  - risky-shell-pipe
+  - yaml[line-length]

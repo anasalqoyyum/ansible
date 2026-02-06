@@ -10,23 +10,23 @@
     - yank
 
 - name: Unzip yank
-  shell: unzip -p /tmp/win32yank.zip win32yank.exe > /tmp/win32yank
-  become: true
+  unarchive:
+    src: /tmp/win32yank.zip
+    dest: /tmp
+    remote_src: true
+    include:
+      - win32yank.exe
   tags:
     - install
     - linux-only
     - yank
 
-- name: Chmod +x yank
-  shell: chmod +x /tmp/win32yank
-  become: true
-  tags:
-    - install
-    - linux-only
-    - yank
-
-- name: Unzip yank
-  shell: mv /tmp/win32yank /usr/local/bin/
+- name: Install yank binary
+  copy:
+    src: /tmp/win32yank.exe
+    dest: /usr/local/bin/win32yank
+    mode: "0755"
+    remote_src: true
   become: true
   tags:
     - install
@@ -38,7 +38,7 @@
     path: ~/.tmux.conf
     insertbefore: "^set-option -g prefix C-a"
     create: yes
-    marker: ""
+    marker: "# {mark} ANSIBLE MANAGED WIN32YANK"
     block: |
       # Win32yank clipboard configuration
       set -g @override_copy_command "win32yank -i"
@@ -53,7 +53,7 @@
     path: ~/.tmux.conf
     insertafter: "^set-option -g prefix C-a"
     create: yes
-    marker: ""
+    marker: "# {mark} ANSIBLE MANAGED WIN32YANK THUMBS"
     block: |
       # Overriding it on wsl for tmux-thumbs
       set -g @thumbs-command 'echo -n {} | win32yank -i'

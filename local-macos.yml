@@ -1,25 +1,39 @@
 - hosts: localhost
+  gather_facts: true
   vars:
-    source_key: "./.ssh/id_ed25519"
+    source_key: "{{ lookup('env', 'ANSIBLE_SOURCE_SSH_KEY') | default('./.ssh/id_ed25519', true) }}"
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
   pre_tasks:
+    - name: Ensure host is macOS
+      ansible.builtin.assert:
+        that:
+          - ansible_system == "Darwin"
+        fail_msg: "local-macos.yml should only run on macOS hosts."
+
     - name: Check if brew is installed
       command: which brew
       register: brew_check
+      changed_when: false
       ignore_errors: true
+
     - name: Install brew
-      become: true
       shell: 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
       when: brew_check.rc != 0
+
     - name: Check if git is installed
       command: which git
+      changed_when: false
+
     - name: Touch .hushlogin
-      command: touch ~/.hushlogin
+      file:
+        path: "{{ lookup('env', 'HOME') }}/.hushlogin"
+        state: touch
   tasks:
     - import_tasks: tasks/ssh.yml
     - import_tasks: tasks/git-setup.yml
     - import_tasks: tasks/core-brew-setup.yml
     - import_tasks: tasks/rust-setup.yml
     - import_tasks: tasks/rust-tools-setup.yml
+    - import_tasks: tasks/node-setup.yml
     - import_tasks: tasks/npm-packages.yml
     - import_tasks: tasks/dotfiles.yml
