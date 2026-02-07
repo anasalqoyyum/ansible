@@ -87,6 +87,7 @@
       - obs
       - obsidian
       - localsend
+      - zed
     state: present
   tags:
     - install

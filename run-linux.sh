@@ -13,4 +13,4 @@ if ! command -v ansible >/dev/null 2>&1; then
 fi
 
 ansible-galaxy collection install -r requirements.yml
-ansible-playbook -i localhost, local-linux.yml --ask-become-pass --skip-tags "macos-only,ssh"
+ansible-playbook local-linux.yml --ask-become-pass --skip-tags "macos-only,ssh"

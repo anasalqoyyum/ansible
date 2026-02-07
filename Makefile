@@ -13,17 +13,17 @@ bootstrap-collections:
 	ansible-galaxy collection install -r requirements.yml
 
 syntax-check:
-	ansible-playbook -i localhost, local-linux.yml --syntax-check
-	ansible-playbook -i localhost, local-macos.yml --syntax-check
+	ansible-playbook local-linux.yml --syntax-check
+	ansible-playbook local-macos.yml --syntax-check
 
 lint:
 	python -m ansiblelint local-linux.yml local-macos.yml tasks/*.yml
 
 check-linux:
-	ansible-playbook -i localhost, local-linux.yml --check --diff --skip-tags "ssh"
+	ansible-playbook local-linux.yml --check --diff --skip-tags "ssh"
 
 check-macos:
-	ansible-playbook -i localhost, local-macos.yml --check --diff --skip-tags "ssh"
+	ansible-playbook local-macos.yml --check --diff --skip-tags "ssh"
 
 validate: bootstrap-collections syntax-check lint
 
@@ -32,22 +32,22 @@ validate-linux: validate check-linux
 validate-macos: validate check-macos
 
 ssh-linux-vault:
-	ansible-playbook -i localhost, local-linux.yml --tags "ssh" --ask-vault-pass
+	ansible-playbook local-linux.yml --tags "ssh" --ask-vault-pass
 
 ssh-macos-vault:
-	ansible-playbook -i localhost, local-macos.yml --tags "ssh" --ask-vault-pass
+	ansible-playbook local-macos.yml --tags "ssh" --ask-vault-pass
 
 ssh-linux-vault-file:
-	ansible-playbook -i localhost, local-linux.yml --tags "ssh" --vault-password-file "$(VAULT_PASSWORD_FILE)"
+	ansible-playbook local-linux.yml --tags "ssh" --vault-password-file "$(VAULT_PASSWORD_FILE)"
 
 ssh-macos-vault-file:
-	ansible-playbook -i localhost, local-macos.yml --tags "ssh" --vault-password-file "$(VAULT_PASSWORD_FILE)"
+	ansible-playbook local-macos.yml --tags "ssh" --vault-password-file "$(VAULT_PASSWORD_FILE)"
 
 sync-dotfiles-linux:
-	ansible-playbook -i localhost, local-linux.yml --tags "dotfiles" --ask-become-pass
+	ansible-playbook local-linux.yml --tags "dotfiles" --ask-become-pass
 
 sync-dotfiles-macos:
-	ansible-playbook -i localhost, local-macos.yml --tags "dotfiles" --skip-tags "linux-only" --ask-become-pass
+	ansible-playbook local-macos.yml --tags "dotfiles" --skip-tags "linux-only" --ask-become-pass
 
 # Target: remove all .DS_Store files recursively
 clean-dsstore:
