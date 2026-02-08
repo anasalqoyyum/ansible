@@ -3,6 +3,8 @@
 # xh and httpie is interchangebable
 # wireguard is in appstore
 # helium still need to be installed manually
+# parsec is need to be installed manually
+# whatsapp also need to be installed manually
 
 - name: Install Core Packages With Brew
   community.general.homebrew:
@@ -78,17 +80,17 @@
       - httpie-desktop
       - cursor
       - karabiner-elements
-      - parsec
       - upscayl
       - ghostty
       - windscribe
-      - whatsapp
       - discord
       - obs
       - obsidian
       - localsend
       - zed
     state: present
+    install_options:
+      - adopt
   tags:
     - install
     - core-brew
@@ -99,6 +101,8 @@
       - font-jetbrains-mono-nerd-font
       - font-geist-mono-nerd-font
     state: present
+    install_options:
+      - adopt
   tags:
     - install
     - core-brew
