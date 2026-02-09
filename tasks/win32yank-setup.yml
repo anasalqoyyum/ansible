@@ -51,7 +51,7 @@
 - name: Set yank tmux-thumbs config
   blockinfile:
     path: ~/.tmux.conf
-    insertafter: "^set-option -g prefix C-a"
+    insertbefore: "^set-option -g prefix C-a"
     create: yes
     marker: "# {mark} ANSIBLE MANAGED WIN32YANK THUMBS"
     block: |
