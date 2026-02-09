@@ -25,7 +25,7 @@
   file:
     path: "{{ lookup('env', 'HOME') }}/.dotfiles"
     state: directory
-    mode: '0700'
+    mode: "0700"
   tags:
     - install
     - dotfiles
@@ -52,10 +52,10 @@
 - name: Make scripts executable
   file:
     path: "{{ lookup('env', 'HOME') }}/.dotfiles/{{ item }}"
-    mode: '0755'
+    mode: "0755"
   loop:
-    - 'install'
-    - 'stow'
+    - "install"
+    - "stow"
   tags:
     - install
     - dotfiles
@@ -66,7 +66,7 @@
   args:
     chdir: "{{ lookup('env', 'HOME') }}/.dotfiles"
   register: stow_output
-  changed_when: false
+  changed_when: stow_output.stdout != ""
   tags:
     - install
     - dotfiles
