@@ -9,21 +9,28 @@
     - docker
 
 - name: Install docker
-  shell: sh /tmp/get-docker.sh
+  command: sh /tmp/get-docker.sh
+  args:
+    creates: /usr/bin/docker
   become: true
   tags:
     - install
     - docker
 
 - name: Set user to Docker Group
-  shell: usermod -aG docker $USER
+  user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: true
   become: true
   tags:
     - install
     - docker
 
 - name: Install docker-compose
-  apt: name=docker-compose-plugin
+  apt:
+    name: docker-compose-plugin
+    state: present
   become: true
   tags:
     - install
@@ -42,8 +49,10 @@
     - docker-compose
 
 - name: Update iptables for compability
-  shell: update-alternatives --set iptables /usr/sbin/iptables-legacy
+  command: update-alternatives --set iptables /usr/sbin/iptables-legacy
   become: true
+  changed_when: false
+  failed_when: false
   tags:
     - install
     - docker

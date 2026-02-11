@@ -1,14 +1,20 @@
 - name: Install ZSH
-  apt: name=zsh
+  apt:
+    name: zsh
+    state: present
   become: true
+  when: ansible_system == "Linux"
   tags: &tags_for_zsh_tasks ['install', 'dotfiles', 'zsh']
 
-- name: Register current user (workaround to change default shell)
-  shell: whoami
-  register: current_user
+- name: Locate zsh binary
+  command: which zsh
+  register: zsh_binary
+  changed_when: false
   tags: *tags_for_zsh_tasks
 
 - name: Change shell to zsh
-  shell: 'chsh -s $(which zsh) {{ current_user.stdout }}'
+  user:
+    name: "{{ ansible_user_id }}"
+    shell: "{{ zsh_binary.stdout }}"
   become: true
   tags: *tags_for_zsh_tasks
