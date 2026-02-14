@@ -71,3 +71,15 @@
     - install
     - dotfiles
     - stow
+
+- name: Ensure mise zsh shims activation is at end of .zprofile
+  lineinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zprofile"
+    line: 'eval "$(mise activate zsh --shims)"'
+    state: present
+    create: true
+    insertafter: EOF
+  tags:
+    - install
+    - dotfiles
+    - stow

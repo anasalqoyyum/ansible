@@ -34,6 +34,7 @@
       - mycli
       - pgcli
       - btop
+      - chafa
       - mise
       - tw93/tap/mole
     state: present
@@ -48,11 +49,7 @@
       - yazi
       - ffmpeg
       - sevenzip
-      - jq
       - poppler
-      - fd
-      - fzf
-      - zoxide
       - resvg
       - imagemagick
       - font-symbols-only-nerd-font

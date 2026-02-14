@@ -1,15 +1,15 @@
-- name: Install yank
+- name: Download win32yank archive
   get_url:
     url: https://github.com/equalsraf/win32yank/releases/download/v0.1.1/win32yank-x64.zip
     dest: /tmp/win32yank.zip
-    mode: "0755"
-    force: "yes"
+    mode: "0644"
+    force: true
   tags:
     - install
     - linux-only
     - yank
 
-- name: Unzip yank
+- name: Unzip win32yank
   unarchive:
     src: /tmp/win32yank.zip
     dest: /tmp
@@ -21,7 +21,7 @@
     - linux-only
     - yank
 
-- name: Install yank binary
+- name: Install win32yank binary
   copy:
     src: /tmp/win32yank.exe
     dest: /usr/local/bin/win32yank
@@ -35,7 +35,7 @@
 
 - name: Set yank tmux config
   blockinfile:
-    path: ~/.tmux.conf
+    path: "{{ ansible_env.HOME }}/.tmux.conf"
     insertbefore: "^set-option -g prefix C-a"
     create: yes
     marker: "# {mark} ANSIBLE MANAGED WIN32YANK"
@@ -50,7 +50,7 @@
 
 - name: Set yank tmux-thumbs config
   blockinfile:
-    path: ~/.tmux.conf
+    path: "{{ ansible_env.HOME }}/.tmux.conf"
     insertbefore: "^set-option -g prefix C-a"
     create: yes
     marker: "# {mark} ANSIBLE MANAGED WIN32YANK THUMBS"

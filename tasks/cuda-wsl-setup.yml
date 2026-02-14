@@ -23,12 +23,24 @@
   tags:
     - cuda-wsl
 
-- name: Copy CUDA GPG key
+- name: Find CUDA GPG key
+  become: true
+  find:
+    paths: /var/cuda-repo-wsl-ubuntu-12-9-local
+    patterns: cuda-*-keyring.gpg
+    file_type: file
+  register: cuda_keyring
+  tags:
+    - cuda-wsl
+
+- name: Install CUDA keyring
   become: true
   copy:
-    src: /var/cuda-repo-wsl-ubuntu-12-9-local/cuda-*-keyring.gpg
-    dest: /usr/share/keyrings/
+    src: "{{ (cuda_keyring.files | first).path }}"
+    dest: /usr/share/keyrings/cuda-archive-keyring.gpg
     remote_src: yes
+    mode: "0644"
+  when: cuda_keyring.matched > 0
   tags:
     - cuda-wsl
 

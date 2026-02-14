@@ -2,43 +2,45 @@
   become: true
   apt:
     name:
-      [
-        "build-essential",
-        "btop",
-        "clang",
-        "cmake",
-        "cowsay",
-        "curl",
-        "fuse",
-        "fortune",
-        "git",
-        "libbz2-dev",
-        "libclang-dev",
-        "libpthread-stubs0-dev",
-        "libtool",
-        "libtool-bin",
-        "libffi-dev",
-        "liblzma-dev",
-        "libncursesw5-dev",
-        "libreadline-dev",
-        "libsqlite3-dev",
-        "libssl-dev",
-        "libxml2-dev",
-        "libxmlsec1-dev",
-        "llvm",
-        "make",
-        "ncdu",
-        "pkg-config",
-        "tldr",
-        "tk-dev",
-        "unzip",
-        "wget",
-        "wslu",
-        "xz-utils",
-        "zlib1g-dev",
-        "pgcli",
-        "mycli",
-      ]
+      - build-essential
+      - btop
+      - chafa
+      - clang
+      - cmake
+      - cowsay
+      - curl
+      - fuse
+      - fortune
+      - git
+      - libbz2-dev
+      - libclang-dev
+      - libpthread-stubs0-dev
+      - libtool
+      - libtool-bin
+      - libffi-dev
+      - liblzma-dev
+      - libncursesw5-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - libssl-dev
+      - libxml2-dev
+      - libxmlsec1-dev
+      - llvm
+      - make
+      - ncdu
+      - pkg-config
+      - tldr
+      - tk-dev
+      - unzip
+      - wget
+      - wslu
+      - xz-utils
+      - zlib1g-dev
+      - pgcli
+      - mycli
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
   tags:
     - install
     - core

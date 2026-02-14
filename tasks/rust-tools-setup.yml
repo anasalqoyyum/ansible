@@ -1,54 +1,60 @@
 - name: Install cargo-binstall
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install cargo-binstall"
+  shell: "curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall"
   tags:
     - install
     - rust
 
 - name: Install eza
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install eza"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm eza || {{ ansible_env.HOME }}/.cargo/bin/cargo install eza"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/eza"
   tags:
     - install
     - rust
 
 - name: Install typst-cli
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked typst-cli"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm typst-cli || {{ ansible_env.HOME }}/.cargo/bin/cargo install --locked typst-cli"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/typst"
   tags:
     - install
     - rust
 
 - name: Install just
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install just"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm just || {{ ansible_env.HOME }}/.cargo/bin/cargo install just"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/just"
   tags:
     - install
     - rust
 
 - name: Install usage-cli
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install usage-cli"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm usage-cli || {{ ansible_env.HOME }}/.cargo/bin/cargo install usage-cli"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/usage"
   tags:
     - install
     - rust
     - mise
 
 - name: Install mise
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install mise"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm mise || {{ ansible_env.HOME }}/.cargo/bin/cargo install mise"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/mise"
   tags:
     - install
     - rust
@@ -56,75 +62,86 @@
     - linux-only
 
 - name: Install zoxide
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked zoxide"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm zoxide || {{ ansible_env.HOME }}/.cargo/bin/cargo install --locked zoxide"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/zoxide"
   tags:
     - install
     - rust
     - linux-only
 
 - name: Install ripgrep
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install ripgrep --features 'pcre2'"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked ripgrep --features 'pcre2'"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/rg"
+  environment:
+    CARGO_TARGET_DIR: "{{ ansible_env.HOME }}/.cargo/target-install"
   tags:
     - install
     - rust
 
 - name: Install fd
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install fd-find"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm fd-find || {{ ansible_env.HOME }}/.cargo/bin/cargo install fd-find"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/fd"
   tags:
     - install
     - rust
     - linux-only
 
 - name: Install bat
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked bat"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm bat || {{ ansible_env.HOME }}/.cargo/bin/cargo install --locked bat"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/bat"
   tags:
     - install
     - rust
     - linux-only
 
 - name: Install yazi
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked yazi-fm yazi-cli"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --force yazi-build"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/yazi"
+  environment:
+    CARGO_TARGET_DIR: "{{ ansible_env.HOME }}/.cargo/target-install"
   tags:
     - install
     - rust
     - linux-only
 
 - name: Install xh
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked xh"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm xh || {{ ansible_env.HOME }}/.cargo/bin/cargo install --locked xh"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/xh"
   tags:
     - install
     - rust
     - linux-only
 
 - name: Install tree-sitter-cli
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo install --locked tree-sitter-cli"
+  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm tree-sitter-cli || {{ ansible_env.HOME }}/.cargo/bin/cargo install --locked tree-sitter-cli"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/tree-sitter"
   tags:
     - install
     - rust
 
 - name: Install nightly
-  shell: "rustup toolchain install nightly"
+  shell: "rustup toolchain list | grep -q '^nightly' || rustup toolchain install nightly"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"
@@ -133,7 +150,7 @@
     - rust
 
 - name: Install rust-analyzer
-  shell: "rustup component add rust-analyzer"
+  shell: "rustup component list --installed | grep -q '^rust-analyzer' || rustup component add rust-analyzer"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_env.HOME }}"

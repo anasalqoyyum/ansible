@@ -3,7 +3,7 @@
     url: https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
     dest: /usr/local/bin/nvim.appimage
     mode: "0755"
-    force: true
+    force: false
   become: true
   tags:
     - install
@@ -27,7 +27,7 @@
     url: https://github.com/kiyoon/tmux-appimage/releases/latest/download/tmux.appimage
     dest: /usr/local/bin/tmux.appimage
     mode: "0755"
-    force: true
+    force: false
   become: true
   tags:
     - install
@@ -95,10 +95,9 @@
     url: "https://github.com/so-fancy/diff-so-fancy/releases/latest/download/diff-so-fancy"
     dest: /usr/local/bin/diff-so-fancy
     mode: "0755"
-    force: true
+    force: false
   become: true
   tags:
     - install
     - diff-so-fancy
-    - lazygit
     - linux-only
