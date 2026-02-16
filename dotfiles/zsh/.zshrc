@@ -216,6 +216,9 @@ function c() {
     command opencode "$@"
   fi
 }
+function ctui() {
+  opencode --hostname localhost --port 4096
+}
 function cserve() {
   local pass=""
   if [[ -f ~/.config/opencode-server/server_password ]]; then

@@ -24,5 +24,9 @@ theme = "tokyonight_night"
 # background-opacity = 0.99
 # background-blur = true
 
+# copy to clipboard on select
+copy-on-select = clipboard
+confirm-close-surface = false
+
 # cmd+` to toggle quick terminal
 keybind = global:cmd+backquote=toggle_quick_terminal
