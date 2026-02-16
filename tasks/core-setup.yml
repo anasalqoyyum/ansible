@@ -10,6 +10,7 @@
       - cowsay
       - curl
       - fuse
+      - ffmpeg
       - fortune
       - git
       - libbz2-dev

@@ -101,5 +101,6 @@
   "vim-dadbod-completion": { "branch": "master", "commit": "a8dac0b3cf6132c80dc9b18bef36d4cf7a9e1fe6" },
   "vim-dadbod-ui": { "branch": "master", "commit": "07e92e22114cc5b1ba4938d99897d85b58e20475" },
   "vscode-diff.nvim": { "branch": "next", "commit": "7ade58156e12077faa9fe932000c4b1e75d64a0b" },
-  "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" }
+  "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" },
+  "wsl-clipboard.nvim": { "branch": "main", "commit": "04f67d7ec8416794663ec3a8ac72deac8e09dcb9" }
 }

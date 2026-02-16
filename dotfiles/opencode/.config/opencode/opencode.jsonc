@@ -8,9 +8,10 @@
     "bash": "allow",
     "webfetch": "allow"
   },
-  "server": {
-    "port": 4096,
-    "hostname": "0.0.0.0"
-  },
+  // "server": {
+  //   "port": 4096,
+  //   "hostname": "0.0.0.0",
+  //   "mdns": true
+  // },
   "mcp": {}
 }
