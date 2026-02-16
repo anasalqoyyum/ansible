@@ -47,19 +47,6 @@
   tags:
     - install
     - rust
-    - mise
-
-- name: Install mise
-  shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm mise || {{ ansible_env.HOME }}/.cargo/bin/cargo install mise"
-  args:
-    executable: /bin/bash
-    chdir: "{{ ansible_env.HOME }}"
-    creates: "{{ ansible_env.HOME }}/.cargo/bin/mise"
-  tags:
-    - install
-    - rust
-    - mise
-    - linux-only
 
 - name: Install zoxide
   shell: "{{ ansible_env.HOME }}/.cargo/bin/cargo-binstall --no-confirm zoxide || {{ ansible_env.HOME }}/.cargo/bin/cargo install --locked zoxide"

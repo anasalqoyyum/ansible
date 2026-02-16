@@ -1,0 +1,10 @@
+- name: Install mise
+  shell: "curl -fsSL https://mise.run | sh"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_env.HOME }}"
+    creates: "{{ ansible_env.HOME }}/.local/bin/mise"
+  tags:
+    - install
+    - mise
+    - linux-only
