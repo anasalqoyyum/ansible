@@ -8,6 +8,14 @@
     "bash": "allow",
     "webfetch": "allow"
   },
+  "agent": {
+    "review": {
+      "description": "Reviews code for best practices and potential issues"
+    },
+    "refactor": {
+      "description": "Refactors code to improve readability and maintainability"
+    }
+  },
   // "server": {
   //   "port": 4096,
   //   "hostname": "0.0.0.0",

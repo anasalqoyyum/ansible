@@ -58,5 +58,5 @@ lockfile = true
 [env]
 # Auto enable corepack for node versions that support it (>=16.9.0).
 MISE_NODE_COREPACK = true
-OPENCODE_EXPERIMENTAL_PLAN_MODE = 1
-
+OPENCODE_EXPERIMENTAL_PLAN_MODE = true
+OPENCODE_EXPERIMENTAL_MARKDOWN = true

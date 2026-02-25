@@ -1,0 +1,63 @@
+{
+  "version": 3,
+  "skills": {
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "skillFolderHash": "079b06a135401704ea94ab74c7c9d86c92ba259f",
+      "installedAt": "2026-02-25T15:22:41.922Z",
+      "updatedAt": "2026-02-25T15:22:41.922Z"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "skillFolderHash": "c2f31172b6f256272305a5e6e7228b258446899f",
+      "installedAt": "2026-02-25T15:22:46.192Z",
+      "updatedAt": "2026-02-25T15:22:46.192Z"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "skillFolderHash": "928950704df8a8b885c03de5da626331e6f29cf8",
+      "installedAt": "2026-02-25T15:28:32.253Z",
+      "updatedAt": "2026-02-25T15:28:32.253Z"
+    },
+    "pdf": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillPath": "skills/pdf/SKILL.md",
+      "skillFolderHash": "6369f4649de69bd6857c9bc3b058a77206009238",
+      "installedAt": "2026-02-25T15:28:43.499Z",
+      "updatedAt": "2026-02-25T15:28:43.499Z"
+    },
+    "code-reviewer": {
+      "source": "google-gemini/gemini-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/google-gemini/gemini-cli.git",
+      "skillPath": ".gemini/skills/code-reviewer/SKILL.md",
+      "skillFolderHash": "e580e60f488d74811fbec80427183553295d7ceb",
+      "installedAt": "2026-02-25T15:30:37.749Z",
+      "updatedAt": "2026-02-25T15:30:37.749Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "codex",
+    "cursor",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-cli",
+    "opencode",
+    "claude-code"
+  ]
+}
