@@ -26,6 +26,22 @@ C:\Users\username\file.txt
 - **User provides:** `F:\Libraries\Pictures\Screenshots\Screenshot.png`
 - **Agent converts to:** `/mnt/f/Libraries/Pictures/Screenshots/Screenshot.png`
 
+
+## File Change Confirmation
+
+When you detect that a user has modified a file after your previous read, re-read the file and confirm with the user whether the changes are intended.
+
+### Required Actions:
+
+- Re-read the file to capture the current state
+- Present a diff or summary of what changed
+- Ask the user to confirm if changes were intentional
+
+### Example:
+
+- **Scenario:** You previously read `config.json`, then the user runs a command that modifies it
+- **Action:** Re-read `config.json`, show what changed, ask: "I noticed changes in `config.json` — was this intentional?"
+
 ## Git Operations
 
 Git operations should **only be performed when explicitly requested by the user**.

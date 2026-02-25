@@ -8,19 +8,19 @@ version = "0.0.1766937678-g9acadc"
 backend = "npm:@sourcegraph/amp"
 
 [[tools."aqua:joshmedeski/sesh"]]
-version = "2.22.0"
+version = "2.24.2"
 backend = "aqua:joshmedeski/sesh"
-"platforms.linux-x64" = { checksum = "sha256:ca1f5530e0b6099f0f69ff4015a38f346d1e3e22d83e92d4806795e440967fe8", url = "https://github.com/joshmedeski/sesh/releases/download/v2.22.0/sesh_Linux_x86_64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:a33199a6fd5c39628872be1bc40753af755e1dc822f64a27c09a23e330ddd0d0", url = "https://github.com/joshmedeski/sesh/releases/download/v2.24.2/sesh_Linux_x86_64.tar.gz"}
 
 [[tools.aws-cli]]
-version = "2.33.22"
+version = "2.33.29"
 backend = "aqua:aws/aws-cli"
-"platforms.linux-x64" = { checksum = "blake3:d588dbb93845d8981e97c9d4516141ecc3affa429b97dbd24dfac140a05f68e4", url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.33.22.zip"}
+"platforms.linux-x64" = { checksum = "blake3:0644e90c41af2a0b23a913fe552382c7331fdcd8dc26a437289b4ba3be983554", url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.33.29.zip"}
 
 [[tools.biome]]
-version = "2.4.0"
+version = "2.4.4"
 backend = "aqua:biomejs/biome"
-"platforms.linux-x64" = { checksum = "sha256:1fdf25c2dec5799b258de6eefff25f1533dc26e56ed8d0e08503272c63644af5", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.0/biome-linux-x64"}
+"platforms.linux-x64" = { checksum = "sha256:ba5073017ec03a700e5b9270b2454df7dbec6a5124611bb785b68ae717506d45", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.4/biome-linux-x64"}
 
 [[tools.bob]]
 version = "4.1.6"
@@ -37,9 +37,9 @@ version = "2.0.76"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools.codex]]
-version = "0.101.0"
+version = "0.104.0"
 backend = "aqua:openai/codex"
-"platforms.linux-x64" = { checksum = "sha256:a2e8496477bed2449c727cecc5a759e9e6bc319497e31e61051b5c5ecfa5b6bb", url = "https://github.com/openai/codex/releases/download/rust-v0.101.0/codex-x86_64-unknown-linux-musl.zst"}
+"platforms.linux-x64" = { checksum = "sha256:37c6530d7beb6c4a0aaa8655e76782f39c0d6c35653b8bb8e25f22c45beae44c", url = "https://github.com/openai/codex/releases/download/rust-v0.104.0/codex-x86_64-unknown-linux-musl.zst"}
 
 [[tools.docker-cli]]
 version = "29.2.1"
@@ -52,9 +52,9 @@ backend = "aqua:docker/compose"
 "platforms.linux-x64" = { checksum = "sha256:2d880f723d3da7c779c54fdaea91a842fca8af55d1397f1ed8d7cbab3dd7af67", url = "https://github.com/docker/compose/releases/download/v5.0.2/docker-compose-linux-x86_64"}
 
 [[tools.github-cli]]
-version = "2.86.0"
+version = "2.87.2"
 backend = "aqua:cli/cli"
-"platforms.linux-x64" = { checksum = "sha256:f3b08bd6a28420cc2229b0a1a687fa25f2b838d3f04b297414c1041ca68103c7", url = "https://github.com/cli/cli/releases/download/v2.86.0/gh_2.86.0_linux_amd64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:18360b2243e3bf9c1457035db45f6400ae4cf957dcc2f674e69717b4e0b14d55", url = "https://github.com/cli/cli/releases/download/v2.87.2/gh_2.87.2_linux_amd64.tar.gz"}
 
 [[tools.go]]
 version = "1.25.7"
@@ -62,9 +62,9 @@ backend = "core:go"
 "platforms.linux-x64" = { checksum = "sha256:12e6d6a191091ae27dc31f6efc630e3a3b8ba409baf3573d955b196fdf086005", url = "https://dl.google.com/go/go1.25.7.linux-amd64.tar.gz"}
 
 [[tools.golangci-lint]]
-version = "2.9.0"
+version = "2.10.1"
 backend = "aqua:golangci/golangci-lint"
-"platforms.linux-x64" = { checksum = "sha256:493aaaca2eba6c8bcef847d92716bbd91bbac4b22cdbb0ab5b6a581b32946091", url = "https://github.com/golangci/golangci-lint/releases/download/v2.9.0/golangci-lint-2.9.0-linux-amd64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:dfa775874cf0561b404a02a8f4481fc69b28091da95aa697259820d429b09c99", url = "https://github.com/golangci/golangci-lint/releases/download/v2.10.1/golangci-lint-2.10.1-linux-amd64.tar.gz"}
 
 [[tools.httpie-go]]
 version = "0.7.0"
@@ -75,9 +75,9 @@ version = "21.0.2"
 backend = "core:java"
 
 [[tools.k6]]
-version = "1.6.0"
+version = "1.6.1"
 backend = "aqua:grafana/k6"
-"platforms.linux-x64" = { checksum = "sha256:365591ae4039b51b2843b4a117e2dde96fa20cc0c5df800a330790380eebb697", url = "https://github.com/grafana/k6/releases/download/v1.6.0/k6-v1.6.0-linux-amd64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:68df4958a1b089dc6f70a234e07c7ec818922f83b261ca24f3abf79882b13343", url = "https://github.com/grafana/k6/releases/download/v1.6.1/k6-v1.6.1-linux-amd64.tar.gz"}
 
 [[tools.k9s]]
 version = "0.50.18"
@@ -116,19 +116,19 @@ version = "8.0.0"
 backend = "npm:@hubspot/cli"
 
 [[tools."npm:@vue/typescript-plugin"]]
-version = "3.2.4"
+version = "3.2.5"
 backend = "npm:@vue/typescript-plugin"
 
 [[tools."npm:oxfmt"]]
-version = "0.32.0"
+version = "0.35.0"
 backend = "npm:oxfmt"
 
 [[tools."npm:oxlint"]]
-version = "1.47.0"
+version = "1.50.0"
 backend = "npm:oxlint"
 
 [[tools."npm:oxlint-tsgolint"]]
-version = "0.13.0"
+version = "0.15.0"
 backend = "npm:oxlint-tsgolint"
 
 [[tools."npm:typescript-svelte-plugin"]]
@@ -136,16 +136,16 @@ version = "0.3.50"
 backend = "npm:typescript-svelte-plugin"
 
 [[tools.opencode]]
-version = "1.2.5"
+version = "1.2.10"
 backend = "aqua:sst/opencode"
-"platforms.linux-x64" = { checksum = "sha256:c766b662c591a1f75aa5e50c4385fbe995f5896a8b56bcc67bef1af3f31e0740", url = "https://github.com/anomalyco/opencode/releases/download/v1.2.5/opencode-linux-x64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:ebcc24012e8f067b10d7416430c88e9c429115ecfbccf8da9eb59db3b629a358", url = "https://github.com/anomalyco/opencode/releases/download/v1.2.10/opencode-linux-x64.tar.gz"}
 
 [[tools.oxlint]]
 version = "1.16.0"
 backend = "aqua:oxc-project/oxc/oxlint"
 
 [[tools."pipx:mycli"]]
-version = "1.54.0"
+version = "1.56.0"
 backend = "pipx:mycli"
 
 [[tools."pipx:pgcli"]]
@@ -175,6 +175,6 @@ backend = "aqua:aquasecurity/trivy"
 "platforms.linux-x64" = { checksum = "sha256:dd93975bc1e58053810a9bafea89923e5df42ddd3f99905fdf840fd797145157", url = "https://github.com/aquasecurity/trivy/releases/download/v0.69.1/trivy_0.69.1_Linux-64bit.tar.gz"}
 
 [[tools.uv]]
-version = "0.10.2"
+version = "0.10.4"
 backend = "aqua:astral-sh/uv"
-"platforms.linux-x64" = { checksum = "sha256:c162182ba7dd692794362d76dd183990d6e51553217954106da19bdb6ced211b", url = "https://github.com/astral-sh/uv/releases/download/0.10.2/uv-x86_64-unknown-linux-musl.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:18adf097cea30a165ba086c1e72659fec3c5aca056a560e7c39e0164ac871196", url = "https://github.com/astral-sh/uv/releases/download/0.10.4/uv-x86_64-unknown-linux-musl.tar.gz"}
