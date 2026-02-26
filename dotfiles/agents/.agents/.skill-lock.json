@@ -45,6 +45,15 @@
       "skillFolderHash": "e580e60f488d74811fbec80427183553295d7ceb",
       "installedAt": "2026-02-25T15:30:37.749Z",
       "updatedAt": "2026-02-25T15:30:37.749Z"
+    },
+    "opentui": {
+      "source": "msmps/opentui-skill",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/msmps/opentui-skill.git",
+      "skillPath": "skill/opentui/SKILL.md",
+      "skillFolderHash": "00be9b06139cfcfc3a4f63469e148b574a31781b",
+      "installedAt": "2026-02-26T10:38:31.982Z",
+      "updatedAt": "2026-02-26T10:38:31.982Z"
     }
   },
   "dismissed": {

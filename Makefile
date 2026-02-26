@@ -5,9 +5,10 @@ DOTFILES_DEST := $(HOME_DIR)/.dotfiles/
 .PHONY: copy-local sync-dotfiles-linux sync-dotfiles-macos clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
 
 VAULT_PASSWORD_FILE ?= .vault_pass
+COPY_LOCAL_EXCLUDE ?= claude/
 
 copy-local:
-	cp -r $(DOTFILES_DEST)* $(DOTFILES_SRC)
+	rsync -a --exclude='$(COPY_LOCAL_EXCLUDE)' "$(DOTFILES_DEST)" "$(DOTFILES_SRC)"
 
 bootstrap-collections:
 	ansible-galaxy collection install -r requirements.yml
