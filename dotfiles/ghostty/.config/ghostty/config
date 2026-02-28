@@ -30,3 +30,6 @@ confirm-close-surface = false
 
 # cmd+` to toggle quick terminal
 keybind = global:cmd+backquote=toggle_quick_terminal
+
+# match Windows Terminal mapping so apps in tmux can detect Shift+Enter
+keybind = shift+enter=text:\x1b\r

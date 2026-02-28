@@ -1,130 +1,182 @@
 #!/usr/bin/env zsh
 
-# Dotfiles installer with auto-discovery, logging, and error handling
+# Dotfiles installer with auto-discovery, logging, and error handling.
 # Usage: DOTFILES=~/.dotfiles ./install [--verbose] [--dry-run]
+
+set -u
+set -o pipefail
 
 DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
 LOG_FILE="$DOTFILES/.stow.log"
 DRY_RUN=false
 VERBOSE=false
 
-# Parse arguments
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --dry-run)
-            DRY_RUN=true
-            shift
-            ;;
-        --verbose)
-            VERBOSE=true
-            shift
-            ;;
-        *)
-            shift
-            ;;
-    esac
-done
+print_usage() {
+  cat <<'EOF'
+Usage: ./install [--dry-run] [--verbose] [--help]
+Environment:
+  DOTFILES      Dotfiles directory (default: ~/.dotfiles)
+  STOW_FOLDERS  Comma-separated folder list (default: auto-discover)
+EOF
+}
 
-# Initialize log file
-{
+log_header() {
+  {
     echo "=== Stow run: $(date '+%Y-%m-%d %H:%M:%S') ==="
     echo "Dotfiles location: $DOTFILES"
     echo "Dry run: $DRY_RUN"
     echo ""
-} >> "$LOG_FILE"
+  } >> "$LOG_FILE"
+}
+
+# Parse arguments.
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --dry-run)
+      DRY_RUN=true
+      shift
+      ;;
+    --verbose)
+      VERBOSE=true
+      shift
+      ;;
+    --help|-h)
+      print_usage
+      exit 0
+      ;;
+    *)
+      echo "❌ Unknown argument: $1" >&2
+      print_usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ ! -d "$DOTFILES" ]]; then
+  echo "❌ Dotfiles directory not found: $DOTFILES" >&2
+  exit 1
+fi
+
+if ! command -v stow >/dev/null 2>&1; then
+  echo "❌ Required command not found: stow" >&2
+  exit 1
+fi
+
+touch "$LOG_FILE" 2>/dev/null || {
+  echo "❌ Cannot write log file: $LOG_FILE" >&2
+  exit 1
+}
+
+log_header
 
 echo "📦 Starting dotfiles installation..."
 echo "   Location: $DOTFILES"
 
-# Cleanup .DS_Store files before stowing
-echo "🧹 Cleaning up .DS_Store files..."
-find "$DOTFILES" -name ".DS_Store" -type f -delete
+cd "$DOTFILES" || {
+  echo "❌ Failed to enter directory: $DOTFILES" >&2
+  exit 1
+}
 
-# Auto-discover folders: find all directories (excluding hidden and non-directories)
-if [[ -z $STOW_FOLDERS ]]; then
-    STOW_FOLDERS=$(find "$DOTFILES" -mindepth 1 -maxdepth 1 -type d \
-        -not -name '.*' \
-        -not -name '__pycache__' \
-        -exec basename {} \; | sort | tr '\n' ',' | sed 's/,$//')
-    
-    if [[ -z $STOW_FOLDERS ]]; then
-        echo "❌ No dotfile folders found in $DOTFILES"
-        exit 1
-    fi
+echo "🧹 Checking for .DS_Store files..."
+ds_store_count=$(find . -name ".DS_Store" -type f | wc -l | tr -d ' ')
+if [[ "$DRY_RUN" == true ]]; then
+  echo "   Dry run: would remove $ds_store_count file(s)"
+else
+  if [[ "$ds_store_count" -gt 0 ]]; then
+    find . -name ".DS_Store" -type f -delete
+  fi
+  echo "   Removed $ds_store_count file(s)"
 fi
 
-echo "📂 Auto-discovered folders: $STOW_FOLDERS"
+# Resolve folders: use STOW_FOLDERS if set, otherwise auto-discover package directories.
+typeset -a folders
+if [[ -n "${STOW_FOLDERS:-}" ]]; then
+  folders=(${(@s:,:)STOW_FOLDERS})
+else
+  folders=(${(f)"$(find . -mindepth 1 -maxdepth 1 -type d \
+    -not -name '.*' \
+    -not -name '__pycache__' \
+    -exec basename {} \; | sort)"})
+fi
+
+if [[ ${#folders[@]} -eq 0 ]]; then
+  echo "❌ No dotfile folders found in $DOTFILES"
+  exit 1
+fi
+
+echo "📂 Folders: ${folders[*]}"
 echo ""
 
-cd "$DOTFILES" || exit 1
-
-# Build stow flags
-# Use -d to specify stow directory explicitly
-STOW_FLAGS="-R -d ."  # Restow with explicit current directory as dotfiles dir
+typeset -a stow_cmd
+stow_cmd=(stow -R)
 if [[ "$DRY_RUN" == true ]]; then
-    STOW_FLAGS="$STOW_FLAGS -n"  # Dry run
+  stow_cmd+=(-n)
 fi
 if [[ "$VERBOSE" == true ]]; then
-    STOW_FLAGS="$STOW_FLAGS -v"  # Verbose (can be repeated)
+  stow_cmd+=(-v)
 fi
 
-# Track failures
-failed_folders=()
+# Track outcomes.
+typeset -a failed_folders skipped_folders
 success_count=0
 
-# Stow each folder
-for folder in $(echo "$STOW_FOLDERS" | sed "s/,/ /g"); do
-    if [[ ! -d "$DOTFILES/$folder" ]]; then
-        echo "⚠️  Skipping $folder (directory not found)"
-        continue
-    fi
-    
-    echo -n "🔗 Stowing $folder... "
-    
-    # Build command: stow -R [-n] [-v] folder
-    cmd="stow -R $folder"
-    if [[ "$DRY_RUN" == true ]]; then
-        cmd="$cmd -n"
-    fi
-    if [[ "$VERBOSE" == true ]]; then
-        cmd="$cmd -v"
-    fi
-    
-    if eval "$cmd" >> "$LOG_FILE" 2>&1; then
-        echo "✓"
-        ((success_count++))
-    else
-        echo "✗ FAILED"
-        failed_folders+=("$folder")
-        {
-            echo ""
-            echo "ERROR stowing $folder at $(date '+%Y-%m-%d %H:%M:%S'):"
-            eval "$cmd" 2>&1 || true
-            echo ""
-        } >> "$LOG_FILE"
-    fi
+for folder in "${folders[@]}"; do
+  if [[ -z "$folder" ]]; then
+    continue
+  fi
+
+  if [[ ! -d "$folder" ]]; then
+    echo "⚠️  Skipping $folder (directory not found)"
+    skipped_folders+=("$folder")
+    continue
+  fi
+
+  echo -n "🔗 Stowing $folder... "
+
+  tmp_log=$(mktemp)
+  if "${stow_cmd[@]}" "$folder" >"$tmp_log" 2>&1; then
+    cat "$tmp_log" >> "$LOG_FILE"
+    rm -f "$tmp_log"
+    echo "✓"
+    ((success_count++))
+  else
+    cat "$tmp_log" >> "$LOG_FILE"
+    rm -f "$tmp_log"
+    echo "✗ FAILED"
+    failed_folders+=("$folder")
+    {
+      echo ""
+      echo "ERROR stowing $folder at $(date '+%Y-%m-%d %H:%M:%S')"
+      echo ""
+    } >> "$LOG_FILE"
+  fi
 done
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# Summary
-if [[ ${#failed_folders[@]} -eq 0 ]]; then
-    echo "✅ All $success_count folders stowed successfully"
-    {
-        echo "✅ Completed successfully at $(date '+%Y-%m-%d %H:%M:%S')"
-        echo ""
-    } >> "$LOG_FILE"
-    exit 0
-else
-    echo "❌ Stowing completed with errors:"
-    printf "   • %s\n" "${failed_folders[@]}"
-    echo ""
-    echo "   Check log: $LOG_FILE"
-    {
-        echo "❌ Failed with ${#failed_folders[@]} folder(s) at $(date '+%Y-%m-%d %H:%M:%S')"
-        echo "Failed folders: ${failed_folders[*]}"
-        echo ""
-    } >> "$LOG_FILE"
-    exit 1
+if [[ ${#skipped_folders[@]} -gt 0 ]]; then
+  echo "⚠️  Skipped folders:"
+  printf "   • %s\n" "${skipped_folders[@]}"
 fi
+
+# Summary.
+if [[ ${#failed_folders[@]} -eq 0 ]]; then
+  echo "✅ All $success_count folders stowed successfully"
+  {
+    echo "✅ Completed successfully at $(date '+%Y-%m-%d %H:%M:%S')"
+    echo ""
+  } >> "$LOG_FILE"
+  exit 0
+fi
+
+echo "❌ Stowing completed with errors:"
+printf "   • %s\n" "${failed_folders[@]}"
+echo ""
+echo "   Check log: $LOG_FILE"
+{
+  echo "❌ Failed with ${#failed_folders[@]} folder(s) at $(date '+%Y-%m-%d %H:%M:%S')"
+  echo "Failed folders: ${failed_folders[*]}"
+  echo ""
+} >> "$LOG_FILE"
+exit 1

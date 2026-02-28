@@ -9,3 +9,4 @@ shell_snapshot = true
 unified_exec = true
 # unstable
 apply_patch_freeform = true
+js_repl = true

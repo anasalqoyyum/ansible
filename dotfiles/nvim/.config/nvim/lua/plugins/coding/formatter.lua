@@ -122,11 +122,9 @@ M.biome_support = LazyVim.memoize(M.biome_support)
 M.oxfmt_support = LazyVim.memoize(M.oxfmt_support)
 
 return {
-  -- oxfmt is installed through mise temporarily
-  -- PR: https://github.com/mason-org/mason-registry/pull/12767
   {
     "mason-org/mason.nvim",
-    opts = { ensure_installed = { "prettierd", "prettier", "biome" } },
+    opts = { ensure_installed = { "prettierd", "prettier", "biome", "oxfmt" } },
   },
 
   {
