@@ -345,6 +345,8 @@ alias lla="eza -alg --icons --git"
 alias llt="eza -1 --icons --tree --git-ignore"
 alias rgf="rg --fixed-strings"
 alias k="kubectl"
+alias cx="codex --yolo"
+alias cc="claude --dangerously-skip-permissions"
 # I forgot what this does
 alias v="print -z --"
 
