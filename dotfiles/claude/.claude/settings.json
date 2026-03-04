@@ -1,0 +1,5 @@
+{
+  "model": "sonnet",
+  "skipDangerousModePermissionPrompt": true,
+  "cleanupPeriodDays": 9999999999
+}

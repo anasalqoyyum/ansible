@@ -13,17 +13,14 @@ backend = "aqua:joshmedeski/sesh"
 "platforms.linux-x64" = { checksum = "sha256:a33199a6fd5c39628872be1bc40753af755e1dc822f64a27c09a23e330ddd0d0", url = "https://github.com/joshmedeski/sesh/releases/download/v2.24.2/sesh_Linux_x86_64.tar.gz"}
 
 [[tools.aws-cli]]
-version = "2.34.0"
+version = "2.34.1"
 backend = "aqua:aws/aws-cli"
-"platforms.linux-arm64" = { url = "https://awscli.amazonaws.com/awscli-exe-linux-aarch64-2.34.0.zip"}
-"platforms.linux-x64" = { url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.34.0.zip"}
-"platforms.macos-arm64" = { url = "https://awscli.amazonaws.com/AWSCLIV2-2.34.0.pkg"}
-"platforms.macos-x64" = { url = "https://awscli.amazonaws.com/AWSCLIV2-2.34.0.pkg"}
+"platforms.linux-x64" = { checksum = "blake3:5e674c66368ff2ebf1c4a8f5902354804580fdd7d20962cd34646ffd3ef06c7b", url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.34.1.zip"}
 
 [[tools.biome]]
-version = "2.4.4"
+version = "2.4.5"
 backend = "aqua:biomejs/biome"
-"platforms.linux-x64" = { checksum = "sha256:ba5073017ec03a700e5b9270b2454df7dbec6a5124611bb785b68ae717506d45", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.4/biome-linux-x64"}
+"platforms.linux-x64" = { checksum = "sha256:a31815f19b0b90fa043eb23fbf769ed931fbcde6d98bb89894ea8be1387d8394", url = "https://github.com/biomejs/biome/releases/download/%40biomejs/biome%402.4.5/biome-linux-x64"}
 
 [[tools.bob]]
 version = "4.1.6"
@@ -33,30 +30,16 @@ backend = "aqua:MordechaiHadad/bob"
 [[tools.bun]]
 version = "1.3.10"
 backend = "core:bun"
-"platforms.linux-arm64" = { checksum = "sha256:fa5ecb25cafa8e8f5c87a0f833719d46dd0af0a86c7837d806531212d55636d3", url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.10/bun-linux-aarch64.zip"}
-"platforms.linux-arm64-musl" = { checksum = "sha256:d2c81365a2e529b78a42330d3a0056e8dbd7896b4a6782c8e392b6532141e34d", url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.10/bun-linux-aarch64-musl.zip"}
-"platforms.linux-x64" = { checksum = "sha256:f57bc0187e39623de716ba3a389fda5486b2d7be7131a980ba54dc7b733d2e08", url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.10/bun-linux-x64.zip"}
-"platforms.linux-x64-baseline" = { checksum = "sha256:41201a8c5ee74a9dcbb1ce25a1104f1f929838b57a845aa78d98379b0ce7cde2", url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.10/bun-linux-x64-baseline.zip"}
-"platforms.linux-x64-musl" = { checksum = "sha256:48a6c32277d343db0148ce066336472ffd380358a4d26bb1329714742492d824", url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.10/bun-linux-x64-musl.zip"}
-"platforms.linux-x64-musl-baseline" = { checksum = "sha256:a7bc4cdea1ef255a83adbf39c7aafcd30e09f2b8f74deec4b10ee318bc024d1f", url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.10/bun-linux-x64-musl-baseline.zip"}
-"platforms.macos-arm64" = { checksum = "sha256:82034e87c9d9b4398ea619aee2eed5d2a68c8157e9a6ae2d1052d84d533ccd8d", url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.10/bun-darwin-aarch64.zip"}
-"platforms.macos-x64" = { checksum = "sha256:c1d90bf6140f20e572c473065dc6b37a4b036349b5e9e4133779cc642ad94323", url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.10/bun-darwin-x64.zip"}
-"platforms.macos-x64-baseline" = { checksum = "sha256:f9686c4e4e760db4cde77a0f1fad05e552648b9c9cbfa4f7fc9a7ec26b9f3267", url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.10/bun-darwin-x64-baseline.zip"}
-"platforms.windows-x64" = { checksum = "sha256:7a77b3e245e2e26965c93089a4a1332e8a326d3364c89fae1d1fd99cdd3cd73d", url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.10/bun-windows-x64.zip"}
-"platforms.windows-x64-baseline" = { checksum = "sha256:715709c69b176e20994533d3292bd0b7c32de9c0c5575b916746ec6b2aa38346", url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.10/bun-windows-x64-baseline.zip"}
+"platforms.linux-x64" = { checksum = "blake3:1fde3005ad2838fe37d372ba5b213c3549db361aafbb4efb6600a43fe43d4aba"}
 
 [[tools.claude]]
 version = "2.0.76"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools.codex]]
-version = "0.106.0"
+version = "0.107.0"
 backend = "aqua:openai/codex"
-"platforms.linux-arm64" = { checksum = "sha256:6ab135ea93f7eb6d6a81c41b50457b5e921c7d4785b679f800db527257d1f432", url = "https://github.com/openai/codex/releases/download/rust-v0.106.0/codex-aarch64-unknown-linux-musl.zst"}
-"platforms.linux-x64" = { checksum = "sha256:cbf9999532a9039bf7df052bef2012def2d480ab3d7b0c13d1836b7dec19795a", url = "https://github.com/openai/codex/releases/download/rust-v0.106.0/codex-x86_64-unknown-linux-musl.zst"}
-"platforms.macos-arm64" = { checksum = "sha256:41ab0c16d80af020ce963cd4f5cec3e5e3bbb5cec62c7229201d8e3770060d3d", url = "https://github.com/openai/codex/releases/download/rust-v0.106.0/codex-aarch64-apple-darwin.zst"}
-"platforms.macos-x64" = { checksum = "sha256:7a12b9d6fdbd3b71d5f48e3bf9bbd6c2209455b4ee5e543e1ac3caff168303a4", url = "https://github.com/openai/codex/releases/download/rust-v0.106.0/codex-x86_64-apple-darwin.zst"}
-"platforms.windows-x64" = { checksum = "sha256:ccab13940f802d2c6f3602cf69bbf49569997d8a240dd3ff33961f5a9a875d9a", url = "https://github.com/openai/codex/releases/download/rust-v0.106.0/codex-x86_64-pc-windows-msvc.exe.zst"}
+"platforms.linux-x64" = { checksum = "sha256:c42c7ba67c958380229df899ed2b1d38c1a7eb37bde1d7bfaa36188add845ad0", url = "https://github.com/openai/codex/releases/download/rust-v0.107.0/codex-x86_64-unknown-linux-musl.zst"}
 
 [[tools.docker-cli]]
 version = "29.2.1"
@@ -69,9 +52,9 @@ backend = "aqua:docker/compose"
 "platforms.linux-x64" = { checksum = "sha256:2d880f723d3da7c779c54fdaea91a842fca8af55d1397f1ed8d7cbab3dd7af67", url = "https://github.com/docker/compose/releases/download/v5.0.2/docker-compose-linux-x86_64"}
 
 [[tools.github-cli]]
-version = "2.87.2"
+version = "2.87.3"
 backend = "aqua:cli/cli"
-"platforms.linux-x64" = { checksum = "sha256:18360b2243e3bf9c1457035db45f6400ae4cf957dcc2f674e69717b4e0b14d55", url = "https://github.com/cli/cli/releases/download/v2.87.2/gh_2.87.2_linux_amd64.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:c6e5537631fca45f277ef405ce8751d139b491e9402cc20891a003525a8773b2", url = "https://github.com/cli/cli/releases/download/v2.87.3/gh_2.87.3_linux_amd64.tar.gz"}
 
 [[tools.go]]
 version = "1.25.7"
@@ -106,9 +89,9 @@ version = "2.3.10"
 backend = "asdf:kotlin"
 
 [[tools.kubectl]]
-version = "1.35.1"
+version = "1.35.2"
 backend = "aqua:kubernetes/kubernetes/kubectl"
-"platforms.linux-x64" = { checksum = "sha256:36e2f4ac66259232341dd7866952d64a958846470f6a9a6a813b9117bd965207", url = "https://dl.k8s.io/v1.35.1/bin/linux/amd64/kubectl"}
+"platforms.linux-x64" = { checksum = "sha256:924eb50779153f20cb668117d141440b95df2f325a64452d78dff9469145e277", url = "https://dl.k8s.io/v1.35.2/bin/linux/amd64/kubectl"}
 
 [[tools.lazydocker]]
 version = "0.24.4"
@@ -118,11 +101,7 @@ backend = "aqua:jesseduffield/lazydocker"
 [[tools.node]]
 version = "24.14.0"
 backend = "core:node"
-"platforms.linux-arm64" = { checksum = "sha256:f44740cd218de8127f1c44c41510a3a740fa5c9c8d1cdce1c3bedada79f3cde7", url = "https://nodejs.org/dist/v24.14.0/node-v24.14.0-linux-arm64.tar.gz"}
 "platforms.linux-x64" = { checksum = "sha256:dbf5b8665dec15e59e6359a517fefb47b23fdb9152d8def975b9bca3dfc6d355", url = "https://nodejs.org/dist/v24.14.0/node-v24.14.0-linux-x64.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:a1a54f46a750d2523d628d924aab61758a51c9dad3e0238beb14141be9615dd3", url = "https://nodejs.org/dist/v24.14.0/node-v24.14.0-darwin-arm64.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:f2879eb810e25993a0578e5d878930266fd2eafcffe9f2839b3d8db354d4879e", url = "https://nodejs.org/dist/v24.14.0/node-v24.14.0-darwin-x64.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:313fa40c0d7b18575821de8cb17483031fe07d95de5994f6f435f3b345f85c66", url = "https://nodejs.org/dist/v24.14.0/node-v24.14.0-win-x64.zip"}
 
 [[tools."npm:@astrojs/ts-plugin"]]
 version = "1.10.6"
@@ -133,7 +112,7 @@ version = "0.9.1"
 backend = "npm:@frostoven/squoosh-cli"
 
 [[tools."npm:@hubspot/cli"]]
-version = "8.0.0"
+version = "8.1.0"
 backend = "npm:@hubspot/cli"
 
 [[tools."npm:@vue/typescript-plugin"]]
@@ -141,15 +120,15 @@ version = "3.2.5"
 backend = "npm:@vue/typescript-plugin"
 
 [[tools."npm:oxfmt"]]
-version = "0.35.0"
+version = "0.36.0"
 backend = "npm:oxfmt"
 
 [[tools."npm:oxlint"]]
-version = "1.50.0"
+version = "1.51.0"
 backend = "npm:oxlint"
 
 [[tools."npm:oxlint-tsgolint"]]
-version = "0.15.0"
+version = "0.16.0"
 backend = "npm:oxlint-tsgolint"
 
 [[tools."npm:typescript-svelte-plugin"]]
@@ -157,20 +136,16 @@ version = "0.3.50"
 backend = "npm:typescript-svelte-plugin"
 
 [[tools.opencode]]
-version = "1.2.15"
+version = "1.2.16"
 backend = "aqua:sst/opencode"
-"platforms.linux-arm64" = { checksum = "sha256:dd4ca5764a093f92d8515833d5c58eabc657e72cdc3ef2ba3ac11e0db749b80d", url = "https://github.com/anomalyco/opencode/releases/download/v1.2.15/opencode-linux-arm64.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:78b01946464e935c9b79261eda4a48f406621b0787a358fe607b6c71305f320e", url = "https://github.com/anomalyco/opencode/releases/download/v1.2.15/opencode-linux-x64.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:4144cdb7ae4d183964d7b23bdd37061ed52761bbde7e55763e0ebd12998c1e5e", url = "https://github.com/anomalyco/opencode/releases/download/v1.2.15/opencode-darwin-arm64.zip"}
-"platforms.macos-x64" = { checksum = "sha256:ba44d38b7c7a15675246d95f25f1fc4f6b6fbf5229c08d47813ab98f3503a7e3", url = "https://github.com/anomalyco/opencode/releases/download/v1.2.15/opencode-darwin-x64.zip"}
-"platforms.windows-x64" = { checksum = "sha256:ab65f06a01bb3adab6094735ebb9249efce500aaebda7388d5bfd95c8d377e0d", url = "https://github.com/anomalyco/opencode/releases/download/v1.2.15/opencode-windows-x64.zip"}
+"platforms.linux-x64" = { checksum = "sha256:7328f659bfdf5633e85d32151b6d5e394fecee09647a63a8d8df255bc212f0f4", url = "https://github.com/anomalyco/opencode/releases/download/v1.2.16/opencode-linux-x64.tar.gz"}
 
 [[tools.oxlint]]
 version = "1.16.0"
 backend = "aqua:oxc-project/oxc/oxlint"
 
 [[tools."pipx:mycli"]]
-version = "1.56.0"
+version = "1.59.0"
 backend = "pipx:mycli"
 
 [[tools."pipx:pgcli"]]
@@ -190,20 +165,16 @@ version = "3.13.12"
 backend = "core:python"
 
 [[tools.television]]
-version = "0.15.2"
+version = "0.15.3"
 backend = "aqua:alexpasmantier/television"
-"platforms.linux-x64" = { checksum = "sha256:0d3b9d286c73bec60cb5f0bbed3007fe7fecb34ea3498f24ff69ecfefbccc12c", url = "https://github.com/alexpasmantier/television/releases/download/0.15.2/tv-0.15.2-x86_64-unknown-linux-musl.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:01894db9c61239e1b409c6d1b1d81d02d997ae8f0571d564c4beb9f759356204", url = "https://github.com/alexpasmantier/television/releases/download/0.15.3/tv-0.15.3-x86_64-unknown-linux-musl.tar.gz"}
 
 [[tools.trivy]]
-version = "0.69.1"
+version = "0.69.3"
 backend = "aqua:aquasecurity/trivy"
-"platforms.linux-x64" = { checksum = "sha256:dd93975bc1e58053810a9bafea89923e5df42ddd3f99905fdf840fd797145157", url = "https://github.com/aquasecurity/trivy/releases/download/v0.69.1/trivy_0.69.1_Linux-64bit.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:1816b632dfe529869c740c0913e36bd1629cb7688bd5634f4a858c1d57c88b75", url = "https://github.com/aquasecurity/trivy/releases/download/v0.69.3/trivy_0.69.3_Linux-64bit.tar.gz"}
 
 [[tools.uv]]
-version = "0.10.7"
+version = "0.10.8"
 backend = "aqua:astral-sh/uv"
-"platforms.linux-arm64" = { checksum = "sha256:115291f9943531a3b63db3a2eabda8b74b8da4831551679382cb309c9debd9f7", url = "https://github.com/astral-sh/uv/releases/download/0.10.7/uv-aarch64-unknown-linux-musl.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:992529add6024e67135b1c80617abd2eca7be2cf0b99b3911f923de815bd8dc1", url = "https://github.com/astral-sh/uv/releases/download/0.10.7/uv-x86_64-unknown-linux-musl.tar.gz"}
-"platforms.macos-arm64" = { checksum = "sha256:1eb4dcc5e0fc8669fa0b33cf1151b64ba3b8c26b60dceff4f7a686129e2af22b", url = "https://github.com/astral-sh/uv/releases/download/0.10.7/uv-aarch64-apple-darwin.tar.gz"}
-"platforms.macos-x64" = { checksum = "sha256:4fed9d4f4608fb3850db714ee37244436f850a2b6e485bc510795679c2d08866", url = "https://github.com/astral-sh/uv/releases/download/0.10.7/uv-x86_64-apple-darwin.tar.gz"}
-"platforms.windows-x64" = { checksum = "sha256:8881afb877996a1373a12e816395122a8d39a3ac06cd066272acdb49510cf0fe", url = "https://github.com/astral-sh/uv/releases/download/0.10.7/uv-x86_64-pc-windows-msvc.zip"}
+"platforms.linux-x64" = { checksum = "sha256:a4e6ad1aecac61077de548d2cc9ccf2c2f1848863312b3b59fb0d2eb8d8a043c", url = "https://github.com/astral-sh/uv/releases/download/0.10.8/uv-x86_64-unknown-linux-musl.tar.gz"}
