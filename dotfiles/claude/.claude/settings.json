@@ -1,5 +1,8 @@
 {
-  "model": "sonnet",
+  "cleanupPeriodDays": 9999999999,
+  "model": "opus",
   "skipDangerousModePermissionPrompt": true,
-  "cleanupPeriodDays": 9999999999
+  "env": {
+    "ENABLE_CLAUDEAI_MCP_SERVERS": "false"
+  }
 }
