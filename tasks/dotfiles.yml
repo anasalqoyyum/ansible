@@ -83,3 +83,19 @@
     - install
     - dotfiles
     - stow
+
+- name: Ensure mise shims are available in all zsh shells
+  blockinfile:
+    path: "{{ lookup('env', 'HOME') }}/.zshenv"
+    create: true
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - mise shims"
+    insertafter: EOF
+    block: |
+      case ":$PATH:" in
+        *":$HOME/.local/share/mise/shims:"*) ;;
+        *) export PATH="$HOME/.local/share/mise/shims:$PATH" ;;
+      esac
+  tags:
+    - install
+    - dotfiles
+    - stow

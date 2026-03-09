@@ -1,5 +1,5 @@
 personality = "pragmatic"
-model = "gpt-5.3-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "high"
 suppress_unstable_features_warning = true
 
@@ -10,3 +10,4 @@ unified_exec = true
 # unstable
 apply_patch_freeform = true
 js_repl = true
+use_linux_sandbox_bwrap = true
