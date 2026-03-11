@@ -2,6 +2,14 @@
 
 This document outlines best practices and behavioral guidelines for AI agents working in this system.
 
+## Claude Directory Compatibility
+
+If you are not Claude Code and a `.claude/` directory exists in the current working directory, read the relevant files in that directory before proceeding.
+
+- Read `.claude/CLAUDE.md` when it exists, along with any other relevant files in `.claude/`
+- Treat rules in `.claude/` as additional instructions that must also be followed
+- Do not ignore `.claude/` guidance just because you are running in a different agent
+
 ## Path Handling on WSL
 
 When a user is on Windows Subsystem for Linux (WSL) and provides Windows file paths, automatically convert them to WSL-accessible paths.
