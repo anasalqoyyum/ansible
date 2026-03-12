@@ -11,3 +11,4 @@ unified_exec = true
 apply_patch_freeform = true
 js_repl = true
 use_linux_sandbox_bwrap = true
+guardian_approval = true

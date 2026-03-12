@@ -91,3 +91,7 @@ Always ask for permission before performing any git operations unless the user h
 
 - Agents should focus on code correctness and safety without generating build outputs or modifying release artifacts. (Use LSP if possible)
 - Agents shouldn't perform any write actions against generated files. Especially if explicitly stated in the files as comment to NOT modify them. Reading should be allowed and if there's any error found then report it to the user.
+
+## Code Standards
+
+- If working in a React codebase, avoid using `useMemo` unless it is needed for a complex calculation.
