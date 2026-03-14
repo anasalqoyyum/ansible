@@ -54,6 +54,15 @@
       "skillFolderHash": "00be9b06139cfcfc3a4f63469e148b574a31781b",
       "installedAt": "2026-02-26T10:38:31.982Z",
       "updatedAt": "2026-02-26T10:38:31.982Z"
+    },
+    "uncodixfy": {
+      "source": "cyxzdev/uncodixfy",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/cyxzdev/uncodixfy.git",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "de11774974165ed45a09f1a40b95d13994939992",
+      "installedAt": "2026-03-14T16:36:45.740Z",
+      "updatedAt": "2026-03-14T16:36:45.740Z"
     }
   },
   "dismissed": {
@@ -61,12 +70,14 @@
   },
   "lastSelectedAgents": [
     "amp",
+    "cline",
     "codex",
     "cursor",
     "gemini-cli",
     "github-copilot",
     "kimi-cli",
     "opencode",
+    "warp",
     "claude-code"
   ]
 }
