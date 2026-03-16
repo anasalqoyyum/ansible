@@ -21,27 +21,27 @@ checksum = "sha256:a33199a6fd5c39628872be1bc40753af755e1dc822f64a27c09a23e330ddd
 url = "https://github.com/joshmedeski/sesh/releases/download/v2.24.2/sesh_Linux_x86_64.tar.gz"
 
 [[tools.aws-cli]]
-version = "2.34.9"
+version = "2.34.10"
 backend = "aqua:aws/aws-cli"
 
 [tools.aws-cli."platforms.linux-arm64"]
-url = "https://awscli.amazonaws.com/awscli-exe-linux-aarch64-2.34.9.zip"
+url = "https://awscli.amazonaws.com/awscli-exe-linux-aarch64-2.34.10.zip"
 
 [tools.aws-cli."platforms.linux-arm64-musl"]
-url = "https://awscli.amazonaws.com/awscli-exe-linux-aarch64-2.34.9.zip"
+url = "https://awscli.amazonaws.com/awscli-exe-linux-aarch64-2.34.10.zip"
 
 [tools.aws-cli."platforms.linux-x64"]
-checksum = "blake3:a76a62120741b6377881e6b5fb833c21e6d84f32eb73348ff9b7548a268c025a"
-url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.34.9.zip"
+checksum = "blake3:80b5108beb80eb67d90207816eaa4a638173f3416f37b2e5dda72c0b065f2b6f"
+url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.34.10.zip"
 
 [tools.aws-cli."platforms.linux-x64-musl"]
-url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.34.9.zip"
+url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.34.10.zip"
 
 [tools.aws-cli."platforms.macos-arm64"]
-url = "https://awscli.amazonaws.com/AWSCLIV2-2.34.9.pkg"
+url = "https://awscli.amazonaws.com/AWSCLIV2-2.34.10.pkg"
 
 [tools.aws-cli."platforms.macos-x64"]
-url = "https://awscli.amazonaws.com/AWSCLIV2-2.34.9.pkg"
+url = "https://awscli.amazonaws.com/AWSCLIV2-2.34.10.pkg"
 
 [[tools.biome]]
 version = "2.4.6"
@@ -284,7 +284,7 @@ checksum = "sha256:0b697ed4aa80997f7de4deeed6f1fba73df191b28bf691b1f28d2f45fa2a9
 url = "https://github.com/derailed/k9s/releases/download/v0.50.18/k9s_Linux_amd64.tar.gz"
 
 [[tools.kotlin]]
-version = "2.3.10"
+version = "2.3.20"
 backend = "asdf:kotlin"
 
 [[tools.kubectl]]
@@ -296,12 +296,36 @@ checksum = "sha256:924eb50779153f20cb668117d141440b95df2f325a64452d78dff9469145e
 url = "https://dl.k8s.io/v1.35.2/bin/linux/amd64/kubectl"
 
 [[tools.lazydocker]]
-version = "0.24.4"
+version = "0.25.0"
 backend = "aqua:jesseduffield/lazydocker"
 
+[tools.lazydocker."platforms.linux-arm64"]
+checksum = "sha256:75bf3df5ee3bfd8f20a98c009d6f6787d009f03385d0d56b2a2aea26bdb7c287"
+url = "https://github.com/jesseduffield/lazydocker/releases/download/v0.25.0/lazydocker_0.25.0_Linux_arm64.tar.gz"
+
+[tools.lazydocker."platforms.linux-arm64-musl"]
+checksum = "sha256:75bf3df5ee3bfd8f20a98c009d6f6787d009f03385d0d56b2a2aea26bdb7c287"
+url = "https://github.com/jesseduffield/lazydocker/releases/download/v0.25.0/lazydocker_0.25.0_Linux_arm64.tar.gz"
+
 [tools.lazydocker."platforms.linux-x64"]
-checksum = "sha256:c47e6f4b61debde5422183c7eb446a704a92c58b4c35bbd128c722d8bf269a86"
-url = "https://github.com/jesseduffield/lazydocker/releases/download/v0.24.4/lazydocker_0.24.4_Linux_x86_64.tar.gz"
+checksum = "sha256:9c17b1458b214af50168f5f5e981f1f9c4b34d13a22734b7318bf9a05132ff3d"
+url = "https://github.com/jesseduffield/lazydocker/releases/download/v0.25.0/lazydocker_0.25.0_Linux_x86_64.tar.gz"
+
+[tools.lazydocker."platforms.linux-x64-musl"]
+checksum = "sha256:9c17b1458b214af50168f5f5e981f1f9c4b34d13a22734b7318bf9a05132ff3d"
+url = "https://github.com/jesseduffield/lazydocker/releases/download/v0.25.0/lazydocker_0.25.0_Linux_x86_64.tar.gz"
+
+[tools.lazydocker."platforms.macos-arm64"]
+checksum = "sha256:55f0573847bbfa68b0129e7e6922f5766f300ea3411f8b41e34044f86111fa1a"
+url = "https://github.com/jesseduffield/lazydocker/releases/download/v0.25.0/lazydocker_0.25.0_Darwin_arm64.tar.gz"
+
+[tools.lazydocker."platforms.macos-x64"]
+checksum = "sha256:0209a85adc5a6530e452ddfba6f4ddc735bbe953e2a7de76f555684933b01d65"
+url = "https://github.com/jesseduffield/lazydocker/releases/download/v0.25.0/lazydocker_0.25.0_Darwin_x86_64.tar.gz"
+
+[tools.lazydocker."platforms.windows-x64"]
+checksum = "sha256:2af0b2516cd006b1849f2cdae4cd82abbf5d1c2d49b88563daffaa1fb4ac46bb"
+url = "https://github.com/jesseduffield/lazydocker/releases/download/v0.25.0/lazydocker_0.25.0_Windows_x86_64.zip"
 
 [[tools.node]]
 version = "24.14.0"
@@ -332,15 +356,15 @@ version = "3.2.5"
 backend = "npm:@vue/typescript-plugin"
 
 [[tools."npm:oxfmt"]]
-version = "0.40.0"
+version = "0.41.0"
 backend = "npm:oxfmt"
 
 [[tools."npm:oxlint"]]
-version = "1.55.0"
+version = "1.56.0"
 backend = "npm:oxlint"
 
 [[tools."npm:oxlint-tsgolint"]]
-version = "0.16.0"
+version = "0.17.0"
 backend = "npm:oxlint-tsgolint"
 
 [[tools."npm:typescript-svelte-plugin"]]
@@ -348,43 +372,43 @@ version = "0.3.50"
 backend = "npm:typescript-svelte-plugin"
 
 [[tools.opencode]]
-version = "1.2.26"
+version = "1.2.27"
 backend = "aqua:sst/opencode"
 
 [tools.opencode."platforms.linux-arm64"]
-checksum = "sha256:c2f387dcef451379eedd51702c029b190667a9cf7069037d9d19f258b059a61c"
-url = "https://github.com/anomalyco/opencode/releases/download/v1.2.26/opencode-linux-arm64.tar.gz"
+checksum = "sha256:bcd91a3ebe9480ffb1702e5c71168d451150421acc99c6d1abf5edc5e2cb39f5"
+url = "https://github.com/anomalyco/opencode/releases/download/v1.2.27/opencode-linux-arm64.tar.gz"
 
 [tools.opencode."platforms.linux-arm64-musl"]
-checksum = "sha256:c2f387dcef451379eedd51702c029b190667a9cf7069037d9d19f258b059a61c"
-url = "https://github.com/anomalyco/opencode/releases/download/v1.2.26/opencode-linux-arm64.tar.gz"
+checksum = "sha256:bcd91a3ebe9480ffb1702e5c71168d451150421acc99c6d1abf5edc5e2cb39f5"
+url = "https://github.com/anomalyco/opencode/releases/download/v1.2.27/opencode-linux-arm64.tar.gz"
 
 [tools.opencode."platforms.linux-x64"]
-checksum = "sha256:3c7a6dd1dc46e3e39a60e0e2f371176fbf3d9681e29b670991491f1172062454"
-url = "https://github.com/anomalyco/opencode/releases/download/v1.2.26/opencode-linux-x64.tar.gz"
+checksum = "sha256:6fe3820b145857f7ff507d2826058b7acf1fce8258def1498468dd43809e69e8"
+url = "https://github.com/anomalyco/opencode/releases/download/v1.2.27/opencode-linux-x64.tar.gz"
 
 [tools.opencode."platforms.linux-x64-musl"]
-checksum = "sha256:3c7a6dd1dc46e3e39a60e0e2f371176fbf3d9681e29b670991491f1172062454"
-url = "https://github.com/anomalyco/opencode/releases/download/v1.2.26/opencode-linux-x64.tar.gz"
+checksum = "sha256:6fe3820b145857f7ff507d2826058b7acf1fce8258def1498468dd43809e69e8"
+url = "https://github.com/anomalyco/opencode/releases/download/v1.2.27/opencode-linux-x64.tar.gz"
 
 [tools.opencode."platforms.macos-arm64"]
-checksum = "sha256:214b97f623f870478468aad2be159544ab312f3354b23402c75ae8853de3e821"
-url = "https://github.com/anomalyco/opencode/releases/download/v1.2.26/opencode-darwin-arm64.zip"
+checksum = "sha256:fa680fa79086c7509d3a2c21e49c9264b803da7c0f1b7807ed842b8e37325597"
+url = "https://github.com/anomalyco/opencode/releases/download/v1.2.27/opencode-darwin-arm64.zip"
 
 [tools.opencode."platforms.macos-x64"]
-checksum = "sha256:950c9918df4c923f6b9e9842f81974fd341bfbf793fda768119c4d17159cdc87"
-url = "https://github.com/anomalyco/opencode/releases/download/v1.2.26/opencode-darwin-x64.zip"
+checksum = "sha256:fc719db27acbc817ff2a4df2bbaa788e02976ddc26a96c84de4fdbe663714b8c"
+url = "https://github.com/anomalyco/opencode/releases/download/v1.2.27/opencode-darwin-x64.zip"
 
 [tools.opencode."platforms.windows-x64"]
-checksum = "sha256:4cdd79773a21a73847e1024ba689d305cdc96e8100729bd89bca4cf1fd5b8256"
-url = "https://github.com/anomalyco/opencode/releases/download/v1.2.26/opencode-windows-x64.zip"
+checksum = "sha256:9e2e43568e6f952e8c7cb77b934fbff53f454f0213688f24f3c3769b69703e84"
+url = "https://github.com/anomalyco/opencode/releases/download/v1.2.27/opencode-windows-x64.zip"
 
 [[tools.oxlint]]
 version = "1.16.0"
 backend = "aqua:oxc-project/oxc/oxlint"
 
 [[tools."pipx:mycli"]]
-version = "1.64.0"
+version = "1.65.0"
 backend = "pipx:mycli"
 
 [[tools."pipx:pgcli"]]

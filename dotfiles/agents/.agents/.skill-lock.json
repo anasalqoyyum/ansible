@@ -63,6 +63,15 @@
       "skillFolderHash": "de11774974165ed45a09f1a40b95d13994939992",
       "installedAt": "2026-03-14T16:36:45.740Z",
       "updatedAt": "2026-03-14T16:36:45.740Z"
+    },
+    "emil-design-eng": {
+      "source": "emilkowalski/skill",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/emilkowalski/skill.git",
+      "skillPath": "skills/emil-design-eng/SKILL.md",
+      "skillFolderHash": "42244c68fa853423b28f9c2ac53adf38bb45d60f",
+      "installedAt": "2026-03-16T21:13:27.967Z",
+      "updatedAt": "2026-03-16T21:13:27.967Z"
     }
   },
   "dismissed": {
