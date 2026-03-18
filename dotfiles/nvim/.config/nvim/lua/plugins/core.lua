@@ -11,6 +11,7 @@ return {
   {
     "folke/which-key.nvim",
     opts = {
+      delay = 1000,
       spec = {
         { "<leader>a", group = "ai", mode = { "n", "v" } },
         { "<leader>h", group = "haunt", icon = "󱙝", mode = { "n" } },

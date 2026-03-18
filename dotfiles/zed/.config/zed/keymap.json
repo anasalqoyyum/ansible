@@ -26,4 +26,16 @@
       ],
     },
   },
+  {
+    "bindings": {
+      "ctrl-a [": "workspace::ToggleVimMode",
+    },
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-a s": "pane::DeploySearch",
+      "ctrl-a space": "file_finder::Toggle",
+    },
+  },
 ]
