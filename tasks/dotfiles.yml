@@ -72,13 +72,23 @@
     - dotfiles
     - stow
 
-- name: Ensure mise zsh shims activation is at end of .zprofile
-  lineinfile:
+- name: Ensure mise zsh shims activation is configured in .zprofile
+  blockinfile:
     path: "{{ lookup('env', 'HOME') }}/.zprofile"
-    line: 'eval "$(mise activate zsh --shims)"'
-    state: present
     create: true
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - mise activation"
     insertafter: EOF
+    block: |
+      # Resolve mise directly so first shell startup works before PATH is fully initialized.
+      if [ -x "$HOME/.local/bin/mise" ]; then
+        eval "$("$HOME/.local/bin/mise" activate zsh --shims)"
+      elif [ -x "/opt/homebrew/bin/mise" ]; then
+        eval "$("/opt/homebrew/bin/mise" activate zsh --shims)"
+      elif [ -x "/usr/local/bin/mise" ]; then
+        eval "$("/usr/local/bin/mise" activate zsh --shims)"
+      elif command -v mise >/dev/null 2>&1; then
+        eval "$(mise activate zsh --shims)"
+      fi
   tags:
     - install
     - dotfiles
