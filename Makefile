@@ -1,8 +1,10 @@
 HOME_DIR := $(HOME)
 DOTFILES_SRC := ./dotfiles/
 DOTFILES_DEST := $(HOME_DIR)/.dotfiles/
+ZED_WINDOWS_DIR ?= /mnt/c/Users/doubl/AppData/Roaming/Zed
+ZED_DOTFILES_DIR := ./dotfiles/zed/.config/zed
 
-.PHONY: copy-local sync-dotfiles-linux sync-dotfiles-macos clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
+.PHONY: copy-local sync-dotfiles-linux sync-dotfiles-macos sync-zed-windows clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
 
 VAULT_PASSWORD_FILE ?= .vault_pass
 COPY_LOCAL_EXCLUDE ?= .stow.log
@@ -49,6 +51,11 @@ sync-dotfiles-linux:
 
 sync-dotfiles-macos:
 	ansible-playbook local-macos.yml --tags "dotfiles" --skip-tags "linux-only" --ask-become-pass
+
+sync-zed-windows:
+	mkdir -p "$(ZED_DOTFILES_DIR)"
+	install -m 0644 "$(ZED_WINDOWS_DIR)/keymap.json" "$(ZED_DOTFILES_DIR)/keymap.json"
+	install -m 0644 "$(ZED_WINDOWS_DIR)/settings.json" "$(ZED_DOTFILES_DIR)/settings.json"
 
 # Target: remove all .DS_Store files recursively
 clean-dsstore:
