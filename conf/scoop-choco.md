@@ -42,3 +42,5 @@ wezterm 20240203.110809.0
 wezterm.install 20240203.110809.0
 wiztree 4.14.0
 21 packages installed.
+
+winget install -e --id ZedIndustries.Zed

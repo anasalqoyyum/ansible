@@ -82,6 +82,8 @@
       - obs
       - obsidian
       - localsend
+      - steipete/tap/codexbar
+      - zed
     state: present
     install_options:
       - adopt
