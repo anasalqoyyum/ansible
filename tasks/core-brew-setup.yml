@@ -74,8 +74,6 @@
       - orbstack
       - linearmouse
       - zen
-      - httpie-desktop
-      - cursor
       - karabiner-elements
       - upscayl
       - ghostty
@@ -84,7 +82,6 @@
       - obs
       - obsidian
       - localsend
-      - zed
     state: present
     install_options:
       - adopt
