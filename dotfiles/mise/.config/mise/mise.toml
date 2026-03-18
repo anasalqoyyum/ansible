@@ -19,7 +19,7 @@ trivy = "latest"
 aws-cli = "latest"
 television = "latest"
 # AI Tools
-opencode = "latest"
+'aqua:anomalyco/opencode' = "latest"
 codex = "latest"
 # Go Tools
 air = "latest"

@@ -19,6 +19,9 @@ if [[ -f "/opt/homebrew/bin/brew" ]]; then
   export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 fi
 
+# Early export for important paths (e.g. mise)
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+
 # Set true color support
 export COLORTERM=truecolor
 
@@ -309,22 +312,23 @@ export KUBE_EDITOR="nvim"
 export EDITOR="nvim"
 export STARSHIP_LOG="error"
 
-typeset -U path  # Ensures unique entries
+typeset -U path PATH
 path=(
   "$HOME/bin"
-  "${HOME}/.local/bin"
-  "${HOME}/.cargo/bin"
+  "$HOME/.local/bin"
+  "$HOME/.cargo/bin"
   "/usr/local/go/bin"
-  "${HOME}/go/bin"
-  "${ANDROID_HOME}/cmdline-tools/latest/bin"
-  "${ANDROID_HOME}/platform-tools"
-  "${ANDROID_HOME}/tools"
-  "${ANDROID_HOME}/tools/bin"
-  "${GRADLE_HOME}/bin"
-  "${FLYCTL_INSTALL}/bin"
+  "$HOME/go/bin"
+  "$ANDROID_HOME/cmdline-tools/latest/bin"
+  "$ANDROID_HOME/platform-tools"
+  "$ANDROID_HOME/tools"
+  "$ANDROID_HOME/tools/bin"
+  "$GRADLE_HOME/bin"
+  "$FLYCTL_INSTALL/bin"
   "/usr/local/bin"
-  $path
+  "${path[@]}"
 )
+export PATH
 
 # Aliases
 alias vs="code ."
@@ -357,4 +361,3 @@ alias v="print -z --"
 
 # Enable zsh profiling
 # zprof
-
