@@ -21,6 +21,16 @@
 // - Codex
 // - Copilot CLI + Chat (need to also check bottom-right Copilot for inline suggestions)
 {
+  "use_smartcase_search": true,
+  "vim": {
+    "use_smartcase_find": true,
+    "gdefault": true,
+    "toggle_relative_line_numbers": true,
+  },
+  "prettier": {
+    "allowed": true,
+  },
+  "auto_signature_help": true,
   "vim_mode": false,
   "diagnostics": {
     "inline": {
@@ -265,9 +275,7 @@
     },
     "TypeScript": {
       "format_on_save": "on",
-      "TypeScript": {
-        "language_servers": ["tsgo", "vtsls"],
-      },
+      // "language_servers": ["tsgo", "!vtsls", "!typescript-language-server", "!eslint", "..."],
       "prettier": {
         "allowed": false,
       },
@@ -281,6 +289,7 @@
     },
     "TSX": {
       "format_on_save": "on",
+      // "language_servers": ["tsgo", "!vtsls", "!typescript-language-server", "!eslint", "..."],
       "prettier": {
         "allowed": false,
       },

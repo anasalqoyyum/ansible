@@ -19,6 +19,12 @@
     },
   },
   {
+    "context": "Editor",
+    "bindings": {
+      "ctrl-enter": "editor::NewlineBelow",
+    },
+  },
+  {
     "bindings": {
       "ctrl-alt-g": [
         "agent::NewExternalAgentThread",
