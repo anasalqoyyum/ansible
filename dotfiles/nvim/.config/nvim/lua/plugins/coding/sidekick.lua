@@ -45,6 +45,12 @@ return {
             },
           },
         },
+        nes = {
+          diff = {
+            -- or "always"
+            show = "cursor",
+          },
+        },
       }
     end,
     keys = {
@@ -134,12 +140,6 @@ return {
               },
             },
           },
-        },
-      },
-      nes = {
-        diff = {
-          -- or "always"
-          show = "cursor",
         },
       },
     },
