@@ -19,6 +19,9 @@ if [[ -f "/opt/homebrew/bin/brew" ]]; then
   export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 fi
 
+# Disable bang history
+setopt NO_BANG_HIST
+
 # Early export for important paths (e.g. mise)
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
 

@@ -136,6 +136,12 @@ return {
           },
         },
       },
+      nes = {
+        diff = {
+          -- or "always"
+          show = "cursor",
+        },
+      },
     },
   },
 }

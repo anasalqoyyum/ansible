@@ -54,7 +54,7 @@ npm.bun = true
 # This setting is used to allow change version based on the idiomatic version file (e.g .nvmrc).
 idiomatic_version_file_enable_tools = ["node"]
 experimental = true
-lockfile = true
+lockfile = false
 
 [env]
 # Auto enable corepack for node versions that support it (>=16.9.0).
