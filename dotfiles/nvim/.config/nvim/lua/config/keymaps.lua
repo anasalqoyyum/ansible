@@ -128,6 +128,14 @@ vim.keymap.set("v", "<leader>yr", function()
   yank.yank_visual_with_path(yank.get_buffer_cwd_relative(), "relative")
 end, { desc = "[Y]ank selection with [R]elative path" })
 
+-- Undotree toggle
+vim.cmd("packadd nvim.undotree")
+vim.keymap.set("n", "<leader>U", function()
+  require("undotree").open({
+    command = math.floor(vim.api.nvim_win_get_width(0) / 4) .. "vnew",
+  })
+end, { desc = "Toggle [U]ndotree" })
+
 --[[ Git diff (vscode-diff)
 vim.keymap.set('n', '<leader>dd', '<cmd>:CodeDiff<cr>', { desc = 'Git [d]iff' })
 vim.keymap.set('n', '<leader>do', function()
