@@ -28,6 +28,18 @@ local inlay_hints_settings = {
   includeInlayVariableTypeHintsWhenTypeMatchesName = false,
 }
 
+local tsgo_inlay_hints_settings = {
+  enumMemberValues = { enabled = true },
+  functionLikeReturnTypes = { enabled = true },
+  parameterNames = {
+    enabled = "literals",
+    suppressWhenArgumentMatchesName = true,
+  },
+  parameterTypes = { enabled = true },
+  propertyDeclarationTypes = { enabled = true },
+  variableTypes = { enabled = false },
+}
+
 local typescript_keys = {
   {
     "gD",
@@ -52,11 +64,6 @@ local typescript_keys = {
       })
     end,
     desc = "File References",
-  },
-  {
-    "<leader>co",
-    LazyVim.lsp.action["source.organizeImports"],
-    desc = "Organize Imports",
   },
   {
     "<leader>cM",
@@ -128,10 +135,7 @@ return {
           keys = typescript_keys,
           settings = {
             typescript = {
-              inlayHints = inlay_hints_settings,
-            },
-            javascript = {
-              inlayHints = inlay_hints_settings,
+              inlayHints = tsgo_inlay_hints_settings,
             },
             completions = {
               completeFunctionCalls = true,
@@ -147,9 +151,6 @@ return {
           keys = typescript_keys,
           settings = {
             typescript = {
-              inlayHints = inlay_hints_settings,
-            },
-            javascript = {
               inlayHints = inlay_hints_settings,
             },
             completions = {
@@ -183,14 +184,7 @@ return {
               suggest = {
                 completeFunctionCalls = true,
               },
-              inlayHints = {
-                enumMemberValues = { enabled = true },
-                functionLikeReturnTypes = { enabled = true },
-                parameterNames = { enabled = "literals" },
-                parameterTypes = { enabled = true },
-                propertyDeclarationTypes = { enabled = true },
-                variableTypes = { enabled = false },
-              },
+              inlayHints = tsgo_inlay_hints_settings,
             },
           },
           keys = typescript_keys,

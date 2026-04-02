@@ -159,6 +159,10 @@ vim.keymap.set({ "n", "x", "o" }, "<A-i>", function()
   end
 end, { desc = "Select child treesitter node or inner incremental lsp selections" })
 
+vim.keymap.set("n", "<leader>cC", function()
+  vim.lsp.codelens.enable(not vim.lsp.codelens.is_enabled())
+end, { desc = "Toggle [C]odeLens" })
+
 --[[ Git diff (vscode-diff)
 vim.keymap.set('n', '<leader>dd', '<cmd>:CodeDiff<cr>', { desc = 'Git [d]iff' })
 vim.keymap.set('n', '<leader>do', function()

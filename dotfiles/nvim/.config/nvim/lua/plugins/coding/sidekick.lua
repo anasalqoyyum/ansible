@@ -60,9 +60,9 @@ return {
       {
         "<c-.>",
         function()
-          require("sidekick.cli").toggle({ name = "opencode", focus = true })
+          require("sidekick.cli").focus()
         end,
-        desc = "Sidekick Toggle",
+        desc = "Sidekick Focus",
         mode = { "n", "t", "i", "x" },
       },
       {
