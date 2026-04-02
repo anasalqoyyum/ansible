@@ -60,6 +60,12 @@ Snacks.toggle({
   end,
 }):map("<leader>gu")
 
+-- disable arrow keys in normal mode to encourage hjkl usage
+vim.keymap.set("n", "<left>", '<cmd>echo "Use h to move!!"<CR>')
+vim.keymap.set("n", "<right>", '<cmd>echo "Use l to move!!"<CR>')
+vim.keymap.set("n", "<up>", '<cmd>echo "Use k to move!!"<CR>')
+vim.keymap.set("n", "<down>", '<cmd>echo "Use j to move!!"<CR>')
+
 -- remap split window below
 vim.keymap.set("n", "<leader>_", "<C-W>s", { desc = "Split Window Below", remap = true })
 
@@ -135,6 +141,23 @@ vim.keymap.set("n", "<leader>U", function()
     command = math.floor(vim.api.nvim_win_get_width(0) / 4) .. "vnew",
   })
 end, { desc = "Toggle [U]ndotree" })
+
+-- incremental selection treesitter/lsp
+vim.keymap.set({ "n", "x", "o" }, "<A-o>", function()
+  if vim.treesitter.get_parser(nil, nil, { error = false }) then
+    require("vim.treesitter._select").select_parent(vim.v.count1)
+  else
+    vim.lsp.buf.selection_range(vim.v.count1)
+  end
+end, { desc = "Select parent treesitter node or outer incremental lsp selections" })
+
+vim.keymap.set({ "n", "x", "o" }, "<A-i>", function()
+  if vim.treesitter.get_parser(nil, nil, { error = false }) then
+    require("vim.treesitter._select").select_child(vim.v.count1)
+  else
+    vim.lsp.buf.selection_range(-vim.v.count1)
+  end
+end, { desc = "Select child treesitter node or inner incremental lsp selections" })
 
 --[[ Git diff (vscode-diff)
 vim.keymap.set('n', '<leader>dd', '<cmd>:CodeDiff<cr>', { desc = 'Git [d]iff' })

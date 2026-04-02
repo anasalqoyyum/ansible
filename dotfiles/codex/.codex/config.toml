@@ -15,3 +15,15 @@ apply_patch_freeform = true
 js_repl = true
 use_linux_sandbox_bwrap = true
 guardian_approval = true
+
+[notice]
+hide_full_access_warning = true
+
+[tui]
+status_line = [
+  "model-with-reasoning",
+  "context-remaining",
+  "current-dir",
+  "git-branch",
+  "fast-mode",
+]
