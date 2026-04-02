@@ -11,6 +11,6 @@
 --   })
 -- end
 -- require("custom.hotreload")
---
--- bootstrap lazy.nvim, LazyVim and your plugins
+
 require("config.lazy")
+require("custom.tabline")
