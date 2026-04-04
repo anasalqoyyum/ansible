@@ -72,6 +72,15 @@
       "skillFolderHash": "42244c68fa853423b28f9c2ac53adf38bb45d60f",
       "installedAt": "2026-03-16T21:13:27.967Z",
       "updatedAt": "2026-03-16T21:13:27.967Z"
+    },
+    "bkt": {
+      "source": "avivsinai/bitbucket-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/avivsinai/bitbucket-cli.git",
+      "skillPath": "skills/bkt/SKILL.md",
+      "skillFolderHash": "030fa5586e9e4c9c251275461ed12aa1ca830b2c",
+      "installedAt": "2026-04-04T09:27:18.615Z",
+      "updatedAt": "2026-04-04T09:27:18.615Z"
     }
   },
   "dismissed": {
@@ -79,9 +88,12 @@
   },
   "lastSelectedAgents": [
     "amp",
+    "antigravity",
     "cline",
     "codex",
     "cursor",
+    "deepagents",
+    "firebender",
     "gemini-cli",
     "github-copilot",
     "kimi-cli",

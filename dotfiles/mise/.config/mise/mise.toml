@@ -29,6 +29,7 @@ codex = "latest"
 # Go Tools
 air = "latest"
 "aqua:joshmedeski/sesh" = { version = "latest", os = ["linux"] }
+"github:avivsinai/bitbucket-cli" = "latest"
 golangci-lint = "latest"
 # Python Tools
 uv = "latest"
