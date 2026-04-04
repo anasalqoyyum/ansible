@@ -14,7 +14,10 @@ Read-only exploration mode for safe code analysis.
 ## Commands
 
 - `/plan` - Toggle plan mode
-- `/todos` - Show current plan progress
+- `/plan on|off` - Explicitly enable or disable plan mode
+- `/plan export` - Export current plan steps into `.pi/todos`
+- `/plan start <prompt>` - Enable plan mode and immediately send a planning prompt
+- `/todos-plan` - Show current in-memory plan progress
 - `Ctrl+Alt+P` - Toggle plan mode (shortcut)
 
 ## Usage
@@ -31,8 +34,11 @@ Plan:
 ```
 
 4. Choose "Execute the plan" when prompted
+5. Or choose "Export steps to .pi/todos" to turn the extracted plan into persistent file-backed todos
 5. During execution, the agent marks steps complete with `[DONE:n]` tags
 6. Progress widget shows completion status
+
+If exported plan steps are later completed during execution, the corresponding `.pi/todos` entries are automatically closed.
 
 ## How It Works
 

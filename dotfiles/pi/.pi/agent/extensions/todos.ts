@@ -98,7 +98,7 @@ interface TodoSettings {
 }
 
 type KeybindingMatcher = {
-  matches: (keyData: string, keybindingId: string) => boolean
+  matches: (keyData: string, keybindingId: any) => boolean
 }
 
 const TodoParams = Type.Object({
@@ -145,6 +145,7 @@ type TodoAction =
 type TodoOverlayAction = 'back' | 'work'
 
 type TodoMenuAction =
+  | 'plan'
   | 'work'
   | 'refine'
   | 'close'
@@ -312,7 +313,7 @@ class TodoSelectorComponent extends Container implements Focusable {
     currentSessionId?: string,
     private onQuickAction?: (
       todo: TodoFrontMatter,
-      action: 'work' | 'refine'
+      action: 'plan' | 'work' | 'refine'
     ) => void
   ) {
     super()
@@ -381,7 +382,7 @@ class TodoSelectorComponent extends Container implements Focusable {
     this.hintText.setText(
       this.theme.fg(
         'dim',
-        'Type to search • ↑↓ select • Enter actions • Ctrl+Shift+W work • Ctrl+Shift+R refine • Esc close'
+        'Type to search • ↑↓ select • Enter actions • Ctrl+Shift+P plan • Ctrl+Shift+W work • Ctrl+Shift+R refine • Esc close'
       )
     )
   }
@@ -482,6 +483,11 @@ class TodoSelectorComponent extends Container implements Focusable {
       this.onCancelCallback()
       return
     }
+    if (matchesKey(keyData, Key.ctrlShift('p'))) {
+      const selected = this.filteredTodos[this.selectedIndex]
+      if (selected && this.onQuickAction) this.onQuickAction(selected, 'plan')
+      return
+    }
     if (matchesKey(keyData, Key.ctrlShift('r'))) {
       const selected = this.filteredTodos[this.selectedIndex]
       if (selected && this.onQuickAction) this.onQuickAction(selected, 'refine')
@@ -523,6 +529,7 @@ class TodoActionMenuComponent extends Container {
     const title = todo.title || '(untitled)'
     const options: SelectItem[] = [
       { value: 'view', label: 'view', description: 'View todo' },
+      { value: 'plan', label: 'plan', description: 'Plan the work in plan mode' },
       { value: 'work', label: 'work', description: 'Work on todo' },
       { value: 'refine', label: 'refine', description: 'Refine task' },
       ...(closed
@@ -852,8 +859,8 @@ function getTodoSettingsPath(todosDir: string): string {
 
 function normalizeTodoSettings(raw: Partial<TodoSettings>): TodoSettings {
   const gc = raw.gc ?? DEFAULT_TODO_SETTINGS.gc
-  const gcDays = Number.isFinite(raw.gcDays)
-    ? raw.gcDays
+  const gcDays = Number.isFinite(raw.gcDays ?? NaN)
+    ? (raw.gcDays as number)
     : DEFAULT_TODO_SETTINGS.gcDays
   return {
     gc: Boolean(gc),
@@ -1269,6 +1276,14 @@ function buildRefinePrompt(todoId: string, title: string): string {
   )
 }
 
+function buildPlanPrompt(todoId: string, title: string): string {
+  return (
+    `/plan start help me plan how to complete todo ${formatTodoId(todoId)} "${title}". ` +
+    'Inspect the codebase, identify the relevant files and constraints, ask clarifying questions if something is ambiguous, ' +
+    'and finish with a numbered Plan: section.'
+  )
+}
+
 function splitTodosByAssignment(todos: TodoFrontMatter[]): {
   assignedTodos: TodoFrontMatter[]
   openTodos: TodoFrontMatter[]
@@ -1378,8 +1393,10 @@ function renderTodoList(
       ? sectionTodos.length
       : Math.min(sectionTodos.length, 3)
     for (let i = 0; i < maxItems; i++) {
+      const sectionTodo = sectionTodos[i]
+      if (!sectionTodo) continue
       lines.push(
-        `  ${renderTodoHeading(theme, sectionTodos[i], currentSessionId)}`
+        `  ${renderTodoHeading(theme, sectionTodo, currentSessionId)}`
       )
     }
     if (!expanded && sectionTodos.length > maxItems) {
@@ -1972,7 +1989,7 @@ export default function todosExtension(pi: ExtensionAPI) {
         return new Text(text, 0, 0)
       }
 
-      if (!details.todo) {
+      if (!('todo' in details) || !details.todo) {
         const text = result.content[0]
         return new Text(text?.type === 'text' ? text.text : '', 0, 0)
       }
@@ -2022,9 +2039,7 @@ export default function todosExtension(pi: ExtensionAPI) {
       }
 
       let nextPrompt: string | null = null
-      let rootTui: TUI | null = null
       await ctx.ui.custom<void>((tui, theme, keybindings, done) => {
-        rootTui = tui
         let selector: TodoSelectorComponent | null = null
         let actionMenu: TodoActionMenuComponent | null = null
         let deleteConfirm: TodoDeleteConfirmComponent | null = null
@@ -2122,6 +2137,12 @@ export default function todosExtension(pi: ExtensionAPI) {
           record: TodoRecord,
           action: TodoMenuAction
         ): Promise<'stay' | 'exit'> => {
+          if (action === 'plan') {
+            const title = record.title || '(untitled)'
+            nextPrompt = buildPlanPrompt(record.id, title)
+            done()
+            return 'exit'
+          }
           if (action === 'refine') {
             const title = record.title || '(untitled)'
             nextPrompt = buildRefinePrompt(record.id, title)
@@ -2272,7 +2293,9 @@ export default function todosExtension(pi: ExtensionAPI) {
           (todo, action) => {
             const title = todo.title || '(untitled)'
             nextPrompt =
-              action === 'refine'
+              action === 'plan'
+                ? buildPlanPrompt(todo.id, title)
+                : action === 'refine'
                 ? buildRefinePrompt(todo.id, title)
                 : `work on todo ${formatTodoId(todo.id)} "${title}"`
             done()
@@ -2307,7 +2330,6 @@ export default function todosExtension(pi: ExtensionAPI) {
 
       if (nextPrompt) {
         ctx.ui.setEditorText(nextPrompt)
-        rootTui?.requestRender()
       }
     }
   })
