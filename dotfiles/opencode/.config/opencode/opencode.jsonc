@@ -4,11 +4,11 @@
   "autoupdate": true,
   "permission": "allow",
   "agent": {
-    "review": {
-      "description": "Reviews code for best practices and potential issues"
+    "quick-review": {
+      "description": "Performs a quick review of changed files to identify best-practice issues, potential bugs, and code quality concerns."
     },
     "refactor": {
-      "description": "Refactors code to improve readability and maintainability"
+      "description": "Refactors code to improve readability, maintainability, and overall structure without changing behavior."
     }
   },
   // "server": {

@@ -18,8 +18,13 @@ lazydocker = "latest"
 trivy = "latest"
 aws-cli = "latest"
 television = "latest"
+ast-grep = "latest"
 # AI Tools
 'aqua:anomalyco/opencode' = "latest"
+"npm:@mariozechner/pi-coding-agent" = { version = "latest", os = [
+  "linux",
+  "macos",
+] }
 codex = "latest"
 # Go Tools
 air = "latest"
