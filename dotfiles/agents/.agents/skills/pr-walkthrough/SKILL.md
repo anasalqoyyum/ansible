@@ -1,10 +1,9 @@
 ---
 name: pr-walkthrough
-version: 0.2.0
-description: Generate an interactive visual walkthrough of any GitHub, GitLab, or Bitbucket pull/merge request as a local HTML webapp. Produces a multi-slide presentation with SVG diagrams, annotated code, and architecture visuals. Pass a PR/MR URL and optional audience context (e.g. "assume I don't know Rust"). Use when the user says "walkthrough this PR", "explain this MR", "visual walkthrough", "PR presentation", or provides a PR/MR URL and asks for a walkthrough.
+version: 0.2.1
+description: Generate an interactive visual walkthrough of any GitHub, GitLab, or Bitbucket pull/merge request as a local HTML webapp. Produces a multi-slide presentation with SVG diagrams, annotated code, and architecture visuals. Pass a PR/MR URL and optional audience context (e.g. "assume I don't know Rust"), or provide a PR description plus branch target when no URL or remote tooling is available. Use when the user says "walkthrough this PR", "explain this MR", "visual walkthrough", "PR presentation", or provides a PR/MR URL and asks for a walkthrough.
 metadata:
   short-description: Visual PR/MR walkthroughs for GitHub, GitLab, and Bitbucket
-  compatibility: claude-code, codex-cli
 ---
 
 # PR Walkthrough
@@ -13,7 +12,12 @@ Generate a polished, interactive HTML slide deck that walks through a pull reque
 
 ## Input
 
-The user provides a PR/MR URL and optionally additional context after it. Examples:
+The user can provide either:
+
+1. A PR/MR URL, optionally followed by audience/framing context.
+2. A PR description plus the branch target when no URL is available or the remote tooling is unavailable.
+
+URL examples:
 
 ```
 /skill:pr-walkthrough https://github.com/org/repo/pull/42
@@ -22,11 +26,25 @@ The user provides a PR/MR URL and optionally additional context after it. Exampl
 /skill:pr-walkthrough https://bitbucket.example.com/projects/ABC/repos/platform-api/pull-requests/7 the audience is frontend engineers who haven't seen the backend before
 ```
 
+Manual-input examples:
+
+```
+/skill:pr-walkthrough target=main this PR adds retry handling for webhook delivery failures and updates the job retry backoff tests
+/skill:pr-walkthrough branch target=release/2026-04-01 focus on rollout risk; the change moves config loading earlier in startup and adds a fallback env parser
+```
+
 The text after the URL is **audience/framing context** — use it to calibrate:
 - **What to explain vs. assume** — e.g., "assume I don't know Rust" → add a background slide on relevant Rust concepts; no context → assume the reader knows the language and skip basics
 - **What to emphasize** — e.g., "focus on perf implications" → heavier on benchmarks, data flow, and hot paths
 - **Who it's for** — e.g., "for the security team" → emphasize auth, input validation, trust boundaries
 - User might just call the skill `/pr-walkthrough` with a URL and no extra context — in that case, assume the reader is a senior engineer familiar with the stack and focus on design and architecture rather than language basics.
+
+If the user does not provide a URL, treat the provided PR description and branch target as the source of truth. If they already included those details, do not ask for the URL again.
+
+If the user provides neither a URL nor enough manual context to identify the change, ask a question to the user requesting:
+- A short PR description or summary
+- The branch target (for example `main` or `release/2026-04-01`)
+- Optional but helpful: source branch, key files, notable risks, and intended audience
 
 If no extra context is given, assume the reader is a **senior+ engineer familiar with the tech stack** who wants a clear narrative of the change — skip language-level background and focus on the design and architecture.
 
@@ -34,7 +52,12 @@ If no extra context is given, assume the reader is a **senior+ engineer familiar
 
 ### 1. Gather PR Data
 
-Determine the forge type from the URL, then use the preferred CLI first and `webfetch` only as a fallback.
+First decide whether this is a **URL-based walkthrough** or a **manual-input walkthrough**.
+
+- If the user provided a PR/MR URL, determine the forge type from the URL and use the preferred CLI first and `webfetch` only as a fallback.
+- If the user did not provide a URL, use the user's PR description and branch target directly, then inspect the local repo against that target branch when possible.
+- If the relevant forge CLI is missing, remote auth is unavailable, or the remote cannot be fetched, prefer the user's already-provided PR description and branch target if available.
+- If the task is blocked because there is no URL and no usable manual context, ask a question to the user for the PR description and branch target before continuing.
 
 | Forge | Common URL pattern | Preferred CLI |
 |---|---|---|
@@ -52,6 +75,13 @@ bkt --version
 ```
 
 If the relevant CLI is missing and the task is blocked on it, fall back to `webfetch` on the PR URL. If the repo is public, also fetch linked issue/commit pages when that materially improves understanding.
+
+If there is no URL, or the remote tooling path is unavailable, use this manual fallback:
+
+1. Use the user-provided PR description and branch target as the primary input.
+2. If the current repo is available locally, diff the working branch against the target branch and read the touched files plus nearby modules.
+3. If the user has already provided the PR description and branch target, do not stop to ask for a URL.
+4. Only ask a question to the user for more information when the change cannot be understood from the local repo plus the supplied description.
 
 #### GitHub (gh)
 
