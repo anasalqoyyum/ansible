@@ -61,10 +61,10 @@ return {
         },
         icons = {
           diagnostics = {
-            Error = " ",
-            Warn = " ",
-            Info = " ",
-            Hint = " ",
+            Error = "E ",
+            Warn = "W ",
+            Info = "H ",
+            Hint = "I ",
           },
         },
       },

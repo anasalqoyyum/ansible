@@ -155,11 +155,11 @@ return {
     config = function()
       require("rulebook").setup({ ---@diagnostic disable-line: missing-fields
         ruleDocs = {
-          fallback = "https://t3.chat/new?q=Explain%20the%20following%20diagnostic%20error%3A%20%s",
-          -- oxlint = "https://oxc.rs/docs/rules/%s",
+          fallback = "https://chatgpt.com/?prompt=Explain%20the%20following%20diagnostic%20error%3A%20%s",
 
           -- To use `fallback` instead of the builtin rule docs, overwrite the
           -- builtin one with `false`.
+          oxlint = not vim.g.use_ai_to_lookup_rulebook and "https://oxc.rs/docs/rules/%s" or false,
           typescript = not vim.g.use_ai_to_lookup_rulebook,
           biome = not vim.g.use_ai_to_lookup_rulebook,
           eslint = not vim.g.use_ai_to_lookup_rulebook,
