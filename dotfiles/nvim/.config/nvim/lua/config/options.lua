@@ -22,6 +22,7 @@ vim.g.use_completion_ai_source = false -- set to true to enable AI source in com
 vim.g.use_blink_indent = false -- set to true to enable blink indent guides
 vim.g.use_oil = true -- set to true to use oil.nvim for file browsing (otherwise, fyler)
 vim.g.use_ai_to_lookup_rulebook = false -- set to true to use AI to lookup rules in the code (for rulebook)
+vim.g.enable_blink_colorful_menu = false -- set to true to enable colorful-menu.nvim for completion menu (only for Blink, since cmp has its own styling)
 
 vim.opt.swapfile = false -- disable swap files
 vim.opt.list = false -- disable whitespace characters

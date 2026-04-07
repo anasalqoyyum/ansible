@@ -15,6 +15,7 @@ return {
       },
       {
         "xzbdmw/colorful-menu.nvim",
+        enabled = vim.g.enable_blink_colorful_menu,
         opts = {},
       },
     },
@@ -37,12 +38,12 @@ return {
             treesitter = { "lsp" },
             -- We don't need label_description now because label and label_description are already
             -- combined together in label by colorful-menu.nvim.
-            columns = {
+            columns = vim.g.enable_blink_colorful_menu and nil or {
               { "item_idx", "kind_icon", gap = 1 },
-              { "label", "kind", gap = 1 },
+              { "label", "label_description", "kind", gap = 1 },
             },
             -- honestly, the highlight is kinda useless if using theme that have blink.cmp support (basically replacing)
-            components = {
+            components = vim.tbl_extend("force", vim.g.enable_blink_colorful_menu and {
               label = {
                 text = function(ctx)
                   return require("colorful-menu").blink_components_text(ctx)
@@ -51,6 +52,7 @@ return {
                   return require("colorful-menu").blink_components_highlight(ctx)
                 end,
               },
+            } or {}, {
               kind_icon = {
                 text = function(ctx)
                   -- fix tailwindcss not showing icon with color
@@ -97,7 +99,7 @@ return {
                   return { { group = hl, priority = 20000 } }
                 end,
               },
-            },
+            }),
           },
           border = "rounded",
           scrollbar = true,

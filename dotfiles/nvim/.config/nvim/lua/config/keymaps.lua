@@ -159,7 +159,7 @@ vim.keymap.set({ "n", "x", "o" }, "<A-i>", function()
   end
 end, { desc = "Select child treesitter node or inner incremental lsp selections" })
 
-vim.keymap.set("n", "<leader>co", function()
+vim.keymap.set("n", "<leader>cO", function()
   vim.lsp.codelens.enable(not vim.lsp.codelens.is_enabled())
 end, { desc = "Toggle C[o]deLens" })
 
