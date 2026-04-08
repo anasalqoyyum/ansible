@@ -15,6 +15,7 @@ apply_patch_freeform = true
 js_repl = true
 use_linux_sandbox_bwrap = true
 guardian_approval = true
+apps = false
 
 [notice]
 hide_full_access_warning = true
