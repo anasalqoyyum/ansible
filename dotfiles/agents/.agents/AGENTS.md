@@ -95,3 +95,4 @@ Always ask for permission before performing any git operations unless the user h
 ## Code Standards
 
 - If working in a React codebase, avoid using `useMemo` unless it is needed for a complex calculation.
+- Avoid adding comment on top of a function or file unless explicitly requested by the user. Focus on writing clean and self-explanatory code instead.

@@ -35,43 +35,12 @@ return {
         enabled = true,
         cmdline = true,
         disabled_filetypes = {},
-        pairs = {
-          ["'"] = {
-            {
-              "'''",
-              when = function(ctx)
-                return ctx:text_before_cursor(2) == "''"
-              end,
-              languages = { "python" },
-            },
-            -- default behavior kinda weird it doesn't check if next char is single quote
-            -- https://github.com/Saghen/blink.pairs/blob/main/lua/blink/pairs/config/mappings.lua#L41-L53
-            {
-              "'",
-              enter = false,
-              space = false,
-              when = function(ctx)
-                -- The `plaintex` filetype has no treesitter parser, so we can't disable this pair in math environments. Thus, disable this pair completely.
-                if ctx.ft == "plaintex" then
-                  return false
-                end
-
-                -- Allow if next char is a single quote
-                if ctx:text_after_cursor(1) == "'" then
-                  return true
-                end
-
-                -- Block if cursor is on a word character
-                if ctx.char_under_cursor:match("%w") then
-                  return false
-                end
-
-                -- Fallback: use treesitter blacklist
-                -- TODO: disable inside "" strings?
-                return ctx.ts:blacklist("singlequote").matches
-              end,
-            },
-          },
+        pairs = {},
+        wrap = {
+          -- move closing pair via motion
+          ["<C-b>"] = "motion",
+          -- move opening pair via motion
+          ["<C-S-b>"] = "motion_reverse",
         },
       },
       highlights = {
@@ -98,7 +67,10 @@ return {
           enabled = true,
           -- known issue where typing won't update matchparen highlight, disabled by default
           cmdline = false,
+          -- also include pairs not on top of the cursor, but surrounding the cursor
+          include_surrounding = true,
           group = "BlinkPairsMatchParen",
+          priority = 250,
         },
       },
       debug = false,

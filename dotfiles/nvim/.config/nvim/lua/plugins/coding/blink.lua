@@ -38,10 +38,7 @@ return {
             treesitter = { "lsp" },
             -- We don't need label_description now because label and label_description are already
             -- combined together in label by colorful-menu.nvim.
-            columns = vim.g.enable_blink_colorful_menu and nil or {
-              { "item_idx", "kind_icon", gap = 1 },
-              { "label", "label_description", "kind", gap = 1 },
-            },
+            columns = { { "kind_icon" }, { "label", gap = 1 } },
             -- honestly, the highlight is kinda useless if using theme that have blink.cmp support (basically replacing)
             components = vim.tbl_extend("force", vim.g.enable_blink_colorful_menu and {
               label = {
