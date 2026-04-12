@@ -78,9 +78,9 @@
     "thinkingOff": "overlay",
     "thinkingMinimal": "comment",
     "thinkingLow": "blue",
-    "thinkingMedium": "cyan",
-    "thinkingHigh": "purple",
-    "thinkingXhigh": "redBright",
+    "thinkingMedium": "blueBright",
+    "thinkingHigh": "cyan",
+    "thinkingXhigh": "cyanBright",
     "bashMode": "orange"
   },
   "export": {

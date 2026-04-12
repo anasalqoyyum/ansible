@@ -26,7 +26,7 @@ import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const interceptedCommandsPath = join(__dirname, '..', 'intercepted-commands')
+const interceptedCommandsPath = join(__dirname, '..', '..', 'intercepted-commands')
 
 function getBlockedCommandMessage(command: string): string | null {
   // Match commands at the start of a shell segment (start/newline/; /&& /|| /|)

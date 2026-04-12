@@ -4,7 +4,6 @@
   "defaultModel": "gpt-5.4",
   "defaultThinkingLevel": "high",
   "quietStartup": true,
-  "packages": [
-    "git:https://github.com/badlogic/pi-diff-review"
-  ]
+  "packages": ["git:https://github.com/badlogic/pi-diff-review"],
+  "theme": "tokyonight-night"
 }
