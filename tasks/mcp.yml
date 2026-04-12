@@ -1,0 +1,21 @@
+- name: Download fff.nvim MCP installer
+  get_url:
+    url: https://dmtrkovalenko.dev/install-fff-mcp.sh
+    dest: /tmp/install-fff-mcp.sh
+    mode: "0755"
+    force: true
+  tags:
+    - install
+    - mcp
+    - fff-mcp
+
+- name: Install fff.nvim MCP server
+  command: /tmp/install-fff-mcp.sh
+  args:
+    creates: "{{ ansible_env.HOME }}/.local/bin/fff-mcp"
+  environment:
+    FFF_MCP_INSTALL_DIR: "{{ ansible_env.HOME }}/.local/bin"
+  tags:
+    - install
+    - mcp
+    - fff-mcp

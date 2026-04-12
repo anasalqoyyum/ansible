@@ -43,7 +43,7 @@ return {
         function()
           require("fff").live_grep({
             grep = {
-              modes = { "fuzzy", "plain" },
+              modes = { "fuzzy" },
             },
           })
         end,

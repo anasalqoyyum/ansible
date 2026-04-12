@@ -2,6 +2,10 @@
 
 This document outlines best practices and behavioral guidelines for AI agents working in this system.
 
+## Tools
+
+- For any file search or grep in the current git indexed directory use fff tools (if available).
+
 ## Claude Directory Compatibility
 
 If you are not Claude Code and a `.claude/` directory exists in the current working directory, read the relevant files in that directory before proceeding.

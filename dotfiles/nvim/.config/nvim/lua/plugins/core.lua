@@ -21,6 +21,7 @@ return {
         { "<leader>T", group = "tips", icon = " ", mode = { "n" } },
         { "<leader>i", group = "i18n", icon = "", mode = { "n" } },
         { "<leader>y", group = "yank", icon = "", mode = { "n", "v" } },
+        -- { "<leader>p", group = "pi", icon = "π", mode = { "n", "v" } },
       },
     },
   },
