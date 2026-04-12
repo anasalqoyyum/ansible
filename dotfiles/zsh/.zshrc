@@ -173,6 +173,23 @@ function pj() {
     nvim .
   fi
 }
+function open() {
+  if [[ -n "${WSL_DISTRO_NAME:-}" ]] || grep -qi microsoft /proc/version 2>/dev/null; then
+    if (( $+commands[wslview] )); then
+      command wslview "$@"
+      return $?
+    fi
+  fi
+
+  if (( $+commands[open] )); then
+    command open "$@"
+  elif (( $+commands[xdg-open] )); then
+    command xdg-open "$@"
+  else
+    echo "No suitable open command found" >&2
+    return 1
+  fi
+}
 function yank() {
   if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS
