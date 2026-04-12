@@ -32,17 +32,48 @@
     - stow
 
 - name: Sync dotfiles from repo (idempotent)
-  ansible.posix.synchronize:
-    src: "./dotfiles/"
-    dest: "{{ lookup('env', 'HOME') }}/.dotfiles/"
-    delete: yes
-    recursive: yes
-    checksum: yes
-    rsync_opts:
-      - "--exclude=.git"
-      - "--exclude=.gitignore"
-      - "--exclude=*.log"
-      - "--delete-excluded"
+  ansible.builtin.command:
+    argv:
+      - rsync
+      - --archive
+      - --delete
+      - --checksum
+      - --itemize-changes
+      - --exclude=.git
+      - --exclude=.gitignore
+      - --exclude=*.log
+      - --delete-excluded
+      - "{{ playbook_dir }}/dotfiles/"
+      - "{{ lookup('env', 'HOME') }}/.dotfiles/"
+  register: dotfiles_rsync
+  changed_when: dotfiles_rsync.stdout != ""
+  check_mode: false
+  when: not ansible_check_mode
+  delegate_to: localhost
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Preview dotfiles sync changes in check mode
+  ansible.builtin.command:
+    argv:
+      - rsync
+      - --archive
+      - --delete
+      - --checksum
+      - --dry-run
+      - --itemize-changes
+      - --exclude=.git
+      - --exclude=.gitignore
+      - --exclude=*.log
+      - --delete-excluded
+      - "{{ playbook_dir }}/dotfiles/"
+      - "{{ lookup('env', 'HOME') }}/.dotfiles/"
+  register: dotfiles_rsync_check
+  changed_when: dotfiles_rsync_check.stdout != ""
+  check_mode: false
+  when: ansible_check_mode
   delegate_to: localhost
   tags:
     - install
