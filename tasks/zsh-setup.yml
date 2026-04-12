@@ -3,7 +3,7 @@
     name: zsh
     state: present
   become: true
-  when: ansible_system == "Linux"
+  when: ansible_facts['system'] == "Linux"
   tags: &tags_for_zsh_tasks ['install', 'dotfiles', 'zsh']
 
 - name: Locate zsh binary
@@ -14,7 +14,7 @@
 
 - name: Change shell to zsh
   user:
-    name: "{{ ansible_user_id }}"
+    name: "{{ ansible_facts['user_id'] }}"
     shell: "{{ zsh_binary.stdout }}"
   become: true
   tags: *tags_for_zsh_tasks

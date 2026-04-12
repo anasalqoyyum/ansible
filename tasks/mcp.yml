@@ -12,9 +12,9 @@
 - name: Install fff.nvim MCP server
   command: /tmp/install-fff-mcp.sh
   args:
-    creates: "{{ ansible_env.HOME }}/.local/bin/fff-mcp"
+    creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/fff-mcp"
   environment:
-    FFF_MCP_INSTALL_DIR: "{{ ansible_env.HOME }}/.local/bin"
+    FFF_MCP_INSTALL_DIR: "{{ ansible_facts['env']['HOME'] }}/.local/bin"
   tags:
     - install
     - mcp

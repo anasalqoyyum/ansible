@@ -11,7 +11,7 @@
 - name: Install rust/cargo
   shell: /tmp/sh.rustup.rs -y
   args:
-    creates: "{{ ansible_env.HOME }}/.cargo/bin/rustup"
+    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/rustup"
   tags:
     - install
     - rust

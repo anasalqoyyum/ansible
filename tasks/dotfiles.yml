@@ -3,7 +3,7 @@
     name: stow
     state: present
   become: true
-  when: ansible_system == "Linux"
+  when: ansible_facts['system'] == "Linux"
   tags:
     - install
     - dotfiles
@@ -14,7 +14,7 @@
   community.general.homebrew:
     name: stow
     state: present
-  when: ansible_system == "Darwin"
+  when: ansible_facts['system'] == "Darwin"
   tags:
     - install
     - dotfiles

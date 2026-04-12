@@ -8,7 +8,7 @@
     - name: Ensure host is Linux
       ansible.builtin.assert:
         that:
-          - ansible_system == "Linux"
+          - ansible_facts['system'] == "Linux"
         fail_msg: "local-linux.yml should only run on Linux/WSL hosts."
       tags:
         - install
@@ -29,7 +29,7 @@
         dest: "/etc/wsl.conf"
         mode: 0644
       become: true
-      when: "'microsoft' in (ansible_kernel | lower)"
+      when: "'microsoft' in (ansible_facts['kernel'] | lower)"
       tags:
         - install
         - core
@@ -48,4 +48,4 @@
     - import_tasks: tasks/dotfiles.yml
     - import_tasks: tasks/win32yank-setup.yml
     - import_tasks: tasks/cuda-wsl-setup.yml
-      when: "'microsoft' in (ansible_kernel | lower)"
+      when: "'microsoft' in (ansible_facts['kernel'] | lower)"

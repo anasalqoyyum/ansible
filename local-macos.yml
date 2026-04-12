@@ -8,7 +8,7 @@
     - name: Ensure host is macOS
       ansible.builtin.assert:
         that:
-          - ansible_system == "Darwin"
+          - ansible_facts['system'] == "Darwin"
         fail_msg: "local-macos.yml should only run on macOS hosts."
 
     - name: Check if brew is installed

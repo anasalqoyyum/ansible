@@ -35,7 +35,7 @@
 
 - name: Set yank tmux config
   blockinfile:
-    path: "{{ ansible_env.HOME }}/.tmux.conf"
+    path: "{{ ansible_facts['env']['HOME'] }}/.tmux.conf"
     insertbefore: "^set-option -g prefix C-a"
     create: yes
     marker: "# {mark} ANSIBLE MANAGED WIN32YANK"
@@ -50,7 +50,7 @@
 
 - name: Set yank tmux-thumbs config
   blockinfile:
-    path: "{{ ansible_env.HOME }}/.tmux.conf"
+    path: "{{ ansible_facts['env']['HOME'] }}/.tmux.conf"
     insertbefore: "^set-option -g prefix C-a"
     create: yes
     marker: "# {mark} ANSIBLE MANAGED WIN32YANK THUMBS"
