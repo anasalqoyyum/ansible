@@ -3,6 +3,7 @@
   "env": {
     "ENABLE_CLAUDEAI_MCP_SERVERS": "false"
   },
+  "model": "opusplan",
   "skipDangerousModePermissionPrompt": true,
-  "model": "opusplan"
+  "effortLevel": "high"
 }

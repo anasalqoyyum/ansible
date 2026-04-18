@@ -9,7 +9,9 @@ return {
   },
 
   {
-    "sindrets/diffview.nvim",
+    -- "sindrets/diffview.nvim",
+    -- NOTE: this is a fork of original but more maintained
+    "dlyongemallo/diffview.nvim",
     event = "VeryLazy",
     opts = {
       enhanced_diff_hl = true,

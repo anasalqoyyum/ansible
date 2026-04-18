@@ -16,8 +16,8 @@
       - fd
       - tmux
       - tldr
-      - docker
-      - docker-compose
+      # - docker
+      # - docker-compose
       - kubectl
       - lazygit
       - stow
@@ -75,7 +75,7 @@
       - linearmouse
       - zen
       - karabiner-elements
-      - upscayl
+      # - upscayl
       - ghostty
       - windscribe
       - discord
