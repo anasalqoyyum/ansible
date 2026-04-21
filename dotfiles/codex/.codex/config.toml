@@ -28,3 +28,6 @@ status_line = [
   "git-branch",
   "fast-mode",
 ]
+
+[sandbox_workspace_write]
+network_access = true
