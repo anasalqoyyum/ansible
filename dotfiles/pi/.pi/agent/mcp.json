@@ -1,9 +1,3 @@
 {
-  "mcpServers": {
-    "fff": {
-      "command": "fff-mcp",
-      "args": [],
-      "lifecycle": "eager"
-    }
-  }
+  "mcpServers": {}
 }

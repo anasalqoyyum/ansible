@@ -10,17 +10,11 @@
     "refactor": {
       "description": "Refactors code to improve readability, maintainability, and overall structure without changing behavior."
     }
-  },
+  }
+  // "mcp": {},
   // "server": {
   //   "port": 4096,
   //   "hostname": "0.0.0.0",
   //   "mdns": true
-  // },
-  "mcp": {
-    "fff": {
-      "type": "local",
-      "command": ["fff-mcp"],
-      "enabled": true
-    }
-  }
+  // }
 }

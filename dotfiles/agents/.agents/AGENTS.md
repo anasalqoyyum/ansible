@@ -46,17 +46,17 @@ Follow these rules by default. Do not deviate unless the user explicitly instruc
 - Agents should focus on code correctness and safety without generating build outputs or modifying release artifacts. (Use LSP if possible)
 - Agents shouldn't perform any write actions against generated files. Especially if explicitly stated in the files as comment to NOT modify them. Reading should be allowed and if there's any error found then report it to the user.
 
-## Tools
-
-- For any file search or grep in the current git indexed directory use fff tools (if available).
-
 ## Claude Directory Compatibility
 
 If you are not Claude Code and a `.claude/` directory exists in the current working directory, read the relevant files in that directory before proceeding.
 
 - Read `.claude/CLAUDE.md` when it exists, along with any other relevant files in `.claude/`
-- Treat rules in `.claude/` as additional instructions that must also be followed
+- Treat rules in `.claude/rules` as additional instructions that must also be followed
 - Do not ignore `.claude/` guidance just because you are running in a different agent
+
+## Tools
+
+- For any file search or grep in the current git indexed directory use `rg`.
 
 ## Path Handling on WSL
 
@@ -120,4 +120,3 @@ Git operations should **only be performed when explicitly requested by the user*
 ### Best Practice:
 
 Always ask for permission before performing any git operations unless the user has explicitly stated what they want done
-

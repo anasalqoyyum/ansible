@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.66.1",
+  "lastChangelogVersion": "0.68.1",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.4",
   "defaultThinkingLevel": "high",
@@ -8,5 +8,6 @@
     "git:https://github.com/badlogic/pi-diff-review"
   ],
   "theme": "tokyonight-night",
-  "transport": "auto"
+  "transport": "auto",
+  "enableInstallTelemetry": false
 }
