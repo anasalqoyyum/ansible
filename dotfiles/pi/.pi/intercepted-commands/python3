@@ -64,11 +64,11 @@ done
 # `uv run python` defaults, while still avoiding shim recursion.
 resolve_uv_python() {
     local shim_dir candidate candidate_dir
-    shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
     candidate="$(uv python find --managed-python 2>/dev/null || true)"
     if [ -n "$candidate" ] && [ -x "$candidate" ]; then
-        candidate_dir="$(cd "$(dirname "$candidate")" && pwd)"
+        candidate_dir="$(cd "$(dirname "$candidate")" && pwd -P)"
         if [ "$candidate_dir" != "$shim_dir" ]; then
             echo "$candidate"
             return 0
@@ -77,7 +77,7 @@ resolve_uv_python() {
 
     while IFS= read -r candidate; do
         [ -n "$candidate" ] || continue
-        candidate_dir="$(cd "$(dirname "$candidate")" && pwd)"
+        candidate_dir="$(cd "$(dirname "$candidate")" && pwd -P)"
         [ "$candidate_dir" = "$shim_dir" ] && continue
         echo "$candidate"
         return 0
@@ -85,7 +85,7 @@ resolve_uv_python() {
 
     while IFS= read -r candidate; do
         [ -n "$candidate" ] || continue
-        candidate_dir="$(cd "$(dirname "$candidate")" && pwd)"
+        candidate_dir="$(cd "$(dirname "$candidate")" && pwd -P)"
         [ "$candidate_dir" = "$shim_dir" ] && continue
         echo "$candidate"
         return 0
