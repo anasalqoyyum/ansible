@@ -320,7 +320,6 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 export ANDROID_HOME="$HOME/android"
-export GRADLE_HOME=/opt/gradle/gradle-7.6.1 # Might need to change this depending on your version
 export ANDROID_SDK_ROOT=${ANDROID_HOME}
 export BUN_INSTALL="$HOME/.bun"
 export FLYCTL_INSTALL="$HOME/.fly"
@@ -343,7 +342,6 @@ path=(
   "$ANDROID_HOME/platform-tools"
   "$ANDROID_HOME/tools"
   "$ANDROID_HOME/tools/bin"
-  "$GRADLE_HOME/bin"
   "$FLYCTL_INSTALL/bin"
   "/usr/local/bin"
   "${path[@]}"

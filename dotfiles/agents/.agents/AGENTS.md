@@ -44,7 +44,7 @@ Follow these rules by default. Do not deviate unless the user explicitly instruc
 ### Intent
 
 - Agents should focus on code correctness and safety without generating build outputs or modifying release artifacts. (Use LSP if possible)
-- Agents shouldn't perform any write actions against generated files. Especially if explicitly stated in the files as comment to NOT modify them. Reading should be allowed and if there's any error found then report it to the user.
+- Agents are prohibited from performing write actions on generated files, files located in directories with generated in the directory name, or files whose filenames contain gen. This restriction is especially strict when such files explicitly state, including via comments, that they must not be modified. Read-only access is permitted. If errors are identified, agents should report them to the user instead of making changes.
 
 ## Claude Directory Compatibility
 
