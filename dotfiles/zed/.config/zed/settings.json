@@ -21,6 +21,20 @@
 // - Codex
 // - Copilot CLI + Chat (need to also check bottom-right Copilot for inline suggestions)
 {
+  "outline_panel": {
+    "dock": "right"
+  },
+  "collaboration_panel": {
+    "dock": "right"
+  },
+  "agent": {
+    "dock": "left",
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "git_panel": {
+    "dock": "right"
+  },
   "preferred_line_length": 80,
   "soft_wrap": "editor_width",
   "use_smartcase_search": true,

@@ -4,7 +4,7 @@ return {
     enabled = false,
     lazy = true,
     opts = {
-      models = "gpt-5.4",
+      models = "gpt-5.5",
       expand_startup_details = false,
       layout = {
         default = "float",
