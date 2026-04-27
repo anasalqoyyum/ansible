@@ -1,5 +1,5 @@
 personality = "pragmatic"
-model_reasoning_effort = "high"
+model_reasoning_effort = "low"
 model = "gpt-5.5"
 suppress_unstable_features_warning = true
 approvals_reviewer = "guardian_subagent"

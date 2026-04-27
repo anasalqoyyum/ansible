@@ -5,6 +5,7 @@ return {
   {
     "saghen/blink.cmp",
     dependencies = {
+      { "saghen/blink.lib" },
       {
         "fang2hou/blink-copilot",
         enabled = vim.g.use_completion_ai_source,
@@ -18,7 +19,15 @@ return {
         enabled = vim.g.enable_blink_colorful_menu,
         opts = {},
       },
+      "rafamadriz/friendly-snippets",
+      -- add blink.compat to dependencies
+      {
+        "saghen/blink.compat",
+        optional = true, -- make optional so it's only enabled if any extras need it
+        opts = {},
+      },
     },
+    event = { "InsertEnter", "CmdlineEnter" },
     opts = {
       -- let's use builtin blink snippets (if want luasnip then enable luasnip lazy extras)
       -- snippets = { preset = "luasnip" },
@@ -167,6 +176,24 @@ return {
         },
       },
 
+      cmdline = {
+        enabled = true,
+        keymap = {
+          preset = "cmdline",
+          ["<Right>"] = false,
+          ["<Left>"] = false,
+        },
+        completion = {
+          list = { selection = { preselect = false } },
+          menu = {
+            auto_show = function(ctx)
+              return vim.fn.getcmdtype() == ":"
+            end,
+          },
+          ghost_text = { enabled = true },
+        },
+      },
+
       fuzzy = { implementation = "prefer_rust_with_warning" },
 
       keymap = {
@@ -227,6 +254,34 @@ return {
         ['<A-9>'] = { function(cmp) cmp.accept({ index = 9 }) end },
         ['<A-0>'] = { function(cmp) cmp.accept({ index = 10 }) end },
         -- stylua: ignore end
+      },
+    },
+  },
+
+  -- add icons
+  {
+    "saghen/blink.cmp",
+    opts = function(_, opts)
+      opts.appearance = opts.appearance or {}
+      opts.appearance.kind_icons = vim.tbl_extend("force", opts.appearance.kind_icons or {}, LazyVim.config.icons.kinds)
+    end,
+  },
+
+  -- lazydev
+  {
+    "saghen/blink.cmp",
+    opts = {
+      sources = {
+        per_filetype = {
+          lua = { inherit_defaults = true, "lazydev" },
+        },
+        providers = {
+          lazydev = {
+            name = "LazyDev",
+            module = "lazydev.integrations.blink",
+            score_offset = 100, -- show at a higher priority than lsp
+          },
+        },
       },
     },
   },

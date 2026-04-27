@@ -2,12 +2,18 @@
   "lastChangelogVersion": "0.70.0",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
-  "defaultThinkingLevel": "high",
+  "defaultThinkingLevel": "low",
   "quietStartup": true,
   "packages": [
-    "git:https://github.com/badlogic/pi-diff-review"
+    "git:https://github.com/badlogic/pi-diff-review",
+    "npm:@ff-labs/pi-fff"
   ],
   "theme": "tokyonight-night",
   "transport": "auto",
-  "enableInstallTelemetry": false
+  "enableInstallTelemetry": false,
+  "enabledModels": [
+    "openai-codex/gpt-5.5",
+    "openai-codex/gpt-5.4",
+    "opencode-go/kimi-k2.6"
+  ]
 }
