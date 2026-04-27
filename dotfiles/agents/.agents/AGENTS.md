@@ -9,8 +9,8 @@ Follow these rules by default. Do not deviate unless the user explicitly instruc
 ### React
 
 - Do not use `useMemo` unless it is clearly necessary.
-- `useMemo` is not a default pattern, a readability tool, or a premature optimization.
-- If there is no concrete performance or referential-stability reason, do not add it.
+  - `useMemo` is not a default pattern, a readability tool, or a premature optimization.
+  - If there is no concrete performance or referential-stability reason, do not add it.
 
 ### Comments
 
@@ -18,7 +18,7 @@ Follow these rules by default. Do not deviate unless the user explicitly instruc
 - Do not use section-divider comments.
 - Do not write comments that narrate obvious code.
 - Comments are allowed only when they explain why a decision was made and that reasoning would otherwise be hard to infer.
-- If a comment explains what the code does instead of why it exists, delete it.
+  - If a comment explains what the code does instead of why it exists, delete it. Unless the code is complex enough that the "what" is not immediately clear, in which case it's fine to have a comment that explains the "what" as well as the "why".
 
 ### Expectations
 

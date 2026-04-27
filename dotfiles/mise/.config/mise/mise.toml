@@ -42,7 +42,7 @@ uv = "latest"
 biome = { version = "latest" }
 prettier = { version = "latest" }
 "npm:typescript" = { version = "latest" }
-"npm:@typescript/native-preview" = { version = "latest" }
+# "npm:@typescript/native-preview" = { version = "latest" }
 "npm:oxlint" = { version = "latest" }
 "npm:oxlint-tsgolint" = { version = "latest" }
 "npm:oxfmt" = { version = "latest" }
