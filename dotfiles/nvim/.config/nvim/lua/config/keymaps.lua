@@ -50,6 +50,51 @@ local function toggle_diffview()
   end
 end
 
+local function git_relative_path()
+  local file = vim.fn.expand("%:p")
+  local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+
+  if vim.v.shell_error ~= 0 or not git_root or git_root == "" then
+    return vim.fn.expand("%:.")
+  end
+
+  return vim.fn.fnamemodify(file, ":s?" .. vim.pesc(git_root .. "/") .. "??")
+end
+
+local function yank_file_path_with_line()
+  local filepath = git_relative_path()
+  local line = vim.fn.line(".")
+
+  local result = string.format("%s:%d", filepath, line)
+
+  vim.fn.setreg("+", result)
+  vim.fn.setreg('"', result)
+
+  vim.notify("Yanked: " .. result)
+end
+
+local function yank_file_path_with_visual_range()
+  local filepath = git_relative_path()
+  local start_line = vim.fn.line("'<")
+  local end_line = vim.fn.line("'>")
+
+  if start_line > end_line then
+    start_line, end_line = end_line, start_line
+  end
+
+  local result
+  if start_line == end_line then
+    result = string.format("%s:%d", filepath, start_line)
+  else
+    result = string.format("%s:%d-%d", filepath, start_line, end_line)
+  end
+
+  vim.fn.setreg("+", result)
+  vim.fn.setreg('"', result)
+
+  vim.notify("Yanked: " .. result)
+end
+
 Snacks.toggle({
   name = "Git Blame Line",
   get = function()
@@ -133,6 +178,14 @@ end, { desc = "[Y]ank selection with [A]bsolute path" })
 vim.keymap.set("v", "<leader>yr", function()
   yank.yank_visual_with_path(yank.get_buffer_cwd_relative(), "relative")
 end, { desc = "[Y]ank selection with [R]elative path" })
+
+vim.keymap.set("n", "<leader>yg", yank_file_path_with_line, {
+  desc = "Yank [G]it-relative file path with line number",
+})
+
+vim.keymap.set("v", "<leader>yg", yank_file_path_with_visual_range, {
+  desc = "Yank [G]it-relative file path with visual line range",
+})
 
 -- Undotree toggle
 vim.cmd("packadd nvim.undotree")
