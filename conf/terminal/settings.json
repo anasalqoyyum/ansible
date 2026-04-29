@@ -41,7 +41,7 @@
         "action": "sendInput",
         "input": "\u001b[46;5u"
       },
-      "id": "User.sendInput.3B9D7849"
+      "id": "User.sendInput.CtrlPeriodCustom"
     },
     {
       "command": {
@@ -49,6 +49,10 @@
         "input": "\u001b[13;2u"
       },
       "id": "User.sendInput.ShiftEnterCustom"
+    },
+    {
+      "command": { "action": "sendInput", "input": "\u001b[13;3u" },
+      "id": "User.sendInput.AltEnterCustom"
     }
   ],
   "copyFormatting": "none",
@@ -59,7 +63,7 @@
   "initialRows": 40,
   "keybindings": [
     {
-      "id": "User.sendInput.3B9D7849",
+      "id": "User.sendInput.CtrlPeriodCustom",
       "keys": "ctrl+period"
     },
     {
@@ -83,7 +87,7 @@
       "id": "User.sendInput.ShiftEnterCustom"
     },
     {
-      "id": null,
+      "id": "User.sendInput.AltEnterCustom",
       "keys": "alt+enter"
     },
     {
