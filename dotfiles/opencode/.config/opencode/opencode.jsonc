@@ -3,14 +3,6 @@
   "model": "openai/gpt-5.5",
   "autoupdate": true,
   "permission": "allow",
-  "agent": {
-    "quick-review": {
-      "description": "Performs a quick review of changed files to identify best-practice issues, potential bugs, and code quality concerns."
-    },
-    "refactor": {
-      "description": "Refactors code to improve readability, maintainability, and overall structure without changing behavior."
-    }
-  }
   // "mcp": {},
   // "server": {
   //   "port": 4096,

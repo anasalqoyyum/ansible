@@ -3,10 +3,10 @@ node = "24"
 bun = "latest"
 go = "prefix:1.25"
 python = "3.13"
-java = { version = "21", os = ["linux"] }
-maven = { version = "3.9.15", os = ["linux"] }
-gradle = { version = "9.4.1", os = ["linux"] }
-kotlin = { version = "2.3", os = ["linux"] }
+java = { version = "21", os = ["linux", "macos"] }
+maven = { version = "3.9.15", os = ["linux", "macos"] }
+gradle = { version = "9.4.1", os = ["linux", "macos"] }
+kotlin = { version = "2.3", os = ["linux", "macos"] }
 # CLI Tools
 kubectl = { version = "latest", os = ["linux"] }
 k6 = { version = "latest", os = ["linux"] }
