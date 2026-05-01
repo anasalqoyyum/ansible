@@ -8,6 +8,8 @@ Follow these rules by default. Do not deviate unless the user explicitly instruc
 
 ### React
 
+- Prefer a single `useState` object for object-like state instead of multiple related `useState` calls.
+  - Keep separate `useState` calls only when the values are genuinely independent.
 - Do not use `useMemo` unless it is clearly necessary.
   - `useMemo` is not a default pattern, a readability tool, or a premature optimization.
   - If there is no concrete performance or referential-stability reason, do not add it.

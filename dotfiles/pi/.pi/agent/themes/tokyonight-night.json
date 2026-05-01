@@ -12,6 +12,7 @@
     "comment": "#565f89",
     "text": "#c0caf5",
     "subtext": "#a9b1d6",
+
     "red": "#f7768e",
     "redBright": "#ff899d",
     "redDeep": "#db4b4b",
@@ -26,9 +27,17 @@
     "cyan": "#7dcfff",
     "cyanBright": "#a4daff",
     "orange": "#ff9e64",
+
     "customBg": "#11131a",
     "toolSuccessBg": "#0f1a13",
-    "toolErrorBg": "#20131c"
+    "toolErrorBg": "#20131c",
+
+    "thinkingOffColor": "#414868",
+    "thinkingMinimalColor": "#56617f",
+    "thinkingLowColor": "#5f7fcf",
+    "thinkingMediumColor": "#7aa2f7",
+    "thinkingHighColor": "#9ecbff",
+    "thinkingXhighColor": "#c7e7ff"
   },
   "colors": {
     "accent": "blue",
@@ -75,12 +84,12 @@
     "syntaxType": "yellow",
     "syntaxOperator": "cyan",
     "syntaxPunctuation": "subtext",
-    "thinkingOff": "overlay",
-    "thinkingMinimal": "comment",
-    "thinkingLow": "blue",
-    "thinkingMedium": "blueBright",
-    "thinkingHigh": "cyan",
-    "thinkingXhigh": "cyanBright",
+    "thinkingOff": "thinkingOffColor",
+    "thinkingMinimal": "thinkingMinimalColor",
+    "thinkingLow": "thinkingLowColor",
+    "thinkingMedium": "thinkingMediumColor",
+    "thinkingHigh": "thinkingHighColor",
+    "thinkingXhigh": "thinkingXhighColor",
     "bashMode": "orange"
   },
   "export": {
