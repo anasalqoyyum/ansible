@@ -19,6 +19,8 @@
 // Installed Agents:
 // - Claude
 // - Codex
+// - Pi
+// - OpenCode
 // - Copilot CLI + Chat (need to also check bottom-right Copilot for inline suggestions)
 {
   "icon_theme": "Material Icon Theme",
