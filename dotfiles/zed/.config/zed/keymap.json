@@ -9,45 +9,51 @@
   {
     "context": "Workspace",
     "bindings": {
-      "shift shift": "file_finder::Toggle",
-    },
+      "shift shift": "file_finder::Toggle"
+    }
   },
   {
     "context": "Editor && vim_mode == insert",
     "bindings": {
-      "j k": "vim::NormalBefore",
-    },
+      "j k": "vim::NormalBefore"
+    }
   },
   {
     "context": "Editor",
     "bindings": {
-      "ctrl-enter": "editor::NewlineBelow",
-    },
+      "ctrl-enter": "editor::NewlineBelow"
+    }
   },
   {
     "bindings": {
       "ctrl-alt-g": [
         "agent::NewExternalAgentThread",
-        { "agent": { "custom": { "name": "codex-acp" } } },
-      ],
-    },
+        { "agent": { "custom": { "name": "codex-acp" } } }
+      ]
+    }
   },
   {
     "bindings": {
-      "ctrl-a [": "workspace::ToggleVimMode",
-    },
+      "ctrl-a [": "workspace::ToggleVimMode"
+    }
   },
   {
     "context": "Workspace",
     "bindings": {
       "ctrl-a s": "pane::DeploySearch",
-      "ctrl-a space": "file_finder::Toggle",
-    },
+      "ctrl-a space": "file_finder::Toggle"
+    }
   },
   {
     "context": "Workspace",
     "bindings": {
       "ctrl-alt-b": "workspace::ToggleLeftDock"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-alt-b": "workspace::ToggleLeftDock"
     }
   },
   {
@@ -64,8 +70,20 @@
   },
   {
     "context": "Workspace",
+    "bindings": {
+      "cmd-b": "workspace::ToggleRightDock"
+    }
+  },
+  {
+    "context": "Workspace",
     "unbind": {
       "ctrl-alt-b": "workspace::ToggleRightDock"
+    }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "cmd-b": "workspace::ToggleLeftDock"
     }
   }
 ]

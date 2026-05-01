@@ -21,6 +21,7 @@
 // - Codex
 // - Copilot CLI + Chat (need to also check bottom-right Copilot for inline suggestions)
 {
+  "icon_theme": "Material Icon Theme",
   "outline_panel": {
     "dock": "right"
   },
@@ -57,6 +58,12 @@
     "provider": "copilot"
   },
   "agent_servers": {
+    "opencode": {
+      "type": "registry"
+    },
+    "pi-acp": {
+      "type": "registry"
+    },
     "claude-acp": {
       "type": "registry"
     },
