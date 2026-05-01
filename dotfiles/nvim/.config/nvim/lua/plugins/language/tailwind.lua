@@ -27,18 +27,6 @@ return {
             },
           },
         },
-        cssls = {
-          -- Enable (broadcasting) snippet capability for completion
-          capabilities = {
-            textDocument = {
-              completion = {
-                completionItem = {
-                  snippetSupport = true,
-                },
-              },
-            },
-          },
-        },
       },
       setup = {
         tailwindcss = function(_, opts)

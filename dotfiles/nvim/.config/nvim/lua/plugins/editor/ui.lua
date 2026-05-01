@@ -132,54 +132,9 @@ return {
     end,
   },
 
-  {
-    "Bekaboo/dropbar.nvim",
-    event = { "BufReadPost", "BufNewFile" },
-    enabled = false,
-    config = function()
-      local dropbar_api = require("dropbar.api")
-      vim.api.nvim_set_hl(0, "WinBar", { bg = "NONE" }) -- no background for dropbar
-      vim.keymap.set("n", "<Leader>c;", dropbar_api.pick, { desc = "Pick LSP Symbols" })
-      vim.keymap.set("n", "[;", dropbar_api.goto_context_start, { desc = "Go to start of current context" })
-      vim.keymap.set("n", "];", dropbar_api.select_next_context, { desc = "Select next context" })
-    end,
-  },
-
-  {
-    "A7Lavinraj/fyler.nvim",
-    enabled = not vim.g.use_oil,
-    lazy = false,
-    dependencies = { "nvim-mini/mini.icons" },
-    opts = {
-      views = {
-        finder = {
-          default_explorer = true,
-          icon = {
-            directory_collapsed = " ",
-            directory_empty = " ",
-            directory_expanded = " ",
-          },
-        },
-      },
-      hooks = {
-        on_rename = function(src_path, destination_path)
-          Snacks.rename.on_rename_file(src_path, destination_path)
-        end,
-      },
-    },
-    keys = {
-      {
-        "-",
-        "<cmd>Fyler<cr>",
-        desc = "Open parent directory",
-      },
-    },
-  },
-
   -- Oil and related plugins
   {
     "stevearc/oil.nvim",
-    enabled = vim.g.use_oil,
     dependencies = {
       { "nvim-mini/mini.icons", opts = {} },
     },

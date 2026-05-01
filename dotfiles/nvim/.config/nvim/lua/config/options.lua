@@ -14,12 +14,11 @@ vim.g.typescript_linter = "oxlint" -- set to "biome" or "oxlint"
 vim.g.eslint_flavor = "eslint_d" -- set to "eslint_d" or "eslint"
 vim.g.theme_transparency = true -- set to true if you want transparency
 vim.g.copilot_flavor = "lua" -- set to "native" or "lua", prefer lua since native needs node 22.x. Set to "" to disable
+vim.g.sidekick_nes = true -- set to false stupidly distracting if copilot flavor "minuet" disable this
 vim.g.ai_chat = "sidekick" -- set to "avante" or "sidekick". Set to "" to disable.
-vim.g.sidekick_nes = true -- set to false stupidly distracting if copilot flavor "cursor" disable this
 vim.g.use_builtin_lsp_diagnostics = false -- set to true to use built-in LSP diagnostics instead of tiny-inline-diagnostic.nvim
 vim.g.use_completion_ai_source = false -- set to true to enable AI source in completion (Blink, Copilot, etc.) otherwise inline copilot
 vim.g.use_blink_indent = false -- set to true to enable blink indent guides
-vim.g.use_oil = true -- set to true to use oil.nvim for file browsing (otherwise, fyler)
 vim.g.use_ai_to_lookup_rulebook = false -- set to true to use AI to lookup rules in the code (for rulebook)
 vim.g.enable_blink_colorful_menu = false -- set to true to enable colorful-menu.nvim for completion menu (only for Blink, since cmp has its own styling)
 

@@ -51,7 +51,7 @@ return {
         },
       },
       nes = {
-        enabled = false,
+        enabled = false, -- handled by sidekick.nvim if enabled
         auto_trigger = true,
         -- set manually in init above
         keymap = {

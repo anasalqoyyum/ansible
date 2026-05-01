@@ -3,7 +3,7 @@ if vim.g.ai_chat ~= "sidekick" then
 end
 
 return {
-  -- copilot-language-server (disabled in blink tho and will use the native blink)
+  -- only used if copilot.lua is not enabled
   {
     "neovim/nvim-lspconfig",
     opts = function(_, opts)
