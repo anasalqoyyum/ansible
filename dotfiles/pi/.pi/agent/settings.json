@@ -1,12 +1,15 @@
 {
-  "lastChangelogVersion": "0.71.0",
+  "lastChangelogVersion": "0.72.1",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
   "defaultThinkingLevel": "low",
   "quietStartup": true,
   "packages": [
     "git:https://github.com/badlogic/pi-diff-review",
-    "npm:@ff-labs/pi-fff"
+    "npm:@ff-labs/pi-fff",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:@juicesharp/rpiv-todo",
+    "npm:pi-subagents"
   ],
   "theme": "tokyonight-night",
   "transport": "auto",
