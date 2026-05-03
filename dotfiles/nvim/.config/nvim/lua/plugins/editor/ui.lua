@@ -135,9 +135,6 @@ return {
   -- Oil and related plugins
   {
     "stevearc/oil.nvim",
-    dependencies = {
-      { "nvim-mini/mini.icons", opts = {} },
-    },
     -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
     lazy = false,
     ---@module 'oil'
@@ -355,30 +352,6 @@ return {
     },
   },
 
-  -- Filetype icons
-  {
-    "nvim-mini/mini.icons",
-    opts = {
-      file = {
-        [".eslintrc.js"] = { glyph = "󰱺", hl = "MiniIconsYellow" },
-        [".node-version"] = { glyph = "", hl = "MiniIconsGreen" },
-        [".prettierrc"] = { glyph = "", hl = "MiniIconsPurple" },
-        [".yarnrc.yml"] = { glyph = "", hl = "MiniIconsBlue" },
-        ["eslint.config.js"] = { glyph = "󰱺", hl = "MiniIconsYellow" },
-        ["package.json"] = { glyph = "", hl = "MiniIconsGreen" },
-        ["tsconfig.json"] = { glyph = "", hl = "MiniIconsAzure" },
-        ["tsconfig.build.json"] = { glyph = "", hl = "MiniIconsAzure" },
-        ["yarn.lock"] = { glyph = "", hl = "MiniIconsBlue" },
-        ["mdx"] = { glyph = "󰍔", hl = "MiniIconsYellow" },
-      },
-      lsp = {
-        copilot = { glyph = "", hl = "MiniIconsRed" },
-      },
-      filetype = {
-        ["markdown.mdx"] = { glyph = "󰍔", hl = "MiniIconsYellow" },
-      },
-    },
-  },
 
   {
     "lewis6991/satellite.nvim",

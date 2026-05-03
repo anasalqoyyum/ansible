@@ -6,6 +6,7 @@ local prettierSupported = {
   "graphql",
   "handlebars",
   "html",
+  "htmlangular",
   "javascript",
   "javascriptreact",
   "json",

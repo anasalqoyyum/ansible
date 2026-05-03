@@ -4,7 +4,6 @@ return {
     opts = {
       ensure_installed = {
         "dockerfile",
-        "ktlint",
         "git_config",
         "gitcommit",
         "git_rebase",

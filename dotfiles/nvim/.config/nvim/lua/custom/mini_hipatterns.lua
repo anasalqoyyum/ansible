@@ -3,12 +3,7 @@ local M = {}
 ---@type table<string,true>
 M.hl = {}
 
-M.plugin = {
-  "nvim-mini/mini.hipatterns",
-  recommended = true,
-  desc = "Highlight colors in your code. Also includes Tailwind CSS support.",
-  event = "LazyFile",
-  opts = function()
+function M.opts()
     local hi = require("mini.hipatterns")
     return {
       -- custom LazyVim option to enable the tailwind integration
@@ -48,8 +43,9 @@ M.plugin = {
         },
       },
     }
-  end,
-  config = function(_, opts)
+end
+
+function M.setup(opts)
     if type(opts.tailwind) == "table" and opts.tailwind.enabled then
       -- reset hl groups when colorscheme changes
       vim.api.nvim_create_autocmd("ColorScheme", {
@@ -90,8 +86,7 @@ M.plugin = {
       }
     end
     require("mini.hipatterns").setup(opts)
-  end,
-}
+  end
 
 M.colors = {
   slate = {
@@ -403,4 +398,4 @@ M.colors = {
   },
 }
 
-return M.plugin
+return M

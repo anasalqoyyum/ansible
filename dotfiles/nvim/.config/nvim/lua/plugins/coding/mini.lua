@@ -1,74 +1,95 @@
-return {
-  {
-    "nvim-mini/mini.ai",
-    event = "VeryLazy",
-    opts = function()
-      local ai = require("mini.ai")
-      return {
-        n_lines = 500,
-        custom_textobjects = {
-          o = ai.gen_spec.treesitter({ -- code block
-            a = { "@block.outer", "@conditional.outer", "@loop.outer" },
-            i = { "@block.inner", "@conditional.inner", "@loop.inner" },
-          }),
-          f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }), -- function
-          c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }), -- class
-          t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" }, -- tags
-          d = { "%f[%d]%d+" }, -- digits
-          e = { -- Word with case
-            { "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" },
-            "^().*()$",
-          },
-          g = LazyVim.mini.ai_buffer, -- buffer
-          u = ai.gen_spec.function_call(), -- u for "Usage"
-          U = ai.gen_spec.function_call({ name_pattern = "[%w_]" }), -- without dot in function name
-        },
-      }
-    end,
-    config = function(_, opts)
-      require("mini.ai").setup(opts)
-      LazyVim.on_load("which-key.nvim", function()
-        vim.schedule(function()
-          LazyVim.mini.ai_whichkey(opts)
-        end)
-      end)
-    end,
-  },
+local function on_very_lazy(fn)
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "VeryLazy",
+    once = true,
+    callback = fn,
+  })
+end
 
+local function setup_ai()
+  local ai = require("mini.ai")
+  local opts = {
+    n_lines = 500,
+    custom_textobjects = {
+      o = ai.gen_spec.treesitter({
+        a = { "@block.outer", "@conditional.outer", "@loop.outer" },
+        i = { "@block.inner", "@conditional.inner", "@loop.inner" },
+      }),
+      f = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }),
+      c = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }),
+      t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" },
+      d = { "%f[%d]%d+" },
+      e = {
+        { "%u[%l%d]+%f[^%l%d]", "%f[%S][%l%d]+%f[^%l%d]", "%f[%P][%l%d]+%f[^%l%d]", "^[%l%d]+%f[^%l%d]" },
+        "^().*()$",
+      },
+      g = LazyVim.mini.ai_buffer,
+      u = ai.gen_spec.function_call(),
+      U = ai.gen_spec.function_call({ name_pattern = "[%w_]" }),
+    },
+  }
+
+  require("mini.ai").setup(opts)
+  LazyVim.on_load("which-key.nvim", function()
+    vim.schedule(function()
+      LazyVim.mini.ai_whichkey(opts)
+    end)
+  end)
+end
+
+local function setup_icons()
+  require("mini.icons").setup({
+    file = {
+      [".eslintrc.js"] = { glyph = "󰱺", hl = "MiniIconsYellow" },
+      [".go-version"] = { glyph = "", hl = "MiniIconsBlue" },
+      [".keep"] = { glyph = "󰊢", hl = "MiniIconsGrey" },
+      [".node-version"] = { glyph = "", hl = "MiniIconsGreen" },
+      [".prettierrc"] = { glyph = "", hl = "MiniIconsPurple" },
+      [".yarnrc.yml"] = { glyph = "", hl = "MiniIconsBlue" },
+      ["devcontainer.json"] = { glyph = "", hl = "MiniIconsAzure" },
+      ["eslint.config.js"] = { glyph = "󰱺", hl = "MiniIconsYellow" },
+      ["package.json"] = { glyph = "", hl = "MiniIconsGreen" },
+      ["tsconfig.json"] = { glyph = "", hl = "MiniIconsAzure" },
+      ["tsconfig.build.json"] = { glyph = "", hl = "MiniIconsAzure" },
+      ["yarn.lock"] = { glyph = "", hl = "MiniIconsBlue" },
+      ["mdx"] = { glyph = "󰍔", hl = "MiniIconsYellow" },
+    },
+    filetype = {
+      dotenv = { glyph = "", hl = "MiniIconsYellow" },
+      gotmpl = { glyph = "󰟓", hl = "MiniIconsGrey" },
+      ["markdown.mdx"] = { glyph = "󰍔", hl = "MiniIconsYellow" },
+    },
+    lsp = {
+      copilot = { glyph = "", hl = "MiniIconsRed" },
+    },
+  })
+end
+
+local function setup_surround()
+  local opts = {
+    mappings = {
+      add = "gsa",
+      delete = "gsd",
+      find = "gsf",
+      find_left = "gsF",
+      highlight = "gsh",
+      replace = "gsr",
+      update_n_lines = "gsn",
+    },
+  }
+  require("mini.surround").setup(opts)
+end
+
+return {
+  { "nvim-mini/mini.ai", enabled = false },
+  { "nvim-mini/mini.icons", enabled = false },
+  { "nvim-mini/mini.pairs", enabled = false },
   {
-    "nvim-mini/mini.comment",
-    event = "VeryLazy",
+    "nvim-mini/mini.nvim",
+    version = false,
+    lazy = false,
     dependencies = {
       "JoosepAlviste/nvim-ts-context-commentstring",
-    },
-    opts = {
-      options = {
-        custom_commentstring = function()
-          return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
-        end,
-      },
-    },
-  },
-  {
-    "JoosepAlviste/nvim-ts-context-commentstring",
-    lazy = true,
-    opts = {
-      enable_autocmd = false,
-    },
-  },
-
-  -- icons
-  {
-    "nvim-mini/mini.icons",
-    lazy = true,
-    opts = {
-      file = {
-        [".keep"] = { glyph = "󰊢", hl = "MiniIconsGrey" },
-        ["devcontainer.json"] = { glyph = "", hl = "MiniIconsAzure" },
-      },
-      filetype = {
-        dotenv = { glyph = "", hl = "MiniIconsYellow" },
-      },
     },
     init = function()
       package.preload["nvim-web-devicons"] = function()
@@ -76,63 +97,73 @@ return {
         return package.loaded["nvim-web-devicons"]
       end
     end,
-  },
+    config = function()
+      -- mini.icons
+      setup_icons()
 
-  {
-    "nvim-mini/mini.move",
-    event = "VeryLazy",
-    opts = {},
-  },
+      on_very_lazy(function()
+        -- mini.ai
+        setup_ai()
 
-  {
-    "nvim-mini/mini.surround",
-    keys = function(_, keys)
-      -- Populate the keys based on the user's options
-      local opts = LazyVim.opts("mini.surround")
-      local mappings = {
-        { opts.mappings.add, desc = "Add Surrounding", mode = { "n", "v" } },
-        { opts.mappings.delete, desc = "Delete Surrounding" },
-        { opts.mappings.find, desc = "Find Right Surrounding" },
-        { opts.mappings.find_left, desc = "Find Left Surrounding" },
-        { opts.mappings.highlight, desc = "Highlight Surrounding" },
-        { opts.mappings.replace, desc = "Replace Surrounding" },
-        { opts.mappings.update_n_lines, desc = "Update `MiniSurround.config.n_lines`" },
-      }
-      mappings = vim.tbl_filter(function(m)
-        return m[1] and #m[1] > 0
-      end, mappings)
-      return vim.list_extend(mappings, keys)
+        -- mini.comment
+        require("mini.comment").setup({
+          options = {
+            custom_commentstring = function()
+              return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
+            end,
+          },
+        })
+
+        -- mini.move
+        require("mini.move").setup({})
+
+        -- mini.surround
+        setup_surround()
+
+        -- mini.bracketed
+        require("mini.bracketed").setup({
+          comment = { suffix = "r", options = {} },
+        })
+
+        -- mini.cmdline
+        require("mini.cmdline").setup({
+          autocomplete = {
+            enable = false,
+          },
+        })
+
+        -- mini.cursorword
+        require("mini.cursorword").setup({})
+
+        -- mini.pairs
+        if vim.g.auto_pairs == "mini" then
+          LazyVim.mini.pairs({
+            modes = { insert = true, command = true, terminal = false },
+            skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
+            skip_ts = { "string" },
+            skip_unbalanced = true,
+            markdown = true,
+          })
+        end
+      end)
+
+      -- mini.hipatterns
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "LazyFile",
+        once = true,
+        callback = function()
+          local hipatterns = require("custom.mini_hipatterns")
+          hipatterns.setup(hipatterns.opts())
+        end,
+      })
     end,
-    opts = {
-      mappings = {
-        add = "gsa", -- Add surrounding in Normal and Visual modes
-        delete = "gsd", -- Delete surrounding
-        find = "gsf", -- Find surrounding (to the right)
-        find_left = "gsF", -- Find surrounding (to the left)
-        highlight = "gsh", -- Highlight surrounding
-        replace = "gsr", -- Replace surrounding
-        update_n_lines = "gsn", -- Update `n_lines`
-      },
-    },
   },
 
   {
-    "nvim-mini/mini.bracketed",
-    event = "VeryLazy",
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    lazy = true,
     opts = {
-      comment = { suffix = "r", options = {} }, -- conflicted with previous/next class in TS files
+      enable_autocmd = false,
     },
   },
-
-  {
-    "nvim-mini/mini.cmdline",
-    event = "VeryLazy",
-    opts = {
-      autocomplete = {
-        enable = false,
-      },
-    },
-  },
-
-  { "nvim-mini/mini.cursorword", event = "VeryLazy", opts = {} },
 }
