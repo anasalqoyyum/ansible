@@ -1,5 +1,7 @@
 import type { ExtensionAPI } from '@mariozechner/pi-coding-agent'
 
+// Converts Windows drive-letter paths in user input and tool calls to WSL /mnt paths.
+
 const DRIVE_PATH_START = /^[A-Za-z]:[\\/]/
 const PATH_FIELD_NAMES = new Set([
 	'path',

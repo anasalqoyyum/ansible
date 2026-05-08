@@ -47,6 +47,7 @@ prettier = { version = "latest" }
 "npm:@frostoven/squoosh-cli" = { version = "latest" }
 "npm:@hubspot/cli" = { version = "latest" }
 "npm:@bitwarden/cli" = { version = "latest", os = ["linux"] }
+"npm:hunkdiff" = "latest"
 # To setup typescript-plugin
 "npm:@astrojs/ts-plugin" = { version = "latest" }
 "npm:@vue/typescript-plugin" = { version = "latest" }
