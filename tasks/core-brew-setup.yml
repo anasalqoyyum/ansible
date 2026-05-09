@@ -37,6 +37,8 @@
       - chafa
       - mise
       - tw93/tap/mole
+      - lgug2z/tap/komorebi-for-mac
+      - koekeishiya/formulae/skhd
     state: present
     update_homebrew: true
   tags:
