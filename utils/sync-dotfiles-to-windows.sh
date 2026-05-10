@@ -79,5 +79,9 @@ sync_dir "nvim" "$repo_root/dotfiles/nvim/.config/nvim" "$windows_home/AppData/L
 sync_dir "pi" "$repo_root/dotfiles/pi/.pi" "$windows_home/.pi"
 sync_dir "opencode" "$repo_root/dotfiles/opencode/.config/opencode" "$windows_home/.config/opencode"
 sync_dir "zed" "$repo_root/dotfiles/zed/.config/zed" "$windows_home/AppData/Roaming/Zed"
+sync_file "whkdrc" "$repo_root/dotfiles/komorebi/.config/whkdrc" "$windows_home/.config/whkdrc"
+sync_file "komorebi" "$repo_root/dotfiles/komorebi/.config/komorebi/komorebi.json" "$windows_home/.config/komorebi/komorebi.json"
+sync_file "komorebi applications" "$repo_root/dotfiles/komorebi/.config/komorebi/applications.win.json" "$windows_home/.config/komorebi/applications.json"
+sync_file "komorebi bar" "$repo_root/dotfiles/komorebi/.config/komorebi/komorebi.bar.win.json" "$windows_home/.config/komorebi/komorebi.bar.json"
 
 echo "Done."

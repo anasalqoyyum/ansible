@@ -19,6 +19,8 @@ vcredist2022 14.44.35211.0 extras 2025-11-23 11:43:43
 whkd         0.2.10        extras 2026-05-10 00:04:58
 wslcompact   8.7           .oki   2025-08-01 16:40:22
 
+komorebi-switcher
+
 ❯ choco list -localonly
 bitwarden-cli 2026.2.0
 Chocolatey v1.3.1

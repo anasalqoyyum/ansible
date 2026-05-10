@@ -2,11 +2,12 @@
 # It's a mix of things that I've found useful over time. 
 # Other things installed: mise, starship, PowerToys CommandNotFound module, Chocolatey, scoop, btop, gh, neofetch, wslcompact, raycast, neovim
 # neovim need (uv tool install --upgrade pynvim) -> https://github.com/neovim/neovim/blob/master/INSTALL.md#windows
-# scoop install -k ripgrep fd fzf 7zip neovim extras/vcredist2022 gh btop mise starship
+# scoop install -k ripgrep fd fzf 7zip neovim extras/vcredist2022 gh btop mise starship komorebi
 
 Invoke-Expression (&starship init powershell)
-$ENV:STARSHIP_CONFIG = "$HOME\starship.toml"
+$ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
 $ENV:STARSHIP_LOG = "error"
+$Env:KOMOREBI_CONFIG_HOME = '$HOME\.config\komorebi'
 
 function vim { nvim @args }
 
