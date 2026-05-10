@@ -38,7 +38,7 @@
       - mise
       - tw93/tap/mole
       - lgug2z/tap/komorebi-for-mac
-      - koekeishiya/formulae/skhd
+      - asmvik/formulae/skhd
     state: present
     update_homebrew: true
   tags:
@@ -86,6 +86,7 @@
       - localsend
       - steipete/tap/codexbar
       - zed
+      - amrbashir/tap/komorebi-switcher
     state: present
     install_options:
       - adopt

@@ -14,10 +14,11 @@ alt + shift - 0x21      : komorebic cycle-focus previous # 0x21 is [
 alt + shift - 0x1E      : komorebic cycle-focus next # 0x1E is ]
 
 # Move windows
-alt + shift - left      : komorebic move left
-alt + shift - down      : komorebic move down
-alt + shift - up        : komorebic move up
-alt + shift - right     : komorebic move right
+ctrl + alt - left      : komorebic move left
+ctrl + alt - down      : komorebic move down
+ctrl + alt - up        : komorebic move up
+ctrl + alt - right     : komorebic move right
+ctrl + alt - return    : komorebic promote
 alt + shift - return    : komorebic promote
 
 # Stack windows

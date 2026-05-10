@@ -3,12 +3,13 @@
   "app_specific_configuration_path": "$HOME/.config/komorebi/applications.json",
   "window_hiding_behaviour": "Cloak",
   "cross_monitor_move_behaviour": "Insert",
-  "default_workspace_padding": 2,
-  "default_container_padding": 2,
+  "default_workspace_padding": 5,
+  "default_container_padding": 5,
   "floating_window_aspect_ratio": "Widescreen",
   "floating_layer_behaviour": "Float",
+  "window_handling_behaviour": "Async",
   "resize_delta": 100,
-  "border": true,
+  "border": false,
   "border_implementation": "Windows",
   "border_style": "System",
   "border_width": 1,
@@ -21,22 +22,6 @@
     "unfocused": "#303030"
   },
   "mouse_follows_focus": true,
-  "transparency": false,
-  "transparency_alpha": 200,
-  "animation": {
-    "enabled": false,
-    "duration": 250,
-    "fps": 60,
-    "style": {
-      "movement": "EaseOutBack",
-      "transparency": "Linear"
-    }
-  },
-  "theme": {
-    "palette": "Catppuccin",
-    "name": "Mocha",
-    "accent": "Mocha"
-  },
   "stackbar": {
     "height": 24,
     "mode": "Never",
