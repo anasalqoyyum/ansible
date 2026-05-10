@@ -28,6 +28,9 @@ Follow these rules by default. Do not deviate unless the user explicitly instruc
 - Use precise naming and simple structure instead of commentary.
 - Prefer the simplest implementation that satisfies the requirement.
 - Do not add noise. Every line should earn its place.
+- Do not write overly defensive code.
+  - Handle expected failure modes, not every imaginable one.
+  - Avoid redundant checks, generic catch-all logic, unnecessary fallback values, and abstractions whose only purpose is to guard against unlikely misuse.
 
 ## Code Build and Execution
 
