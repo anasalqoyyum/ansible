@@ -4,8 +4,7 @@
 # alt + o               : taskkill /f /im whkd.exe && start /b whkd # if shell is cmd
 # alt + o               : taskkill /f /im whkd.exe; Start-Process whkd -WindowStyle hidden # if shell is pwsh / powershell
 # alt + shift + o       : komorebic reload-configuration
-
-alt + shift + i         : komorebic toggle-shortcuts
+# alt + shift + i       : komorebic toggle-shortcuts
 
 # App shortcuts - these require shell to be pwsh / powershell
 # The apps will be focused if open, or launched if not open
@@ -35,9 +34,9 @@ ctrl + alt + shift + left    : komorebic stack left
 ctrl + alt + shift + down    : komorebic stack down
 ctrl + alt + shift + up      : komorebic stack up
 ctrl + alt + shift + right   : komorebic stack right
-alt + oem_1           : komorebic unstack # oem_1 is ;
-alt + oem_4           : komorebic cycle-stack previous # oem_4 is [
-alt + oem_6           : komorebic cycle-stack next # oem_6 is ]
+alt + oem_1                  : komorebic unstack # oem_1 is ;
+alt + oem_4                  : komorebic cycle-stack previous # oem_4 is [
+alt + oem_6                  : komorebic cycle-stack next # oem_6 is ]
 
 # Resize
 alt + oem_plus          : komorebic resize-axis horizontal increase

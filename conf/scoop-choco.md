@@ -1,25 +1,25 @@
 ❯ scoop list
 Installed apps:
 
-Name         Version       Source Updated             Info
-----         -------       ------ -------             ----
-7zip         25.01         main   2025-11-23 11:42:37
-btop         1.0.4         main   2025-08-12 11:45:05
-fd           10.3.0        main   2025-11-23 11:42:32
-fzf          0.67.0        main   2025-11-23 11:42:33
-gh           2.69.0        main   2025-03-29 06:36:31
-komorebi     0.1.41        extras 2026-05-10 00:04:57
-lazygit      0.57.0        extras 2026-01-01 13:22:48
-mise         2026.3.18     main   2026-04-01 17:24:12
-neofetch     7.1.0         main   2023-02-08 23:29:16
-neovim       0.12.2        main   2026-05-01 10:51:52
-ripgrep      15.1.0        main   2025-11-23 11:42:31
-starship     1.22.1        main   2025-03-29 06:41:46
-vcredist2022 14.44.35211.0 extras 2025-11-23 11:43:43
-whkd         0.2.10        extras 2026-05-10 00:04:58
-wslcompact   8.7           .oki   2025-08-01 16:40:22
-
-komorebi-switcher
+Name              Version       Source    Updated             Info
+----              -------       ------    -------             ----
+7zip              25.01         main      2025-11-23 11:42:37
+btop              1.0.4         main      2025-08-12 11:45:05
+fd                10.3.0        main      2025-11-23 11:42:32
+fzf               0.67.0        main      2025-11-23 11:42:33
+gh                2.69.0        main      2025-03-29 06:36:31
+komorebi          0.1.41        extras    2026-05-10 00:04:57
+komorebi-switcher 0.10.1        amrbashir 2026-05-10 09:57:01
+lazygit           0.57.0        extras    2026-01-01 13:22:48
+mise              2026.3.18     main      2026-04-01 17:24:12
+neofetch          7.1.0         main      2023-02-08 23:29:16
+neovim            0.12.2        main      2026-05-01 10:51:52
+ripgrep           15.1.0        main      2025-11-23 11:42:31
+starship          1.22.1        main      2025-03-29 06:41:46
+vcredist2022      14.44.35211.0 extras    2025-11-23 11:43:43
+whkd              0.2.10        extras    2026-05-10 00:04:58
+wslcompact        8.7           .oki      2025-08-01 16:40:22
+zoxide            0.9.9         main      2026-05-10 17:27:29
 
 ❯ choco list -localonly
 bitwarden-cli 2026.2.0

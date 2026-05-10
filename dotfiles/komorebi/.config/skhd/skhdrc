@@ -19,7 +19,7 @@ ctrl + alt - down      : komorebic move down
 ctrl + alt - up        : komorebic move up
 ctrl + alt - right     : komorebic move right
 ctrl + alt - return    : komorebic promote
-alt + shift - return    : komorebic promote
+alt + shift - return   : komorebic promote
 
 # Stack windows
 ctrl + alt + shift - left    : komorebic stack left
