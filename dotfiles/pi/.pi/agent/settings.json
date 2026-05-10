@@ -11,7 +11,7 @@
     "npm:pi-subagents"
   ],
   "theme": "tokyonight-night",
-  "transport": "auto",
+  "transport": "websocket",
   "enableInstallTelemetry": false,
   "enabledModels": [
     "openai-codex/gpt-5.5",
