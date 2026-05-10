@@ -51,19 +51,19 @@
       "workspaces": [
         {
           "name": "1",
-          "layout": "VerticalStack"
+          "layout": "BSP"
         },
         {
           "name": "2",
-          "layout": "VerticalStack"
+          "layout": "BSP"
         },
         {
           "name": "3",
-          "layout": "VerticalStack"
+          "layout": "BSP"
         },
         {
           "name": "4",
-          "layout": "VerticalStack"
+          "layout": "BSP"
         },
         {
           "name": "5",
