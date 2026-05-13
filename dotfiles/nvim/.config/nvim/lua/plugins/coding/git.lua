@@ -14,6 +14,10 @@ return {
     "dlyongemallo/diffview.nvim",
     event = "VeryLazy",
     opts = {
+      show_help_hints = false,
+      hide_merge_artifacts = true,
+      clean_up_buffers = true,
+      auto_close_on_empty = true,
       enhanced_diff_hl = true,
       use_icons = true,
       view = {
@@ -21,14 +25,27 @@ return {
           winbar_info = false,
           disable_diagnostics = true,
         },
+        file_history = {
+          layout = "diff2_vertical",
+        },
         merge_tool = {
-          layout = "diff3_mixed",
+          layout = "diff4_mixed",
+          winbar_info = true,
+        },
+        cycle_layouts = {
+          merge_tool = { "diff4_mixed", "diff3_mixed", "diff3_horizontal", "diff1_plain" },
         },
       },
       file_panel = {
+        show_branch_name = true,
+        always_show_sections = true,
         win_config = {
           position = "right",
         },
+      },
+      file_history_panel = {
+        stat_style = "both",
+        date_format = "relative",
       },
       hooks = {
         diff_buf_win_enter = function(bufnr, winid, _)
