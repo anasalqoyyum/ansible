@@ -47,13 +47,13 @@
       "updatedAt": "2026-02-25T15:30:37.749Z"
     },
     "opentui": {
-      "source": "msmps/opentui-skill",
+      "source": "anomalyco/opentui",
       "sourceType": "github",
-      "sourceUrl": "https://github.com/msmps/opentui-skill.git",
-      "skillPath": "skill/opentui/SKILL.md",
-      "skillFolderHash": "00be9b06139cfcfc3a4f63469e148b574a31781b",
+      "sourceUrl": "https://github.com/anomalyco/opentui.git",
+      "skillPath": "packages/web/src/content/SKILL.md",
+      "skillFolderHash": "3c0bc2b814bbf5ed44ed2d979f73c6b398c44d3b",
       "installedAt": "2026-02-26T10:38:31.982Z",
-      "updatedAt": "2026-02-26T10:38:31.982Z"
+      "updatedAt": "2026-05-14T12:59:52.501Z"
     },
     "uncodixfy": {
       "source": "cyxzdev/uncodixfy",
@@ -156,6 +156,7 @@
     "codex",
     "cursor",
     "deepagents",
+    "dexto",
     "firebender",
     "gemini-cli",
     "github-copilot",

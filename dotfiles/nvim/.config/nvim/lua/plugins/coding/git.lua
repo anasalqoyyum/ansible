@@ -12,7 +12,15 @@ return {
     -- "sindrets/diffview.nvim",
     -- NOTE: this is a fork of original but more maintained
     "dlyongemallo/diffview.nvim",
-    event = "VeryLazy",
+    -- v0.32 errored out on vim.env path.lua
+    version = "v0.31",
+    cmd = {
+      "DiffviewOpen",
+      "DiffviewToggle",
+      "DiffviewFileHistory",
+      "DiffviewDiffFiles",
+      "DiffviewLog",
+    },
     opts = {
       show_help_hints = false,
       hide_merge_artifacts = true,

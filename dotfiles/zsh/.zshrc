@@ -83,6 +83,10 @@ zinit wait'2' lucid for \
     OMZP::kubectl \
     OMZP::kubectx
 
+# Example of loading a plugin with custom atload and atclone commands with empty repo
+# zinit ice wait'2' lucid atload'eval "$(fnox activate zsh)"'
+# zinit light zdharma-continuum/null
+
 # pnpm completion - defer to load later
 zinit ice wait'2' lucid atload"zpcdreplay" atclone"./zplug.zsh" atpull"%atclone"
 zinit light g-plane/pnpm-shell-completion
