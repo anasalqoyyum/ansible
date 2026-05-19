@@ -20,14 +20,18 @@
  * blocks disallowed invocations at bash spawn time.
  */
 
-import type { ExtensionAPI } from '@mariozechner/pi-coding-agent'
-import { createBashTool, createLocalBashOperations } from '@mariozechner/pi-coding-agent'
+import type { ExtensionAPI } from '@earendil-works/pi-coding-agent'
+import { createBashTool } from '@earendil-works/pi-coding-agent'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const interceptedCommandsPath = join(__dirname, '..', '..', 'intercepted-commands')
-const commandPrefix = `export PATH="${interceptedCommandsPath}:$PATH"`
+const interceptedCommandsPath = join(
+  __dirname,
+  '..',
+  '..',
+  'intercepted-commands'
+)
 
 function getBlockedCommandMessage(command: string): string | null {
   // Match commands at the start of a shell segment (start/newline/; /&& /|| /|)
@@ -110,9 +114,8 @@ function getBlockedCommandMessage(command: string): string | null {
 
 export default function (pi: ExtensionAPI) {
   const cwd = process.cwd()
-  const localBash = createLocalBashOperations()
   const bashTool = createBashTool(cwd, {
-    commandPrefix,
+    commandPrefix: `export PATH="${interceptedCommandsPath}:$PATH"`,
     spawnHook: ctx => {
       const blockedMessage = getBlockedCommandMessage(ctx.command)
       if (blockedMessage) {
@@ -123,26 +126,4 @@ export default function (pi: ExtensionAPI) {
   })
 
   pi.registerTool(bashTool)
-
-  pi.on('user_bash', event => {
-    const blockedMessage = getBlockedCommandMessage(event.command)
-    if (blockedMessage) {
-      return {
-        result: {
-          output: blockedMessage,
-          exitCode: 1,
-          cancelled: false,
-          truncated: false
-        }
-      }
-    }
-
-    return {
-      operations: {
-        exec(command, cwd, options) {
-          return localBash.exec(`${commandPrefix}\n${command}`, cwd, options)
-        }
-      }
-    }
-  })
 }

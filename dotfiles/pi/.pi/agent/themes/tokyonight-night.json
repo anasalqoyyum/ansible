@@ -87,8 +87,8 @@
     "thinkingOff": "thinkingOffColor",
     "thinkingMinimal": "thinkingMinimalColor",
     "thinkingLow": "thinkingLowColor",
-    "thinkingMedium": "thinkingMediumColor",
-    "thinkingHigh": "thinkingHighColor",
+    "thinkingMedium": "thinkingLowColor",
+    "thinkingHigh": "thinkingLowColor",
     "thinkingXhigh": "thinkingXhighColor",
     "bashMode": "orange"
   },

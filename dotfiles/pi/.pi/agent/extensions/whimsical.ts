@@ -1,4 +1,4 @@
-import type { ExtensionAPI } from '@mariozechner/pi-coding-agent'
+import type { ExtensionAPI } from '@earendil-works/pi-coding-agent'
 
 const messages = [
   // Short
@@ -167,6 +167,7 @@ const messages = [
   'Scribbling...',
   'Squiggling...',
   'Wriggling...',
+  'Niggling...',
   'Higgling...',
   'Piggling...',
   'Figgling...',
@@ -240,7 +241,7 @@ const messages = [
   'Tangling...',
   'Jangling...',
   'Angling...',
-  'Strangling...',
+  'Struggling...',
   'Mingling...',
   'Tingling...',
   'Jingling...',
@@ -455,12 +456,11 @@ const messages = [
   'Icing the interfaces...',
   'Glazing the graphics...',
   'Topping with tests...',
-  'Cherry-picking the commits...',
-  'Slop forking open source...'
+  'Cherry-picking the commits...'
 ]
 
 function pickRandom(): string {
-  return messages[Math.floor(Math.random() * messages.length)]!
+  return messages[Math.floor(Math.random() * messages.length)]
 }
 
 export default function (pi: ExtensionAPI) {

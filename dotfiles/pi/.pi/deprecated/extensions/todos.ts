@@ -37,8 +37,8 @@ import {
   type ExtensionAPI,
   type ExtensionContext,
   type Theme
-} from '@mariozechner/pi-coding-agent'
-import { StringEnum } from '@mariozechner/pi-ai'
+} from '@earendil-works/pi-coding-agent'
+import { StringEnum } from '@earendil-works/pi-ai'
 import { Type } from '@sinclair/typebox'
 import path from 'node:path'
 import fs from 'node:fs/promises'
@@ -59,7 +59,7 @@ import {
   matchesKey,
   truncateToWidth,
   visibleWidth
-} from '@mariozechner/pi-tui'
+} from '@earendil-works/pi-tui'
 
 const TODO_DIR_NAME = '.pi/todos'
 const TODO_PATH_ENV = 'PI_TODO_PATH'
@@ -529,7 +529,11 @@ class TodoActionMenuComponent extends Container {
     const title = todo.title || '(untitled)'
     const options: SelectItem[] = [
       { value: 'view', label: 'view', description: 'View todo' },
-      { value: 'plan', label: 'plan', description: 'Plan the work in plan mode' },
+      {
+        value: 'plan',
+        label: 'plan',
+        description: 'Plan the work in plan mode'
+      },
       { value: 'work', label: 'work', description: 'Work on todo' },
       { value: 'refine', label: 'refine', description: 'Refine task' },
       ...(closed
@@ -1395,9 +1399,7 @@ function renderTodoList(
     for (let i = 0; i < maxItems; i++) {
       const sectionTodo = sectionTodos[i]
       if (!sectionTodo) continue
-      lines.push(
-        `  ${renderTodoHeading(theme, sectionTodo, currentSessionId)}`
-      )
+      lines.push(`  ${renderTodoHeading(theme, sectionTodo, currentSessionId)}`)
     }
     if (!expanded && sectionTodos.length > maxItems) {
       lines.push(
@@ -2296,8 +2298,8 @@ export default function todosExtension(pi: ExtensionAPI) {
               action === 'plan'
                 ? buildPlanPrompt(todo.id, title)
                 : action === 'refine'
-                ? buildRefinePrompt(todo.id, title)
-                : `work on todo ${formatTodoId(todo.id)} "${title}"`
+                  ? buildRefinePrompt(todo.id, title)
+                  : `work on todo ${formatTodoId(todo.id)} "${title}"`
             done()
           }
         )

@@ -1,111 +1,111 @@
 // types.ts - Core type definitions
-import type { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import type { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
-import type { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import type { TextContent, ImageContent } from "@mariozechner/pi-ai";
+import type { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js'
+import type { SSEClientTransport } from '@modelcontextprotocol/sdk/client/sse.js'
+import type { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js'
+import type { TextContent, ImageContent } from '@earendil-works/pi-ai'
 
 // Transport type (stdio + HTTP)
-export type Transport = 
-  | StdioClientTransport 
-  | SSEClientTransport 
-  | StreamableHTTPClientTransport;
+export type Transport =
+  | StdioClientTransport
+  | SSEClientTransport
+  | StreamableHTTPClientTransport
 
 // Import sources for config
-export type ImportKind = 
-  | "cursor" 
-  | "claude-code" 
-  | "claude-desktop" 
-  | "codex" 
-  | "windsurf" 
-  | "vscode";
+export type ImportKind =
+  | 'cursor'
+  | 'claude-code'
+  | 'claude-desktop'
+  | 'codex'
+  | 'windsurf'
+  | 'vscode'
 
 // Tool definition from MCP server
 export interface McpTool {
-  name: string;
-  title?: string;
-  description?: string;
-  inputSchema?: unknown; // JSON Schema
-  _meta?: Record<string, unknown>;
+  name: string
+  title?: string
+  description?: string
+  inputSchema?: unknown // JSON Schema
+  _meta?: Record<string, unknown>
 }
 
 // Resource definition from MCP server
 export interface McpResource {
-  uri: string;
-  name: string;
-  description?: string;
-  mimeType?: string;
-  _meta?: Record<string, unknown>;
+  uri: string
+  name: string
+  description?: string
+  mimeType?: string
+  _meta?: Record<string, unknown>
 }
 
 export interface UiResourceMeta {
-  csp?: UiResourceCsp;
-  permissions?: UiResourcePermissions;
-  domain?: string;
-  prefersBorder?: boolean;
+  csp?: UiResourceCsp
+  permissions?: UiResourcePermissions
+  domain?: string
+  prefersBorder?: boolean
 }
 
 export interface UiResourceContent {
-  uri: string;
-  html: string;
-  mimeType?: string;
-  meta: UiResourceMeta;
+  uri: string
+  html: string
+  mimeType?: string
+  meta: UiResourceMeta
 }
 
 export interface UiProxyRequestBody<TParams> {
-  token: string;
-  params: TParams;
+  token: string
+  params: TParams
 }
 
 export interface UiProxyResult<T = Record<string, unknown>> {
-  ok: boolean;
-  result?: T;
-  error?: string;
+  ok: boolean
+  result?: T
+  error?: string
 }
 
 export interface UiResourceCsp {
-  connectDomains?: string[];
-  scriptDomains?: string[];
-  styleDomains?: string[];
-  fontDomains?: string[];
-  imgDomains?: string[];
-  mediaDomains?: string[];
-  frameDomains?: string[];
-  workerDomains?: string[];
-  baseUriDomains?: string[];
+  connectDomains?: string[]
+  scriptDomains?: string[]
+  styleDomains?: string[]
+  fontDomains?: string[]
+  imgDomains?: string[]
+  mediaDomains?: string[]
+  frameDomains?: string[]
+  workerDomains?: string[]
+  baseUriDomains?: string[]
 }
 
 export interface UiResourcePermissions {
-  camera?: {};
-  microphone?: {};
-  geolocation?: {};
-  clipboardWrite?: {};
+  camera?: {}
+  microphone?: {}
+  geolocation?: {}
+  clipboardWrite?: {}
 }
 
 export interface UiToolInfo {
-  id?: string | number;
+  id?: string | number
   tool: {
-    name: string;
-    description?: string;
-    inputSchema?: unknown;
-  };
+    name: string
+    description?: string
+    inputSchema?: unknown
+  }
 }
 
 export interface UiHostContext {
-  toolInfo?: UiToolInfo;
-  theme?: "light" | "dark";
-  styles?: Record<string, unknown>;
-  displayMode?: UiDisplayMode;
-  availableDisplayModes?: UiDisplayMode[];
+  toolInfo?: UiToolInfo
+  theme?: 'light' | 'dark'
+  styles?: Record<string, unknown>
+  displayMode?: UiDisplayMode
+  availableDisplayModes?: UiDisplayMode[]
   containerDimensions?: {
-    width?: number;
-    maxWidth?: number;
-    height?: number;
-    maxHeight?: number;
-  };
-  [key: string]: unknown;
+    width?: number
+    maxWidth?: number
+    height?: number
+    maxHeight?: number
+  }
+  [key: string]: unknown
 }
 
-export type UiDisplayMode = "inline" | "fullscreen" | "pip";
+export type UiDisplayMode = 'inline' | 'fullscreen' | 'pip'
 
 // Re-export stream types from the shared lightweight module.
 // This allows the example package to import stream schemas without pulling the full types.ts dependency graph.
@@ -135,80 +135,88 @@ export {
   type UiStreamCallToolResult,
   type UiStreamResultPatchNotification,
   type ServerStreamResultPatchNotification,
-  type UiStreamSummary,
-} from "./ui-stream-types.js";
+  type UiStreamSummary
+} from './ui-stream-types.js'
 
 export interface UiMessageParams {
-  role?: string;
-  content?: unknown[];
-  type?: "prompt" | "notify" | "intent" | "message";
-  message?: string;
-  prompt?: string;
-  intent?: string;
-  params?: Record<string, unknown>;
-  [key: string]: unknown;
+  role?: string
+  content?: unknown[]
+  type?: 'prompt' | 'notify' | 'intent' | 'message'
+  message?: string
+  prompt?: string
+  intent?: string
+  params?: Record<string, unknown>
+  [key: string]: unknown
 }
 
 /**
  * Extract prompt text from either legacy MCP UI message shapes or native AppBridge user messages.
  */
-export function extractUiPromptText(params: UiMessageParams): string | undefined {
-  if (params.type === "prompt" || params.prompt) {
-    const prompt = params.prompt ?? String(params.message ?? "");
-    return prompt || undefined;
+export function extractUiPromptText(
+  params: UiMessageParams
+): string | undefined {
+  if (params.type === 'prompt' || params.prompt) {
+    const prompt = params.prompt ?? String(params.message ?? '')
+    return prompt || undefined
   }
 
-  if (params.role === "user" && Array.isArray(params.content)) {
+  if (params.role === 'user' && Array.isArray(params.content)) {
     const text = params.content
-      .map((block) => (block && typeof block === "object" && "text" in block ? String((block as { text?: unknown }).text ?? "") : ""))
+      .map(block =>
+        block && typeof block === 'object' && 'text' in block
+          ? String((block as { text?: unknown }).text ?? '')
+          : ''
+      )
       .filter(Boolean)
-      .join("\n\n");
-    return text || undefined;
+      .join('\n\n')
+    return text || undefined
   }
 
-  return undefined;
+  return undefined
 }
 
 /**
  * Structured UI handoff recovered from a canonical prompt envelope.
  */
 export interface UiPromptHandoff {
-  intent: string;
-  params: Record<string, unknown>;
-  raw: string;
+  intent: string
+  params: Record<string, unknown>
+  raw: string
 }
 
 /**
  * Parse a canonical named UI handoff encoded as `intent\n{json}`.
  */
-export function parseUiPromptHandoff(prompt: string): UiPromptHandoff | undefined {
-  const newlineIndex = prompt.indexOf("\n");
+export function parseUiPromptHandoff(
+  prompt: string
+): UiPromptHandoff | undefined {
+  const newlineIndex = prompt.indexOf('\n')
   if (newlineIndex <= 0) {
-    return undefined;
+    return undefined
   }
 
-  const intent = prompt.slice(0, newlineIndex).trim();
-  const payloadText = prompt.slice(newlineIndex + 1).trim();
+  const intent = prompt.slice(0, newlineIndex).trim()
+  const payloadText = prompt.slice(newlineIndex + 1).trim()
   if (!intent || !payloadText) {
-    return undefined;
+    return undefined
   }
 
   if (!/^[A-Za-z][A-Za-z0-9_-]*$/.test(intent)) {
-    return undefined;
+    return undefined
   }
 
   try {
-    const parsed = JSON.parse(payloadText);
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-      return undefined;
+    const parsed = JSON.parse(payloadText)
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      return undefined
     }
     return {
       intent,
       params: parsed as Record<string, unknown>,
-      raw: prompt,
-    };
+      raw: prompt
+    }
   } catch {
-    return undefined;
+    return undefined
   }
 }
 
@@ -217,131 +225,135 @@ export function parseUiPromptHandoff(prompt: string): UiPromptHandoff | undefine
  * Collected during the session and available when it ends.
  */
 export interface UiSessionMessages {
-  prompts: string[];
-  notifications: string[];
-  intents: Array<{ intent: string; params?: Record<string, unknown> }>;
+  prompts: string[]
+  notifications: string[]
+  intents: Array<{ intent: string; params?: Record<string, unknown> }>
 }
 
 export interface UiModelContextParams {
-  content?: unknown[];
-  structuredContent?: Record<string, unknown>;
-  [key: string]: unknown;
+  content?: unknown[]
+  structuredContent?: Record<string, unknown>
+  [key: string]: unknown
 }
 
 export interface UiOpenLinkResult {
-  isError?: boolean;
-  [key: string]: unknown;
+  isError?: boolean
+  [key: string]: unknown
 }
 
 export interface UiDisplayModeRequest {
-  mode?: UiDisplayMode;
+  mode?: UiDisplayMode
 }
 
 export interface UiDisplayModeResult {
-  mode: UiDisplayMode;
-  [key: string]: unknown;
+  mode: UiDisplayMode
+  [key: string]: unknown
 }
 
 // Content types from MCP
 export interface McpContent {
-  type: "text" | "image" | "audio" | "resource" | "resource_link";
-  text?: string;
-  data?: string;
-  mimeType?: string;
+  type: 'text' | 'image' | 'audio' | 'resource' | 'resource_link'
+  text?: string
+  data?: string
+  mimeType?: string
   resource?: {
-    uri: string;
-    text?: string;
-    blob?: string;
-  };
-  uri?: string;
-  name?: string;
-  description?: string;
+    uri: string
+    text?: string
+    blob?: string
+  }
+  uri?: string
+  name?: string
+  description?: string
 }
 
 // Pi content block type
-export type ContentBlock = TextContent | ImageContent;
+export type ContentBlock = TextContent | ImageContent
 
 // Server configuration
 export interface ServerEntry {
-  command?: string;
-  args?: string[];
-  env?: Record<string, string>;
-  cwd?: string;
+  command?: string
+  args?: string[]
+  env?: Record<string, string>
+  cwd?: string
   // HTTP fields
-  url?: string;
-  headers?: Record<string, string>;
-  auth?: "oauth" | "bearer";
-  bearerToken?: string;
-  bearerTokenEnv?: string;
+  url?: string
+  headers?: Record<string, string>
+  auth?: 'oauth' | 'bearer'
+  bearerToken?: string
+  bearerTokenEnv?: string
   // OAuth-specific config (optional, for pre-registered clients)
-  oauthClientId?: string;
-  oauthClientSecret?: string;
-  oauthScope?: string;
-  lifecycle?: "keep-alive" | "lazy" | "eager";
-  idleTimeout?: number; // minutes, overrides global setting
+  oauthClientId?: string
+  oauthClientSecret?: string
+  oauthScope?: string
+  lifecycle?: 'keep-alive' | 'lazy' | 'eager'
+  idleTimeout?: number // minutes, overrides global setting
   // Resource handling
-  exposeResources?: boolean;
+  exposeResources?: boolean
   // Direct tool registration
-  directTools?: boolean | string[];
+  directTools?: boolean | string[]
   // Debug
-  debug?: boolean;  // Show server stderr (default: false)
+  debug?: boolean // Show server stderr (default: false)
 }
 
 // Settings
 export interface McpSettings {
-  toolPrefix?: "server" | "none" | "short";
-  idleTimeout?: number; // minutes, default 10, 0 to disable
-  directTools?: boolean;
+  toolPrefix?: 'server' | 'none' | 'short'
+  idleTimeout?: number // minutes, default 10, 0 to disable
+  directTools?: boolean
 }
 
 // Root config
 export interface McpConfig {
-  mcpServers: Record<string, ServerEntry>;
-  imports?: ImportKind[];
-  settings?: McpSettings;
+  mcpServers: Record<string, ServerEntry>
+  imports?: ImportKind[]
+  settings?: McpSettings
 }
 
 // Alias for clarity
-export type ServerDefinition = ServerEntry;
+export type ServerDefinition = ServerEntry
 
 export interface ToolMetadata {
-  name: string;           // Prefixed tool name (e.g., "xcodebuild_list_sims")
-  originalName: string;   // Original MCP tool name (e.g., "list_sims")
-  description: string;
-  resourceUri?: string;   // For resource tools: the URI to read
-  uiResourceUri?: string; // For app-enabled tools: the UI resource URI
-  inputSchema?: unknown;  // JSON Schema for parameters (stored for describe/errors)
-  uiStreamMode?: UiStreamMode;
+  name: string // Prefixed tool name (e.g., "xcodebuild_list_sims")
+  originalName: string // Original MCP tool name (e.g., "list_sims")
+  description: string
+  resourceUri?: string // For resource tools: the URI to read
+  uiResourceUri?: string // For app-enabled tools: the UI resource URI
+  inputSchema?: unknown // JSON Schema for parameters (stored for describe/errors)
+  uiStreamMode?: UiStreamMode
 }
 
 export interface DirectToolSpec {
-  serverName: string;
-  originalName: string;
-  prefixedName: string;
-  description: string;
-  inputSchema?: unknown;
-  resourceUri?: string;
-  uiResourceUri?: string;
-  uiStreamMode?: UiStreamMode;
+  serverName: string
+  originalName: string
+  prefixedName: string
+  description: string
+  inputSchema?: unknown
+  resourceUri?: string
+  uiResourceUri?: string
+  uiStreamMode?: UiStreamMode
 }
 
 export interface ServerProvenance {
-  path: string;
-  kind: "user" | "project" | "import";
-  importKind?: string;
+  path: string
+  kind: 'user' | 'project' | 'import'
+  importKind?: string
 }
 
 export interface McpPanelCallbacks {
-  reconnect: (serverName: string) => Promise<boolean>;
-  getConnectionStatus: (serverName: string) => "connected" | "idle" | "failed" | "needs-auth";
-  refreshCacheAfterReconnect: (serverName: string) => import("./metadata-cache.js").ServerCacheEntry | null;
+  reconnect: (serverName: string) => Promise<boolean>
+  getConnectionStatus: (
+    serverName: string
+  ) => 'connected' | 'idle' | 'failed' | 'needs-auth'
+  refreshCacheAfterReconnect: (
+    serverName: string
+  ) => import('./metadata-cache.js').ServerCacheEntry | null
 }
 
 export interface McpPanelResult {
-  changes: Map<string, true | string[] | false>;
-  cancelled: boolean;
+  changes: Map<string, true | string[] | false>
+  cancelled: boolean
   /** If set, the user requested OAuth authentication for this server. */
-  authServer?: string;
+  authServer?: string
 }
 
 /**
@@ -349,15 +361,15 @@ export interface McpPanelResult {
  */
 export function getServerPrefix(
   serverName: string,
-  mode: "server" | "none" | "short"
+  mode: 'server' | 'none' | 'short'
 ): string {
-  if (mode === "none") return "";
-  if (mode === "short") {
-    let short = serverName.replace(/-?mcp$/i, "").replace(/-/g, "_");
-    if (!short) short = "mcp";
-    return short;
+  if (mode === 'none') return ''
+  if (mode === 'short') {
+    let short = serverName.replace(/-?mcp$/i, '').replace(/-/g, '_')
+    if (!short) short = 'mcp'
+    return short
   }
-  return serverName.replace(/-/g, "_");
+  return serverName.replace(/-/g, '_')
 }
 
 /**
@@ -366,8 +378,8 @@ export function getServerPrefix(
 export function formatToolName(
   toolName: string,
   serverName: string,
-  prefix: "server" | "none" | "short"
+  prefix: 'server' | 'none' | 'short'
 ): string {
-  const p = getServerPrefix(serverName, prefix);
-  return p ? `${p}_${toolName}` : toolName;
+  const p = getServerPrefix(serverName, prefix)
+  return p ? `${p}_${toolName}` : toolName
 }
