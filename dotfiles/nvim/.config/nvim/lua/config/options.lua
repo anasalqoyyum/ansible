@@ -30,26 +30,21 @@ vim.opt.background = "dark" -- always prefer dark mode
 -- kinda broke lazy package manager and flash.nvim border (but nice rounded)
 -- vim.o.winborder = "rounded"
 
--- Clipboard (from https://github.com/neovim/neovim/blob/master/runtime/autoload/provider/clipboard.vim)
--- pretty much placeholder for now, as it is working as expected currently
--- can also use https://github.com/bkoropoff/clipipe (but slow startup)
---
--- if vim.fn.has("wsl") == 1 then
---     local win32yank = "win32yank.exe"
---     if vim.fn.getftype(vim.fn.exepath(win32yank)) == "link" then
---         win32yank = vim.fn.resolve(vim.fn.exepath(win32yank))
---     end
---
---     vim.g.clipboard = {
---         name = "win32yank",
---         copy = {
---             ["+"] = { win32yank, "-i", "--crlf" },
---             ["*"] = { win32yank, "-i", "--crlf" },
---         },
---         paste = {
---             ["+"] = { win32yank, "-o", "--lf" },
---             ["*"] = { win32yank, "-o", "--lf" },
---         },
---         cache_enabled = 1, -- cache fixes del lag
---     }
--- end
+if vim.fn.has("wsl") == 1 then
+  local config_path = vim.fn.stdpath("config")
+  local copy_script = config_path .. "/scripts/wsl-copy.sh"
+  local paste_script = config_path .. "/scripts/wsl-paste.sh"
+
+  vim.g.clipboard = {
+    name = "wsl-clipboard",
+    copy = {
+      ["+"] = { copy_script },
+      ["*"] = { copy_script },
+    },
+    paste = {
+      ["+"] = { paste_script },
+      ["*"] = { paste_script },
+    },
+    cache_enabled = 0,
+  }
+end
