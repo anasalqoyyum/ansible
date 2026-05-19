@@ -163,6 +163,10 @@ vim.keymap.set("n", "<leader>cL", function()
   lsp_restart.restart_lsp()
 end, { desc = "[L]SP Restart" })
 
+vim.keymap.set({ "n", "v" }, "<A-y>", '"+y', { desc = "[Y]ank to system clipboard" })
+vim.keymap.set("n", "<leader>yY", '"+Y', { desc = "[Y]ank line to system clipboard" })
+vim.keymap.set({ "n", "v" }, "<A-p>", '"+p', { desc = "Paste from system clipboard" })
+
 vim.keymap.set("n", "<leader>ya", function()
   yank.yank_path(yank.get_buffer_absolute(), "absolute")
 end, { desc = "[Y]ank [A]bsolute path to clipboard" })

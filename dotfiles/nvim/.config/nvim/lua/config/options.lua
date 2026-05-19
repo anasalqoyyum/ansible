@@ -24,7 +24,7 @@ vim.g.enable_blink_colorful_menu = false -- set to true to enable colorful-menu.
 
 vim.opt.swapfile = false -- disable swap files
 vim.opt.list = false -- disable whitespace characters
-vim.opt.clipboard = "unnamedplus"
+vim.opt.clipboard = ""
 vim.opt.background = "dark" -- always prefer dark mode
 
 -- kinda broke lazy package manager and flash.nvim border (but nice rounded)
