@@ -21,9 +21,10 @@ trivy = "latest"
 aws-cli = "latest"
 television = "latest"
 ast-grep = "latest"
+rclone = "latest"
 # AI Tools
 'aqua:anomalyco/opencode' = "latest"
-"npm:@mariozechner/pi-coding-agent" = "latest"
+"npm:@earendil-works/pi-coding-agent" = "latest"
 codex = "latest"
 # Go Tools
 air = "latest"
@@ -70,6 +71,4 @@ lockfile = false
 OPENCODE_EXPERIMENTAL_OXFMT = true
 OPENCODE_EXPERIMENTAL_PLAN_MODE = true
 OPENCODE_EXPERIMENTAL_MARKDOWN = true
-# Speed up Claude Code init on WSL
-# USERPROFILE = "/mnt/c/Users/<your-username>"
 CLAUDE_CODE_SKIP_WINDOWS_PROFILE = 1
