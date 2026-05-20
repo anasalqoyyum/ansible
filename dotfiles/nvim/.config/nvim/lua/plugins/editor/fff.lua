@@ -11,8 +11,8 @@ return {
         height = 0.5,
         width = 0.5,
         prompt_position = "bottom", -- or 'top'
-        preview_position = "top", -- or 'left', 'right', 'top', 'bottom'
-        preview_size = 0.4,
+        preview_position = "right", -- or 'left', 'right', 'top', 'bottom'
+        preview_size = 0.45,
       },
       preview = {
         line_numbers = true,

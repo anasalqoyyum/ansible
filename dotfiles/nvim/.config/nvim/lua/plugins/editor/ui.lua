@@ -198,7 +198,7 @@ return {
         replace_netrw = false,
       },
       picker = {
-        layout = "select_reverse",
+        layout = "telescope_small",
         layouts = {
           select_reverse = {
             reverse = true,
@@ -216,6 +216,28 @@ return {
               { win = "preview", title = "{preview}", height = 0.4, border = "bottom" },
               { win = "list", border = "none" },
               { win = "input", height = 1, border = "top" },
+            },
+          },
+          telescope_small = {
+            reverse = true,
+            layout = {
+              box = "horizontal",
+              backdrop = false,
+              width = 0.5,
+              height = 0.5,
+              border = "rounded",
+              {
+                box = "vertical",
+                { win = "list", border = "none" },
+                { win = "input", height = 1, border = "top", title = "{title} {live} {flags}", title_pos = "center" },
+              },
+              {
+                win = "preview",
+                title = "{preview}",
+                width = 0.45,
+                border = "left",
+                title_pos = "center",
+              },
             },
           },
         },
@@ -351,7 +373,6 @@ return {
       },
     },
   },
-
 
   {
     "lewis6991/satellite.nvim",
