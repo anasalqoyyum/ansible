@@ -164,6 +164,7 @@ vim.keymap.set("n", "<leader>cL", function()
 end, { desc = "[L]SP Restart" })
 
 vim.keymap.set({ "n", "v" }, "<A-y>", '"+y', { desc = "[Y]ank to system clipboard" })
+vim.keymap.set({ "n", "v" }, "<leader>yy", '"+y', { desc = "[Y]ank to system clipboard" })
 vim.keymap.set("n", "<leader>yY", '"+Y', { desc = "[Y]ank line to system clipboard" })
 vim.keymap.set({ "n", "v" }, "<A-p>", '"+p', { desc = "Paste from system clipboard" })
 
