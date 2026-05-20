@@ -23,6 +23,12 @@
 // - OpenCode
 // - Copilot CLI + Chat (need to also check bottom-right Copilot for inline suggestions)
 {
+  "language_models": {
+    "opencode": {
+      "show_free_models": false,
+      "show_zen_models": false
+    }
+  },
   "icon_theme": "Material Icon Theme",
   "outline_panel": {
     "dock": "right"
@@ -31,6 +37,12 @@
     "dock": "right"
   },
   "agent": {
+    "default_model": {
+      "provider": "openai-subscribed",
+      "model": "gpt-5.5",
+      "enable_thinking": true,
+      "effort": "low"
+    },
     "dock": "left",
     "favorite_models": [],
     "model_parameters": []
