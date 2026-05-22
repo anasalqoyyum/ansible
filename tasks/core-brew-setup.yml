@@ -51,6 +51,7 @@
       - yazi
       - ffmpeg
       - sevenzip
+      - unar
       - poppler
       - resvg
       - imagemagick
