@@ -1,15 +1,18 @@
 {
-  "lastChangelogVersion": "0.75.3",
+  "lastChangelogVersion": "0.75.4",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.5",
   "defaultThinkingLevel": "low",
   "quietStartup": true,
   "packages": [
     "npm:@ff-labs/pi-fff",
-    "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:@juicesharp/rpiv-todo",
     "npm:pi-subagents",
-    "npm:pi-codex-fast"
+    "npm:pi-codex-fast",
+    "npm:pi-mcp-adapter",
+    "npm:@vanillagreen/pi-codex-minimal-tools",
+    "npm:@vanillagreen/pi-web-tools",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:@juicesharp/rpiv-todo"
   ],
   "theme": "tokyonight-night",
   "transport": "websocket",
