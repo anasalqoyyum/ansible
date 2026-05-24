@@ -30,7 +30,7 @@ local inlay_hints_settings = {
 
 local tsgo_inlay_hints_settings = {
   enumMemberValues = { enabled = true },
-  functionLikeReturnTypes = { enabled = true },
+  functionLikeReturnTypes = { enabled = false },
   parameterNames = {
     enabled = "literals",
     suppressWhenArgumentMatchesName = true,

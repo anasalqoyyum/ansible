@@ -164,8 +164,16 @@ return {
               return on_dir(force_linter_to_run(bufnr))
             end
 
+            -- prefer the top-level oxlint config if it exists (monorepo support), but I think it's kinda the redundant with the bottom one
+            -- local git = vim.fs.root(bufnr, ".git")
+            -- local markers = { ".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.config.ts" }
+            -- local root = git and vim.fs.root(git, markers) or vim.fs.root(bufnr, markers)
+            -- if root then
+            --   on_dir(root)
+            -- end
+
             local fname = vim.api.nvim_buf_get_name(bufnr)
-            local root_markers = util.insert_package_json({ ".oxlintrc.json" }, "oxlint", fname)
+            local root_markers = util.insert_package_json({  ".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.config.ts" }, "oxlint", fname)
             on_dir(vim.fs.dirname(vim.fs.find(root_markers, { path = fname, upward = true })[1]))
           end,
           settings = oxlint_settings,
