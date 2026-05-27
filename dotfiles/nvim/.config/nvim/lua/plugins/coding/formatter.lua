@@ -71,7 +71,7 @@ function M.has_config(ctx)
 end
 
 function M.oxfmt_has_config(ctx)
-  local config_found = vim.fs.find(".oxfmtrc.json", {
+  local config_found = vim.fs.find({ ".oxfmtrc.json", ".oxfmtrc.jsonc", "oxfmt.config.ts" }, {
     path = ctx.filename,
     upward = true,
   })[1]
