@@ -33,8 +33,9 @@ Example valid oxlint_settings (assuming defaults, buffer = 12, and git dir = /ho
 ]]
 local oxlint_settings = {
   run = "onType", -- or "onSave"
-  typeAware = true,
   fixKind = "all",
+  -- Enables type-aware linting. When unset (null), uses the root config's options.typeAware value.
+  -- typeAware = true,
 }
 
 local eslint_config_files = {
@@ -173,7 +174,8 @@ return {
             -- end
 
             local fname = vim.api.nvim_buf_get_name(bufnr)
-            local root_markers = util.insert_package_json({  ".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.config.ts" }, "oxlint", fname)
+            local root_markers =
+              util.insert_package_json({ ".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.config.ts" }, "oxlint", fname)
             on_dir(vim.fs.dirname(vim.fs.find(root_markers, { path = fname, upward = true })[1]))
           end,
           settings = oxlint_settings,

@@ -1,12 +1,12 @@
 return {
   {
     "saghen/blink.pairs",
+    dependencies = "saghen/blink.lib",
     enabled = vim.g.auto_pairs == "blink",
     event = "VeryLazy",
-    -- prefer build from source
-    -- dependencies = "saghen/blink.download",
-    build = "cargo build --release",
-
+    build = function()
+      require("blink.pairs").build():pwait(60000)
+    end,
     --- @module 'blink.pairs'
     --- @type blink.pairs.Config
     opts = {
