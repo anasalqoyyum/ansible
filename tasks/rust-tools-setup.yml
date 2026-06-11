@@ -76,6 +76,7 @@
     - install
     - rust
     - rust-tools
+    - linux-only
 
 - name: Install fd
   shell: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/cargo-binstall --no-confirm fd-find || {{ ansible_facts['env']['HOME'] }}/.cargo/bin/cargo install fd-find"

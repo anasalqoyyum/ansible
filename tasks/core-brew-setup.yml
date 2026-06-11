@@ -16,6 +16,7 @@
       - fd
       - tmux
       - tldr
+      - ripgrep
       # - docker
       # - docker-compose
       - kubectl
@@ -26,7 +27,6 @@
       - k6
       - fortune
       - cowsay
-      - sesh
       - ncdu
       - gh
       - xh
