@@ -11,9 +11,12 @@
     "test:web-tools": "npm run test --workspace=pi-web-tools-extension"
   },
   "dependencies": {
-    "@mariozechner/pi-ai": "^0.64.0",
-    "@mariozechner/pi-coding-agent": "^0.64.0",
-    "@mariozechner/pi-tui": "^0.64.0",
-    "@sinclair/typebox": "^0.34.48"
+    "diff": "^8.0.2"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-tui": "*",
+    "typebox": "*"
   }
 }
