@@ -78,6 +78,7 @@ sync_dir "mise" "$repo_root/dotfiles/mise/.config/mise" "$windows_home/.config/m
 sync_dir "nvim" "$repo_root/dotfiles/nvim/.config/nvim" "$windows_home/AppData/Local/nvim"
 sync_dir "pi" "$repo_root/dotfiles/pi/.pi" "$windows_home/.pi"
 sync_dir "opencode" "$repo_root/dotfiles/opencode/.config/opencode" "$windows_home/.config/opencode"
+sync_file "starship" "$repo_root/dotfiles/starship/.config/starship.toml" "$windows_home/.config/starship/starship.toml"
 sync_dir "zed" "$repo_root/dotfiles/zed/.config/zed" "$windows_home/AppData/Roaming/Zed"
 sync_file "whkdrc" "$repo_root/dotfiles/komorebi/.config/komorebi/whkdrc" "$windows_home/.config/komorebi/whkdrc"
 sync_file "komorebi" "$repo_root/dotfiles/komorebi/.config/komorebi/komorebi.json" "$windows_home/.config/komorebi/komorebi.json"

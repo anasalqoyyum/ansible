@@ -15,6 +15,7 @@
 // - tsgo
 // - toml
 // - Tokyo Night Dark Theme
+// - Material Icon
 //
 // Installed Agents:
 // - Claude
@@ -23,6 +24,15 @@
 // - OpenCode
 // - Copilot CLI + Chat (need to also check bottom-right Copilot for inline suggestions)
 {
+  "terminal": {
+    "shell": {
+      "with_arguments": {
+        "program": "pwsh.exe",
+        "args": ["-nologo"],
+        "title_override": null
+      }
+    }
+  },
   "language_models": {
     "opencode": {
       "show_free_models": false,
