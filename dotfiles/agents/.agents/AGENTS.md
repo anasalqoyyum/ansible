@@ -4,32 +4,34 @@ This document outlines best practices and behavioral guidelines for AI agents wo
 
 ## Non-Negotiable Code Standards
 
-Follow these rules by default. Do not deviate unless the user explicitly instructs you to.
+Follow these rules by default. Do NOT deviate unless the user explicitly instructs you to.
 
 ### React
 
 - Prefer a single `useState` object for object-like state instead of multiple related `useState` calls.
   - Keep separate `useState` calls only when the values are genuinely independent.
-- Do not use `useMemo` unless it is clearly necessary.
-  - `useMemo` is not a default pattern, a readability tool, or a premature optimization.
-  - If there is no concrete performance or referential-stability reason, do not add it.
+- Do NOT use `useMemo` unless it is clearly necessary.
+  - `useMemo` is NOT a default pattern, a readability tool, or a premature optimization.
+  - If there is no concrete performance or referential-stability reason, do NOT add it.
 
 ### Comments
 
-- Do not place comments above functions or files unless the user asks for them.
-- Do not use section-divider comments.
-- Do not write comments that narrate obvious code.
+- Do NOT place comments above functions or files unless the user asks for them.
+- Do NOT use section-divider comments.
+- Do NOT write comments that narrate obvious code.
+- Do NOT put a needless code comment. Code comment should be reserved for important parts and flow explanation.
 - Comments are allowed only when they explain why a decision was made and that reasoning would otherwise be hard to infer.
-  - If a comment explains what the code does instead of why it exists, delete it. Unless the code is complex enough that the "what" is not immediately clear, in which case it's fine to have a comment that explains the "what" as well as the "why".
+  - If a comment explains what the code does instead of why it exists, delete it. Unless the code is complex enough that the "what" is NOT immediately clear, in which case it's fine to have a comment that explains the "what" as well as the "why".
 
 ### Expectations
 
 - Write code that explains itself.
 - Use precise naming and simple structure instead of commentary.
 - Prefer the simplest implementation that satisfies the requirement.
-- Do not add noise. Every line should earn its place.
-- Do not write overly defensive code.
-  - Handle expected failure modes, not every imaginable one.
+- Do NOT be a yes-person. Be critical
+- Do NOT add noise. Every line should earn its place.
+- Do NOT write overly defensive code.
+  - Handle expected failure modes, NOT every imaginable one.
   - Avoid redundant checks, generic catch-all logic, unnecessary fallback values, and abstractions whose only purpose is to guard against unlikely misuse.
 
 ## Code Build and Execution
@@ -44,20 +46,21 @@ Follow these rules by default. Do not deviate unless the user explicitly instruc
 
 - Type checking is allowed (e.g. `tsc --noEmit`, `mypy`, `pyright`).
 - Linting, formatting, and static analysis are allowed.
-- Tests that do not trigger a build step are allowed.
+- Tests that do NOT trigger a build step are allowed.
 
 ### Intent
 
+- NEVER BE TOO WORDY. Ensure that what you spout is compact and easy to understand. Get to the point. Never sugarcoat. I don't need those.
 - Agents should focus on code correctness and safety without generating build outputs or modifying release artifacts. (Use LSP if possible)
-- Agents are prohibited from performing write actions on generated files, files located in directories with generated in the directory name, or files whose filenames contain gen. This restriction is especially strict when such files explicitly state, including via comments, that they must not be modified. Read-only access is permitted. If errors are identified, agents should report them to the user instead of making changes.
+- Agents are prohibited from performing write actions on generated files, files located in directories with generated in the directory name, or files whose filenames contain gen. This restriction is especially strict when such files explicitly state, including via comments, that they must NOT be modified. Read-only access is permitted. If errors are identified, agents should report them to the user instead of making changes.
 
 ## Claude Directory Compatibility
 
-If you are not Claude Code and a `.claude/` directory exists in the current working directory, read the relevant files in that directory before proceeding.
+If you are NOT Claude Code and a `.claude/` directory exists in the current working directory, read the relevant files in that directory before proceeding.
 
 - Read `.claude/CLAUDE.md` when it exists, along with any other relevant files in `.claude/`
 - Treat rules in `.claude/rules` as additional instructions that must also be followed
-- Do not ignore `.claude/` guidance just because you are running in a different agent
+- Do NOT ignore `.claude/` guidance just because you are running in a different agent
 
 ## Tools
 
