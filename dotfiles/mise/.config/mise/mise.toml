@@ -22,6 +22,7 @@ aws-cli = "latest"
 television = "latest"
 ast-grep = "latest"
 rclone = "latest"
+yt-dlp = "latest"
 # AI Tools
 'aqua:anomalyco/opencode' = "latest"
 "npm:@earendil-works/pi-coding-agent" = "latest"
