@@ -4,13 +4,14 @@
 # neovim need (uv tool install --upgrade pynvim) -> https://github.com/neovim/neovim/blob/master/INSTALL.md#windows
 # scoop install -k ripgrep fd fzf 7zip neovim extras/vcredist2022 gh btop mise starship komorebi zoxide
 
-Invoke-Expression (&starship init powershell)
 $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
 $ENV:STARSHIP_LOG = "error"
 $ENV:KOMOREBI_CONFIG_HOME = "$HOME\.config\komorebi"
 $ENV:WHKD_CONFIG_HOME = "$HOME\.config\komorebi"
 
 function vim { nvim @args }
+function lg { lazygit @args }
+function gl { git pull @args }
 
 #f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
 # Import-Module -Name Microsoft.WinGet.CommandNotFound
@@ -26,5 +27,6 @@ if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"
 }
 
-mise activate pwsh | Out-String | Invoke-Expression
+Invoke-Expression (&starship init powershell)
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
+mise activate pwsh | Out-String | Invoke-Expression
