@@ -42,6 +42,7 @@
       - --exclude=.git
       - --exclude=.gitignore
       - --exclude=*.log
+      - --exclude=node_modules/
       - --delete-excluded
       - "{{ playbook_dir }}/dotfiles/"
       - "{{ lookup('env', 'HOME') }}/.dotfiles/"
@@ -67,6 +68,7 @@
       - --exclude=.git
       - --exclude=.gitignore
       - --exclude=*.log
+      - --exclude=node_modules/
       - --delete-excluded
       - "{{ playbook_dir }}/dotfiles/"
       - "{{ lookup('env', 'HOME') }}/.dotfiles/"

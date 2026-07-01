@@ -13,7 +13,7 @@ VAULT_PASSWORD_FILE ?= .vault_pass
 COPY_LOCAL_EXCLUDE ?= .stow.log
 
 copy-local:
-	rsync -a --exclude='$(COPY_LOCAL_EXCLUDE)' "$(DOTFILES_DEST)" "$(DOTFILES_SRC)"
+	rsync -a --exclude='$(COPY_LOCAL_EXCLUDE)' --exclude='node_modules/' "$(DOTFILES_DEST)" "$(DOTFILES_SRC)"
 
 bootstrap-collections:
 	ansible-galaxy collection install -r requirements.yml

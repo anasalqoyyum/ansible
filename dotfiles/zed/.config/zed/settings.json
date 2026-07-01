@@ -25,13 +25,7 @@
 // - Copilot CLI + Chat (need to also check bottom-right Copilot for inline suggestions)
 {
   "terminal": {
-    "shell": {
-      "with_arguments": {
-        "program": "pwsh.exe",
-        "args": ["-nologo"],
-        "title_override": null
-      }
-    }
+    "shell": "system"
   },
   "language_models": {
     "opencode": {
