@@ -36,3 +36,4 @@
     - import_tasks: tasks/rust-setup.yml
     - import_tasks: tasks/rust-tools-setup.yml
     - import_tasks: tasks/dotfiles.yml
+    - import_tasks: tasks/ags-cli-setup.yml

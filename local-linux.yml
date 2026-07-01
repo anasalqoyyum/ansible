@@ -46,5 +46,6 @@
     - import_tasks: tasks/docker-setup.yml
     - import_tasks: tasks/dotfiles.yml
     - import_tasks: tasks/win32yank-setup.yml
+    - import_tasks: tasks/ags-cli-setup.yml
     - import_tasks: tasks/cuda-wsl-setup.yml
       when: "'microsoft' in (ansible_facts['kernel'] | lower)"
