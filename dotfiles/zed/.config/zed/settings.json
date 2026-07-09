@@ -41,6 +41,14 @@
     "dock": "right"
   },
   "agent": {
+    "sandbox_permissions": {
+      "allow_fs_write_all": true,
+      "allow_all_hosts": true
+    },
+    "tool_permissions": {
+      "default": "allow",
+      "tools": {}
+    },
     "default_model": {
       "provider": "openai-subscribed",
       "model": "gpt-5.5",
