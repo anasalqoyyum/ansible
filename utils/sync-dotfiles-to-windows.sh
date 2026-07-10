@@ -74,6 +74,8 @@ sync_file() {
 
 sync_dir "agents" "$repo_root/dotfiles/agents/.agents" "$windows_home/.agents"
 sync_file "codex agents" "$repo_root/dotfiles/agents/.agents/AGENTS.md" "$windows_home/.codex/AGENTS.md"
+sync_file "claude agents" "$repo_root/dotfiles/agents/.agents/AGENTS.md" "$windows_home/.claude/CLAUDE.md"
+sync_dir "claude skills" "$repo_root/dotfiles/agents/.agents/skills" "$windows_home/.claude/skills"
 sync_dir "mise" "$repo_root/dotfiles/mise/.config/mise" "$windows_home/.config/mise"
 sync_dir "nvim" "$repo_root/dotfiles/nvim/.config/nvim" "$windows_home/AppData/Local/nvim"
 sync_dir "pi" "$repo_root/dotfiles/pi/.pi" "$windows_home/.pi"
