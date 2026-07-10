@@ -1,21 +1,15 @@
 personality = "pragmatic"
 model_reasoning_effort = "medium"
 model = "gpt-5.6-sol"
+
 suppress_unstable_features_warning = true
-approvals_reviewer = "guardian_subagent"
-approval_policy = "on-request"
-sandbox_mode = "workspace-write"
+approvals_reviewer = "auto_review"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
 
 [features]
-multi_agent = true
-shell_snapshot = true
 unified_exec = true
-# unstable
-apply_patch_freeform = true
 js_repl = true
-use_linux_sandbox_bwrap = true
-guardian_approval = true
-apps = false
 
 [notice]
 hide_full_access_warning = true
@@ -28,6 +22,4 @@ status_line = [
   "git-branch",
   "fast-mode",
 ]
-
-[sandbox_workspace_write]
-network_access = true
+pet = "disabled"
