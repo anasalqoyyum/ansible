@@ -48,10 +48,12 @@ source "${ZINIT_HOME}/zinit.zsh"
 # zinit light romkatv/powerlevel10k
 
 # Add in Starship prompt
-zinit ice as"command" from"gh-r" \
-  atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
-  atpull"%atclone" src"init.zsh"
-zinit light starship/starship
+if [[ "$TERM" != dumb ]]; then
+  zinit ice as"command" from"gh-r" \
+    atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+    atpull"%atclone" src"init.zsh"
+  zinit light starship/starship
+fi
 
 # Add in zsh plugins (with wait for lucid)
 zinit wait lucid for \

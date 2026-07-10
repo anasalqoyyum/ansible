@@ -8,6 +8,8 @@ $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
 $ENV:STARSHIP_LOG = "error"
 $ENV:KOMOREBI_CONFIG_HOME = "$HOME\.config\komorebi"
 $ENV:WHKD_CONFIG_HOME = "$HOME\.config\komorebi"
+# Prevent mise warning on pwsh v5
+$env:MISE_PWSH_CHPWD_WARNING=0
 
 function vim { nvim @args }
 function lg { lazygit @args }
@@ -27,6 +29,9 @@ if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"
 }
 
-Invoke-Expression (&starship init powershell)
+# Run starship prompt if the terminal supports it
+if ($env:TERM -ne 'dumb' -and $Host.UI.SupportsVirtualTerminal) {
+    Invoke-Expression (&starship init powershell)
+}
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 mise activate pwsh | Out-String | Invoke-Expression

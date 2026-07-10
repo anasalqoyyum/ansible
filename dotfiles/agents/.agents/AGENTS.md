@@ -68,6 +68,17 @@ If you are NOT Claude Code and a `.claude/` directory exists in the current work
 
 ## Path Handling on WSL
 
+### Windows-Native Agent with a WSL Workspace
+
+When the agent is running as a Windows-native process while the workspace is stored in WSL:
+
+- Modify workspace files through the Windows-accessible WSL path (for example, `Z:\home\real\work\project` or `\\wsl.localhost\Ubuntu\home\real\work\project`).
+- Run repository commands in the appropriate WSL distribution with the Linux workspace path, for example: `wsl.exe -d Ubuntu --cd /home/real/work/project -- <command>`.
+- Use Windows-native computer-use and browser tools when WSL-hosted agents cannot access them.
+- Treat the Windows and WSL paths as views of the same files; do not copy the repository between environments.
+- For a server explicitly authorized to run in WSL, prefer `localhost` from Windows and bind to `0.0.0.0` only when required for Windows access.
+- Continue to follow project-specific restrictions on starting development servers, builds, and other commands.
+
 When a user is on Windows Subsystem for Linux (WSL) and provides Windows file paths, automatically convert them to WSL-accessible paths.
 **Windows Path Format:**
 
