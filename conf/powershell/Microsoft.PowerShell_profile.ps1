@@ -35,3 +35,6 @@ if ($env:TERM -ne 'dumb' -and $Host.UI.SupportsVirtualTerminal) {
 }
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
 mise activate pwsh | Out-String | Invoke-Expression
+
+# This is so bun\bin has higher priority than the mise installed one
+$env:PATH = "$HOME\.bun\bin;$env:PATH"
