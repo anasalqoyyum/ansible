@@ -16,6 +16,7 @@ Follow these rules by default. Do NOT deviate unless the user explicitly instruc
 
 ### Comments
 
+- Comments are a great way to clarify functionality and how code is used. Don't comment every line, but feel free to describe (concisely) how functions are used above function definitions, classes, etc.
 - Do NOT place comments above functions or files unless the user asks for them.
 - Do NOT use section-divider comments.
 - Do NOT write comments that narrate obvious code.
@@ -25,6 +26,11 @@ Follow these rules by default. Do NOT deviate unless the user explicitly instruc
 
 ### Expectations
 
+- Keep things simple. Channel "YAGNI" energy unless told otherwise.
+- Typesafety is useful, take advantage of it.
+- Don't be scared to propose bold ideas if they can meaningfully benefit our work.
+- Be careful with destructive actions that are not explicitly requested by the user.
+- Tests are good! Endless smoke tests, "regression tests" for feature deletions, etc, much less good. Tests should be focused, not slop.
 - Write code that explains itself.
 - Use precise naming and simple structure instead of commentary.
 - Prefer the simplest implementation that satisfies the requirement.
