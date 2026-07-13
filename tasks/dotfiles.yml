@@ -42,6 +42,7 @@
       - --exclude=.git
       - --exclude=.gitignore
       - --exclude=*.log
+      - --filter=P node_modules/
       - --exclude=node_modules/
       - --delete-excluded
       - "{{ playbook_dir }}/dotfiles/"
@@ -68,6 +69,7 @@
       - --exclude=.git
       - --exclude=.gitignore
       - --exclude=*.log
+      - --filter=P node_modules/
       - --exclude=node_modules/
       - --delete-excluded
       - "{{ playbook_dir }}/dotfiles/"
