@@ -21,7 +21,7 @@
     "monocle": "#f38ba8",
     "unfocused": "#303030"
   },
-  "mouse_follows_focus": true,
+  "mouse_follows_focus": false,
   "stackbar": {
     "height": 24,
     "mode": "Never",
