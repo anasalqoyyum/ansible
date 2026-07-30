@@ -32,10 +32,15 @@ focus_pane_down = ["prefix+j", "alt+down"]
 focus_pane_up = ["prefix+k", "alt+up"]
 focus_pane_right = ["prefix+l", "alt+right"]
 
+new_workspace = "prefix+n"
+switch_workspace = "prefix+shift+1..9"
+previous_workspace = ["prefix+shift+k", "prefix+shift+up"]
+next_workspace = ["prefix+shift+j", "prefix+shift+down"]
+
 # tmux used prefix+H/L and prefix+S-Left/Right for windows; herdr ships those keys
 # as swap_pane, so the swap bindings are cleared to keep the tmux muscle memory.
-previous_tab = ["prefix+p", "prefix+shift+h", "prefix+shift+left"]
-next_tab = ["prefix+n", "prefix+shift+l", "prefix+shift+right"]
+previous_tab = ["prefix+shift+h", "prefix+shift+left"]
+next_tab = ["prefix+shift+l", "prefix+shift+right"]
 swap_pane_left = ""
 swap_pane_right = ""
 
@@ -79,6 +84,7 @@ pane_borders = true
 prompt_new_tab_name = false
 sidebar_start_collapsed = true
 
+agent_panel_sort = "spaces"
 [session]
 resume_agents_on_restore = true
 
