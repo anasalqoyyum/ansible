@@ -1,0 +1,10 @@
+- name: Install herdr
+  shell: "curl -fsSL https://herdr.dev/install.sh | sh"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_facts['env']['HOME'] }}"
+    creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/herdr"
+  tags:
+    - install
+    - herdr
+    - linux-only

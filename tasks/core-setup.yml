@@ -31,6 +31,7 @@
       - make
       - ncdu
       - pkg-config
+      - timg
       - tldr
       - tk-dev
       - unzip

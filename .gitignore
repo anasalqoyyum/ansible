@@ -12,3 +12,6 @@
 
 # local planning artifacts
 .opencode/
+
+# pi model-store.json
+models-store.json

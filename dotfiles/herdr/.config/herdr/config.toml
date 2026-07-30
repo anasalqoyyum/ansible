@@ -1,0 +1,80 @@
+[theme]
+name = "tokyo-night"
+
+# tokyonight "vague" variant: near-black background with the standard tokyonight accents.
+[theme.custom]
+accent = "#7aa2f7"
+panel_bg = "#080A11"
+surface_dim = "#080A11"
+surface0 = "#3b4261"
+surface1 = "#414868"
+overlay0 = "#565f89"
+overlay1 = "#697196"
+text = "#c0caf5"
+subtext0 = "#a9b1d6"
+mauve = "#bb9af7"
+green = "#9ece6a"
+yellow = "#e0af68"
+red = "#f7768e"
+blue = "#7aa2f7"
+teal = "#7dcfff"
+peach = "#ff9e64"
+
+[terminal]
+new_cwd = "follow"
+
+[keys]
+prefix = "ctrl+a"
+
+focus_pane_left = ["prefix+h", "alt+left"]
+focus_pane_down = ["prefix+j", "alt+down"]
+focus_pane_up = ["prefix+k", "alt+up"]
+focus_pane_right = ["prefix+l", "alt+right"]
+
+# tmux used prefix+H/L and prefix+S-Left/Right for windows; herdr ships those keys
+# as swap_pane, so the swap bindings are cleared to keep the tmux muscle memory.
+previous_tab = ["prefix+p", "prefix+shift+h", "prefix+shift+left"]
+next_tab = ["prefix+n", "prefix+shift+l", "prefix+shift+right"]
+swap_pane_left = ""
+swap_pane_right = ""
+
+split_vertical = "prefix+v"
+split_horizontal = "prefix+b"
+
+detach = ["prefix+d", "prefix+q"]
+
+# prefix+r reloaded the config in tmux, so resize mode moves aside.
+reload_config = "prefix+r"
+resize_mode = "prefix+shift+r"
+
+# prefix+g runs lazygit below, so the session navigator moves off it.
+goto = "prefix+f"
+
+[[keys.command]]
+key = "prefix+g"
+type = "popup"
+command = "zsh -i -c lazygit"
+description = "lazygit"
+width = "80%"
+height = "80%"
+
+[[keys.command]]
+key = "prefix+t"
+type = "popup"
+command = "exec \"${SHELL:-zsh}\""
+description = "scratch shell"
+width = "80%"
+height = "80%"
+
+[ui]
+accent = "#7aa2f7"
+mouse_capture = true
+copy_on_select = true
+pane_borders = true
+
+[session]
+resume_agents_on_restore = true
+
+[experimental]
+# Closest thing to tmux allow-passthrough — needed for yazi/timg image previews.
+kitty_graphics = true
