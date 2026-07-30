@@ -144,6 +144,15 @@
       "skillFolderHash": "d9cffe56d26d4af7687299e391a7be1cfaf46c1b",
       "installedAt": "2026-04-27T01:16:50.494Z",
       "updatedAt": "2026-04-27T01:16:50.494Z"
+    },
+    "herdr": {
+      "source": "herdrdev/herdr",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/herdrdev/herdr.git",
+      "skillPath": "skills/herdr/SKILL.md",
+      "skillFolderHash": "4821f1d39ccae24b9b274b03184edaaf198a3994",
+      "installedAt": "2026-07-30T03:30:44.750Z",
+      "updatedAt": "2026-07-30T03:30:44.750Z"
     }
   },
   "dismissed": {
@@ -152,17 +161,17 @@
   "lastSelectedAgents": [
     "amp",
     "antigravity",
+    "antigravity-cli",
     "cline",
     "codex",
     "cursor",
     "deepagents",
-    "dexto",
-    "firebender",
     "gemini-cli",
     "github-copilot",
-    "kimi-cli",
+    "kimi-code-cli",
     "opencode",
     "warp",
+    "zed",
     "claude-code"
   ]
 }

@@ -1,5 +1,6 @@
 [theme]
 name = "tokyo-night"
+auto_switch = true
 
 # tokyonight "vague" variant: near-black background with the standard tokyonight accents.
 [theme.custom]
@@ -41,6 +42,10 @@ swap_pane_right = ""
 split_vertical = "prefix+v"
 split_horizontal = "prefix+b"
 
+# prefix+b is the split above, so the sidebar keeps the b mnemonic one modifier up
+# and also gets a prefix-free chord since it is toggled constantly.
+toggle_sidebar = ["prefix+shift+b", "ctrl+alt+b"]
+
 detach = ["prefix+d", "prefix+q"]
 
 # prefix+r reloaded the config in tmux, so resize mode moves aside.
@@ -71,6 +76,8 @@ accent = "#7aa2f7"
 mouse_capture = true
 copy_on_select = true
 pane_borders = true
+prompt_new_tab_name = false
+sidebar_start_collapsed = true
 
 [session]
 resume_agents_on_restore = true
