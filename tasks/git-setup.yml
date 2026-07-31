@@ -1,15 +1,40 @@
-- name: Check for gh CLI
-  ansible.builtin.command: gh --version
-  register: gh_check
-  failed_when: false
+- name: Resolve gh executable
+  ansible.builtin.shell: |
+    if command -v gh >/dev/null 2>&1; then
+      command -v gh
+    elif [ -x "$HOME/.local/share/mise/shims/gh" ]; then
+      printf '%s\n' "$HOME/.local/share/mise/shims/gh"
+    else
+      exit 1
+    fi
+  args:
+    executable: /bin/bash
+  register: gh_executable
   changed_when: false
   tags:
-    - gh-dash
+    - gh-extensions
 
-- name: Ensure gh-dash extension is installed (if gh exists)
-  ansible.builtin.command: gh extension install dlvhdr/gh-dash
-  args:
-    creates: "{{ lookup('env', 'HOME') }}/.local/share/gh/extensions/gh-dash"
-  when: gh_check.rc == 0
+- name: List installed gh extensions
+  ansible.builtin.command:
+    argv:
+      - "{{ gh_executable.stdout }}"
+      - extension
+      - list
+  register: gh_extensions
+  changed_when: false
   tags:
-    - gh-dash
+    - gh-extensions
+
+- name: Install gh extensions
+  ansible.builtin.command:
+    argv:
+      - "{{ gh_executable.stdout }}"
+      - extension
+      - install
+      - "{{ item }}"
+  loop:
+    - dlvhdr/gh-dash
+    - github/gh-stack
+  when: item not in gh_extensions.stdout
+  tags:
+    - gh-extensions
