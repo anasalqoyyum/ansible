@@ -40,19 +40,17 @@ Follow these rules by default. Do NOT deviate unless the user explicitly instruc
   - Handle expected failure modes, NOT every imaginable one.
   - Avoid redundant checks, generic catch-all logic, unnecessary fallback values, and abstractions whose only purpose is to guard against unlikely misuse.
 
-## Code Build and Execution
 
+## Code Build and Execution
 ### Build & Execution
 
 - Do NOT run any dev or production start commands. (e.g. `dev`). Assume that the user will run these commands themselves after you have made code changes. Unless explicitly requested by the user.
-- Do NOT run build scripts (e.g. `build`, `compile`, `bundle`, `release`).
-- Do NOT run commands that produce production artifacts.
 
 ### Allowed Commands
 
 - Type checking is allowed (e.g. `tsc --noEmit`, `mypy`, `pyright`).
 - Linting, formatting, and static analysis are allowed.
-- Tests that do NOT trigger a build step are allowed.
+- Unit Tests and E2E are allowed.
 
 ### Intent
 
