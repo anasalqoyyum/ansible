@@ -8,6 +8,8 @@ approval_policy = "never"
 sandbox_mode = "danger-full-access"
 
 [features]
+default_mode_request_user_input = true
+hooks = true
 unified_exec = true
 js_repl = true
 
