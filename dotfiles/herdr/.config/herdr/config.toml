@@ -78,6 +78,9 @@ width = "80%"
 height = "80%"
 
 [ui]
+# WSL defaults to herdr's drawn block cursor (ConPTY flicker workaround);
+# native restores the terminal cursor so nvim's insert-mode shape/color work.
+host_cursor = "native"
 accent = "#7aa2f7"
 mouse_capture = true
 copy_on_select = true
