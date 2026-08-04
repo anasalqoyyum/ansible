@@ -58,6 +58,18 @@ Follow these rules by default. Do NOT deviate unless the user explicitly instruc
 - Agents should focus on code correctness and safety without generating build outputs or modifying release artifacts. (Use LSP if possible)
 - Agents are prohibited from performing write actions on generated files, files located in directories with generated in the directory name, or files whose filenames contain gen. This restriction is especially strict when such files explicitly state, including via comments, that they must NOT be modified. Read-only access is permitted. If errors are identified, agents should report them to the user instead of making changes.
 
+### JavaScript and TypeScript
+
+- Use `pnpm` whenever possible for JavaScript and TypeScript projects, including package management, workspace management, and running scripts.
+- If `pnpm` is unavailable, try `corepack enable` before falling back to another package manager.
+- Follow the project’s existing tooling when it explicitly requires npm, Yarn, Bun, or another package manager.
+
+### Python
+
+- Use `uv` whenever possible for Python projects, including package management, virtual environments, dependency synchronization, and running Python tools or scripts.
+- Prefer commands such as `uv venv`, `uv add`, `uv sync`, and `uv run`.
+- Follow the project’s existing tooling when it explicitly requires direct Python, `pip`, or another package manager.
+
 ## Claude Directory Compatibility
 
 If you are NOT Claude Code and a `.claude/` directory exists in the current working directory, read the relevant files in that directory before proceeding.
