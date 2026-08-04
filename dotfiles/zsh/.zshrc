@@ -377,7 +377,7 @@ alias rgf="rg --fixed-strings"
 alias k="kubectl"
 # alias cx="codex --yolo"
 alias cx="codex --dangerously-bypass-approvals-and-sandbox"
-alias cc="claude --dangerously-skip-permissions"
+alias cc="IS_DEMO=1 claude --dangerously-skip-permissions"
 # I forgot what this does
 alias v="print -z --"
 

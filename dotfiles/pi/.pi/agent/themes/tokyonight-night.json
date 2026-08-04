@@ -88,8 +88,9 @@
     "thinkingMinimal": "thinkingMinimalColor",
     "thinkingLow": "thinkingLowColor",
     "thinkingMedium": "thinkingLowColor",
-    "thinkingHigh": "thinkingLowColor",
-    "thinkingXhigh": "thinkingXhighColor",
+    "thinkingHigh": "thinkingMediumColor",
+    "thinkingXhigh": "thinkingMediumColor",
+    "thinkingMax": "thinkingMediumColor",
     "bashMode": "orange"
   },
   "export": {

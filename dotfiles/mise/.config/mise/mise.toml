@@ -65,9 +65,8 @@ idiomatic_version_file_enable_tools = ["node"]
 experimental = true
 lockfile = false
 
-# Need to also run `gh auth login`
 [settings.github]
-use_git_credentials = true
+credential_command = 'gh auth token --hostname {% if os() == "windows" %}%MISE_CREDENTIAL_HOST%{% else %}"$MISE_CREDENTIAL_HOST"{% endif %}'
 
 [env]
 # Auto enable corepack for node versions that support it (>=16.9.0).
