@@ -1,6 +1,7 @@
 personality = "pragmatic"
-model_reasoning_effort = "medium"
 model = "gpt-5.6-sol"
+model_reasoning_effort = "medium"
+model_verbosity = "low"
 
 suppress_unstable_features_warning = true
 approvals_reviewer = "auto_review"
@@ -11,8 +12,8 @@ sandbox_mode = "danger-full-access"
 default_mode_request_user_input = true
 hooks = true
 unified_exec = true
-js_repl = true
 wsl_remote_connections = true
+js_repl = true
 
 [notice]
 hide_full_access_warning = true
