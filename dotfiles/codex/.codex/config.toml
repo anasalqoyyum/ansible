@@ -12,6 +12,7 @@ default_mode_request_user_input = true
 hooks = true
 unified_exec = true
 js_repl = true
+wsl_remote_connections = true
 
 [notice]
 hide_full_access_warning = true

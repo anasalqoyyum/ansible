@@ -41,6 +41,7 @@
     - import_tasks: tasks/rust-setup.yml
     - import_tasks: tasks/rust-tools-setup.yml
     - import_tasks: tasks/mise.yml
+    - import_tasks: tasks/ai-tools.yml
     - import_tasks: tasks/herdr-setup.yml
     - import_tasks: tasks/zsh-setup.yml
     - import_tasks: tasks/docker-setup.yml

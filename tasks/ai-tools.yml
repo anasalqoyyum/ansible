@@ -1,0 +1,19 @@
+- name: Install Claude Code natively
+  ansible.builtin.shell: "curl -fsSL https://claude.ai/install.sh | bash"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_facts['env']['HOME'] }}"
+    creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/claude"
+  tags:
+    - install
+    - ai-tools
+
+- name: Install Codex CLI natively
+  ansible.builtin.shell: "curl -fsSL https://chatgpt.com/codex/install.sh | sh"
+  args:
+    executable: /bin/bash
+    chdir: "{{ ansible_facts['env']['HOME'] }}"
+    creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/codex"
+  tags:
+    - install
+    - ai-tools

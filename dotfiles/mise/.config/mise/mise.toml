@@ -26,7 +26,6 @@ yt-dlp = "latest"
 # AI Tools
 'aqua:anomalyco/opencode' = "latest"
 "npm:@earendil-works/pi-coding-agent" = "latest"
-"npm:@openai/codex" = "latest"
 # Go Tools
 air = "latest"
 "github:avivsinai/bitbucket-cli" = "latest"

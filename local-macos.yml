@@ -32,6 +32,7 @@
   tasks:
     - import_tasks: tasks/ssh.yml
     - import_tasks: tasks/core-brew-setup.yml
+    - import_tasks: tasks/ai-tools.yml
     - import_tasks: tasks/rust-setup.yml
     - import_tasks: tasks/rust-tools-setup.yml
     - import_tasks: tasks/dotfiles.yml
