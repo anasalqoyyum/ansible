@@ -12,6 +12,7 @@ kubectl = { version = "latest", os = ["linux"] }
 k6 = { version = "latest", os = ["linux"] }
 k9s = { version = "latest", os = ["linux"] }
 bob = "latest"
+'aqua:ankitpokhrel/jira-cli' = "latest"
 github-cli = { version = "latest", os = ["linux", "windows"] }
 docker-cli = { version = "latest", os = ["linux"] }
 docker-compose = { version = "latest", os = ["linux"] }
