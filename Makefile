@@ -10,10 +10,21 @@ ZED_DOTFILES_DIR := ./dotfiles/zed/.config/zed
 .PHONY: copy-local sync-dotfiles-linux sync-dotfiles-macos sync-dotfiles-windows sync-zed-windows clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
 
 VAULT_PASSWORD_FILE ?= .vault_pass
-COPY_LOCAL_EXCLUDE ?= .stow.log
 
 copy-local:
-	rsync -a --exclude='$(COPY_LOCAL_EXCLUDE)' --exclude='node_modules/' "$(DOTFILES_DEST)" "$(DOTFILES_SRC)"
+	rsync -a \
+		--exclude='.stow.log' \
+		--exclude='node_modules/' \
+		--exclude='/herdr/.config/herdr/.plugins.lock' \
+		--exclude='/herdr/.config/herdr/release-notes.json' \
+		--exclude='/herdr/.config/herdr/sessions/' \
+		--exclude='/opencode/.config/opencode/plugins/herdr-agent-state.js' \
+		--exclude='/pi/.pi/agent/extensions/herdr-agent-state.ts' \
+		--exclude='/pi/.pi/agent/mcp-cache.json' \
+		--exclude='/pi/.pi/agent/mcp-npx-cache.json' \
+		--exclude='/pi/.pi/agent/mcp-onboarding.json' \
+		--exclude='/pi/.pi/agent/run-history.jsonl' \
+		"$(DOTFILES_DEST)" "$(DOTFILES_SRC)"
 
 bootstrap-collections:
 	ansible-galaxy collection install -r requirements.yml
