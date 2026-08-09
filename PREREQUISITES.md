@@ -56,6 +56,7 @@ Then reopen Ubuntu.
 - The current WSL run includes the CUDA toolkit task for detected WSL environments. Review or skip the `cuda-wsl` tag if CUDA is not needed.
 - The playbook installs Docker Engine inside WSL. Decide whether to use that or Docker Desktop integration rather than configuring both unintentionally.
 - SSH setup is skipped by `run-linux.sh`. Configure SSH separately when needed.
+- On Ubuntu 25.10 and later the default `sudo` is `sudo-rs`, whose password prompt breaks Ansible's `become` detection (it fails with `Timed out waiting for become success or become password prompt`). `run-linux.sh` works around this by installing classic sudo and setting `ANSIBLE_BECOME_EXE=sudo.ws`; do the same when running `ansible-playbook` by hand.
 - To copy selected configuration to native Windows applications after the WSL setup, run:
 
 ```bash
