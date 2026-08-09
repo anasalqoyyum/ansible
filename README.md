@@ -12,6 +12,42 @@ Ansible playbooks for bootstrapping a personal setup on:
 
 Both scripts install Ansible (if missing), install required collections from `requirements.yml`, and run the matching playbook.
 
+## New Machine How-To
+
+Read [PREREQUISITES.md](PREREQUISITES.md) before setting up a new machine.
+
+### Windows + WSL 2
+
+From Administrator PowerShell:
+
+```powershell
+wsl --install -d Ubuntu
+wsl --update
+```
+
+After restarting Windows, open Ubuntu, create your Linux user, then clone and run the setup:
+
+```bash
+sudo apt update
+sudo apt install -y git
+git clone <repository-url> ~/src/ansible
+cd ~/src/ansible
+bash run-linux.sh
+```
+
+Restart WSL afterwards with `wsl --shutdown` from PowerShell.
+
+### macOS
+
+Install the Apple command-line tools, then clone and run the native setup:
+
+```bash
+xcode-select --install
+git clone <repository-url> ~/src/ansible
+cd ~/src/ansible
+bash run-macos.sh
+```
+
 ## Validation Workflow
 
 Run these before applying bigger changes:
