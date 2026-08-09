@@ -5,9 +5,9 @@ git:
   paging:
     colorArg: always
     pager: diff-so-fancy
-  pagers:
-    - pager: diff-so-fancy
-    - pager: delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
+  diffRenderers:
+    - command: diff-so-fancy
+    - command: delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
 gui:
   nerdFontsVersion: "3"
   # tokyo night theme
@@ -37,28 +37,28 @@ gui:
   #   defaultFgColor:
   #     - "#c0caf5"
 
-  # vague color
-  # authorColors:
-  #   "*": "#f3be7c"
-  # theme:
-  #   activeBorderColor:
-  #     - "#aeaed1"
-  #     - "bold"
-  #   inactiveBorderColor:
-  #     - "#606079"
-  #   optionsTextColor:
-  #     - "#606079"
-  #   selectedLineBgColor:
-  #     - "#252530"
-  #   cherryPickedCommitFgColor:
-  #     - "#d8647e"
-  #   cherryPickedCommitBgColor:
-  #     - "bg"
-  #   markedBaseCommitFgColor:
-  #     - "#f3be7c"
-  #   markedBaseCommitBgColor:
-  #     - "bg"
-  #   unstagedChangesColor:
-  #     - "#d8647e"
-  #   defaultFgColor:
-  #     - "#cdcdcd"
+# vague color
+# authorColors:
+#   "*": "#f3be7c"
+# theme:
+#   activeBorderColor:
+#     - "#aeaed1"
+#     - "bold"
+#   inactiveBorderColor:
+#     - "#606079"
+#   optionsTextColor:
+#     - "#606079"
+#   selectedLineBgColor:
+#     - "#252530"
+#   cherryPickedCommitFgColor:
+#     - "#d8647e"
+#   cherryPickedCommitBgColor:
+#     - "bg"
+#   markedBaseCommitFgColor:
+#     - "#f3be7c"
+#   markedBaseCommitBgColor:
+#     - "bg"
+#   unstagedChangesColor:
+#     - "#d8647e"
+#   defaultFgColor:
+#     - "#cdcdcd"
