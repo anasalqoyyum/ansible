@@ -140,7 +140,9 @@
     - rust-tools
 
 - name: Install nightly
-  shell: "rustup toolchain list | grep -q '^nightly' || rustup toolchain install nightly"
+  shell: "{{ rustup }} toolchain list | grep -q '^nightly' || {{ rustup }} toolchain install nightly"
+  vars:
+    rustup: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/rustup"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
@@ -149,7 +151,9 @@
     - rust
 
 - name: Install rust-analyzer
-  shell: "rustup component list --installed | grep -q '^rust-analyzer' || rustup component add rust-analyzer"
+  shell: "{{ rustup }} component list --installed | grep -q '^rust-analyzer' || {{ rustup }} component add rust-analyzer"
+  vars:
+    rustup: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/rustup"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"

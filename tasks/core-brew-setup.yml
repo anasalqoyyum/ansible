@@ -15,7 +15,6 @@
       - bat
       - fd
       - tmux
-      - tldr
       - ripgrep
       # - docker
       # - docker-compose
@@ -25,14 +24,10 @@
       - k9s
       - jq
       - k6
-      - fortune
-      - cowsay
       - ncdu
       - gh
       - xh
       - diff-so-fancy
-      - mycli
-      - pgcli
       - btop
       - chafa
       - timg

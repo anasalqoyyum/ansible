@@ -34,8 +34,8 @@ golangci-lint = "latest"
 # Python Tools
 uv = "latest"
 "pipx:sqlit-tui" = "latest"
-"pipx:pgcli" = { version = "latest", os = ["linux"] }
-"pipx:mycli" = { version = "latest", os = ["linux"] }
+"pipx:pgcli" = { version = "latest", os = ["linux", "macos"] }
+"pipx:mycli" = { version = "latest", os = ["linux", "macos"] }
 # Node Tools
 biome = { version = "latest" }
 prettier = { version = "latest" }
