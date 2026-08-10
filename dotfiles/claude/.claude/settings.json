@@ -6,5 +6,6 @@
   "model": "opus",
   "effortLevel": "high",
   "tui": "fullscreen",
+  "autoMemoryEnabled": false,
   "skipDangerousModePermissionPrompt": true
 }

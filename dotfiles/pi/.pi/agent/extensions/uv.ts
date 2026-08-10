@@ -21,7 +21,7 @@
  */
 
 import type { ExtensionAPI } from '@earendil-works/pi-coding-agent'
-import { createBashTool } from '@earendil-works/pi-coding-agent'
+import { createBashToolDefinition } from '@earendil-works/pi-coding-agent'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -32,6 +32,13 @@ const interceptedCommandsPath = join(
   '..',
   'intercepted-commands'
 )
+
+const uvPromptGuidelines = [
+  'For Python projects, use `uv` whenever possible for package management, virtual environments, dependency synchronization, and running Python tools or scripts.',
+  'Prefer `uv venv`, `uv add`, `uv sync`, and `uv run`; invoke Python as `uv run python ...` rather than `python ...` or `python3 ...`.',
+  'Write the `uv` command directly instead of relying on the Python and pip interception shims.',
+  'Follow the project\'s existing tooling when it explicitly requires direct Python, pip, Poetry, or another package manager.'
+]
 
 function getBlockedCommandMessage(command: string): string | null {
   // Match commands at the start of a shell segment (start/newline/; /&& /|| /|)
@@ -114,7 +121,7 @@ function getBlockedCommandMessage(command: string): string | null {
 
 export default function (pi: ExtensionAPI) {
   const cwd = process.cwd()
-  const bashTool = createBashTool(cwd, {
+  const bashTool = createBashToolDefinition(cwd, {
     commandPrefix: `export PATH="${interceptedCommandsPath}:$PATH"`,
     spawnHook: ctx => {
       const blockedMessage = getBlockedCommandMessage(ctx.command)
@@ -125,5 +132,11 @@ export default function (pi: ExtensionAPI) {
     }
   })
 
-  pi.registerTool(bashTool)
+  pi.registerTool({
+    ...bashTool,
+    promptGuidelines: [
+      ...(bashTool.promptGuidelines ?? []),
+      ...uvPromptGuidelines
+    ]
+  })
 }
