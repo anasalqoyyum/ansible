@@ -15,6 +15,7 @@ copy-local:
 	rsync -a \
 		--exclude='.stow.log' \
 		--exclude='node_modules/' \
+		--exclude='/claude/.claude/hooks/herdr-agent-state.sh' \
 		--exclude='/herdr/.config/herdr/.plugins.lock' \
 		--exclude='/herdr/.config/herdr/release-notes.json' \
 		--exclude='/herdr/.config/herdr/sessions/' \

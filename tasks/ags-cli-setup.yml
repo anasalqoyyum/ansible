@@ -35,12 +35,8 @@
         - ags-cli
 
     - name: Extract AGS CLI binary
-      ansible.builtin.unarchive:
-        src: /tmp/ags.tar.gz
-        dest: /tmp
-        remote_src: true
-        include:
-          - ./ags
+      ansible.builtin.command: tar -xzf /tmp/ags.tar.gz -C /tmp ./ags
+      changed_when: false
       tags:
         - install
         - ags-cli
