@@ -29,4 +29,7 @@ if sudo --version 2>&1 | grep -qi 'sudo-rs'; then
 fi
 
 ansible-galaxy collection install -r requirements.yml
-ansible-playbook local-linux.yml --ask-become-pass --skip-tags "macos-only,ssh"
+ansible-playbook local-linux.yml \
+  --ask-become-pass \
+  --skip-tags "macos-only,ssh" \
+  --extra-vars "install_cuda_wsl=${INSTALL_CUDA_WSL:-false}"

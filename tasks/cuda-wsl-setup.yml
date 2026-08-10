@@ -1,54 +1,44 @@
-- name: Download CUDA repository pin file
-  become: true
-  get_url:
-    url: https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
-    dest: /etc/apt/preferences.d/cuda-repository-pin-600
+- name: Ensure CUDA supports this WSL distribution
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['distribution'] == "Ubuntu"
+      - ansible_facts['architecture'] == "x86_64"
+      - ansible_facts['distribution_release'] in cuda_supported_ubuntu_releases.get(cuda_toolkit_version, [])
+    fail_msg: >-
+      CUDA Toolkit {{ cuda_toolkit_version }} does not support this WSL distribution.
+      Supported Ubuntu releases: {{ cuda_supported_ubuntu_releases.get(cuda_toolkit_version, []) | join(', ') }}.
+  tags:
+    - cuda-wsl
+
+- name: Download CUDA repository keyring
+  ansible.builtin.get_url:
+    url: "https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-keyring_{{ cuda_keyring_version }}_all.deb"
+    dest: "/tmp/cuda-keyring_{{ cuda_keyring_version }}_all.deb"
+    checksum: "{{ cuda_keyring_checksum }}"
     mode: "0644"
   tags:
     - cuda-wsl
 
-- name: Download CUDA repository package
-  get_url:
-    url: https://developer.download.nvidia.com/compute/cuda/12.9.0/local_installers/cuda-repo-wsl-ubuntu-12-9-local_12.9.0-1_amd64.deb
-    dest: /tmp/cuda-repo-wsl-ubuntu-12-9-local_12.9.0-1_amd64.deb
-    mode: "0644"
-  tags:
-    - cuda-wsl
-
-- name: Install CUDA repository package
+- name: Install CUDA repository keyring
   become: true
-  apt:
-    deb: /tmp/cuda-repo-wsl-ubuntu-12-9-local_12.9.0-1_amd64.deb
+  ansible.builtin.apt:
+    deb: "/tmp/cuda-keyring_{{ cuda_keyring_version }}_all.deb"
     state: present
-  tags:
-    - cuda-wsl
-
-- name: Find CUDA GPG key
-  become: true
-  find:
-    paths: /var/cuda-repo-wsl-ubuntu-12-9-local
-    patterns: cuda-*-keyring.gpg
-    file_type: file
-  register: cuda_keyring
-  tags:
-    - cuda-wsl
-
-- name: Install CUDA keyring
-  become: true
-  copy:
-    src: "{{ (cuda_keyring.files | first).path }}"
-    dest: /usr/share/keyrings/cuda-archive-keyring.gpg
-    remote_src: yes
-    mode: "0644"
-  when: cuda_keyring.matched > 0
   tags:
     - cuda-wsl
 
 - name: Install CUDA toolkit
   become: true
-  apt:
-    name: cuda-toolkit-12-9
+  ansible.builtin.apt:
+    name: "cuda-toolkit-{{ cuda_toolkit_version }}"
     state: present
-    update_cache: yes
+    update_cache: true
+  tags:
+    - cuda-wsl
+
+- name: Remove CUDA repository keyring package
+  ansible.builtin.file:
+    path: "/tmp/cuda-keyring_{{ cuda_keyring_version }}_all.deb"
+    state: absent
   tags:
     - cuda-wsl

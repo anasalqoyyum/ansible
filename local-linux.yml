@@ -4,6 +4,13 @@
   vars:
     source_key: "{{ lookup('env', 'ANSIBLE_SOURCE_SSH_KEY') | default('./.ssh/id_ed25519', true) }}"
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
+    install_cuda_wsl: false
+    cuda_toolkit_version: "13-3"
+    cuda_supported_ubuntu_releases:
+      "12-9": [focal, jammy, noble]
+      "13-3": [jammy, noble, resolute]
+    cuda_keyring_version: "1.1-1"
+    cuda_keyring_checksum: "sha256:eea6cc5f0eaeb99082d054b8c05ae206a378e31e88048df0310d59f651dceed2"
   pre_tasks:
     - name: Ensure host is Linux
       ansible.builtin.assert:
@@ -51,4 +58,6 @@
     - import_tasks: tasks/win32yank-setup.yml
     - import_tasks: tasks/ags-cli-setup.yml
     - import_tasks: tasks/cuda-wsl-setup.yml
-      when: "'microsoft' in (ansible_facts['kernel'] | lower)"
+      when:
+        - "'microsoft' in (ansible_facts['kernel'] | lower)"
+        - install_cuda_wsl | bool
