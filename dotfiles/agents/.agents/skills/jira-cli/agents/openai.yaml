@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jira CLI"
+  short_description: "Operate Jira quickly from the command line"
+  default_prompt: "Use $jira-cli to inspect or update my Jira work."
