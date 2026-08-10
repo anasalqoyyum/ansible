@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bitbucket Jira PR"
+  short_description: "Open ticket-aware PRs and update Jira"
+  default_prompt: "Use $bkt-jira-pr to open my pull request and update its Jira ticket."
