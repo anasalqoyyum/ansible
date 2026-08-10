@@ -1,9 +1,29 @@
+- name: Check whether mise is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/mise"
+  register: mise_binary
+  tags:
+    - install
+    - mise
+    - linux-only
+
+- name: Download mise installer
+  ansible.builtin.get_url:
+    url: https://mise.run
+    dest: /tmp/install-mise.sh
+    mode: "0755"
+  when: not mise_binary.stat.exists
+  tags:
+    - install
+    - mise
+    - linux-only
+
 - name: Install mise
-  shell: "curl -fsSL https://mise.run | sh"
+  ansible.builtin.command: /bin/sh /tmp/install-mise.sh
   args:
-    executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
     creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/mise"
+  when: not mise_binary.stat.exists
   tags:
     - install
     - mise

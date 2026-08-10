@@ -34,7 +34,7 @@ syntax-check:
 	ansible-playbook local-macos.yml --syntax-check
 
 lint:
-	python -m ansiblelint local-linux.yml local-macos.yml tasks/*.yml
+	uvx --from ansible-lint ansible-lint local-linux.yml local-macos.yml tasks/*.yml
 
 check-linux:
 	ansible-playbook local-linux.yml --check --diff --skip-tags "ssh"

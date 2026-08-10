@@ -1,19 +1,55 @@
+- name: Check whether Claude Code is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/claude"
+  register: claude_code_binary
+  tags:
+    - install
+    - ai-tools
+
+- name: Download Claude Code installer
+  ansible.builtin.get_url:
+    url: https://claude.ai/install.sh
+    dest: /tmp/install-claude-code.sh
+    mode: "0755"
+  when: not claude_code_binary.stat.exists
+  tags:
+    - install
+    - ai-tools
+
 - name: Install Claude Code natively
-  ansible.builtin.shell: "curl -fsSL https://claude.ai/install.sh | bash"
+  ansible.builtin.command: /bin/bash /tmp/install-claude-code.sh
   args:
-    executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
     creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/claude"
+  when: not claude_code_binary.stat.exists
+  tags:
+    - install
+    - ai-tools
+
+- name: Check whether Codex CLI is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/codex"
+  register: codex_cli_binary
+  tags:
+    - install
+    - ai-tools
+
+- name: Download Codex CLI installer
+  ansible.builtin.get_url:
+    url: https://chatgpt.com/codex/install.sh
+    dest: /tmp/install-codex-cli.sh
+    mode: "0755"
+  when: not codex_cli_binary.stat.exists
   tags:
     - install
     - ai-tools
 
 - name: Install Codex CLI natively
-  ansible.builtin.shell: "curl -fsSL https://chatgpt.com/codex/install.sh | sh"
+  ansible.builtin.command: /bin/sh /tmp/install-codex-cli.sh
   args:
-    executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
     creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/codex"
+  when: not codex_cli_binary.stat.exists
   tags:
     - install
     - ai-tools

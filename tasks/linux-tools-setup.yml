@@ -49,7 +49,7 @@
 - name: Register current versions
   uri:
     url: "https://api.github.com/repos/{{ item.repo }}/releases/latest"
-    return_content: yes
+    return_content: true
   register: version_responses
   loop:
     - { repo: "junegunn/fzf", name: "fzf" }

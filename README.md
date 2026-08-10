@@ -56,7 +56,7 @@ Run these before applying bigger changes:
 - `make syntax-check`
 - `make lint`
 
-If lint is missing locally, install it with `python -m pip install ansible-lint`.
+The lint target uses `uvx` to run `ansible-lint` without a manual installation.
 
 Optional dry-run checks:
 

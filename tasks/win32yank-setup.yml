@@ -40,7 +40,7 @@
       blockinfile:
         path: "{{ ansible_facts['env']['HOME'] }}/.tmux.conf"
         insertbefore: "^set-option -g prefix C-a"
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED WIN32YANK"
         block: |
           # Win32yank clipboard configuration
@@ -55,7 +55,7 @@
       blockinfile:
         path: "{{ ansible_facts['env']['HOME'] }}/.tmux.conf"
         insertbefore: "^set-option -g prefix C-a"
-        create: yes
+        create: true
         marker: "# {mark} ANSIBLE MANAGED WIN32YANK THUMBS"
         block: |
           # Overriding it on wsl for tmux-thumbs

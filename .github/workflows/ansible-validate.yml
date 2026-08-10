@@ -22,7 +22,7 @@ jobs:
       - name: Install Ansible tooling
         run: |
           python -m pip install --upgrade pip
-          pip install ansible ansible-lint
+          pip install ansible uv
 
       - name: Install collections
         run: ansible-galaxy collection install -r requirements.yml

@@ -1,9 +1,27 @@
+- name: Check whether cargo-binstall is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/cargo-binstall"
+  register: cargo_binstall_binary
+  tags:
+    - install
+    - rust
+
+- name: Download cargo-binstall installer
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh
+    dest: /tmp/install-cargo-binstall.sh
+    mode: "0755"
+  when: not cargo_binstall_binary.stat.exists
+  tags:
+    - install
+    - rust
+
 - name: Install cargo-binstall
-  shell: "curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash"
+  ansible.builtin.command: /bin/bash /tmp/install-cargo-binstall.sh
   args:
-    executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
     creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/cargo-binstall"
+  when: not cargo_binstall_binary.stat.exists
   tags:
     - install
     - rust

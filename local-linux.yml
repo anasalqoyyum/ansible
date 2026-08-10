@@ -1,4 +1,5 @@
-- hosts: localhost
+- name: Configure local Linux workstation
+  hosts: localhost
   connection: local
   gather_facts: true
   vars:
@@ -34,7 +35,7 @@
       copy:
         src: "conf/wsl.conf"
         dest: "/etc/wsl.conf"
-        mode: 0644
+        mode: "0644"
       become: true
       when: "'microsoft' in (ansible_facts['kernel'] | lower)"
       tags:
@@ -42,22 +43,53 @@
         - core
         - wsl
   tasks:
-    - import_tasks: tasks/ssh.yml
-    - import_tasks: tasks/core-setup.yml
-    - import_tasks: tasks/linux-tools-setup.yml
-    - import_tasks: tasks/rust-setup.yml
-    - import_tasks: tasks/rust-tools-setup.yml
-    - import_tasks: tasks/mise.yml
-    - import_tasks: tasks/ai-tools.yml
-    - import_tasks: tasks/herdr-setup.yml
-    - import_tasks: tasks/zsh-setup.yml
-    - import_tasks: tasks/docker-setup.yml
-    - import_tasks: tasks/dotfiles.yml
-    - import_tasks: tasks/mise-tools-setup.yml
-    - import_tasks: tasks/git-setup.yml
-    - import_tasks: tasks/win32yank-setup.yml
-    - import_tasks: tasks/ags-cli-setup.yml
-    - import_tasks: tasks/cuda-wsl-setup.yml
+    - name: Configure SSH
+      ansible.builtin.import_tasks: tasks/ssh.yml
+
+    - name: Install core packages
+      ansible.builtin.import_tasks: tasks/core-setup.yml
+
+    - name: Install Linux tools
+      ansible.builtin.import_tasks: tasks/linux-tools-setup.yml
+
+    - name: Install Rust
+      ansible.builtin.import_tasks: tasks/rust-setup.yml
+
+    - name: Install Rust tools
+      ansible.builtin.import_tasks: tasks/rust-tools-setup.yml
+
+    - name: Install mise
+      ansible.builtin.import_tasks: tasks/mise.yml
+
+    - name: Install AI tools
+      ansible.builtin.import_tasks: tasks/ai-tools.yml
+
+    - name: Install Herdr
+      ansible.builtin.import_tasks: tasks/herdr-setup.yml
+
+    - name: Configure Zsh
+      ansible.builtin.import_tasks: tasks/zsh-setup.yml
+
+    - name: Configure Docker
+      ansible.builtin.import_tasks: tasks/docker-setup.yml
+
+    - name: Configure dotfiles
+      ansible.builtin.import_tasks: tasks/dotfiles.yml
+
+    - name: Install mise tools
+      ansible.builtin.import_tasks: tasks/mise-tools-setup.yml
+
+    - name: Configure Git
+      ansible.builtin.import_tasks: tasks/git-setup.yml
+
+    - name: Install win32yank
+      ansible.builtin.import_tasks: tasks/win32yank-setup.yml
+
+    - name: Install AGS CLI
+      ansible.builtin.import_tasks: tasks/ags-cli-setup.yml
+
+    - name: Install CUDA on WSL
+      ansible.builtin.import_tasks: tasks/cuda-wsl-setup.yml
       when:
         - "'microsoft' in (ansible_facts['kernel'] | lower)"
         - install_cuda_wsl | bool

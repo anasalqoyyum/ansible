@@ -1,9 +1,29 @@
-- name: Install herdr
-  shell: "curl -fsSL https://herdr.dev/install.sh | sh"
+- name: Check whether Herdr is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/herdr"
+  register: herdr_binary
+  tags:
+    - install
+    - herdr
+    - linux-only
+
+- name: Download Herdr installer
+  ansible.builtin.get_url:
+    url: https://herdr.dev/install.sh
+    dest: /tmp/install-herdr.sh
+    mode: "0755"
+  when: not herdr_binary.stat.exists
+  tags:
+    - install
+    - herdr
+    - linux-only
+
+- name: Install Herdr
+  ansible.builtin.command: /bin/sh /tmp/install-herdr.sh
   args:
-    executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
     creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/herdr"
+  when: not herdr_binary.stat.exists
   tags:
     - install
     - herdr
