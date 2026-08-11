@@ -36,6 +36,7 @@
         src: "conf/wsl.conf"
         dest: "/etc/wsl.conf"
         mode: "0644"
+        force: false
       become: true
       when: "'microsoft' in (ansible_facts['kernel'] | lower)"
       tags:
