@@ -68,6 +68,14 @@ Convenience targets:
 - Linux validation bundle: `make validate-linux`
 - macOS validation bundle: `make validate-macos`
 
+Optional WSL OpenSSH server setup:
+
+```bash
+INSTALL_OPENSSH_SERVER_WSL=true bash run-linux.sh
+```
+
+This installs `openssh-server`, enables `ssh.socket`, and verifies that port 22 is listening. It is disabled by default.
+
 ## Useful Playbook Commands
 
 - Linux dotfiles only: `ansible-playbook -i localhost, local-linux.yml --tags "dotfiles" --ask-become-pass`

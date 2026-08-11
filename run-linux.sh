@@ -32,4 +32,5 @@ ansible-galaxy collection install -r requirements.yml
 ansible-playbook local-linux.yml \
   --ask-become-pass \
   --skip-tags "macos-only,ssh" \
-  --extra-vars "install_cuda_wsl=${INSTALL_CUDA_WSL:-false}"
+  --extra-vars "install_cuda_wsl=${INSTALL_CUDA_WSL:-false}" \
+  --extra-vars "install_openssh_server_wsl=${INSTALL_OPENSSH_SERVER_WSL:-false}"

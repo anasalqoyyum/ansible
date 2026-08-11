@@ -1,0 +1,20 @@
+- name: Install OpenSSH server
+  become: true
+  ansible.builtin.apt:
+    name: openssh-server
+    state: present
+    update_cache: true
+
+- name: Enable and start OpenSSH socket
+  become: true
+  ansible.builtin.systemd:
+    name: ssh.socket
+    enabled: true
+    state: started
+
+- name: Verify OpenSSH is listening on port 22
+  ansible.builtin.wait_for:
+    host: 127.0.0.1
+    port: 22
+    state: started
+    timeout: 15

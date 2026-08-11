@@ -6,6 +6,7 @@
     source_key: "{{ lookup('env', 'ANSIBLE_SOURCE_SSH_KEY') | default('./.ssh/id_ed25519', true) }}"
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
     install_cuda_wsl: false
+    install_openssh_server_wsl: false
     cuda_toolkit_version: "13-3"
     cuda_supported_ubuntu_releases:
       "12-9": [focal, jammy, noble]
@@ -88,6 +89,16 @@
 
     - name: Install AGS CLI
       ansible.builtin.import_tasks: tasks/ags-cli-setup.yml
+
+    - name: Install OpenSSH server on WSL
+      ansible.builtin.import_tasks: tasks/openssh-wsl-setup.yml
+      when:
+        - "'microsoft' in (ansible_facts['kernel'] | lower)"
+        - install_openssh_server_wsl | bool
+      tags:
+        - install
+        - openssh-server
+        - wsl
 
     - name: Install CUDA on WSL
       ansible.builtin.import_tasks: tasks/cuda-wsl-setup.yml

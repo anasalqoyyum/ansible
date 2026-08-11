@@ -35,7 +35,8 @@
         - ags-cli
 
     - name: Extract AGS CLI binary
-      ansible.builtin.command: tar -xzf /tmp/ags.tar.gz -C /tmp ./ags
+      # unarchive requires gtar, which macOS does not provide by default.
+      ansible.builtin.command: tar -xzf /tmp/ags.tar.gz -C /tmp ./ags # noqa: command-instead-of-module
       changed_when: false
       tags:
         - install
