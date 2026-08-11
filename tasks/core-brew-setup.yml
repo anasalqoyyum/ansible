@@ -78,6 +78,7 @@
       # - upscayl
       - ghostty
       - windscribe
+      - tailscale-app
       - discord
       - obs
       - obsidian
