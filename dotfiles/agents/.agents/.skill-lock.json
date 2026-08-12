@@ -78,9 +78,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/avivsinai/bitbucket-cli.git",
       "skillPath": "skills/bkt/SKILL.md",
-      "skillFolderHash": "030fa5586e9e4c9c251275461ed12aa1ca830b2c",
+      "skillFolderHash": "31163933f5b662811d958271cd6bd7276872e9c9",
       "installedAt": "2026-04-04T09:27:18.615Z",
-      "updatedAt": "2026-04-04T09:27:18.615Z"
+      "updatedAt": "2026-08-12T05:08:29.099Z"
     },
     "design-taste-frontend": {
       "source": "Leonxlnx/taste-skill",

@@ -25,6 +25,7 @@ copy-local:
 		--exclude='/pi/.pi/agent/mcp-npx-cache.json' \
 		--exclude='/pi/.pi/agent/mcp-onboarding.json' \
 		--exclude='/pi/.pi/agent/run-history.jsonl' \
+		--exclude='/pi/.pi/agent/missions/' \
 		"$(DOTFILES_DEST)" "$(DOTFILES_SRC)"
 
 bootstrap-collections:
