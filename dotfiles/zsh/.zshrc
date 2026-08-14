@@ -376,9 +376,11 @@ alias lla="eza -alg --icons --git"
 alias llt="eza -1 --icons --tree --git-ignore"
 alias rgf="rg --fixed-strings"
 alias k="kubectl"
-# alias cx="codex --yolo"
 alias cx="codex --dangerously-bypass-approvals-and-sandbox"
-alias cc="IS_DEMO=1 claude --dangerously-skip-permissions"
+alias cc="IS_DEMO=1 claude --enable-auto-mode"
+# Disabled by security policy
+# alias cc="IS_DEMO=1 claude --dangerously-skip-permissions"
+# alias cx="codex --yolo"
 # I forgot what this does
 alias v="print -z --"
 
