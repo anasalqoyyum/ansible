@@ -458,6 +458,55 @@
       "skillFolderHash": "b1512e24318785e3f9028e19a8f7cbec11343088",
       "installedAt": "2026-08-15T03:07:47.344Z",
       "updatedAt": "2026-08-15T03:07:47.344Z"
+    },
+    "bro": {
+      "source": "backnotprop/bro",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/backnotprop/bro.git",
+      "skillPath": "skills/bro/SKILL.md",
+      "skillFolderHash": "19def6229f89686253063fb9d795a6d45a246046",
+      "pluginName": "bro",
+      "installedAt": "2026-08-15T03:17:30.105Z",
+      "updatedAt": "2026-08-15T03:17:30.105Z"
+    },
+    "facts": {
+      "source": "backnotprop/bro",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/backnotprop/bro.git",
+      "skillPath": "skills/facts/SKILL.md",
+      "skillFolderHash": "506010476ff11a7f91dd30d73bc59f642b5bec76",
+      "pluginName": "bro",
+      "installedAt": "2026-08-15T03:17:30.106Z",
+      "updatedAt": "2026-08-15T03:17:30.106Z"
+    },
+    "readback": {
+      "source": "backnotprop/bro",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/backnotprop/bro.git",
+      "skillPath": "skills/readback/SKILL.md",
+      "skillFolderHash": "fc70783c5f47782c162037cec1221020cbc0facc",
+      "pluginName": "bro",
+      "installedAt": "2026-08-15T03:17:30.109Z",
+      "updatedAt": "2026-08-15T03:17:30.109Z"
+    },
+    "recap": {
+      "source": "backnotprop/bro",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/backnotprop/bro.git",
+      "skillPath": "skills/recap/SKILL.md",
+      "skillFolderHash": "59dce45959f6cada691e30349b0ce22ac7834062",
+      "pluginName": "bro",
+      "installedAt": "2026-08-15T03:17:30.110Z",
+      "updatedAt": "2026-08-15T03:17:30.110Z"
+    },
+    "show-me": {
+      "source": "humanlayer/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/humanlayer/skills.git",
+      "skillPath": "plugins/show-me/skills/show-me/SKILL.md",
+      "skillFolderHash": "0bdb821a21e793a4f6f82a7078c052154447e5cc",
+      "installedAt": "2026-08-15T03:20:43.955Z",
+      "updatedAt": "2026-08-15T03:20:43.955Z"
     }
   },
   "dismissed": {
