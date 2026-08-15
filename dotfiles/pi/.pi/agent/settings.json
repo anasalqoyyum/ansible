@@ -6,13 +6,11 @@
   "quietStartup": true,
   "packages": [
     "npm:@ff-labs/pi-fff",
-    "npm:pi-subagents",
     "npm:pi-mcp-adapter",
     "npm:@vanillagreen/pi-codex-minimal-tools",
     "npm:@vanillagreen/pi-web-tools",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:@juicesharp/rpiv-todo",
-    "npm:@tunnckocore/pi-gpt-fast-mode"
+    "npm:@juicesharp/rpiv-todo"
   ],
   "theme": "tokyonight-night",
   "transport": "websocket",
