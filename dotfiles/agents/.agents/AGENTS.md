@@ -1,157 +1,81 @@
 # Agent Guidelines
 
-This document outlines best practices and behavioral guidelines for AI agents working in this system.
+Apply these rules by default unless the user explicitly overrides them.
 
-## Non-Negotiable Code Standards
-
-Follow these rules by default. Do NOT deviate unless the user explicitly instructs you to.
+## Code Standards
 
 ### React
 
-- Prefer a single `useState` object for object-like state instead of multiple related `useState` calls.
-  - Keep separate `useState` calls only when the values are genuinely independent.
-- Do NOT use `useMemo` unless it is clearly necessary.
-  - `useMemo` is NOT a default pattern, a readability tool, or a premature optimization.
-  - If there is no concrete performance or referential-stability reason, do NOT add it.
+- Use one `useState` object for related, object-like state. Keep separate state only for genuinely independent values.
+- Add `useMemo` only for a concrete performance or referential-stability need, not as a default readability pattern or premature optimization.
 
 ### Comments
 
-- Comments are a great way to clarify functionality and how code is used. Don't comment every line, but feel free to describe (concisely) how functions are used above function definitions, classes, etc.
-- Do NOT place comments above functions or files unless the user asks for them.
-- Do NOT use section-divider comments.
-- Do NOT write comments that narrate obvious code.
-- Do NOT put a needless code comment. Code comment should be reserved for important parts and flow explanation.
-- Comments are allowed only when they explain why a decision was made and that reasoning would otherwise be hard to infer.
-  - If a comment explains what the code does instead of why it exists, delete it. Unless the code is complex enough that the "what" is NOT immediately clear, in which case it's fine to have a comment that explains the "what" as well as the "why".
+- Add concise comments only to explain non-obvious reasoning or genuinely complex behavior.
+- Prefer self-explanatory code over comments. Avoid section dividers and comments that narrate obvious code.
 
-### Expectations
+### Engineering Approach
 
-- Keep things simple. Channel "YAGNI" energy unless told otherwise.
-- Typesafety is useful, take advantage of it.
-- Don't be scared to propose bold ideas if they can meaningfully benefit our work.
-- Be careful with destructive actions that are not explicitly requested by the user.
-- Tests are good! Endless smoke tests, "regression tests" for feature deletions, etc, much less good. Tests should be focused, not slop.
-- Write code that explains itself.
-- Use precise naming and simple structure instead of commentary.
-- Prefer the simplest implementation that satisfies the requirement.
-- Do NOT be a yes-person. Be critical
-- Do NOT add noise. Every line should earn its place.
-- Do NOT write overly defensive code.
-  - Handle expected failure modes, NOT every imaginable one.
-  - Avoid redundant checks, generic catch-all logic, unnecessary fallback values, and abstractions whose only purpose is to guard against unlikely misuse.
+- Prefer the simplest implementation that satisfies the requirement; apply YAGNI.
+- Use type safety, precise naming, and straightforward structure so the code explains itself.
+- Be critical rather than agreeable by default. Propose bold ideas when they offer meaningful value.
+- Handle expected failure modes without redundant checks, catch-all logic, unnecessary fallbacks, or speculative abstractions.
+- Add focused tests that protect meaningful behavior. Avoid low-value smoke tests and regression tests for removed features.
+- Treat destructive actions cautiously when the user has not explicitly requested them.
 
+## Build and Execution
 
-## Code Build and Execution
-### Build & Execution
-
-- Do NOT run any dev or production start commands. (e.g. `dev`). Assume that the user will run these commands themselves after you have made code changes. Unless explicitly requested by the user.
-
-### Allowed Commands
-
-- Type checking is allowed (e.g. `tsc --noEmit`, `mypy`, `pyright`).
-- Linting, formatting, and static analysis are allowed.
-- Unit Tests and E2E are allowed.
-
-### Intent
-
-- NEVER BE TOO WORDY. Ensure that what you spout is compact and easy to understand. Get to the point. Never sugarcoat. I don't need those.
-- Agents should focus on code correctness and safety without generating build outputs or modifying release artifacts. (Use LSP if possible)
-- Agents are prohibited from performing write actions on generated files, files located in directories with generated in the directory name, or files whose filenames contain gen. This restriction is especially strict when such files explicitly state, including via comments, that they must NOT be modified. Read-only access is permitted. If errors are identified, agents should report them to the user instead of making changes.
+- Do not start development or production processes unless the user explicitly requests it or a test requires one. Stop any process started for testing when the test finishes.
+- Type checking, linting, formatting, static analysis, unit tests, and E2E tests are allowed.
+- Prioritize targeted correctness and safety checks, then run the build when it provides useful validation. Prefer LSP-based checks when available, and do not edit build or release artifacts manually.
+- Treat generated files as read-only. If generated output is outdated or causes an error, rerun the repository's documented generator instead of editing the output manually. Report generation failures.
+- Keep responses concise, direct, and unsentimental.
 
 ### JavaScript and TypeScript
 
-- Use `pnpm` whenever possible for JavaScript and TypeScript projects, including package management, workspace management, and running scripts.
-- If `pnpm` is unavailable, try `corepack enable` before falling back to another package manager.
-- Follow the project’s existing tooling when it explicitly requires npm, Yarn, Bun, or another package manager.
+- Use `pnpm` for package management, workspace commands, and scripts when possible.
+- If `pnpm` is unavailable, try `corepack enable` before another package manager.
+- Follow the repository's existing tooling when it explicitly requires npm, Yarn, Bun, or another package manager.
 
 ### Python
 
-- Use `uv` whenever possible for Python projects, including package management, virtual environments, dependency synchronization, and running Python tools or scripts.
-- Prefer commands such as `uv venv`, `uv add`, `uv sync`, and `uv run`.
-- Follow the project’s existing tooling when it explicitly requires direct Python, `pip`, or another package manager.
+- Use `uv` for package management, virtual environments, dependency synchronization, and execution when possible.
+- Prefer `uv venv`, `uv add`, `uv sync`, and `uv run`.
+- Follow the repository's existing tooling when it explicitly requires Python, `pip`, or another package manager directly.
 
 ## Claude Directory Compatibility
 
-If you are NOT Claude Code and a `.claude/` directory exists in the current working directory, read the relevant files in that directory before proceeding.
-
-- Read `.claude/CLAUDE.md` when it exists, along with any other relevant files in `.claude/`
-- Treat rules in `.claude/rules` as additional instructions that must also be followed
-- Do NOT ignore `.claude/` guidance just because you are running in a different agent
+When running outside Claude Code, check for a `.claude/` directory before proceeding. Read `.claude/CLAUDE.md` and relevant files under `.claude/rules/`, and treat them as additional instructions.
 
 ## Tools
 
-- For any file search or grep in the current git indexed directory use `rg`.
+- Use `rg` for file and content searches in the current Git-indexed repository.
 
-## Path Handling on WSL
+## WSL Path Handling
 
 ### Windows-Native Agent with a WSL Workspace
 
-When the agent is running as a Windows-native process while the workspace is stored in WSL:
+- Edit files through a Windows-accessible WSL path such as `Z:\home\real\work\project` or `\\wsl.localhost\Ubuntu\home\real\work\project`.
+- Run repository commands in the correct distribution, for example: `wsl.exe -d Ubuntu --cd /home/real/work/project -- <command>`.
+- Use Windows-native browser and computer-use tools when the WSL-hosted agent cannot access them.
+- Treat Windows and WSL paths as views of the same files; do not copy the repository between environments.
+- For an explicitly authorized WSL server, prefer `localhost` from Windows and bind to `0.0.0.0` only when required.
+- Continue following repository restrictions on starting servers, builds, and other commands.
 
-- Modify workspace files through the Windows-accessible WSL path (for example, `Z:\home\real\work\project` or `\\wsl.localhost\Ubuntu\home\real\work\project`).
-- Run repository commands in the appropriate WSL distribution with the Linux workspace path, for example: `wsl.exe -d Ubuntu --cd /home/real/work/project -- <command>`.
-- Use Windows-native computer-use and browser tools when WSL-hosted agents cannot access them.
-- Treat the Windows and WSL paths as views of the same files; do not copy the repository between environments.
-- For a server explicitly authorized to run in WSL, prefer `localhost` from Windows and bind to `0.0.0.0` only when required for Windows access.
-- Continue to follow project-specific restrictions on starting development servers, builds, and other commands.
+### Windows Paths Provided in WSL
 
-When a user is on Windows Subsystem for Linux (WSL) and provides Windows file paths, automatically convert them to WSL-accessible paths.
-**Windows Path Format:**
+Convert drive-letter paths to `/mnt/<lowercase-drive>/` and replace backslashes with forward slashes.
 
-```
-F:\path\to\file
-C:\Users\username\file.txt
-```
+Example: `F:\Libraries\Pictures\Screenshot.png` becomes `/mnt/f/Libraries/Pictures/Screenshot.png`.
 
-**WSL Conversion:**
+## Concurrent File Changes
 
-```
-/mnt/f/path/to/file
-/mnt/c/Users/username/file.txt
-```
+If a file changed after it was last read:
 
-**Rule:** Map Windows drive letters to `/mnt/<drive_letter>/` and replace backslashes with forward slashes.
-
-### Example
-
-- **User provides:** `F:\Libraries\Pictures\Screenshots\Screenshot.png`
-- **Agent converts to:** `/mnt/f/Libraries/Pictures/Screenshots/Screenshot.png`
-
-
-## File Change Confirmation
-
-When you detect that a user has modified a file after your previous read, re-read the file and confirm with the user whether the changes are intended.
-
-### Required Actions:
-
-- Re-read the file to capture the current state
-- Present a diff or summary of what changed
-- Ask the user to confirm if changes were intentional
-
-### Example:
-
-- **Scenario:** You previously read `config.json`, then the user runs a command that modifies it
-- **Action:** Re-read `config.json`, show what changed, ask: "I noticed changes in `config.json` — was this intentional?"
+1. Re-read it to capture the current state.
+2. Show a diff or concise summary of the unexpected changes.
+3. Ask whether the changes were intentional before editing further.
 
 ## Git Operations
 
-Git operations should **only be performed when explicitly requested by the user**.
-
-### Allowed Scenarios:
-
-- User asks: "Create a commit"
-- User asks: "Push changes to remote"
-- User asks: "Create a pull request"
-- User asks: "Merge this branch"
-
-### Prohibited Scenarios:
-
-- Do NOT commit changes automatically
-- Do NOT push to remote without explicit request
-- Do NOT amend commits without user approval
-- Do NOT force push unless explicitly requested
-- Do NOT perform destructive operations (hard resets, force pushes to main/master) without explicit user consent
-
-### Best Practice:
-
-Always ask for permission before performing any git operations unless the user has explicitly stated what they want done
+Perform Git operations only when the user explicitly requests them. This includes commits, pushes, pull requests, merges, amendments, resets, and force pushes. Require explicit confirmation for destructive operations such as hard resets or force-pushing a protected branch.
