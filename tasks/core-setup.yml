@@ -29,6 +29,7 @@
       - make
       - ncdu
       - pkg-config
+      - thunar
       - timg
       - tk-dev
       - unzip

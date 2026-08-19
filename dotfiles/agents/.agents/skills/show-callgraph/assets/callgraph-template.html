@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>show-callgraph · interactive trace</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1015;
+      --chrome: #0d1319;
+      --panel: #111820;
+      --panel-2: #17212b;
+      --panel-3: #1d2934;
+      --surface-deep: #0e151c;
+      --line: #25313c;
+      --line-strong: #3b4a58;
+      --separator: #1c2731;
+      --text: #e6e1cf;
+      --text-soft: #c7cfda;
+      --muted: #9aa8b6;
+      --faint: #778798;
+      --disabled: #4f5b66;
+      --accent: #ffb454;
+      --accent-strong: #ffd580;
+      --selection: #17293a;
+      --selection-line: #39bae6;
+      --info: #59c2ff;
+      --error: #f07178;
+      --warning: #ffb454;
+      --success: #aad94c;
+      --code-bg: #111a24;
+      --code-text: #d9e0e8;
+      --focus: #59c2ff;
+      --top-h: 54px;
+      --ops-h: 42px;
+      --status-h: 34px;
+      font-family: "Segoe UI Variable", "Segoe UI", sans-serif;
+      font-size: 13px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; min-height: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--text); overflow: hidden; }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+    ::selection { background: var(--accent); color: var(--bg); }
+    ::-webkit-scrollbar { width: 9px; height: 9px; }
+    ::-webkit-scrollbar-track { background: var(--panel); }
+    ::-webkit-scrollbar-thumb { background: var(--line-strong); border: 2px solid var(--panel); }
+    ::-webkit-scrollbar-thumb:hover { background: #536575; }
+
+    .mono { font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Consolas, monospace; }
+    .shell { height: 100vh; display: grid; grid-template-rows: var(--top-h) var(--ops-h) var(--status-h) 1fr; }
+    .topbar { grid-row: 1; display: flex; align-items: center; min-width: 0; border-bottom: 1px solid var(--line); background: var(--chrome); }
+    .brand { height: 100%; width: 232px; flex: 0 0 auto; padding: 0 16px; display: flex; align-items: center; gap: 10px; border-right: 1px solid var(--line); }
+    .brand svg { width: 21px; color: var(--accent); }
+    .brand strong { font-size: 14px; letter-spacing: -.02em; }
+    .brand span { color: var(--faint); font: 10px/1 ui-monospace, monospace; }
+    .trace-title { min-width: 0; padding: 0 18px; }
+    .trace-title strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+    .trace-title span { display: block; margin-top: 3px; color: var(--faint); font: 10px/1 ui-monospace, monospace; }
+    .controls { margin-left: auto; padding: 0 12px; display: flex; align-items: center; gap: 4px; }
+    .icon-btn, .run-btn, .quiet-btn {
+      height: 32px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      cursor: pointer;
+    }
+    .icon-btn { width: 32px; padding: 0; }
+    .icon-btn:hover, .quiet-btn:hover { background: var(--panel-3); color: var(--text); border-color: var(--line); }
+    .icon-btn:disabled { color: var(--disabled); cursor: default; background: transparent; }
+    .icon-btn svg, .run-btn svg { width: 14px; height: 14px; }
+    .run-btn { padding: 0 12px; color: var(--bg); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+    .run-btn:hover { background: var(--accent-strong); }
+    .step-counter { width: 72px; color: var(--muted); text-align: right; font: 10px/1 ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+    .operations { grid-row: 2; display: flex; align-items: stretch; min-width: 0; padding-left: 232px; border-bottom: 1px solid var(--line); background: var(--chrome); }
+    .operation-tab { min-width: 118px; border: 0; border-right: 1px solid var(--line); background: transparent; color: var(--muted); padding: 0 16px; text-align: left; cursor: pointer; position: relative; }
+    .operation-tab strong { color: inherit; font-size: 11px; }
+    .operation-tab span { margin-left: 7px; color: var(--faint); font: 9px/1 ui-monospace, monospace; }
+    .operation-tab:hover { background: var(--panel); color: var(--text); }
+    .operation-tab.active { color: var(--text); background: var(--panel); }
+    .operation-tab.active::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: 0; height: 2px; background: var(--accent); }
+    .operation-tab.error.active::after { background: var(--error); }
+
+    .statusbar { grid-row: 3; display: flex; align-items: center; gap: 16px; padding: 0 14px; min-width: 0; border-bottom: 1px solid var(--line); background: var(--panel); color: var(--muted); font-size: 10px; }
+    .statusbar strong { color: var(--text); font-weight: 600; }
+    .status-item { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .status-item.grow { min-width: 0; flex: 1; }
+    .status-item.grow span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+    .status-dot.error { background: var(--error); }
+    .status-dot.pending { background: var(--warning); }
+
+    .variant { grid-row: 4; display: none; height: 100%; min-height: 0; }
+    .variant.active { display: block; }
+    .pane { min-width: 0; min-height: 0; background: var(--panel); }
+    .pane-head { height: 37px; padding: 0 13px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); color: var(--muted); }
+    .pane-head strong { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
+    .pane-head span { color: var(--faint); font: 9px/1 ui-monospace, monospace; }
+    .scroll { overflow: auto; min-height: 0; }
+
+    /* Variant A: full workbench */
+    .workbench { height: 100%; display: grid; grid-template-columns: 232px 382px minmax(480px, 1fr); }
+    .context-pane, .trace-pane { border-right: 1px solid var(--line); }
+    .context-pane { display: grid; grid-template-rows: 37px auto 1fr auto; }
+    .search-wrap { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+    .search { width: 100%; height: 30px; border: 1px solid var(--line); background: var(--surface-deep); color: var(--text); padding: 0 9px; font: 10px/1 ui-monospace, monospace; }
+    .search::placeholder { color: var(--faint); }
+    .context-list { padding: 6px 0; }
+    .context-button { width: 100%; min-height: 45px; padding: 8px 13px; border: 0; border-left: 2px solid transparent; background: transparent; color: var(--muted); text-align: left; cursor: pointer; }
+    .context-button:hover { background: var(--panel-2); color: var(--text); }
+    .context-button.active { background: var(--panel-3); color: var(--text); border-left-color: var(--accent); }
+    .context-button .context-top { display: flex; align-items: center; gap: 8px; }
+    .context-button .context-count { margin-left: auto; color: var(--faint); font: 9px/1 ui-monospace, monospace; }
+    .context-button small { display: block; margin: 5px 0 0 17px; color: var(--faint); font: 9px/1.25 ui-monospace, monospace; }
+    .context-glyph { width: 9px; height: 9px; border: 1px solid currentColor; border-radius: 50%; }
+    .context-button.active .context-glyph { background: var(--accent); border-color: var(--accent); }
+    .legend { padding: 10px 13px 13px; border-top: 1px solid var(--line); display: grid; gap: 8px; color: var(--faint); font: 9px/1 ui-monospace, monospace; }
+    .legend-row { display: flex; align-items: center; gap: 8px; }
+
+    .trace-pane { display: grid; grid-template-rows: 37px 1fr; }
+    .trace-list { padding-bottom: 78px; }
+    .trace-row { width: 100%; min-height: 58px; display: grid; grid-template-columns: 34px 34px 1fr; border: 0; border-bottom: 1px solid var(--separator); background: transparent; color: var(--muted); padding: 0; text-align: left; cursor: pointer; }
+    .trace-row:hover { background: var(--panel-2); }
+    .trace-row.active { background: var(--selection); color: var(--text); box-shadow: inset 2px 0 0 var(--selection-line); }
+    .trace-row.filtered-out { display: none; }
+    .breakpoint-cell { display: grid; place-items: start center; padding-top: 18px; }
+    .breakpoint { width: 11px; height: 11px; border: 1px solid var(--faint); border-radius: 50%; background: transparent; padding: 0; cursor: pointer; }
+    .breakpoint.on { background: var(--error); border-color: var(--error); }
+    .step-no { padding-top: 16px; color: var(--faint); font: 10px/1 ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+    .trace-copy { min-width: 0; padding: 11px 10px 10px 0; }
+    .trace-copy strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); font-size: 11px; font-weight: 600; }
+    .trace-meta { display: flex; align-items: center; gap: 7px; margin-top: 5px; min-width: 0; }
+    .trace-meta code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--faint); font: 9px/1 ui-monospace, monospace; }
+    .kind { flex: 0 0 auto; color: var(--accent); font: 700 8px/1 ui-monospace, monospace; letter-spacing: .05em; text-transform: uppercase; }
+    .kind.error { color: var(--error); }
+    .kind.effect { color: var(--warning); }
+    .kind.boundary { color: var(--info); }
+    .trace-progress { position: absolute; left: 232px; width: 382px; bottom: 0; height: 56px; padding: 10px 12px; border-top: 1px solid var(--line); border-right: 1px solid var(--line); background: rgba(13, 19, 25, .97); }
+    .progress-line { height: 2px; margin-top: 10px; background: var(--line); position: relative; }
+    .progress-line span { display: block; height: 100%; background: var(--accent); }
+    .progress-labels { margin-top: 7px; display: flex; justify-content: space-between; color: var(--faint); font: 8px/1 ui-monospace, monospace; }
+
+    .inspector-pane { display: grid; grid-template-rows: auto 38px 1fr; background: var(--surface-deep); }
+    .inspector-title { min-height: 92px; padding: 16px 20px 14px; border-bottom: 1px solid var(--line); }
+    .inspector-kicker { display: flex; align-items: center; gap: 9px; color: var(--muted); font: 9px/1 ui-monospace, monospace; }
+    .inspector-title h1 { margin: 8px 0 5px; font-size: 20px; line-height: 1.15; letter-spacing: -.02em; font-weight: 650; }
+    .inspector-title p { margin: 0; max-width: 76ch; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .tag { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border: 1px solid var(--line-strong); color: var(--muted); font: 8px/1 ui-monospace, monospace; text-transform: uppercase; letter-spacing: .07em; }
+    .tag.error { border-color: #81484e; color: var(--error); }
+    .inspector-tabs { display: flex; padding: 0 18px; border-bottom: 1px solid var(--line); }
+    .inspector-tab { min-width: 78px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--faint); cursor: pointer; font-size: 10px; }
+    .inspector-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+    .inspector-content { overflow: auto; padding: 18px 20px 80px; }
+    .detail-grid { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(230px, .75fr); gap: 22px; }
+    .section-title { margin: 0 0 9px; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+    .explanation { margin: 0 0 18px; max-width: 74ch; color: var(--text-soft); line-height: 1.62; font-size: 12px; }
+    .code-block { margin: 0; padding: 14px 16px; border: 1px solid var(--line-strong); background: var(--code-bg); color: var(--code-text); overflow: auto; font: 11px/1.65 ui-monospace, "Cascadia Code", monospace; tab-size: 2; }
+    .source-line { margin: 0 0 8px; color: var(--faint); font: 9px/1 ui-monospace, monospace; }
+    .state-table { width: 100%; border-collapse: collapse; font: 10px/1.45 ui-monospace, monospace; }
+    .state-table th, .state-table td { padding: 7px 0; border-bottom: 1px solid var(--separator); vertical-align: top; text-align: left; }
+    .state-table th { width: 42%; color: var(--faint); font-weight: 500; }
+    .state-table td { color: var(--text-soft); overflow-wrap: anywhere; }
+    .flow-box { margin-top: 18px; padding: 11px 13px; border: 1px solid var(--line); background: var(--panel-2); color: var(--muted); font: 10px/1.55 ui-monospace, monospace; }
+    .flow-box strong { color: var(--text); }
+    .error-box { margin-top: 18px; padding: 12px 14px; border: 1px solid #81484e; background: #28191f; color: #f3a6ac; font-size: 11px; line-height: 1.5; }
+    .error-box strong { color: #ffc1c5; }
+
+    /* Variant B: trace-first */
+    .focus-layout { height: 100%; display: grid; grid-template-columns: minmax(360px, 40%) 1fr; }
+    .focus-trace { display: grid; grid-template-rows: 46px 1fr; border-right: 1px solid var(--line); }
+    .focus-toolbar { padding: 0 13px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--line); background: var(--panel); }
+    .context-chip { height: 24px; padding: 0 8px; border: 1px solid var(--line); background: transparent; color: var(--faint); cursor: pointer; font: 9px/1 ui-monospace, monospace; }
+    .context-chip.active { color: var(--text); background: var(--panel-3); border-color: var(--line-strong); }
+    .focus-row { width: 100%; min-height: 66px; display: grid; grid-template-columns: 48px 1fr 84px; border: 0; border-bottom: 1px solid var(--separator); background: transparent; color: var(--muted); text-align: left; padding: 0; cursor: pointer; }
+    .focus-row:hover { background: var(--panel-2); }
+    .focus-row.active { background: var(--selection); box-shadow: inset 2px 0 var(--selection-line); }
+    .focus-step { align-self: stretch; display: grid; place-items: center; border-right: 1px solid var(--separator); color: var(--faint); font: 10px/1 ui-monospace, monospace; }
+    .focus-copy { min-width: 0; padding: 11px 13px; }
+    .focus-copy strong { display: block; color: var(--text); font-size: 11px; }
+    .focus-copy p { margin: 5px 0 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 10px; }
+    .focus-context { display: grid; place-items: center; color: var(--faint); border-left: 1px solid var(--separator); font: 8px/1.2 ui-monospace, monospace; text-align: center; }
+    .focus-inspector { min-width: 0; overflow: auto; background: var(--surface-deep); padding-bottom: 80px; }
+    .focus-hero { min-height: 160px; display: grid; grid-template-columns: 1fr minmax(260px, 35%); border-bottom: 1px solid var(--line); }
+    .focus-summary { padding: 24px 26px; }
+    .focus-summary h1 { margin: 11px 0 8px; font-size: 24px; line-height: 1.12; letter-spacing: -.025em; }
+    .focus-summary p { margin: 0; max-width: 72ch; color: var(--muted); line-height: 1.58; }
+    .focus-state { padding: 18px 20px; border-left: 1px solid var(--line); background: var(--panel); }
+    .focus-body { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr); }
+    .focus-code, .focus-evidence { min-width: 0; padding: 20px 24px; }
+    .focus-evidence { border-left: 1px solid var(--line); }
+    .evidence-list { margin: 0; padding: 0; list-style: none; }
+    .evidence-list li { display: grid; grid-template-columns: 82px 1fr; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--separator); font: 10px/1.45 ui-monospace, monospace; }
+    .evidence-list span:first-child { color: var(--faint); }
+
+    /* Variant C: timeline */
+    .timeline-layout { height: 100%; display: grid; grid-template-rows: minmax(280px, 46%) 1fr; }
+    .timeline-top { min-height: 0; display: grid; grid-template-columns: 190px 1fr; border-bottom: 1px solid var(--line); }
+    .lane-labels { border-right: 1px solid var(--line); background: var(--panel); padding-top: 43px; }
+    .lane-name { height: 50px; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--separator); color: var(--muted); font-size: 10px; }
+    .lane-name span { color: var(--faint); font: 8px/1 ui-monospace, monospace; }
+    .timeline-scroll { min-width: 0; overflow: auto; position: relative; background: var(--surface-deep); }
+    .time-ruler { position: sticky; top: 0; z-index: 3; height: 43px; display: grid; grid-template-columns: repeat(12, minmax(84px, 1fr)); border-bottom: 1px solid var(--line); background: rgba(13, 19, 25, .97); }
+    .time-ruler span { padding: 14px 8px 0; border-right: 1px solid var(--separator); color: var(--faint); font: 8px/1 ui-monospace, monospace; }
+    .lanes { min-width: 1008px; }
+    .lane { height: 50px; display: grid; grid-template-columns: repeat(12, minmax(84px, 1fr)); border-bottom: 1px solid var(--separator); }
+    .lane-cell { border-right: 1px solid var(--separator); padding: 7px 5px; }
+    .event-bar { width: 100%; height: 35px; border: 1px solid var(--line-strong); background: var(--panel-3); color: var(--muted); padding: 4px 7px; text-align: left; cursor: pointer; overflow: hidden; }
+    .event-bar:hover { border-color: #536575; color: var(--text); }
+    .event-bar.active { background: var(--selection); border-color: var(--selection-line); color: var(--text); }
+    .event-bar.error { border-color: #81484e; color: var(--error); }
+    .event-bar strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 9px; }
+    .event-bar span { display: block; margin-top: 3px; color: var(--faint); font: 7px/1 ui-monospace, monospace; }
+    .timeline-detail { min-height: 0; display: grid; grid-template-columns: minmax(280px, 32%) minmax(0, 1fr) minmax(240px, 26%); }
+    .timeline-summary, .timeline-code, .timeline-state { min-width: 0; overflow: auto; padding: 18px 20px 80px; }
+    .timeline-summary, .timeline-code { border-right: 1px solid var(--line); }
+    .timeline-summary h1 { margin: 9px 0 8px; font-size: 20px; line-height: 1.16; }
+    .timeline-summary p { margin: 0; color: var(--muted); line-height: 1.55; }
+
+    .prototype-switcher { position: fixed; z-index: 30; bottom: 13px; left: 50%; transform: translateX(-50%); display: grid; grid-template-columns: 38px minmax(225px, auto) 38px; border: 1px solid var(--line-strong); background: var(--chrome); box-shadow: 0 14px 38px rgba(0,0,0,.46); }
+    .switch-btn { height: 38px; border: 0; background: var(--panel); color: var(--muted); cursor: pointer; }
+    .switch-btn:hover { color: var(--text); background: var(--panel-3); }
+    .switch-copy { display: grid; place-items: center; padding: 0 16px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); text-align: center; }
+    .switch-copy strong { font-size: 10px; }
+    .switch-copy span { margin-top: 2px; color: var(--faint); font-size: 8px; }
+
+    @media (min-width: 1001px) {
+      :root {
+        --top-h: 58px;
+        --ops-h: 46px;
+        --status-h: 40px;
+        font-size: 15px;
+      }
+
+      .brand { width: 250px; padding-inline: 18px; }
+      .brand strong { font-size: 16px; }
+      .brand span, .trace-title span { font-size: 11px; }
+      .trace-title strong { font-size: 15px; }
+      .step-counter { width: 78px; font-size: 12px; }
+      .operations { padding-left: 250px; }
+      .operation-tab { min-width: 138px; padding-inline: 18px; }
+      .operation-tab strong { font-size: 13px; }
+      .operation-tab span { font-size: 11px; }
+      .statusbar { font-size: 12px; }
+
+      .pane-head { height: 42px; padding-inline: 15px; }
+      .pane-head strong { font-size: 12px; }
+      .pane-head span { font-size: 11px; }
+      .workbench { grid-template-columns: 250px 430px minmax(520px, 1fr); }
+      .context-pane { grid-template-rows: 42px auto 1fr auto; }
+      .search { height: 34px; font-size: 12px; }
+      .context-button { min-height: 54px; padding: 10px 15px; }
+      .context-button .context-count,
+      .context-button small,
+      .legend { font-size: 11px; }
+
+      .trace-pane { grid-template-rows: 42px 1fr; }
+      .trace-row { min-height: 68px; grid-template-columns: 38px 38px 1fr; }
+      .breakpoint-cell { padding-top: 22px; }
+      .step-no { padding-top: 20px; font-size: 11px; }
+      .trace-copy { padding: 14px 12px 12px 0; }
+      .trace-copy strong { font-size: 13px; }
+      .trace-meta { margin-top: 7px; }
+      .trace-meta code { font-size: 11px; }
+      .kind { font-size: 10px; }
+      .trace-progress { left: 250px; width: 430px; height: 62px; }
+      .progress-labels { font-size: 10px; }
+
+      .inspector-pane { grid-template-rows: auto 42px 1fr; }
+      .inspector-title { min-height: 108px; padding: 19px 22px 16px; }
+      .inspector-kicker { font-size: 11px; }
+      .inspector-title h1 { margin-top: 10px; font-size: 24px; }
+      .inspector-title p { font-size: 14px; line-height: 1.58; }
+      .tag { height: 23px; font-size: 10px; }
+      .inspector-tab { min-width: 88px; font-size: 12px; }
+      .inspector-content { padding: 22px 24px 84px; }
+      .section-title { font-size: 12px; }
+      .explanation { font-size: 14px; }
+      .source-line { font-size: 11px; }
+      .code-block { font-size: 13px; line-height: 1.72; }
+      .state-table { font-size: 12px; line-height: 1.5; }
+      .state-table th, .state-table td { padding-block: 9px; }
+      .flow-box { font-size: 12px; line-height: 1.6; }
+      .error-box { font-size: 13px; line-height: 1.55; }
+
+      .focus-layout { grid-template-columns: minmax(430px, 42%) 1fr; }
+      .focus-trace { grid-template-rows: 50px 1fr; }
+      .context-chip { height: 29px; padding-inline: 10px; font-size: 11px; }
+      .focus-row { min-height: 76px; grid-template-columns: 54px 1fr 94px; }
+      .focus-step { font-size: 11px; }
+      .focus-copy { padding: 14px 15px; }
+      .focus-copy strong { font-size: 13px; }
+      .focus-copy p { margin-top: 7px; font-size: 12px; }
+      .focus-context { font-size: 10px; }
+      .focus-summary h1 { font-size: 28px; }
+      .focus-summary p { font-size: 14px; line-height: 1.62; }
+      .evidence-list li { font-size: 12px; line-height: 1.5; }
+
+      .timeline-top { grid-template-columns: 210px 1fr; }
+      .lane-labels { padding-top: 46px; }
+      .lane-name, .lane { height: 58px; }
+      .lane-name { font-size: 12px; }
+      .lane-name span { font-size: 10px; }
+      .time-ruler { height: 46px; }
+      .time-ruler span { padding-top: 16px; font-size: 10px; }
+      .event-bar { height: 42px; padding: 6px 8px; }
+      .event-bar strong { font-size: 11px; }
+      .event-bar span { font-size: 9px; }
+      .timeline-summary h1 { font-size: 24px; }
+      .timeline-summary p { font-size: 14px; line-height: 1.6; }
+
+      .prototype-switcher { grid-template-columns: 42px minmax(245px, auto) 42px; }
+      .switch-btn { height: 42px; }
+      .switch-copy strong { font-size: 12px; }
+      .switch-copy span { font-size: 10px; }
+    }
+
+    @media (max-width: 1000px) {
+      body { overflow: auto; }
+      .shell { min-height: 100vh; height: auto; grid-template-rows: var(--top-h) auto auto auto; }
+      .brand { width: 150px; }
+      .operations { padding-left: 0; overflow-x: auto; }
+      .operation-tab { height: 42px; }
+      .workbench { height: auto; min-height: calc(100vh - 130px); grid-template-columns: 310px 1fr; }
+      .context-pane { display: none; }
+      .trace-progress { left: 0; width: 310px; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .focus-layout { height: auto; min-height: calc(100vh - 130px); grid-template-columns: 310px 1fr; }
+      .focus-hero { grid-template-columns: 1fr; }
+      .focus-state { border-left: 0; border-top: 1px solid var(--line); }
+      .focus-body { grid-template-columns: 1fr; }
+      .focus-evidence { border-left: 0; border-top: 1px solid var(--line); }
+      .timeline-layout { height: auto; min-height: calc(100vh - 130px); grid-template-rows: 360px auto; }
+      .timeline-detail { grid-template-columns: 1fr 1fr; }
+      .timeline-state { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+    }
+
+    @media (max-width: 680px) {
+      :root { --top-h: 50px; }
+      .brand { width: 42px; padding: 0 11px; border-right: 0; }
+      .brand strong, .brand span { display: none; }
+      .trace-title { display: none; }
+      .controls { width: calc(100% - 42px); justify-content: flex-end; padding-right: 7px; }
+      #reset, #step-back, #step-forward, .step-counter { display: none; }
+      .operations { padding-left: 0; }
+      .operation-tab { min-width: 104px; padding: 0 12px; }
+      .statusbar { flex-wrap: wrap; gap: 4px 12px; padding: 7px 10px; }
+      .status-item.grow { width: 100%; order: 3; flex-basis: 100%; }
+      .workbench, .focus-layout { grid-template-columns: 1fr; }
+      .trace-pane, .focus-trace { min-height: 410px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .trace-progress { display: none; }
+      .inspector-pane { min-height: 620px; }
+      .focus-inspector { min-height: 680px; }
+      .focus-body, .timeline-detail { grid-template-columns: 1fr; }
+      .timeline-summary, .timeline-code { border-right: 0; border-bottom: 1px solid var(--line); }
+      .timeline-state { grid-column: auto; }
+      .timeline-top { grid-template-columns: 112px 1fr; }
+      .lane-labels { font-size: 8px; }
+      .lane-name { padding: 0 8px; }
+      .prototype-switcher { bottom: 8px; max-width: calc(100vw - 16px); grid-template-columns: 36px minmax(190px, auto) 36px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <!--
+    REFERENCE TEMPLATE: Replace artifact, operations, and contextMeta with evidence from the target repository.
+    MODEL: The interface shows a causal execution trace. Async and process boundaries are not presented as nested native calls.
+    VIEWS: Workbench, trace-first, and runtime timeline remain switchable through ?variant=.
+  -->
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4v16M19 4v16M5 8h6v4h8M5 16h8v-4"/></svg>
+        <strong>show-callgraph</strong>
+        <span id="artifact-trace-label">reference</span>
+      </div>
+      <div class="trace-title">
+        <strong id="artifact-title">Projects CRUD</strong>
+        <span id="artifact-subtitle">apps/web + apps/api + packages/db</span>
+      </div>
+      <div class="controls">
+        <button class="icon-btn" id="reset" aria-label="Reset trace" title="Reset trace">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8"/><path d="M4 3v5h5"/></svg>
+        </button>
+        <button class="icon-btn" id="step-back" aria-label="Previous trace step" title="Previous trace step">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM10 12l9-6v12z"/></svg>
+        </button>
+        <button class="run-btn" id="run">
+          <svg id="run-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <span id="run-label">Run</span>
+        </button>
+        <button class="icon-btn" id="step-forward" aria-label="Next trace step" title="Next trace step">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM5 6l9 6-9 6z"/></svg>
+        </button>
+        <span class="step-counter" id="step-counter">01 / 12</span>
+      </div>
+    </header>
+
+    <nav class="operations" id="operations" aria-label="Trace scenario"></nav>
+
+    <div class="statusbar">
+      <span class="status-item"><i class="status-dot" id="status-dot"></i><strong id="trace-state">Paused</strong></span>
+      <span class="status-item"><span id="artifact-language">TypeScript 5.7</span></span>
+      <span class="status-item"><span id="artifact-stack">React 19 · Hono · Prisma · PostgreSQL</span></span>
+      <span class="status-item grow"><span class="mono" id="semantic-note"></span></span>
+      <span class="status-item"><span class="mono" id="elapsed">+0.0ms</span></span>
+    </div>
+
+    <section class="variant" id="variant-workbench" data-variant="workbench" aria-label="Full workbench variant">
+      <div class="workbench">
+        <aside class="pane context-pane">
+          <div class="pane-head"><strong>Execution contexts</strong><span id="context-total-a"></span></div>
+          <div class="search-wrap"><input class="search" id="trace-search" placeholder="Filter functions or files" aria-label="Filter functions or files"></div>
+          <div class="scroll context-list" id="context-list"></div>
+          <div class="legend">
+            <div class="legend-row"><i class="context-glyph"></i><span>logical step</span></div>
+            <div class="legend-row"><i class="context-glyph" style="border-color:var(--error);background:var(--error)"></i><span>failure or breakpoint</span></div>
+          </div>
+        </aside>
+        <section class="pane trace-pane">
+          <div class="pane-head"><strong>Execution trace</strong><span id="trace-count-a"></span></div>
+          <div class="scroll trace-list" id="trace-list-a"></div>
+        </section>
+        <section class="pane inspector-pane">
+          <div class="inspector-title" id="inspector-title-a"></div>
+          <div class="inspector-tabs" id="inspector-tabs-a"></div>
+          <div class="inspector-content" id="inspector-content-a"></div>
+        </section>
+        <div class="trace-progress">
+          <div class="progress-line"><span id="progress-fill"></span></div>
+          <div class="progress-labels"><span>entry</span><span id="progress-label">selected 1 of 12</span><span>settled</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="variant" id="variant-focus" data-variant="focus" aria-label="Trace first variant">
+      <div class="focus-layout">
+        <section class="focus-trace">
+          <div class="focus-toolbar" id="context-chips"></div>
+          <div class="scroll" id="trace-list-b"></div>
+        </section>
+        <section class="focus-inspector" id="focus-inspector"></section>
+      </div>
+    </section>
+
+    <section class="variant" id="variant-timeline" data-variant="timeline" aria-label="Runtime timeline variant">
+      <div class="timeline-layout">
+        <section class="timeline-top">
+          <div class="lane-labels" id="lane-labels"></div>
+          <div class="timeline-scroll">
+            <div class="time-ruler" id="time-ruler"></div>
+            <div class="lanes" id="lanes"></div>
+          </div>
+        </section>
+        <section class="timeline-detail" id="timeline-detail"></section>
+      </div>
+    </section>
+  </main>
+
+  <nav class="prototype-switcher" aria-label="Prototype variants">
+    <button class="switch-btn" id="variant-prev" aria-label="Previous prototype">&#8592;</button>
+    <div class="switch-copy"><strong id="variant-name">Full workbench</strong><span id="variant-description">Contexts, trace, and inspector</span></div>
+    <button class="switch-btn" id="variant-next" aria-label="Next prototype">&#8594;</button>
+  </nav>
+
+  <script>
+    const artifact = {
+      title: "Projects CRUD",
+      subtitle: "apps/web + apps/api + packages/db",
+      language: "TypeScript 5.7",
+      stack: "React 19 · Hono · Prisma · PostgreSQL",
+      traceLabel: "reference"
+    };
+
+    const operations = {
+      create: {
+        label: "Create",
+        outcome: "201 Created",
+        note: "Synthetic trace. The browser stack unwinds during fetch; the API transaction and outbox write remain one server-side unit.",
+        steps: [
+          s("ProjectForm.submit", "browser", "call", "apps/web/features/projects/ProjectForm.tsx:84", "The form handler receives trusted client-side values and starts the mutation.", "const onSubmit = form.handleSubmit(values => createProject.mutate(values))", { name: "Aurora migration", ownerId: "usr_91", version: "new" }, { next: "createProjectMutation", stack: "live" }),
+          s("createProjectMutation.mutationFn", "browser", "call", "apps/web/features/projects/useCreateProject.ts:19", "React Query enters the mutation function. It owns client status, retries, and cache callbacks.", "mutationFn: input => projectsApi.create(input)", { mutationStatus: "pending", retryCount: 0 }, { next: "projectsApi.create", stack: "live" }),
+          s("projectsApi.create", "network", "boundary", "apps/web/lib/projects-api.ts:27", "fetch starts a POST request. The JavaScript call stack can unwind while the Promise remains pending.", "return fetchJson('/api/projects', { method: 'POST', body: input })", { method: "POST", url: "/api/projects", requestId: "req_7fd2" }, { next: "authenticate", stack: "unwound" }),
+          s("authenticate", "api", "call", "apps/api/middleware/auth.ts:31", "The API resolves the session and adds the authenticated actor to request context.", "const actor = await sessions.requireActor(c.req.header('authorization'))", { actorId: "usr_91", role: "editor" }, { next: "CreateProjectSchema.parse", stack: "live" }),
+          s("CreateProjectSchema.parse", "api", "boundary", "packages/contracts/projects.ts:42", "The request boundary converts unknown JSON into the CreateProjectInput domain shape.", "const input = CreateProjectSchema.parse(await c.req.json())", { name: "Aurora migration", visibility: "team" }, { next: "ProjectService.create", stack: "live" }),
+          s("ProjectService.create", "service", "call", "apps/api/services/project-service.ts:58", "The service checks policy and constructs the project plus its initial audit event.", "return db.$transaction(tx => createProject(tx, actor, input))", { policy: "project:create", allowed: true }, { next: "prisma.$transaction", stack: "live" }),
+          s("prisma.$transaction", "database", "call", "packages/db/project-repository.ts:23", "Prisma opens a database transaction so the project and outbox event commit together.", "return prisma.$transaction(async tx => { /* writes */ })", { isolation: "ReadCommitted", transaction: "tx_194" }, { next: "project.create", stack: "logical" }),
+          s("project.create", "database", "effect", "packages/db/project-repository.ts:29", "The repository inserts the project and returns the generated ID and version.", "const project = await tx.project.create({ data: projectData })", { projectId: "prj_8d2", version: 1, rowsAffected: 1 }, { next: "outboxEvent.create", stack: "logical" }),
+          s("outboxEvent.create", "background", "effect", "packages/db/outbox-repository.ts:17", "An outbox record is written inside the same transaction. Delivery happens later, after commit.", "await tx.outboxEvent.create({ data: ProjectCreated.from(project) })", { eventType: "project.created", delivery: "pending" }, { next: "transaction.commit", stack: "logical" }),
+          s("transaction.commit", "database", "effect", "packages/db/client.ts:11", "PostgreSQL commits both writes. From this point the project is durable and the outbox worker may publish the event.", "// COMMIT tx_194", { transaction: "committed", durationMs: 8.4 }, { next: "HTTP 201", stack: "returning" }),
+          s("HTTP 201 response", "api", "return", "apps/api/routes/projects.ts:37", "The API serializes the created project and returns a location header.", "return c.json(ProjectResponse.from(project), 201)", { status: 201, location: "/api/projects/prj_8d2" }, { next: "onSuccess", stack: "returning" }),
+          s("createProjectMutation.onSuccess", "browser", "effect", "apps/web/features/projects/useCreateProject.ts:24", "React Query stores the result, invalidates the project list, and navigates to the new project.", "queryClient.setQueryData(projectKey(project.id), project)", { cache: "updated", route: "/projects/prj_8d2", toast: "Project created" }, { next: "complete", stack: "live" })
+        ]
+      },
+      read: {
+        label: "Read",
+        outcome: "200 OK",
+        note: "Synthetic cache-miss trace. The browser query cache, HTTP boundary, API policy, and database read are shown as separate contexts.",
+        steps: [
+          s("ProjectRoute.loader", "browser", "call", "apps/web/routes/projects.$projectId.tsx:16", "The route resolves the project ID and asks React Query to ensure data exists.", "return queryClient.ensureQueryData(projectQuery(params.projectId))", { projectId: "prj_8d2" }, { next: "query cache", stack: "live" }),
+          s("queryClient.ensureQueryData", "browser", "call", "apps/web/features/projects/project-query.ts:13", "No fresh cache entry exists, so React Query invokes the query function.", "queryKey: ['projects', id], staleTime: 30_000", { cacheStatus: "miss", staleTimeMs: 30000 }, { next: "projectsApi.get", stack: "live" }),
+          s("projectsApi.get", "network", "boundary", "apps/web/lib/projects-api.ts:16", "fetch starts a GET request and returns a Promise to the route loader.", "return fetchJson(`/api/projects/${id}`)", { method: "GET", requestId: "req_7fd9" }, { next: "authenticate", stack: "unwound" }),
+          s("authenticate", "api", "call", "apps/api/middleware/auth.ts:31", "The middleware loads the actor and request tenancy before the route runs.", "const actor = await sessions.requireActor(token)", { actorId: "usr_91", teamId: "team_12" }, { next: "ProjectIdSchema.parse", stack: "live" }),
+          s("ProjectIdSchema.parse", "api", "boundary", "packages/contracts/projects.ts:12", "The route parameter is validated and branded before it enters service code.", "const projectId = ProjectIdSchema.parse(c.req.param('projectId'))", { projectId: "prj_8d2", branded: true }, { next: "ProjectService.get", stack: "live" }),
+          s("ProjectService.get", "service", "call", "apps/api/services/project-service.ts:28", "The service requests a tenant-scoped record. Missing and forbidden remain distinct outcomes.", "const project = await projects.findVisible(actor, projectId)", { permission: "project:read", tenantScope: "team_12" }, { next: "project.findFirst", stack: "live" }),
+          s("project.findFirst", "database", "effect", "packages/db/project-repository.ts:44", "The query includes tenant and deletion predicates so an invisible record never leaves the repository.", "return prisma.project.findFirst({ where: { id, teamId, deletedAt: null } })", { query: "SELECT project", rows: 1, durationMs: 3.2 }, { next: "ProjectResponse.from", stack: "returning" }),
+          s("ProjectResponse.from", "api", "return", "packages/contracts/projects.ts:78", "The response mapper strips internal columns and produces the public contract.", "const body = ProjectResponse.from(project)", { fields: 9, internalFieldsRemoved: 4 }, { next: "HTTP 200", stack: "returning" }),
+          s("HTTP 200 response", "network", "return", "apps/api/routes/projects.ts:19", "The response crosses back to the browser with an entity tag derived from the project version.", "return c.json(body, 200, { ETag: `W/\"${project.version}\"` })", { status: 200, etag: "W/\"1\"" }, { next: "query cache", stack: "unwound" }),
+          s("query cache write", "browser", "effect", "node_modules/@tanstack/query-core/query.ts:231", "React Query stores the result, timestamps it, and resolves the route loader.", "query.setData(response, { updatedAt: Date.now() })", { cacheStatus: "fresh", observers: 1 }, { next: "ProjectPage render", stack: "live" }),
+          s("ProjectPage render", "browser", "call", "apps/web/routes/projects.$projectId.tsx:31", "React renders the route from the cache snapshot. Render itself performs no external effect.", "const project = useSuspenseQuery(projectQuery(projectId)).data", { renderPhase: "render", projectName: "Aurora migration" }, { next: "document title effect", stack: "live" }),
+          s("document title effect", "browser", "effect", "apps/web/features/projects/ProjectHeader.tsx:22", "After commit, the passive effect updates the document title.", "useEffect(() => { document.title = `${project.name} · Projects` }, [project.name])", { documentTitle: "Aurora migration · Projects" }, { next: "complete", stack: "live" })
+        ]
+      },
+      update: {
+        label: "Update",
+        outcome: "409 Conflict",
+        note: "Synthetic conflict trace. The optimistic browser state is newer locally, but the API rejects version 7 because PostgreSQL already stores version 8.",
+        steps: [
+          s("ProjectEditor.save", "browser", "call", "apps/web/features/projects/ProjectEditor.tsx:112", "The editor submits changed fields together with the version the user originally loaded.", "updateProject.mutate({ id, patch: form.getValues(), expectedVersion: project.version })", { projectId: "prj_8d2", expectedVersion: 7, name: "Aurora migration v2" }, { next: "onMutate", stack: "live" }),
+          s("updateProject.onMutate", "browser", "effect", "apps/web/features/projects/useUpdateProject.ts:31", "React Query cancels in-flight reads, saves the prior cache value, and applies an optimistic patch.", "queryClient.setQueryData(projectKey(id), current => ({ ...current, ...patch }))", { cacheVersion: 7, optimistic: true, previousName: "Aurora migration" }, { next: "mutationFn", stack: "live" }),
+          s("updateProject.mutationFn", "browser", "call", "apps/web/features/projects/useUpdateProject.ts:24", "The mutation function sends the patch and expected version to the API.", "return projectsApi.update(id, patch, expectedVersion)", { method: "PATCH", ifMatch: "W/\"7\"" }, { next: "PATCH /api/projects", stack: "live" }),
+          s("PATCH /api/projects/:id", "network", "boundary", "apps/web/lib/projects-api.ts:42", "fetch owns the pending request. The browser stack unwinds while the API processes it.", "return fetchJson(url, { method: 'PATCH', headers: { 'If-Match': etag } })", { requestId: "req_8011", bodyBytes: 96 }, { next: "UpdateProjectSchema.parse", stack: "unwound" }),
+          s("authenticate + authorize", "api", "call", "apps/api/routes/projects.ts:51", "The route authenticates the actor and checks update permission before parsing the patch.", "const actor = await auth.requirePermission(c, 'project:update')", { actorId: "usr_91", permission: "project:update", allowed: true }, { next: "UpdateProjectSchema.parse", stack: "live" }),
+          s("UpdateProjectSchema.parse", "api", "boundary", "packages/contracts/projects.ts:55", "The boundary rejects unknown fields and converts the If-Match header into an integer version.", "const command = UpdateProjectCommand.parse({ id, patch, expectedVersion: ifMatch })", { changedFields: ["name"], expectedVersion: 7 }, { next: "ProjectService.update", stack: "live" }),
+          s("ProjectService.update", "service", "call", "apps/api/services/project-service.ts:91", "The service requests a compare-and-swap update. It never reads and writes in separate unprotected steps.", "const updated = await projects.updateIfVersion(command)", { strategy: "compare-and-swap", retry: false }, { next: "project.updateMany", stack: "live" }),
+          s("project.updateMany", "database", "effect", "packages/db/project-repository.ts:73", "The UPDATE predicate includes version 7. PostgreSQL finds no matching row because another writer committed version 8.", "UPDATE projects SET name = $1, version = version + 1 WHERE id = $2 AND version = 7", { rowsAffected: 0, storedVersion: 8, durationMs: 4.1 }, { next: "VersionConflict", stack: "returning" }),
+          s("VersionConflict", "service", "error", "apps/api/services/project-service.ts:99", "Zero affected rows becomes a typed conflict rather than a generic not-found error.", "throw new VersionConflict({ projectId: command.id, expectedVersion: 7 })", { errorTag: "VersionConflict", expected: 7, actual: 8 }, { next: "error mapper", stack: "unwinding" }),
+          s("projectErrorToHttp", "api", "error", "apps/api/http/project-errors.ts:18", "The HTTP mapper preserves the conflict semantics and tells the client how to recover.", "case 'VersionConflict': return c.json({ code: error._tag, currentVersion: 8 }, 409)", { status: 409, code: "VERSION_CONFLICT", currentVersion: 8 }, { next: "onError", stack: "returning" }),
+          s("updateProject.onError", "browser", "effect", "apps/web/features/projects/useUpdateProject.ts:44", "React Query restores the previous cache snapshot so the optimistic value does not masquerade as saved data.", "queryClient.setQueryData(projectKey(id), context.previousProject)", { optimistic: false, cacheRestored: true, formPreserved: true }, { next: "conflict UI", stack: "live" }),
+          s("ProjectConflictBanner", "browser", "error", "apps/web/features/projects/ProjectConflictBanner.tsx:17", "The editor keeps the user's draft, fetches version 8, and offers an explicit compare-and-reapply path.", "showConflict({ draft, server: await projectsApi.get(id) })", { draftName: "Aurora migration v2", serverName: "Aurora rollout", recovery: "compare changes" }, { next: "user decision", stack: "live" })
+        ]
+      },
+      delete: {
+        label: "Delete",
+        outcome: "409 Blocked",
+        note: "Synthetic guarded-delete trace. The service refuses deletion while three active tasks reference the project and returns an archive recovery action.",
+        steps: [
+          s("DeleteProjectDialog.confirm", "browser", "call", "apps/web/features/projects/DeleteProjectDialog.tsx:68", "The confirmation passes the typed project name and starts a destructive mutation.", "deleteProject.mutate({ id, confirmation: typedName })", { confirmation: "Aurora migration", matches: true }, { next: "delete mutation", stack: "live" }),
+          s("deleteProject.mutationFn", "browser", "call", "apps/web/features/projects/useDeleteProject.ts:21", "The browser sends DELETE with the current project version for stale-action protection.", "return projectsApi.delete(id, project.version)", { method: "DELETE", ifMatch: "W/\"8\"" }, { next: "DELETE /api/projects", stack: "live" }),
+          s("DELETE /api/projects/:id", "network", "boundary", "apps/web/lib/projects-api.ts:55", "fetch suspends the mutation while the API evaluates deletion constraints.", "return fetchJson(url, { method: 'DELETE', headers: { 'If-Match': etag } })", { requestId: "req_803a" }, { next: "authorize", stack: "unwound" }),
+          s("require project:delete", "api", "call", "apps/api/routes/projects.ts:79", "The route checks the destructive permission before entering service code.", "const actor = await auth.requirePermission(c, 'project:delete')", { actorId: "usr_91", allowed: true }, { next: "ProjectService.delete", stack: "live" }),
+          s("ProjectService.delete", "service", "call", "apps/api/services/project-service.ts:128", "The service opens a transaction and asks the repository whether hard deletion is currently safe.", "return db.$transaction(tx => deleteProject(tx, actor, command))", { projectId: "prj_8d2", expectedVersion: 8 }, { next: "activeTask.count", stack: "live" }),
+          s("activeTask.count", "database", "effect", "packages/db/project-repository.ts:112", "The repository counts active task references under the same transaction snapshot.", "const activeTasks = await tx.task.count({ where: { projectId, status: { not: 'done' } } })", { activeTasks: 3, durationMs: 2.7 }, { next: "constraint decision", stack: "logical" }),
+          s("deletion constraint", "service", "error", "apps/api/services/project-service.ts:139", "Three active tasks make hard deletion unsafe. The service returns a typed domain error before any row is removed.", "if (activeTasks > 0) throw new ProjectHasActiveTasks({ projectId, activeTasks })", { errorTag: "ProjectHasActiveTasks", activeTasks: 3 }, { next: "transaction rollback", stack: "unwinding" }),
+          s("transaction.rollback", "database", "effect", "packages/db/client.ts:14", "The transaction closes without writes. The project and tasks remain unchanged.", "// ROLLBACK tx_201", { writes: 0, projectExists: true }, { next: "error mapper", stack: "returning" }),
+          s("projectErrorToHttp", "api", "error", "apps/api/http/project-errors.ts:26", "The mapper returns a conflict response with a recovery action instead of pretending deletion failed unexpectedly.", "return c.json({ code: 'PROJECT_HAS_ACTIVE_TASKS', activeTasks: 3, canArchive: true }, 409)", { status: 409, canArchive: true }, { next: "onError", stack: "returning" }),
+          s("deleteProject.onError", "browser", "error", "apps/web/features/projects/useDeleteProject.ts:29", "The mutation keeps existing cache data and exposes the structured conflict to the dialog.", "if (error.code === 'PROJECT_HAS_ACTIVE_TASKS') setDeleteConflict(error)", { cacheRemoved: false, dialogOpen: true }, { next: "recovery UI", stack: "live" }),
+          s("DeleteConflictRecovery", "browser", "call", "apps/web/features/projects/DeleteConflictRecovery.tsx:14", "The dialog names the blocking tasks and offers Archive project as the safe alternative.", "return <ArchiveInstead projectId={id} activeTaskCount={3} />", { primaryAction: "View active tasks", secondaryAction: "Archive project" }, { next: "user decision", stack: "live" }),
+          s("trace settled", "browser", "return", "apps/web/features/projects/DeleteProjectDialog.tsx:91", "No destructive mutation occurred. The user remains in control with their project intact.", "// waiting for recovery choice", { deleted: false, recoverable: true }, { next: "complete", stack: "idle" })
+        ]
+      }
+    };
+
+    function s(name, context, kind, source, explanation, code, values, flow) {
+      return { name, context, kind, source, explanation, code, values, flow };
+    }
+
+    const contextMeta = {
+      browser: { label: "Browser", detail: "React + query cache" },
+      network: { label: "Network", detail: "fetch boundary" },
+      api: { label: "API", detail: "auth + contracts" },
+      service: { label: "Service", detail: "domain decisions" },
+      database: { label: "Database", detail: "Prisma + PostgreSQL" },
+      background: { label: "Background", detail: "transactional outbox" }
+    };
+
+    const variants = [
+      { id: "workbench", name: "Full workbench", description: "Contexts, trace, and inspector" },
+      { id: "focus", name: "Trace first", description: "Two panes with inline contexts" },
+      { id: "timeline", name: "Runtime timeline", description: "Context lanes above the evidence" }
+    ];
+
+    const state = {
+      operation: Object.keys(operations)[0],
+      step: 0,
+      variant: "workbench",
+      context: "all",
+      inspectorTab: "evidence",
+      search: "",
+      breakpoints: new Set(),
+      playing: false,
+      timer: null
+    };
+
+    const $ = selector => document.querySelector(selector);
+    const trace = () => operations[state.operation];
+    const current = () => trace().steps[state.step];
+    const contexts = () => [...new Set(trace().steps.map(step => step.context))];
+    const escapeHtml = value => String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const timeLabel = (step, index) => Number.isFinite(step.elapsedMs) ? `+${step.elapsedMs.toFixed(1)}ms` : `step ${String(index + 1).padStart(2, "0")}`;
+    const defaultBreakpoints = operation => {
+      const firstFailure = operations[operation].steps.findIndex(step => step.kind === "error");
+      return new Set(firstFailure >= 0 ? [firstFailure] : []);
+    };
+
+    function setOperation(operation) {
+      stop();
+      state.operation = operation;
+      state.step = 0;
+      state.context = "all";
+      state.search = "";
+      state.breakpoints = defaultBreakpoints(operation);
+      $("#trace-search").value = "";
+      updateUrl();
+      render();
+    }
+
+    function setStep(step) {
+      state.step = Math.max(0, Math.min(step, trace().steps.length - 1));
+      if (state.playing && state.breakpoints.has(state.step)) stop(`Breakpoint at step ${state.step + 1}`);
+      render();
+    }
+
+    function stop(label = "Paused") {
+      state.playing = false;
+      clearInterval(state.timer);
+      state.timer = null;
+      $("#run-label").textContent = state.step === trace().steps.length - 1 ? "Replay" : "Run";
+      $("#run-icon").innerHTML = '<path d="M8 5v14l11-7z"/>';
+      $("#trace-state").textContent = label;
+    }
+
+    function toggleRun() {
+      if (state.playing) return stop();
+      if (state.step === trace().steps.length - 1) state.step = 0;
+      state.playing = true;
+      $("#run-label").textContent = "Pause";
+      $("#run-icon").innerHTML = '<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>';
+      $("#trace-state").textContent = "Running trace";
+      render();
+      state.timer = setInterval(() => {
+        if (state.step >= trace().steps.length - 1) return stop("Trace settled");
+        setStep(state.step + 1);
+      }, 900);
+    }
+
+    function toggleBreakpoint(step) {
+      state.breakpoints.has(step) ? state.breakpoints.delete(step) : state.breakpoints.add(step);
+      render();
+    }
+
+    function setVariant(variant, update = true) {
+      state.variant = variants.some(item => item.id === variant) ? variant : variants[0].id;
+      document.querySelectorAll(".variant").forEach(node => node.classList.toggle("active", node.dataset.variant === state.variant));
+      const selected = variants.find(item => item.id === state.variant);
+      $("#variant-name").textContent = selected.name;
+      $("#variant-description").textContent = selected.description;
+      if (update) updateUrl();
+    }
+
+    function cycleVariant(delta) {
+      const index = variants.findIndex(item => item.id === state.variant);
+      setVariant(variants[(index + delta + variants.length) % variants.length].id);
+    }
+
+    function updateUrl() {
+      const url = new URL(location.href);
+      url.searchParams.set("variant", state.variant);
+      url.searchParams.set("operation", state.operation);
+      try { history.replaceState(null, "", url); } catch { location.hash = `${state.variant}:${state.operation}`; }
+    }
+
+    function renderHeader() {
+      $("#artifact-title").textContent = artifact.title;
+      $("#artifact-subtitle").textContent = artifact.subtitle;
+      $("#artifact-language").textContent = artifact.language;
+      $("#artifact-stack").textContent = artifact.stack;
+      $("#artifact-trace-label").textContent = artifact.traceLabel;
+      $("#operations").innerHTML = Object.entries(operations).map(([key, operation]) => {
+        const active = key === state.operation ? "active" : "";
+        const error = operation.steps.some(step => step.kind === "error") ? "error" : "";
+        return `<button class="operation-tab ${active} ${error}" data-operation="${key}"><strong>${operation.label}</strong><span>${operation.outcome}</span></button>`;
+      }).join("");
+      document.querySelectorAll("[data-operation]").forEach(button => button.addEventListener("click", () => setOperation(button.dataset.operation)));
+      $("#step-counter").textContent = `${String(state.step + 1).padStart(2, "0")} / ${String(trace().steps.length).padStart(2, "0")}`;
+      $("#step-back").disabled = state.step === 0;
+      $("#step-forward").disabled = state.step === trace().steps.length - 1;
+      $("#semantic-note").textContent = trace().note;
+      $("#elapsed").textContent = timeLabel(current(), state.step);
+      const isError = current().kind === "error";
+      $("#status-dot").className = `status-dot ${isError ? "error" : state.playing ? "pending" : ""}`;
+      if (!state.playing) $("#trace-state").textContent = state.step === 0 ? "Paused at entry" : isError ? "Failure selected" : "Paused";
+    }
+
+    function matchesFilter(step) {
+      const contextMatch = state.context === "all" || step.context === state.context;
+      const search = state.search.trim().toLowerCase();
+      return contextMatch && (!search || `${step.name} ${step.source} ${step.kind}`.toLowerCase().includes(search));
+    }
+
+    function kindClass(kind) {
+      return ["error"].includes(kind) ? "error" : ["effect"].includes(kind) ? "effect" : ["boundary"].includes(kind) ? "boundary" : "";
+    }
+
+    function renderContextList() {
+      const counts = Object.fromEntries(contexts().map(context => [context, trace().steps.filter(step => step.context === context).length]));
+      $("#context-total-a").textContent = `${contexts().length} active`;
+      const rows = [{ id: "all", label: "All contexts", detail: "causal trace", count: trace().steps.length }, ...contexts().map(id => ({ id, ...contextMeta[id], count: counts[id] }))];
+      $("#context-list").innerHTML = rows.map(item => `<button class="context-button ${state.context === item.id ? "active" : ""}" data-context="${item.id}"><span class="context-top"><i class="context-glyph"></i><span>${item.label}</span><span class="context-count">${item.count}</span></span><small>${item.detail}</small></button>`).join("");
+      document.querySelectorAll("[data-context]").forEach(button => button.addEventListener("click", () => { state.context = button.dataset.context; render(); }));
+    }
+
+    function traceRow(step, index) {
+      return `<button class="trace-row ${index === state.step ? "active" : ""} ${matchesFilter(step) ? "" : "filtered-out"}" data-step="${index}"><span class="breakpoint-cell"><i class="breakpoint ${state.breakpoints.has(index) ? "on" : ""}" data-breakpoint="${index}" role="button" aria-label="Toggle breakpoint at step ${index + 1}"></i></span><span class="step-no">${String(index + 1).padStart(2, "0")}</span><span class="trace-copy"><strong>${escapeHtml(step.name)}</strong><span class="trace-meta"><span class="kind ${kindClass(step.kind)}">${step.kind}</span><code>${escapeHtml(step.source)}</code></span></span></button>`;
+    }
+
+    function bindTraceInteractions(scope = document) {
+      scope.querySelectorAll("[data-step]").forEach(button => button.addEventListener("click", event => {
+        if (event.target.dataset.breakpoint !== undefined) return;
+        setStep(Number(button.dataset.step));
+      }));
+      scope.querySelectorAll("[data-breakpoint]").forEach(button => button.addEventListener("click", event => {
+        event.stopPropagation();
+        toggleBreakpoint(Number(button.dataset.breakpoint));
+      }));
+    }
+
+    function renderValues(values) {
+      return `<table class="state-table"><tbody>${Object.entries(values).map(([key, value]) => `<tr><th>${escapeHtml(key)}</th><td>${escapeHtml(Array.isArray(value) ? value.join(", ") : value)}</td></tr>`).join("")}</tbody></table>`;
+    }
+
+    function inspectorTitle() {
+      const step = current();
+      return `<div class="inspector-kicker"><span>${escapeHtml(step.source)}</span><span class="tag ${step.kind === "error" ? "error" : ""}">${step.kind}</span><span class="tag">${contextMeta[step.context].label}</span></div><h1>${escapeHtml(step.name)}</h1><p>${escapeHtml(step.explanation)}</p>`;
+    }
+
+    function evidenceContent() {
+      const step = current();
+      return `<div class="detail-grid"><section><h2 class="section-title">Source evidence</h2><p class="source-line">${escapeHtml(step.source)}</p><pre class="code-block"><code>${escapeHtml(step.code)}</code></pre><div class="flow-box"><strong>Transition</strong><br>${escapeHtml(step.name)} → ${escapeHtml(step.flow.next)}<br><span>native stack: ${escapeHtml(step.flow.stack)}</span></div>${step.kind === "error" ? `<div class="error-box"><strong>${escapeHtml(step.values.errorTag || step.name)}</strong><br>${escapeHtml(step.explanation)}</div>` : ""}</section><section><h2 class="section-title">State at this step</h2>${renderValues(step.values)}<h2 class="section-title" style="margin-top:20px">Runtime truth</h2>${renderValues({ context: contextMeta[step.context].label, stepKind: step.kind, nativeStack: step.flow.stack, logicalNext: step.flow.next })}</section></div>`;
+    }
+
+    function renderWorkbench() {
+      renderContextList();
+      $("#trace-count-a").textContent = `${trace().steps.filter(matchesFilter).length} visible`;
+      $("#trace-list-a").innerHTML = trace().steps.map(traceRow).join("");
+      bindTraceInteractions($("#trace-list-a"));
+      $("#inspector-title-a").innerHTML = inspectorTitle();
+      const tabs = ["evidence", "state", "failure"];
+      $("#inspector-tabs-a").innerHTML = tabs.map(tab => `<button class="inspector-tab ${state.inspectorTab === tab ? "active" : ""}" data-inspector-tab="${tab}">${tab[0].toUpperCase() + tab.slice(1)}</button>`).join("");
+      document.querySelectorAll("[data-inspector-tab]").forEach(button => button.addEventListener("click", () => { state.inspectorTab = button.dataset.inspectorTab; renderWorkbench(); }));
+      if (state.inspectorTab === "evidence") $("#inspector-content-a").innerHTML = evidenceContent();
+      if (state.inspectorTab === "state") $("#inspector-content-a").innerHTML = `<div class="detail-grid"><section><h2 class="section-title">Current state</h2>${renderValues(current().values)}</section><section><h2 class="section-title">Trace state</h2>${renderValues({ operation: trace().label, outcome: trace().outcome, selectedStep: state.step + 1, breakpoints: [...state.breakpoints].map(n => n + 1).join(", ") || "none", contextFilter: state.context })}</section></div>`;
+      if (state.inspectorTab === "failure") $("#inspector-content-a").innerHTML = current().kind === "error" ? `<h2 class="section-title">Failure channel</h2><div class="error-box"><strong>${escapeHtml(current().values.errorTag || current().name)}</strong><br>${escapeHtml(current().explanation)}</div><div class="flow-box">The causal path continues at <strong>${escapeHtml(current().flow.next)}</strong>.</div>` : `<h2 class="section-title">No failure at this step</h2><p class="explanation">This step is on the success or boundary path. Choose a red trace row to inspect failure propagation and recovery.</p>`;
+      const progress = ((state.step + 1) / trace().steps.length) * 100;
+      $("#progress-fill").style.width = `${progress}%`;
+      $("#progress-label").textContent = `selected ${state.step + 1} of ${trace().steps.length}`;
+    }
+
+    function renderFocus() {
+      const chips = [{ id: "all", label: "All" }, ...contexts().map(id => ({ id, label: contextMeta[id].label }))];
+      $("#context-chips").innerHTML = chips.map(item => `<button class="context-chip ${state.context === item.id ? "active" : ""}" data-focus-context="${item.id}">${item.label}</button>`).join("");
+      document.querySelectorAll("[data-focus-context]").forEach(button => button.addEventListener("click", () => { state.context = button.dataset.focusContext; render(); }));
+      $("#trace-list-b").innerHTML = trace().steps.filter(step => state.context === "all" || step.context === state.context).map(step => {
+        const index = trace().steps.indexOf(step);
+        return `<button class="focus-row ${index === state.step ? "active" : ""}" data-step="${index}"><span class="focus-step">${String(index + 1).padStart(2, "0")}</span><span class="focus-copy"><strong>${escapeHtml(step.name)}</strong><p>${escapeHtml(step.explanation)}</p></span><span class="focus-context"><span>${contextMeta[step.context].label}</span><span class="kind ${kindClass(step.kind)}">${step.kind}</span></span></button>`;
+      }).join("");
+      bindTraceInteractions($("#trace-list-b"));
+      const step = current();
+      $("#focus-inspector").innerHTML = `<div class="focus-hero"><section class="focus-summary"><div class="inspector-kicker"><span>${escapeHtml(step.source)}</span><span class="tag ${step.kind === "error" ? "error" : ""}">${step.kind}</span></div><h1>${escapeHtml(step.name)}</h1><p>${escapeHtml(step.explanation)}</p></section><aside class="focus-state"><h2 class="section-title">State snapshot</h2>${renderValues(step.values)}</aside></div><div class="focus-body"><section class="focus-code"><h2 class="section-title">Source evidence</h2><p class="source-line">${escapeHtml(step.source)}</p><pre class="code-block"><code>${escapeHtml(step.code)}</code></pre></section><aside class="focus-evidence"><h2 class="section-title">Execution evidence</h2><ul class="evidence-list"><li><span>context</span><strong>${contextMeta[step.context].label}</strong></li><li><span>kind</span><strong>${step.kind}</strong></li><li><span>native stack</span><strong>${step.flow.stack}</strong></li><li><span>next</span><strong>${escapeHtml(step.flow.next)}</strong></li><li><span>time</span><strong>${timeLabel(step, state.step)}</strong></li></ul>${step.kind === "error" ? `<div class="error-box"><strong>Recovery is part of the trace</strong><br>${escapeHtml(step.explanation)}</div>` : ""}</aside></div>`;
+    }
+
+    function renderTimeline() {
+      const visibleContexts = contexts();
+      $("#lane-labels").innerHTML = visibleContexts.map(context => `<div class="lane-name"><strong>${contextMeta[context].label}</strong><span>${trace().steps.filter(step => step.context === context).length}</span></div>`).join("");
+      $("#time-ruler").innerHTML = trace().steps.map((step, index) => `<span>${timeLabel(step, index)}</span>`).join("");
+      $("#lanes").innerHTML = visibleContexts.map(context => `<div class="lane">${trace().steps.map((step, index) => `<div class="lane-cell">${step.context === context ? `<button class="event-bar ${index === state.step ? "active" : ""} ${step.kind === "error" ? "error" : ""}" data-step="${index}"><strong>${escapeHtml(step.name)}</strong><span>${step.kind}</span></button>` : ""}</div>`).join("")}</div>`).join("");
+      bindTraceInteractions($("#lanes"));
+      const step = current();
+      $("#timeline-detail").innerHTML = `<section class="timeline-summary"><div class="inspector-kicker"><span>step ${state.step + 1}</span><span class="tag ${step.kind === "error" ? "error" : ""}">${step.kind}</span></div><h1>${escapeHtml(step.name)}</h1><p>${escapeHtml(step.explanation)}</p><div class="flow-box"><strong>${contextMeta[step.context].label}</strong> → ${escapeHtml(step.flow.next)}<br>native stack: ${escapeHtml(step.flow.stack)}</div></section><section class="timeline-code"><h2 class="section-title">Source evidence</h2><p class="source-line">${escapeHtml(step.source)}</p><pre class="code-block"><code>${escapeHtml(step.code)}</code></pre></section><aside class="timeline-state"><h2 class="section-title">State snapshot</h2>${renderValues(step.values)}</aside>`;
+    }
+
+    function render() {
+      renderHeader();
+      renderWorkbench();
+      renderFocus();
+      renderTimeline();
+      setVariant(state.variant, false);
+    }
+
+    $("#trace-search").addEventListener("input", event => { state.search = event.target.value; renderWorkbench(); });
+    $("#reset").addEventListener("click", () => { stop("Trace reset"); state.step = 0; render(); });
+    $("#step-back").addEventListener("click", () => setStep(state.step - 1));
+    $("#step-forward").addEventListener("click", () => setStep(state.step + 1));
+    $("#run").addEventListener("click", toggleRun);
+    $("#variant-prev").addEventListener("click", () => cycleVariant(-1));
+    $("#variant-next").addEventListener("click", () => cycleVariant(1));
+    document.addEventListener("keydown", event => {
+      if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName) || document.activeElement.isContentEditable) return;
+      if (event.key === "ArrowLeft") { event.preventDefault(); cycleVariant(-1); }
+      if (event.key === "ArrowRight") { event.preventDefault(); cycleVariant(1); }
+      if (event.key === "j") { event.preventDefault(); setStep(state.step + 1); }
+      if (event.key === "k") { event.preventDefault(); setStep(state.step - 1); }
+      if (event.key === " ") { event.preventDefault(); toggleRun(); }
+      if (event.key === "b") { event.preventDefault(); toggleBreakpoint(state.step); }
+    });
+
+    const requested = new URL(location.href);
+    const hashParts = location.hash.replace("#", "").split(":");
+    const requestedVariant = requested.searchParams.get("variant") || hashParts[0];
+    const requestedOperation = requested.searchParams.get("operation") || hashParts[1];
+    if (variants.some(item => item.id === requestedVariant)) state.variant = requestedVariant;
+    if (operations[requestedOperation]) state.operation = requestedOperation;
+    state.breakpoints = defaultBreakpoints(state.operation);
+    render();
+  </script>
+</body>
+</html>

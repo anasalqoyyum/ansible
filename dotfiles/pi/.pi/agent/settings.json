@@ -10,7 +10,8 @@
     "npm:@vanillagreen/pi-codex-minimal-tools",
     "npm:@vanillagreen/pi-web-tools",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:@juicesharp/rpiv-todo"
+    "npm:@juicesharp/rpiv-todo",
+    "npm:@tintinweb/pi-subagents"
   ],
   "theme": "tokyonight-night",
   "transport": "websocket",

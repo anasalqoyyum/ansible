@@ -1,0 +1,8 @@
+interface:
+  display_name: "Show callgraph"
+  short_description: "Build an interactive call graph from real code"
+  brand_color: "#FFB454"
+  default_prompt: "Use $show-callgraph to trace this feature and generate an interactive HTML call graph."
+
+policy:
+  allow_implicit_invocation: false

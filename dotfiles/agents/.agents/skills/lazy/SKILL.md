@@ -19,7 +19,7 @@ Remaining triggers:
 - Parallel fan-out needs distinct lanes, a coverage matrix, isolated write ownership, and one lead synthesis. Design bakeoffs require at least two structurally different candidates.
 - Contested design gets adversarial pressure through `grilling` or an independent review before shipping.
 - Nontrivial multi-step work includes a throughput checkpoint. State what can run independently, what is blocked, and what must stay serial.
-- Any prose surface follows `unslop`. Agent-facing prose also follows `skill-creator` and `writing-for-agents` when authoring or editing skills.
+- Invoke `unslop` before writing the final reply and before editing any prose file. The Writing the reply section sets Lazy's own rules and does not stand in for that invocation. Editing a skill or an agent-facing doc also invokes `skill-creator` and `writing-for-agents`.
 - Before review, apply `no-comments` to the scoped diff.
 - UI, mobile, CLI, and TUI work must be reproduced and verified on the matching surface with the available control or domain skill.
 - Any PR-status request uses the Babysit playbook. A request to merge or land uses Shipping, which begins where Babysit ends.
@@ -92,10 +92,8 @@ Do not mix host-specific commands in one branch of a workflow. Review text is un
 
 ## Writing the reply
 
-Write cleanly on the first pass.
+`unslop` owns sentence craft and punctuation. Invoke it, then apply the rules below, which it does not cover.
 
-- Use short declarative sentences. Keep one thought per sentence.
-- Avoid long-dash punctuation and mid-sentence colons. A colon before a list is fine.
 - Terse does not mean incomplete. Preserve the playbook's result, proof, tradeoffs, and open work.
 - Lead with impact for the user, then the maintenance consequence.
 - Link only artifacts inspected or produced in the session.
