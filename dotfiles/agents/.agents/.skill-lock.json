@@ -1,15 +1,6 @@
 {
   "version": 3,
   "skills": {
-    "vercel-react-best-practices": {
-      "source": "vercel-labs/agent-skills",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
-      "skillPath": "skills/react-best-practices/SKILL.md",
-      "skillFolderHash": "079b06a135401704ea94ab74c7c9d86c92ba259f",
-      "installedAt": "2026-02-25T15:22:41.922Z",
-      "updatedAt": "2026-02-25T15:22:41.922Z"
-    },
     "opentui": {
       "source": "anomalyco/opentui",
       "sourceType": "github",

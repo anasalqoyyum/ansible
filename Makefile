@@ -63,6 +63,14 @@ ssh-macos-vault-file:
 	ansible-playbook local-macos.yml --tags "ssh" --vault-password-file "$(VAULT_PASSWORD_FILE)"
 
 sync-dotfiles-linux:
+	@if sudo --version 2>&1 | grep -qi 'sudo-rs'; then \
+		command -v sudo.ws >/dev/null 2>&1 || sudo apt install -y sudo; \
+		if ! command -v sudo.ws >/dev/null 2>&1; then \
+			echo "sudo-rs breaks Ansible's become prompt and classic sudo (sudo.ws) is unavailable." >&2; \
+			exit 1; \
+		fi; \
+		export ANSIBLE_BECOME_EXE="$$(command -v sudo.ws)"; \
+	fi; \
 	ansible-playbook local-linux.yml --tags "dotfiles" --ask-become-pass
 
 sync-dotfiles-macos:
