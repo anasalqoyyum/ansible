@@ -12,6 +12,7 @@
       - fuse
       - ffmpeg
       - git
+      - jq
       - libbz2-dev
       - libclang-dev
       - libpthread-stubs0-dev

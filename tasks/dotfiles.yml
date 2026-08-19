@@ -42,9 +42,11 @@
       - --exclude=.git
       - --exclude=.gitignore
       - --exclude=*.log
+      - --exclude=herdr/.config/herdr/.plugins.lock
+      - --exclude=herdr/.config/herdr/plugins.json
+      - --exclude=herdr/.config/herdr/plugins/
       - --filter=P node_modules/
       - --exclude=node_modules/
-      - --delete-excluded
       - "{{ playbook_dir }}/dotfiles/"
       - "{{ lookup('env', 'HOME') }}/.dotfiles/"
   register: dotfiles_rsync
@@ -69,9 +71,11 @@
       - --exclude=.git
       - --exclude=.gitignore
       - --exclude=*.log
+      - --exclude=herdr/.config/herdr/.plugins.lock
+      - --exclude=herdr/.config/herdr/plugins.json
+      - --exclude=herdr/.config/herdr/plugins/
       - --filter=P node_modules/
       - --exclude=node_modules/
-      - --delete-excluded
       - "{{ playbook_dir }}/dotfiles/"
       - "{{ lookup('env', 'HOME') }}/.dotfiles/"
   register: dotfiles_rsync_check

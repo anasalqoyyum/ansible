@@ -1,0 +1,34 @@
+- name: Check installed Herdr plugins
+  ansible.builtin.command:
+    argv:
+      - herdr
+      - plugin
+      - list
+      - --json
+  environment:
+    PATH: "{{ ansible_facts['env']['HOME'] }}/.local/bin:/opt/homebrew/bin:/usr/local/bin:{{ ansible_facts['env']['PATH'] }}"
+  register: herdr_plugins
+  changed_when: false
+  check_mode: false
+  tags:
+    - install
+    - dotfiles
+    - herdr
+    - plugins
+
+- name: Install Herdr Automatic Rename plugin
+  ansible.builtin.command:
+    argv:
+      - herdr
+      - plugin
+      - install
+      - qu8n/herdr-automatic-rename
+      - --yes
+  environment:
+    PATH: "{{ ansible_facts['env']['HOME'] }}/.local/bin:/opt/homebrew/bin:/usr/local/bin:{{ ansible_facts['env']['PATH'] }}"
+  when: "'\"plugin_id\":\"herdr-automatic-rename\"' not in herdr_plugins.stdout"
+  tags:
+    - install
+    - dotfiles
+    - herdr
+    - plugins

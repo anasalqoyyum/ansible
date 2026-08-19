@@ -49,6 +49,9 @@
     - name: Configure dotfiles
       ansible.builtin.import_tasks: tasks/dotfiles.yml
 
+    - name: Install Herdr plugins
+      ansible.builtin.import_tasks: tasks/herdr-plugins.yml
+
     - name: Install mise tools
       ansible.builtin.import_tasks: tasks/mise-tools-setup.yml
 

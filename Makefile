@@ -17,6 +17,8 @@ copy-local:
 		--exclude='node_modules/' \
 		--exclude='/claude/.claude/hooks/herdr-agent-state.sh' \
 		--exclude='/herdr/.config/herdr/.plugins.lock' \
+		--exclude='/herdr/.config/herdr/plugins.json' \
+		--exclude='/herdr/.config/herdr/plugins/' \
 		--exclude='/herdr/.config/herdr/release-notes.json' \
 		--exclude='/herdr/.config/herdr/sessions/' \
 		--exclude='/opencode/.config/opencode/plugins/herdr-agent-state.js' \
