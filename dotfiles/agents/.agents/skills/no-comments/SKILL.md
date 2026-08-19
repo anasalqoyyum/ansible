@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # No comments
 
-Run a fresh “Comment Sicko” pass, then act on accepted findings. Authoring context makes comments feel necessary. The fresh pass exists to challenge that bias.
+Run a fresh "Comment Sicko" pass, then act on accepted findings. Authoring context makes comments feel necessary. The fresh pass exists to challenge that bias.
 
 ## Scope
 
@@ -16,7 +16,7 @@ Include line and block comments, doc comments, lint suppressions, formatter dire
 
 ## Steps
 
-1. When delegation is available and worth the coordination cost, send one independent reviewer the scope and ask it to act as Comment Sicko. Use the current session model by omitting model selection. Ask for a report and suggested deletions, not application-code edits. When delegation is unavailable, perform a separate comment-only pass after setting aside the authoring rationale.
+1. When delegation is available and worth the coordination cost, use the installed `comment-sicko` or `comment_sicko` specialist and pass the scope. Use the current session model by omitting model selection. If the harness cannot resolve that specialist, send one independent reviewer the scope and the absolute path to [references/comment-sicko.md](references/comment-sicko.md), and require it to follow that role. Ask for a report, not edits. When delegation is unavailable, read that reference and perform a separate comment-only pass after setting aside the authoring rationale.
 2. Inspect the report and diff. Reject scope escapes, application behavior changes, legal-header deletion, generated-directive edits, and removal of comments that describe proven constraints outside the codebase. Audit missed lint, formatter, and type suppressions yourself.
 3. Classify each accepted finding:
    - `remove` for narration, section labels, stale explanations, commented-out code, and comments that restate the next statement.
