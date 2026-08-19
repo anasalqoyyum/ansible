@@ -1,0 +1,4 @@
+interface:
+  display_name: "Herdr"
+  short_description: "Inspect and control Herdr workspaces and panes"
+  default_prompt: "Use $herdr to inspect or control my current Herdr workspace."

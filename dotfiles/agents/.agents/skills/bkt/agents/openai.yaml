@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bitbucket CLI"
+  short_description: "Manage Bitbucket repositories and pull requests"
+  default_prompt: "Use $bkt to inspect or manage this Bitbucket repository."

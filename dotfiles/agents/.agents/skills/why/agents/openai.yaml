@@ -1,0 +1,4 @@
+interface:
+  display_name: "Why"
+  short_description: "Trace code rationale through history and tickets"
+  default_prompt: "Use $why to investigate why this code or decision has its current shape."

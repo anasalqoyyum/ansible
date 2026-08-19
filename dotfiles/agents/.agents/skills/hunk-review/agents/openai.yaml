@@ -1,0 +1,4 @@
+interface:
+  display_name: "Hunk Review"
+  short_description: "Review live diffs and add focused inline comments"
+  default_prompt: "Use $hunk-review to inspect my current Hunk review session."

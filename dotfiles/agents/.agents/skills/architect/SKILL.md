@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Architect
 
-Design before implementing. Sketch types, function signatures, class shapes, and module boundaries with `not implemented` bodies and pseudocode. Synthesize across multiple model perspectives, then fill in code against the chosen sketch. If implementation proves the sketch wrong, throw it out and redesign.
+Design before implementing. Sketch types, function signatures, class shapes, and module boundaries with `not implemented` bodies and pseudocode. Synthesize across independent design perspectives, then fill in code against the chosen sketch. If implementation proves the sketch wrong, throw it out and redesign.
 
 ## Start
 
@@ -30,9 +30,9 @@ Skip Phase A only when the work is genuinely greenfield with no surrounding syst
 
 Spawn parallel design candidates: one subagent per runner, all in a single message, each with the design-sketch task and the Phase A grounding artifacts. Pass `references/runner-prompt.md` as each runner's prompt. Then read the candidates yourself and synthesize one design from the strongest parts of each -- graft, don't just pick a winner. Each candidate produces a design package shaped per `references/rationale-template.md`: the caller's usage written first, then the type sketch, function signatures, module map, and prose rationale derived from it.
 
-Use three runners on `opus`, `fable`, and `sonnet` (`subagent_type: general-purpose`). Different families produce structurally different designs, which is the whole point of running more than one.
+Use three independent runners. Let every runner inherit the current session model. Give them different design lenses so the candidates diverge structurally: caller experience, domain and data shape, and operational boundaries.
 
-Design it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. This is the **exhaust-the-design-space** principle skill made concrete. Whole-shape alternatives, not point fixes inside one shape.
+Design it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. Compare whole-shape alternatives, not point fixes inside one shape.
 
 Screen every candidate against [`references/design-red-flags.md`](references/design-red-flags.md) before synthesis. Reject or revise shallow modules, information leakage, temporal decomposition, and pass-through methods.
 
@@ -46,7 +46,7 @@ Default: proceed directly to implementation with the synthesized design. No huma
 
 Opt in to a checkpoint when the invoker explicitly asks: "/architect with checkpoint," "stop and show me before implementing," or similar. Then surface the synthesized design and pause for sign-off.
 
-The synthesis can ship as its own commit either way. That's the "scaffold first" mode of the **foundational-thinking** principle skill; subsequent commits read as filling in bodies against a stable contract. Planned and scoped breakage during fill-in is fine, per the **outcome-oriented-execution** principle skill. For adversarial pressure on the design before implementing, run the **grilling** or **code-review** skill on the synthesized sketch.
+The synthesis can ship as its own commit either way. Treat it as a stable scaffold that later work fills in. Planned and scoped breakage during fill-in is fine when it converges directly on the target shape. For adversarial pressure on the design before implementing, run the **grilling** or **code-review** skill on the synthesized sketch.
 
 If the human pushes back on the shape (in a checkpoint or after the fact), treat that as Phase A evidence. Re-ground and re-run Phase B before writing more code.
 
@@ -58,7 +58,7 @@ Deviations from the sketch are signal worth surfacing, not friction to absorb si
 
 ## Phase E: Scrap when the architecture is wrong
 
-If implementation keeps producing friction the sketch can't absorb, throw the sketch out. Don't bolt fixes onto a wrong design, per the **redesign-from-first-principles** and **fix-root-causes** principle skills.
+If implementation keeps producing friction the sketch can't absorb, throw the sketch out. Redesign from the observed constraints instead of bolting fixes onto the wrong shape.
 
 The signal is a *pattern*, not single instances. Tells:
 
@@ -74,9 +74,9 @@ Use judgment. A few edge cases don't condemn an architecture. Some problems are 
 When you scrap:
 
 1. Re-run the **how** skill over what's been built. The implementation lessons enter the new design as inputs, not vibes.
-2. Redesign as if the new constraints had been day-one assumptions, per redesign-from-first-principles.
-3. Subtract before adding, per the **subtract-before-you-add** principle skill. The new sketch should be smaller than the old one before it grows.
-4. Return to Phase B and re-run arena.
+2. Redesign as if the new constraints had been day-one assumptions.
+3. Subtract before adding. The new sketch should be smaller than the old one before it grows.
+4. Return to Phase B and run the independent candidates again.
 
 ## Outputs
 

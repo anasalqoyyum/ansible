@@ -3,7 +3,7 @@
 ## What this source contains
 
 - Commit history (messages, dates, authors, diffs)
-- PR descriptions, review comments, and discussion threads (via `gh`)
+- PR descriptions, review comments, and discussion threads from GitHub or Bitbucket
 - Inline code comments, TODOs, FIXMEs, deprecation notes
 - ADRs (architectural decision records) if the repo keeps them
 - Tests. Names and assertions often encode the edge cases that motivated a change
@@ -54,13 +54,11 @@ bkt pr list --json | jq '.pull_requests[] | {id, title, state, source: .source_b
 # GitHub
 gh pr view <number> --json title,body,author,createdAt,mergedAt,labels,closingIssuesReferences,comments,reviews,files
 
-# GitLab
-glab mr view <number> --comments
 ```
 
 Review threads and PR bodies are where the real signal is; the diff you already have.
 
-Recovering the PR number differs by forge. GitHub squash commits carry `(#N)` in the subject. Bitbucket usually does not: read the merge commit body (`Merge pull request #N in PROJ/repo from ...`), or match the commit's branch name against `bkt pr list`. If the branch name carries an issue key (`AR-1234-fix-scroll`), hand that key straight to the issue-tracker investigator.
+Recovering the PR number differs by forge. GitHub squash commits often carry `(#N)` in the subject. Bitbucket usually does not: read the merge commit body (`Merge pull request #N in PROJ/repo from ...`), or match the commit's branch name against `bkt pr list`. If the branch name carries an issue key (`AR-1234-fix-scroll`), hand that key straight to the Jira investigator.
 
 Look for out-of-band docs:
 

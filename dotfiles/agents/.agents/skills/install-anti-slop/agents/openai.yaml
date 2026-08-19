@@ -1,0 +1,4 @@
+interface:
+  display_name: "Install Anti-Slop"
+  short_description: "Add opinionated anti-slop Oxlint rules"
+  default_prompt: "Use $install-anti-slop to install and configure anti-slop linting in this repository."

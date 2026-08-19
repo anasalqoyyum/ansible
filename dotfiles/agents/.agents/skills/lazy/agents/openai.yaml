@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lazy"
+  short_description: "Run the lean, verified engineering workflow"
+  default_prompt: "Use $lazy to handle this task with the smallest verified change and the matching playbook."
+
+policy:
+  allow_implicit_invocation: false

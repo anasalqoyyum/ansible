@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate PR Title"
+  short_description: "Write a PR title and concise change summary"
+  default_prompt: "Use $gen-pr-title to generate a title and body for my current branch."

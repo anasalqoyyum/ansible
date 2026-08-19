@@ -4,7 +4,7 @@ Build the synthesizer's prompt from this template; fill in the placeholders.
 
 ---
 
-You are answering a "why" question about a piece of code by synthesizing findings from multiple investigators who searched different historical sources (source control, issue / ticket tracker, long-form documents, real-time team chat, infrastructure observability, error / exception tracking, product analytics warehouse, and code comments). Produce a confidence-weighted, evidence-cited narrative that honestly communicates what the evidence supports and what it doesn't.
+You are answering a "why" question about code by synthesizing findings from repository and forge history, Jira, and in-repo documents. Produce a confidence-weighted, evidence-cited narrative that states what the evidence supports and what it does not.
 
 ## The Question
 
@@ -87,7 +87,7 @@ Skip this section if there's a single clear answer.
 
 ### What We Don't Know
 
-**Explicit gaps.** Things the user asked that the evidence didn't answer. Sources searched that came up empty. Sources that weren't searchable at all, such as a missing real-time team chat MCP.
+**Explicit gaps.** Things the user asked that the evidence did not answer, searches that came up empty, and providers that were unavailable.
 
 Be specific. "We searched the issue tracker for [query1], [query2], [query3] and found no issue discussing the rate-limit threshold" is useful. "We don't know why" is not. Include:
 
@@ -100,19 +100,15 @@ Be specific. "We searched the issue tracker for [query1], [query2], [query3] and
 
 Bulleted list of what was actually searched, so the user can judge coverage and redirect. Format:
 
-- **Source control history**: {file paths}, {number of commits reviewed}, PRs #{numbers}, and code comments searched. Or "Not searched. This should not happen because git and `gh` are always expected."
-- **Issue / ticket tracker**: {ticket IDs and keyword searches}. Or "Not searched. No matching MCP available in this environment."
-- **Long-form documents**: {page titles and search queries}. Or "Not searched. No matching MCP available in this environment."
-- **Real-time team chat**: {channels searched, date ranges, queries}. Or "Not searched. No matching MCP available in this environment."
-- **Infrastructure observability**: {dashboards, monitors, metrics, logs, traces, or incidents searched}. Or "Not searched. No matching MCP available in this environment."
-- **Error / exception tracking**: {issues, events, or releases searched}. Or "Not searched. No matching MCP available in this environment."
-- **Product analytics warehouse**: {fully-qualified tables queried, the time windows, and the numeric summaries (counts, percentiles, first/last-seen timestamps) that bore on the question}. Or "Not searched. No matching MCP available in this environment."
+- **Repository and forge history**: {file paths}, {commits reviewed}, GitHub or Bitbucket PRs, review threads, tests, and code comments searched.
+- **Jira**: {issue keys, parent issues, comments, and keyword searches}. Or "Not searched. Jira was unavailable or no Jira context existed."
+- **In-repo documents**: {ADR, RFC, spec, postmortem, changelog, and runbook paths plus search terms}. Or "No relevant document location existed."
 
 ### Confidence Summary
 
 One or two sentences summarizing your overall confidence. E.g.:
 
-> "The core rationale (A) is well-supported by direct PR and ticket evidence. The specific threshold value (100) is inferred from the surrounding context but not explicitly documented. The question of whether this was driven by a customer request could not be answered. No relevant issue tracker or long-form doc content surfaced, and real-time team chat search was unavailable."
+> "The core rationale is supported by direct PR and Jira evidence. The threshold value is inferred from surrounding context but is not explicitly documented. The repository contains no ADR or postmortem for this decision."
 
 ---
 

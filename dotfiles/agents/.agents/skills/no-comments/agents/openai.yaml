@@ -1,0 +1,7 @@
+interface:
+  display_name: "No Comments"
+  short_description: "Remove narration and encode real constraints"
+  default_prompt: "Use $no-comments to review this diff's comments and suppressions before code review."
+
+policy:
+  allow_implicit_invocation: false

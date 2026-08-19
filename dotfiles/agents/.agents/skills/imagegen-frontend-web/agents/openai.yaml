@@ -1,0 +1,4 @@
+interface:
+  display_name: "Web UI Imagegen"
+  short_description: "Generate premium website section design references"
+  default_prompt: "Use $imagegen-frontend-web to generate a design reference for each section of this webpage."

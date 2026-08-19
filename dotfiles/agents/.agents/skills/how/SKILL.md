@@ -10,7 +10,7 @@ Explore the codebase to answer "how does X work?" questions. Produce clear archi
 Two modes:
 
 1. **Explain** (default). Explore the codebase and produce a clear explanation
-2. **Critique.** Explain first, then spawn multiple models to independently identify architectural issues
+2. **Critique.** Explain first, then run independent architectural critics with distinct lenses
 
 ## Explain Mode
 
@@ -42,10 +42,7 @@ Decompose the question into 2-4 parallel exploration angles, each a distinct sli
 
 The right decomposition depends on the question. Use your judgment. Narrow questions: 2 explorers is fine. Broad subsystems: up to 4.
 
-Spawn all explorers in a single message:
-
-- `subagent_type`: `Explore` (read-only; it cannot edit files)
-- `model`: `haiku` for mechanical tracing, `sonnet` when the slice is subtle
+Spawn all explorers in a single message. Keep them read-only and let them inherit the current session model.
 
 Each explorer gets the same base prompt from `references/explorer-prompt.md` plus a specific exploration angle naming its slice. Each explorer should:
 - Start broad: Glob for relevant directories, Grep for key types/interfaces/class names
@@ -60,10 +57,7 @@ Then proceed to Step 3.
 
 ### Step 2b. Direct Explain (simple questions)
 
-Spawn a single Task subagent that explores and explains in one pass:
-
-- `subagent_type`: `Explore` (read-only)
-- `model`: `fable` (or `opus` when the subsystem is large)
+Spawn one read-only subagent using the current session model to explore and explain in one pass.
 
 The agent does its own exploration (Glob, Grep, Read) and writes the explanation directly. Read `references/explainer-prompt.md` for the communication style and output format. Same structure, just no explorer findings as input.
 
@@ -71,10 +65,7 @@ Proceed to Step 4.
 
 ### Step 3. Synthesize (complex questions only)
 
-Once all explorers return, spawn a single Task subagent to synthesize their findings into one coherent explanation:
-
-- `subagent_type`: `Explore` (read-only)
-- `model`: `fable` (or `opus` when the subsystem is large)
+Once all explorers return, spawn one read-only subagent using the current session model to synthesize their findings into one coherent explanation.
 
 The explainer gets all explorers' findings and writes the human-facing explanation (output format below). Read `references/explainer-prompt.md` for the full prompt template. The explainer reconciles overlapping findings, resolves contradictions, and weaves the slices into a unified picture.
 
@@ -106,11 +97,9 @@ Run the full explain flow above (Steps 1-4). You must understand the architectur
 
 ### Step 2. Spawn Critics
 
-After the explanation is complete, spawn one architectural critic per model, all in a single message. Use `opus`, `fable`, and `sonnet` -- different families disagree in useful ways, and three is enough.
+After the explanation is complete, spawn three architectural critics in one message. Let each inherit the current session model and assign distinct lenses: boundaries and ownership, data shape and state, and changeability and operational risk.
 
-For each critic:
-- `subagent_type`: `Explore` (read-only)
-- `model`: one of `opus`, `fable`, `sonnet`. Escalate to all-`opus` when the architecture warrants deeper analysis.
+Keep each critic read-only.
 
 Read `references/critic-prompt.md` for the prompt template. Each critic gets:
 1. The explanation from Step 1 (so they don't re-explore)
@@ -119,7 +108,7 @@ Read `references/critic-prompt.md` for the prompt template. Each critic gets:
 
 ### Step 3. Lead Judgment
 
-Same framework as the interrogate skill. You're a pragmatic lead, not an aggregator.
+Act as a pragmatic lead, not an aggregator.
 
 Categorize findings:
 - **Act on.** Architectural problems worth fixing now

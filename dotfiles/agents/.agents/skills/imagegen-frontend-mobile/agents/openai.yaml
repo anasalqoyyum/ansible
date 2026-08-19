@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mobile UI Imagegen"
+  short_description: "Generate premium mobile app screen concepts"
+  default_prompt: "Use $imagegen-frontend-mobile to generate a polished mobile app screen concept for this flow."

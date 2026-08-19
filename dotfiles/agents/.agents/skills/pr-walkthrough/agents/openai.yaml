@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Walkthrough"
+  short_description: "Create an interactive visual PR walkthrough"
+  default_prompt: "Use $pr-walkthrough to create a visual walkthrough of this pull request."

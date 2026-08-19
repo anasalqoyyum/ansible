@@ -1,0 +1,7 @@
+interface:
+  display_name: "Recall"
+  short_description: "Rebuild recent project context from prior sessions"
+  default_prompt: "Use $recall to reconstruct where I left off on this work."
+
+policy:
+  allow_implicit_invocation: false

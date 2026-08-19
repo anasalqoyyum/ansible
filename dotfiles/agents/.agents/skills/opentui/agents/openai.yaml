@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenTUI"
+  short_description: "Build terminal interfaces with OpenTUI"
+  default_prompt: "Use $opentui to build or update this terminal interface."

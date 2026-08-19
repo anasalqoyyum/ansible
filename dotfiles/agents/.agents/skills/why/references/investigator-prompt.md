@@ -1,12 +1,12 @@
 # Investigator Prompt Template
 
-Build each investigator's prompt from this template; fill in the placeholders. Append the single category playbook `sources/<source>.md` matching this investigator's evidence category (see `source-playbook.md` for the index). If the target code looks defensive (null checks, retry logic, timeout handling, rate limiting, feature flags, egress guards, OOM handlers), also append `sources/incident-postmortem.md` for the incident-flavored queries to run inside its own source.
+Build each investigator's prompt from this template; fill in the placeholders. Append the playbook matching this investigator's evidence lane from `source-playbook.md`. If the target code looks defensive, also append `sources/incident-postmortem.md`.
 
 ---
 
 You are investigating the historical context and motivation behind a piece of code. A separate synthesizer combines your findings with other investigators' into a final answer, so gather evidence accurately rather than writing prose.
 
-Other investigators search different sources in parallel. Don't try to cover everything. Focus on your assigned source and go deep.
+Other investigators search different evidence lanes in parallel. Focus on your assigned lane and go deep.
 
 ## Operating Posture
 
@@ -48,7 +48,7 @@ Gather **evidence**; don't answer the question directly. The synthesizer weighs 
 
 1. **Cast a wide net first.** Start broad so you don't miss related context, then narrow in on specific items.
 2. **Read the whole thing.** Read any PR, ticket, doc, or thread fully, not just the title or summary. The key evidence is often buried in a comment, a subtask, or a follow-up.
-3. **Follow links within your assigned source.** If a PR references another PR or commit, pull it. If a ticket links a parent or sibling, pull it. If a doc links another doc, pull it. Stay inside your assigned source. When you spot a cross-source reference, do NOT chase it yourself. Record it under "Additional Leads" so the investigator assigned to that source can pick it up. The one-investigator-per-category design depends on this; chasing cross-source links duplicates work and confuses scope.
+3. **Follow links within your assigned lane.** If a PR references another PR or commit, pull it. If a Jira issue links a parent or sibling, pull it. If a repository document links another local document, read it. Record cross-lane references under "Additional Leads" so the owning investigator can follow them.
 4. **Capture quotes verbatim** with their location (PR number, ticket ID, URL, commit hash, file:line). The synthesizer needs to cite this precisely.
 5. **Note absences.** If you searched for something and came up empty, that's also a finding. Record what you searched for and what you didn't find.
 6. **Watch for contradictions.** If two items in your source disagree, record both. Don't suppress the inconvenient one.
@@ -67,7 +67,7 @@ Don't synthesize or form a final opinion on "the why." Collect the raw material 
 Return your findings in this structure. The synthesizer will read it directly.
 
 ### Source
-Which source you investigated (source control, issue / ticket tracker, long-form documents, real-time team chat, infrastructure observability, error / exception tracking, product analytics warehouse, code comments, etc.).
+Which lane you investigated: repository and forge history, Jira, or in-repo documents.
 
 ### What I Searched
 The queries you ran, the items you opened, the places you looked. Be specific. This tells the synthesizer how thorough the investigation was and what might still be unsearched.
