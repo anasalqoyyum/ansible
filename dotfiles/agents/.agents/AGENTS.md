@@ -79,3 +79,7 @@ If a file changed after it was last read:
 ## Git Operations
 
 Perform Git operations only when the user explicitly requests them. This includes commits, pushes, pull requests, merges, amendments, resets, and force pushes. Require explicit confirmation for destructive operations such as hard resets or force-pushing a protected branch.
+
+### Commits
+
+- Keep commit messages concise and use Conventional Commits, such as `fix(parser): handle empty input`.

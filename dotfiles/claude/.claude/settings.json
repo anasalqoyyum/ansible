@@ -9,6 +9,7 @@
     "defaultMode": "auto"
   },
   "tui": "fullscreen",
+  "outputStyle": "Concise",
   "autoMemoryEnabled": false,
   "skipDangerousModePermissionPrompt": true
 }
