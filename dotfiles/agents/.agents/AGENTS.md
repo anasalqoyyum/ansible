@@ -23,6 +23,11 @@ Apply these rules by default unless the user explicitly overrides them.
 - Add focused tests that protect meaningful behavior. Avoid low-value smoke tests and regression tests for removed features.
 - Treat destructive actions cautiously when the user has not explicitly requested them.
 
+## Writing
+
+- Apply the unslop rules to assistant-authored prose on every turn. Remove AI filler, puffery, excessive hedging, chatbot phrases, and em dash overuse while preserving meaning and requested tone.
+- Treat code, identifiers, commands, quoted text, and user-provided text as exact content unless the user asks for changes.
+
 ## Build and Execution
 
 - Do not start development or production processes unless the user explicitly requests it or a test requires one. Stop any process started for testing when the test finishes.
