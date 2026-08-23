@@ -13,7 +13,7 @@
     "npm:@juicesharp/rpiv-todo",
     "npm:@tintinweb/pi-subagents"
   ],
-  "theme": "tokyonight-night",
+  "theme": "savy-dark",
   "transport": "websocket",
   "enableInstallTelemetry": false,
   "enabledModels": [

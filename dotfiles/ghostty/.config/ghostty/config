@@ -20,7 +20,7 @@ shell-integration = zsh
 shell-integration-features = no-cursor
 
 cursor-style = block
-theme = "tokyonight_night"
+theme = "savy-dark"
 # background-opacity = 0.99
 # background-blur = true
 

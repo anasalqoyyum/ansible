@@ -1,26 +1,45 @@
 onboarding = false
 [theme]
 name = "tokyo-night"
-auto_switch = true
+auto_switch = false
 
-# tokyonight "vague" variant: near-black background with the standard tokyonight accents.
+# Active: savy-dark
 [theme.custom]
-accent = "#7aa2f7"
-panel_bg = "#080A11"
-surface_dim = "#080A11"
-surface0 = "#3b4261"
-surface1 = "#414868"
-overlay0 = "#565f89"
-overlay1 = "#697196"
-text = "#c0caf5"
-subtext0 = "#a9b1d6"
-mauve = "#bb9af7"
-green = "#9ece6a"
-yellow = "#e0af68"
-red = "#f7768e"
-blue = "#7aa2f7"
-teal = "#7dcfff"
-peach = "#ff9e64"
+accent = "#81A2BE"
+panel_bg = "#0A0A0A"
+surface_dim = "#0A0A0A"
+surface0 = "#1D1F21"
+surface1 = "#343A47"
+overlay0 = "#666666"
+overlay1 = "#C5C8C6"
+text = "#F5F5F5"
+subtext0 = "#C5C8C6"
+mauve = "#B294BB"
+green = "#B5BD68"
+yellow = "#F0C674"
+red = "#CC6666"
+blue = "#81A2BE"
+teal = "#8ABEB7"
+peach = "#F0C674"
+
+# Inactive: Tokyo Night
+# [theme.custom]
+# accent = "#7aa2f7"
+# panel_bg = "#080A11"
+# surface_dim = "#080A11"
+# surface0 = "#3b4261"
+# surface1 = "#414868"
+# overlay0 = "#565f89"
+# overlay1 = "#697196"
+# text = "#c0caf5"
+# subtext0 = "#a9b1d6"
+# mauve = "#bb9af7"
+# green = "#9ece6a"
+# yellow = "#e0af68"
+# red = "#f7768e"
+# blue = "#7aa2f7"
+# teal = "#7dcfff"
+# peach = "#ff9e64"
 
 [terminal]
 new_cwd = "follow"
@@ -81,7 +100,6 @@ height = "80%"
 # WSL defaults to herdr's drawn block cursor (ConPTY flicker workaround);
 # native restores the terminal cursor so nvim's insert-mode shape/color work.
 host_cursor = "native"
-accent = "#7aa2f7"
 mouse_capture = true
 copy_on_select = true
 pane_borders = true
