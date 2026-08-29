@@ -29,8 +29,19 @@
   },
   "language_models": {
     "opencode": {
-      "show_free_models": false,
+      "show_go_models": false,
       "show_zen_models": false
+    },
+    "deepseek": {
+      "api_url": "https://api.deepseek.com/v1",
+      "available_models": [
+        {
+          "name": "deepseek-v4-flash-vision-exp",
+          "display_name": "DeepSeek V4 Flash Vision (Experimental)",
+          "max_tokens": 1000000,
+          "max_output_tokens": 384000
+        }
+      ]
     }
   },
   "icon_theme": "Material Icon Theme",
@@ -41,6 +52,40 @@
     "dock": "right"
   },
   "agent": {
+    "default_profile": "full",
+    "show_turn_stats": true,
+    "play_sound_when_agent_done": "when_hidden",
+    "profiles": {
+      "full": {
+        "default_model": {
+          "provider": "openai-subscribed",
+          "model": "gpt-5.6-sol",
+          "enable_thinking": true,
+          "effort": "low"
+        },
+        "name": "Full",
+        "tools": {
+          "write_file": true,
+          "terminal": true,
+          "spawn_agent": true,
+          "skill": true,
+          "read_file": true,
+          "move_path": true,
+          "list_directory": true,
+          "grep": true,
+          "find_path": true,
+          "fetch": true,
+          "edit_file": true,
+          "diagnostics": true,
+          "delete_path": true,
+          "create_directory": true,
+          "copy_path": true,
+          "ask_user": true
+        },
+        "enable_all_context_servers": false,
+        "context_servers": {}
+      }
+    },
     "sandbox_permissions": {
       "allow_fs_write_all": true,
       "allow_all_hosts": true
@@ -50,10 +95,9 @@
       "tools": {}
     },
     "default_model": {
-      "provider": "openai-subscribed",
-      "model": "gpt-5.5",
-      "enable_thinking": true,
-      "effort": "low"
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash-vision-exp",
+      "enable_thinking": false
     },
     "dock": "left",
     "favorite_models": [],
@@ -84,16 +128,7 @@
     "provider": "copilot"
   },
   "agent_servers": {
-    "opencode": {
-      "type": "registry"
-    },
     "pi-acp": {
-      "type": "registry"
-    },
-    "claude-acp": {
-      "type": "registry"
-    },
-    "github-copilot-cli": {
       "type": "registry"
     },
     "codex-acp": {

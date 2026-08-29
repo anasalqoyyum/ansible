@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.84.3",
+  "lastChangelogVersion": "0.84.4",
   "defaultProvider": "openai-codex",
   "defaultModel": "gpt-5.6-sol",
   "defaultThinkingLevel": "high",
@@ -20,7 +20,8 @@
     "openai-codex/gpt-5.6-luna",
     "openai-codex/gpt-5.6-sol",
     "deepseek/deepseek-v4-flash",
-    "deepseek/deepseek-v4-flash-vision-exp"
+    "deepseek/deepseek-v4-flash-vision-exp",
+    "openrouter/z-ai/glm-5.3-flash"
   ],
   "editorPaddingX": 0,
   "collapseChangelog": true,
