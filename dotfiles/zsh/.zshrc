@@ -57,7 +57,7 @@ fi
 
 # Add in zsh plugins (with wait for lucid)
 zinit wait lucid for \
- atinit"zicompinit; zicdreplay" \
+ atinit"zicompinit; zicdreplay" nocd \
     zdharma-continuum/fast-syntax-highlighting \
  blockf \
     zsh-users/zsh-completions \

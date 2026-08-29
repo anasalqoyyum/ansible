@@ -3,13 +3,13 @@
   "env": {
     "ENABLE_CLAUDEAI_MCP_SERVERS": "false"
   },
-  "model": "opus",
-  "effortLevel": "high",
   "permissions": {
     "defaultMode": "auto"
   },
-  "tui": "fullscreen",
+  "model": "opus",
   "outputStyle": "Concise",
+  "effortLevel": "high",
+  "tui": "fullscreen",
   "autoMemoryEnabled": false,
   "skipDangerousModePermissionPrompt": true
 }

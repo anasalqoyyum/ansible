@@ -6,7 +6,7 @@
       "models": [
         {
           "id": "deepseek-v4-flash-vision-exp",
-          "name": "DeepSeek V4 Flash Vision Exp",
+          "name": "DeepSeek V4 Flash Vision Exp-Custom",
           "reasoning": true,
           "thinkingLevelMap": {
             "minimal": null,
@@ -15,10 +15,7 @@
             "high": "high",
             "max": "max"
           },
-          "input": [
-            "text",
-            "image"
-          ],
+          "input": ["text", "image"],
           "cost": {
             "input": 0.14,
             "output": 0.28,
