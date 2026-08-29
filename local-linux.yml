@@ -63,9 +63,6 @@
     - name: Install mise
       ansible.builtin.import_tasks: tasks/mise.yml
 
-    - name: Install AI tools
-      ansible.builtin.import_tasks: tasks/ai-tools.yml
-
     - name: Install Herdr
       ansible.builtin.import_tasks: tasks/herdr-setup.yml
 
@@ -83,6 +80,9 @@
 
     - name: Install mise tools
       ansible.builtin.import_tasks: tasks/mise-tools-setup.yml
+
+    - name: Install AI tools
+      ansible.builtin.import_tasks: tasks/ai-tools.yml
 
     - name: Configure Git
       ansible.builtin.import_tasks: tasks/git-setup.yml

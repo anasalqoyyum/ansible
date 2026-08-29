@@ -37,9 +37,6 @@
     - name: Install core Homebrew packages
       ansible.builtin.import_tasks: tasks/core-brew-setup.yml
 
-    - name: Install AI tools
-      ansible.builtin.import_tasks: tasks/ai-tools.yml
-
     - name: Install Rust
       ansible.builtin.import_tasks: tasks/rust-setup.yml
 
@@ -54,6 +51,9 @@
 
     - name: Install mise tools
       ansible.builtin.import_tasks: tasks/mise-tools-setup.yml
+
+    - name: Install AI tools
+      ansible.builtin.import_tasks: tasks/ai-tools.yml
 
     - name: Configure Git
       ansible.builtin.import_tasks: tasks/git-setup.yml

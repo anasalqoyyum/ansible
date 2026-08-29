@@ -53,3 +53,270 @@
   tags:
     - install
     - ai-tools
+
+- name: Resolve AI tool environment
+  ansible.builtin.set_fact:
+    ai_tools_path: >-
+      {{ [
+        ansible_facts['env']['HOME'] ~ '/.local/bin',
+        ansible_facts['env']['HOME'] ~ '/.bun/bin',
+        ansible_facts['env']['HOME'] ~ '/.opencode/bin',
+        ansible_facts['env']['HOME'] ~ '/.local/share/mise/shims',
+        ansible_facts['env']['PATH']
+      ] | join(':') }}
+    ai_tools_bun_install: "{{ ansible_facts['env']['HOME'] }}/.bun"
+  changed_when: false
+  tags:
+    - install
+    - ai-tools
+
+- name: Ensure the user local bin directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin"
+    state: directory
+    mode: "0755"
+  tags:
+    - install
+    - ai-tools
+
+- name: Check whether curl is available for AI tool installers
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  loop:
+    - /usr/bin/curl
+    - /bin/curl
+    - /opt/homebrew/bin/curl
+    - /usr/local/bin/curl
+  register: curl_binaries
+  tags:
+    - install
+    - ai-tools
+
+- name: Set curl availability
+  ansible.builtin.set_fact:
+    ai_tools_curl_available: >-
+      {{ curl_binaries.results | selectattr('stat.exists') | list | length > 0 }}
+  changed_when: false
+  tags:
+    - install
+    - ai-tools
+
+- name: Check whether Pi is installed
+  ansible.builtin.command: pi --version
+  environment:
+    PATH: "{{ ai_tools_path }}"
+  register: pi_binary
+  changed_when: false
+  check_mode: false
+  failed_when: false
+  tags:
+    - install
+    - ai-tools
+
+- name: Install Pi
+  when:
+    - not ansible_check_mode
+    - pi_binary.rc != 0
+  tags:
+    - install
+    - ai-tools
+  block:
+    - name: Install Pi with the native installer
+      ansible.builtin.shell: |
+        set -o pipefail
+        export NPM_CONFIG_PREFIX="$HOME/.local"
+        curl -fsSL https://pi.dev/install.sh | /bin/sh
+      args:
+        executable: /bin/bash
+      environment:
+        PATH: "{{ ai_tools_path }}"
+        BUN_INSTALL: "{{ ai_tools_bun_install }}"
+      when: ai_tools_curl_available
+
+    - name: Install Pi with Bun
+      ansible.builtin.command:
+        argv:
+          - bun
+          - install
+          - --global
+          - "@earendil-works/pi-coding-agent"
+      environment:
+        PATH: "{{ ai_tools_path }}"
+        BUN_INSTALL: "{{ ai_tools_bun_install }}"
+      when: not ai_tools_curl_available
+
+    - name: Verify Pi installation
+      ansible.builtin.command: pi --version
+      environment:
+        PATH: "{{ ai_tools_path }}"
+      changed_when: false
+  rescue:
+    - name: Install Pi with Bun after native installer failure
+      ansible.builtin.command:
+        argv:
+          - bun
+          - install
+          - --global
+          - "@earendil-works/pi-coding-agent"
+      environment:
+        PATH: "{{ ai_tools_path }}"
+        BUN_INSTALL: "{{ ai_tools_bun_install }}"
+      when: ai_tools_curl_available
+
+- name: Check Pi in the user local bin directory
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/pi"
+    follow: false
+  register: pi_local_binary
+  tags:
+    - install
+    - ai-tools
+
+- name: Check Pi in the Bun global bin directory
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.bun/bin/pi"
+    follow: false
+  register: pi_bun_binary
+  tags:
+    - install
+    - ai-tools
+
+- name: Expose the Bun Pi install through the user local bin directory
+  ansible.builtin.file:
+    src: "{{ ansible_facts['env']['HOME'] }}/.bun/bin/pi"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.local/bin/pi"
+    state: link
+  when:
+    - not ansible_check_mode
+    - not pi_local_binary.stat.exists
+    - pi_bun_binary.stat.exists
+  tags:
+    - install
+    - ai-tools
+
+- name: Verify that Pi is installed
+  ansible.builtin.command: pi --version
+  environment:
+    PATH: "{{ ai_tools_path }}"
+  register: pi_installed
+  changed_when: false
+  check_mode: false
+  when: not ansible_check_mode
+  tags:
+    - install
+    - ai-tools
+
+- name: Check whether OpenCode is installed
+  ansible.builtin.command: opencode --version
+  environment:
+    PATH: "{{ ai_tools_path }}"
+  register: opencode_binary
+  changed_when: false
+  check_mode: false
+  failed_when: false
+  tags:
+    - install
+    - ai-tools
+
+- name: Install OpenCode
+  when:
+    - not ansible_check_mode
+    - opencode_binary.rc != 0
+  tags:
+    - install
+    - ai-tools
+  block:
+    - name: Install OpenCode with the native installer
+      ansible.builtin.shell: |
+        set -o pipefail
+        curl -fsSL https://opencode.ai/install | /bin/bash -s -- --no-modify-path
+      args:
+        executable: /bin/bash
+      environment:
+        PATH: "{{ ai_tools_path }}"
+        BUN_INSTALL: "{{ ai_tools_bun_install }}"
+      when: ai_tools_curl_available
+
+    - name: Install OpenCode with Bun
+      ansible.builtin.command:
+        argv:
+          - bun
+          - install
+          - --global
+          - opencode-ai@latest
+      environment:
+        PATH: "{{ ai_tools_path }}"
+        BUN_INSTALL: "{{ ai_tools_bun_install }}"
+      when: not ai_tools_curl_available
+
+    - name: Verify OpenCode installation
+      ansible.builtin.command: opencode --version
+      environment:
+        PATH: "{{ ai_tools_path }}"
+      changed_when: false
+  rescue:
+    - name: Install OpenCode with Bun after native installer failure
+      ansible.builtin.command:
+        argv:
+          - bun
+          - install
+          - --global
+          - opencode-ai@latest
+      environment:
+        PATH: "{{ ai_tools_path }}"
+        BUN_INSTALL: "{{ ai_tools_bun_install }}"
+      when: ai_tools_curl_available
+
+- name: Check OpenCode in the user local bin directory
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/opencode"
+    follow: false
+  register: opencode_local_binary
+  tags:
+    - install
+    - ai-tools
+
+- name: Check OpenCode in its native install directory
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.opencode/bin/opencode"
+  register: opencode_native_binary
+  tags:
+    - install
+    - ai-tools
+
+- name: Check OpenCode in the Bun global bin directory
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.bun/bin/opencode"
+    follow: false
+  register: opencode_bun_binary
+  tags:
+    - install
+    - ai-tools
+
+- name: Expose OpenCode through the user local bin directory
+  ansible.builtin.file:
+    src: >-
+      {{ (ansible_facts['env']['HOME'] ~ '/.opencode/bin/opencode')
+         if opencode_native_binary.stat.exists
+         else (ansible_facts['env']['HOME'] ~ '/.bun/bin/opencode') }}
+    dest: "{{ ansible_facts['env']['HOME'] }}/.local/bin/opencode"
+    state: link
+  when:
+    - not ansible_check_mode
+    - not opencode_local_binary.stat.exists
+    - opencode_native_binary.stat.exists or opencode_bun_binary.stat.exists
+  tags:
+    - install
+    - ai-tools
+
+- name: Verify that OpenCode is installed
+  ansible.builtin.command: opencode --version
+  environment:
+    PATH: "{{ ai_tools_path }}"
+  register: opencode_installed
+  changed_when: false
+  check_mode: false
+  when: not ansible_check_mode
+  tags:
+    - install
+    - ai-tools

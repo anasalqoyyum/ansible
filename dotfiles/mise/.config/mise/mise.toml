@@ -24,9 +24,6 @@ television = "latest"
 ast-grep = "latest"
 rclone = "latest"
 yt-dlp = "latest"
-# AI Tools
-'aqua:anomalyco/opencode' = "latest"
-"npm:@earendil-works/pi-coding-agent" = "latest"
 # Go Tools
 air = "latest"
 "github:avivsinai/bitbucket-cli" = "latest"
