@@ -48,3 +48,10 @@ wiztree 4.14.0
 21 packages installed.
 
 winget install -e --id ZedIndustries.Zed
+
+Manual:
+herdr
+codex
+claude
+pi
+opencode

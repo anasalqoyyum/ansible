@@ -8,12 +8,14 @@ $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
 $ENV:STARSHIP_LOG = "error"
 $ENV:KOMOREBI_CONFIG_HOME = "$HOME\.config\komorebi"
 $ENV:WHKD_CONFIG_HOME = "$HOME\.config\komorebi"
+$ENV:HERDR_CONFIG_PATH = "$HOME\.config\herdr\config.toml"
 # Prevent mise warning on pwsh v5
 $env:MISE_PWSH_CHPWD_WARNING=0
 
 function vim { nvim @args }
 function lg { lazygit @args }
 function gl { git pull @args }
+function hr { herdr --session main @args }
 
 #f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
 # Import-Module -Name Microsoft.WinGet.CommandNotFound

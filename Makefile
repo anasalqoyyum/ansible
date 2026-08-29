@@ -22,6 +22,7 @@ copy-local:
 		--exclude='/herdr/.config/herdr/release-notes.json' \
 		--exclude='/herdr/.config/herdr/sessions/' \
 		--exclude='/opencode/.config/opencode/plugins/herdr-agent-state.js' \
+		--exclude='/opencode/.config/opencode/herdr-tui-session.js' \
 		--exclude='/pi/.pi/agent/extensions/herdr-agent-state.ts' \
 		--exclude='/pi/.pi/agent/mcp-cache.json' \
 		--exclude='/pi/.pi/agent/mcp-npx-cache.json' \

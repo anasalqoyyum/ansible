@@ -7,6 +7,8 @@ auto_switch = false
 [theme.custom]
 accent = "#81A2BE"
 panel_bg = "#0A0A0A"
+active_row_bg = "#1D1F21"
+selection_bg = "#343A47"
 surface_dim = "#0A0A0A"
 surface0 = "#1D1F21"
 surface1 = "#343A47"
