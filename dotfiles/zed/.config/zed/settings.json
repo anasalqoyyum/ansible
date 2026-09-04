@@ -21,7 +21,6 @@
 // - Claude
 // - Codex
 // - Pi
-// - OpenCode
 // - Copilot CLI + Chat (need to also check bottom-right Copilot for inline suggestions)
 {
   "terminal": {
@@ -52,6 +51,7 @@
     "dock": "right"
   },
   "agent": {
+    "use_modifier_to_send": true,
     "default_profile": "full",
     "show_turn_stats": true,
     "play_sound_when_agent_done": "when_hidden",
@@ -95,12 +95,36 @@
       "tools": {}
     },
     "default_model": {
-      "provider": "deepseek",
-      "model": "deepseek-v4-flash-vision-exp",
-      "enable_thinking": false
+      "effort": "max",
+      "provider": "openai-subscribed",
+      "model": "gpt-5.6-luna",
+      "enable_thinking": true
     },
     "dock": "left",
-    "favorite_models": [],
+    "favorite_models": [
+      {
+        "provider": "openrouter",
+        "model": "z-ai/glm-5.3-flash",
+        "enable_thinking": true
+      },
+      {
+        "provider": "openai-subscribed",
+        "model": "gpt-5.6-sol",
+        "enable_thinking": true,
+        "effort": "low"
+      },
+      {
+        "provider": "deepseek",
+        "model": "deepseek-v4-flash-vision-exp",
+        "enable_thinking": true
+      },
+      {
+        "provider": "openai-subscribed",
+        "model": "gpt-5.6-luna",
+        "enable_thinking": true,
+        "effort": "max"
+      }
+    ],
     "model_parameters": []
   },
   "git_panel": {
@@ -125,7 +149,8 @@
     }
   },
   "edit_predictions": {
-    "provider": "copilot"
+    "allow_data_collection": "no",
+    "provider": "zed"
   },
   "agent_servers": {
     "pi-acp": {
