@@ -21,6 +21,9 @@ whkd              0.2.10        extras    2026-05-10 00:04:58
 wslcompact        8.7           .oki      2025-08-01 16:40:22
 zoxide            0.9.9         main      2026-05-10 17:27:29
 
+scoop install yazi
+scoop install ffmpeg 7zip jq poppler fd ripgrep fzf zoxide resvg imagemagick
+
 ❯ choco list -localonly
 bitwarden-cli 2026.2.0
 Chocolatey v1.3.1
