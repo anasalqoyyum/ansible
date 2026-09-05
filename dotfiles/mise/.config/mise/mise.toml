@@ -3,6 +3,7 @@ node = "26"
 bun = "latest"
 go = "prefix:1.25"
 python = "3.13"
+dotnet = "10.0.400"
 java = { version = "21", os = ["linux", "macos"] }
 maven = { version = "3.9.15", os = ["linux", "macos"] }
 gradle = { version = "9.4.1", os = ["linux", "macos"] }

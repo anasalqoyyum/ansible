@@ -2,6 +2,7 @@ personality = "pragmatic"
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 model_verbosity = "low"
+model_reasoning_summary = "detailed"
 
 suppress_unstable_features_warning = true
 approvals_reviewer = "auto_review"
