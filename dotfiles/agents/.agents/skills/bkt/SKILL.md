@@ -1,7 +1,7 @@
 ---
 name: bkt
 version: 0.31.0
-description: Bitbucket CLI for Data Center and Cloud. Use when users need to manage repositories, pull requests, branches, issues, webhooks, or pipelines in Bitbucket. Triggers include "bitbucket", "bkt", "pull request", "PR", "repo list", "branch create", "Bitbucket Data Center", "Bitbucket Cloud", "keyring timeout".
+description: Bitbucket CLI for Data Center and Cloud. Use when the user names Bitbucket or bkt, or requests a repository, pull request, branch, issue, webhook, or pipeline action with Bitbucket context. Do not trigger on a generic PR or repository request without Bitbucket context.
 metadata:
   short-description: Bitbucket CLI for repos, PRs, branches
   compatibility: claude-code, codex-cli

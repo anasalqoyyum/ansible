@@ -52,7 +52,7 @@ The goal is not a clean repro but a **higher reproduction rate**. Loop the trigg
 
 ### When you genuinely cannot build a loop
 
-Stop and say so explicitly. List what you tried. Ask the user for: (a) access to whatever environment reproduces it, (b) a redacted captured artifact (HAR file, log dump, core dump, screen recording with timestamps), or (c) permission to add temporary production instrumentation. Do **not** proceed to hypothesise without a loop.
+Stop dynamic reproduction and say so explicitly. List what you tried. Record evidence-backed hypotheses as unconfirmed and state what observation would decide them. Ask the user for: (a) access to whatever environment reproduces it, (b) a redacted captured artifact (HAR file, log dump, core dump, screen recording with timestamps), or (c) permission to add temporary production instrumentation. Do not present an unverified hypothesis as the root cause or implement a fix from it.
 
 ### Completion criterion — a tight loop that goes red
 
@@ -63,7 +63,7 @@ Phase 1 is done when the loop is **tight** and **red-capable**: you can name **o
 - [ ] **Fast** — seconds, not minutes.
 - [ ] **Agent-runnable** — you can run it unattended; a human in the loop only via `scripts/hitl-loop.template.sh`.
 
-If you catch yourself reading code to build a theory before this command exists, **stop — jumping straight to a hypothesis is the exact failure this skill prevents.** No red-capable command, no Phase 2.
+If you catch yourself treating a theory as established before this command exists, stop. A red-capable command is required before claiming a confirmed root cause or moving to Phase 2.
 
 ## Phase 2 — Reproduce + minimise
 
@@ -111,7 +111,9 @@ Tool preference:
 
 **Perf branch.** For performance regressions, logs are usually wrong. Instead: establish a baseline measurement (timing harness, `performance.now()`, profiler, query plan), then bisect. Measure first, fix second.
 
-## Phase 5 — Fix + regression test
+## Phase 5 — Fix + regression test (when implementation is requested)
+
+If the user requested diagnosis only, stop after the investigation with a `confirmed`, `rejected`, or `unresolved` conclusion and a verification plan. Do not edit application code.
 
 Write the regression test **before the fix** — but only if there is a **correct seam** for it.
 
@@ -129,7 +131,7 @@ If a correct seam exists:
 
 ## Phase 6 — Cleanup
 
-Required before declaring done:
+Required before declaring a fix done:
 
 - [ ] Original repro no longer reproduces (re-run the Phase 1 loop)
 - [ ] Regression test passes (or absence of seam is documented)

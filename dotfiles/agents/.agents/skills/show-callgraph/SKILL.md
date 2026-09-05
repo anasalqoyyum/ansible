@@ -1,6 +1,7 @@
 ---
 name: show-callgraph
 description: "Build an interactive standalone HTML call graph from repository evidence."
+disable-model-invocation: true
 ---
 
 # Show callgraph

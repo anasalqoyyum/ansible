@@ -6,10 +6,10 @@ disable-model-invocation: true
 
 Implement the work described by the user in the spec or tickets.
 
-Use /tdd where possible, at pre-agreed seams.
+Use the TDD workflow when the user requests test-first work or when it materially improves the change. Test at public seams that match the behavior under change.
 
 Run typechecking regularly, single test files regularly, and the full test suite once at the end.
 
-Once done, use /code-review to review the work.
+Once done, invoke the code-review workflow when review is in scope for the current CLI.
 
-Commit your work to the current branch.
+Commit only when the user has authorized the commit. Otherwise leave the changes in the working tree and report them.

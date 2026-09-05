@@ -4,4 +4,4 @@ description: A relentless interview to sharpen a plan or design, which also crea
 disable-model-invocation: true
 ---
 
-Call the Skill tool twice, for "grilling" and "domain-modeling".
+Invoke `grilling` using the current CLI's skill mechanism. When the discussion concerns software structure, also invoke `codebase-design`; otherwise capture the domain terms directly in the ADR or glossary.

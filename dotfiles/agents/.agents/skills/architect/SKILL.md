@@ -46,7 +46,7 @@ Default: proceed directly to implementation with the synthesized design. No huma
 
 Opt in to a checkpoint when the invoker explicitly asks: "/architect with checkpoint," "stop and show me before implementing," or similar. Then surface the synthesized design and pause for sign-off.
 
-The synthesis can ship as its own commit either way. Treat it as a stable scaffold that later work fills in. Planned and scoped breakage during fill-in is fine when it converges directly on the target shape. For adversarial pressure on the design before implementing, run the **grilling** or **code-review** skill on the synthesized sketch.
+Write the synthesis to the requested artifact or path. Commit, branch, or publish it only when the invoker explicitly authorizes that action. Treat an authorized sketch commit as a stable scaffold that later work fills in. Planned and scoped breakage during fill-in is fine when it converges directly on the target shape. For adversarial pressure on the design before implementing, run the **grilling** or **code-review** skill on the synthesized sketch.
 
 If the human pushes back on the shape (in a checkpoint or after the fact), treat that as Phase A evidence. Re-ground and re-run Phase B before writing more code.
 

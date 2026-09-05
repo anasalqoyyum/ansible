@@ -1,4 +1,0 @@
-interface:
-  display_name: "Codebase Audit"
-  short_description: "Audit unfamiliar codebases with timed stages"
-  default_prompt: "Use $codebase-audit to run a focused audit of this codebase and prioritize evidence-backed fixes."

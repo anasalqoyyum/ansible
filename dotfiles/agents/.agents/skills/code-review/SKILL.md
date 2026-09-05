@@ -3,14 +3,14 @@ name: code-review
 description: Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes — Standards (does the code follow this repo's documented coding standards?) and Spec (does the code match what the originating issue/spec asked for?). Runs both reviews in parallel sub-agents and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to "review since X".
 ---
 
-Two-axis review of the diff between `HEAD` and a fixed point the user supplies:
+Two-axis review of changes from a fixed point the user supplies. The default comparison is the committed branch diff; include working-tree changes when the request covers work in progress:
 
 - **Standards** — does the code conform to this repo's documented coding standards?
 - **Spec** — does the code faithfully implement the originating issue / spec?
 
 Both axes run as **parallel sub-agents** so they don't pollute each other's context, then this skill aggregates their findings.
 
-The issue tracker should have been provided to you. If `docs/agents/issue-tracker.md` is missing, just put it there as bullet points for now, and the sub-agent will fetch the issue references from the commit messages.
+Use `docs/agents/issue-tracker.md` when it exists. If it is missing, use the available forge or Jira tools and commit references, then report that the repository has no tracker configuration. Do not create tracker configuration as a side effect of a review.
 
 ## Process
 
@@ -18,7 +18,9 @@ The issue tracker should have been provided to you. If `docs/agents/issue-tracke
 
 Whatever the user said is the fixed point — a commit SHA, branch name, tag, `main`, `HEAD~5`, etc. If they didn't specify one, ask for it.
 
-Capture the diff command once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base). Also note the list of commits via `git log <fixed-point>..HEAD --oneline`.
+Capture the committed-branch comparison once: `git diff <fixed-point>...HEAD` (three-dot, so the comparison is against the merge-base). Also note the list of commits via `git log <fixed-point>..HEAD --oneline`.
+
+If the scope includes working-tree changes, also capture `git status --short`, `git diff`, `git diff --cached`, and `git ls-files --others --exclude-standard`. Read untracked files that belong to the requested change. Do not silently review only `HEAD` when the user asked for work in progress.
 
 Before going further, confirm the fixed point resolves (`git rev-parse <fixed-point>`) and the diff is non-empty. A bad ref or empty diff should fail here — not inside two parallel sub-agents.
 
@@ -26,7 +28,7 @@ Before going further, confirm the fixed point resolves (`git rev-parse <fixed-po
 
 Look for the originating spec, in this order:
 
-1. Issue references in the commit messages (`#123`, `Closes #45`, GitLab `!67`, etc.) — fetch via the workflow in `docs/agents/issue-tracker.md`.
+1. Issue references in the commit messages (`#123`, `Closes #45`, GitLab `!67`, etc.) — fetch via the workflow in `docs/agents/issue-tracker.md` when it exists.
 2. A path the user passed as an argument.
 3. A spec file under `docs/`, `specs/`, or `.scratch/` matching the branch name or feature.
 4. If nothing is found, ask the user where the spec is. If they say there isn't one, the **Spec** sub-agent will skip and report "no spec available".

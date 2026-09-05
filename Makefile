@@ -29,6 +29,15 @@ copy-local:
 		--exclude='/pi/.pi/agent/mcp-onboarding.json' \
 		--exclude='/pi/.pi/agent/run-history.jsonl' \
 		--exclude='/pi/.pi/agent/missions/' \
+		--exclude='/pi/.pi/agent/auth.json' \
+		--exclude='/pi/.pi/agent/.cache/' \
+		--exclude='/pi/.pi/agent/cache/' \
+		--exclude='/pi/.pi/agent/models-store.json' \
+		--exclude='/pi/.pi/agent/npm/package.json' \
+		--exclude='/pi/.pi/agent/npm/package-lock.json' \
+		--exclude='/pi/.pi/agent/sessions/' \
+		--exclude='/pi/.pi/agent/vstack/sessions/' \
+		--exclude='/pi/.pi/agent/todos/' \
 		"$(DOTFILES_DEST)" "$(DOTFILES_SRC)"
 
 bootstrap-collections:

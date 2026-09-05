@@ -1,6 +1,6 @@
 ---
 name: imagegen-frontend-web
-description: Elite frontend image-direction skill for generating premium, conversion-aware website design references. CRITICAL OUTPUT RULE — generate ONE separate horizontal image FOR EVERY section. A landing page with 8 sections produces 8 images. Never compress multiple sections into one image. Enforces composition variety (not always left-text / right-image), background-image freedom, varied CTAs, varied hero scales (giant / mid / mini minimalist), narrative concept spine, second-read moments, and a single consistent palette across all images. Optimized for landing pages, marketing sites, and product comps that developers or coding models can accurately recreate.
+description: Generate premium, conversion-aware website design reference images for landing pages, marketing sites, and product comps. Use for visual comps, not frontend implementation. Generate one separate horizontal image per section and keep the set coherent, varied, and implementation-friendly.
 ---
 
 # HARD OUTPUT RULE — READ FIRST
@@ -396,13 +396,7 @@ instead.
 
 ## 5. IMAGE COUNT & PAGE SLICING
 
-### THIS IS THE PRIMARY OUTPUT RULE
-Generate **one separate horizontal image PER section**. Always.
-
-- never combine multiple sections in a single image
-- never return a single tall slice that contains the whole page
-- never return one "best" image and skip the rest
-- never replace several sections with one collage
+Use the hard output rule at the top of this file as canonical. This section supplies count defaults and presentation details; it does not override that one-image-per-section requirement.
 
 If the request is ambiguous about section count, **default high**:
 - "hero" -> 1 image
@@ -425,7 +419,7 @@ If the model can only render one image per call, generate them **sequentially in
 - 8 sections -> 8 horizontal images
 - 12 sections -> 12 horizontal images
 
-Do not collapse multiple sections into one tall slice. Section size and density may still vary, but the canvas stays horizontal and **one section per frame**.
+Section size and density may vary, but keep every canvas horizontal and one section per frame.
 
 ### Section size variety
 Across the site, mix section ambition deliberately:

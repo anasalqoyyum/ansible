@@ -8,9 +8,10 @@ Generate a PR title and body for the current branch.
 ## Steps
 
 1. Run `git branch --show-current`. Resolve a Jira key matching `[A-Z][A-Z0-9]+-[0-9]+`, case-insensitively, from an explicit key in the request or from the branch name. Normalize it to uppercase. If explicit and branch keys conflict, or the branch contains multiple keys without an explicit choice, ask which key to use. Continue without a Jira key when neither source contains one.
-2. Run `git diff main...HEAD` (or `git diff master...HEAD` if `main` doesn't exist) to understand all changes. Also run `git log main...HEAD --oneline` (or `master`) to see the commit history.
-3. Read any touched files as needed to understand context beyond the diff.
-4. Produce the output in **exactly** this shape — no extra prose before or after. Include the conditional sections only when their rules apply.
+2. Resolve the base ref from an explicit PR target or user argument, the current branch's upstream, `main`, or `master`, in that order. Verify it with `git rev-parse`.
+3. Run `git diff <base>...HEAD` to understand committed branch changes. Also run `git log <base>..HEAD --oneline` to see the commits. If the user wants working-tree changes included, inspect `git status --short`, `git diff`, `git diff --cached`, and untracked files that belong to the change.
+4. Read any touched files as needed to understand context beyond the diff.
+5. Produce the output in **exactly** this shape — no extra prose before or after. Include the conditional sections only when their rules apply.
 
 ```
 ## Title
@@ -47,6 +48,7 @@ Generate a PR title and body for the current branch.
 - Use plain, direct language; keep technical terms when they add useful precision
 - State the outcome and reason, rather than narrating implementation details
 - Keep each bullet self-contained and avoid repeating the title or later sections
+- Mention relevant checks that actually ran. Never claim a check passed unless you ran it.
 
 **What's fixed rules:**
 - Include this section only when the title type is `fix`

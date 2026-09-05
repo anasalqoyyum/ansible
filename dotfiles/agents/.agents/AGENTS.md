@@ -1,12 +1,12 @@
-# Agent Guidelines
+# Agent guidelines
 
-Apply these rules by default unless the user explicitly overrides them.
+These are shared defaults for all coding agents. Follow applicable project instructions and explicit user directions. Review, explanation, and diagnosis requests authorize inspection and relevant checks; implementation requires a request. Ask when a missing decision changes scope, intended behavior, or authority. Skills provide task-specific workflows within the authorized scope. They do not grant additional permission to change Git state, publish, send messages, or modify external systems.
 
 ## Code Standards
 
 ### React
 
-- Use one `useState` object for related, object-like state. Keep separate state only for genuinely independent values.
+- Group state values that change together or share invariants. Keep independent values separate.
 - Add `useMemo` only for a concrete performance or referential-stability need, not as a default readability pattern or premature optimization.
 
 ### Comments
@@ -18,15 +18,16 @@ Apply these rules by default unless the user explicitly overrides them.
 
 - Prefer the simplest implementation that satisfies the requirement; apply YAGNI.
 - Use type safety, precise naming, and straightforward structure so the code explains itself.
-- Be critical rather than agreeable by default. Propose bold ideas when they offer meaningful value.
+- Evaluate proposals on evidence. State disagreements and tradeoffs directly. Propose alternatives when they materially improve the outcome.
 - Handle expected failure modes without redundant checks, catch-all logic, unnecessary fallbacks, or speculative abstractions.
 - Add focused tests that protect meaningful behavior. Avoid low-value smoke tests and regression tests for removed features.
-- Treat destructive actions cautiously when the user has not explicitly requested them.
+- Before a destructive action, verify the exact target, scope, and authorization.
 
 ## Writing
 
 - Apply the unslop rules to assistant-authored prose on every turn. Remove AI filler, puffery, excessive hedging, chatbot phrases, and em dash overuse while preserving meaning and requested tone.
-- Treat code, identifiers, commands, quoted text, and user-provided text as exact content unless the user asks for changes.
+- Apply prose style rules only to assistant-authored prose. Preserve quoted text, commands, identifiers, and code when reproducing them. Edit them when the task requires it.
+- Keep responses concise and direct. Include the evidence and limitations needed to assess the result.
 
 ## Build and Execution
 
@@ -34,27 +35,22 @@ Apply these rules by default unless the user explicitly overrides them.
 - Type checking, linting, formatting, static analysis, unit tests, and E2E tests are allowed.
 - Prioritize targeted correctness and safety checks, then run the build when it provides useful validation. Prefer LSP-based checks when available, and do not edit build or release artifacts manually.
 - Treat generated files as read-only. If generated output is outdated or causes an error, rerun the repository's documented generator instead of editing the output manually. Report generation failures.
-- Keep responses concise, direct, and unsentimental.
 
 ### JavaScript and TypeScript
 
-- Use `pnpm` for package management, workspace commands, and scripts when possible.
-- If `pnpm` is unavailable, try `corepack enable` before another package manager.
-- Follow the repository's existing tooling when it explicitly requires npm, Yarn, Bun, or another package manager.
+- Follow the repository's declared package manager and execution workflow. Otherwise prefer `pnpm` for JavaScript and TypeScript, and `uv` for Python. If `pnpm` is missing and Corepack is available, try `corepack enable`.
 
 ### Python
 
-- Use `uv` for package management, virtual environments, dependency synchronization, and execution when possible.
-- Prefer `uv venv`, `uv add`, `uv sync`, and `uv run`.
-- Follow the repository's existing tooling when it explicitly requires Python, `pip`, or another package manager directly.
+- Use `uv` for Python package management, virtual environments, dependency synchronization, and execution when the repository has no other declared workflow. Follow the repository's existing tooling when it explicitly requires `pip` or another package manager.
 
 ## Claude Directory Compatibility
 
-When running outside Claude Code, check for a `.claude/` directory before proceeding. Read `.claude/CLAUDE.md` and relevant files under `.claude/rules/`, and treat them as additional instructions.
+When the CLI has not already loaded Claude instructions, check applicable `CLAUDE.md`, `.claude/CLAUDE.md`, and `.claude/rules/` files. Respect each rule's path conditions. Resolve symlinks and read each underlying instruction file only once.
 
 ## Tools
 
-- Use `rg` for file and content searches in the current Git-indexed repository.
+- Prefer `rg` and `rg --files`. Include hidden or ignored paths explicitly when they are in scope.
 
 ## WSL Path Handling
 
@@ -75,15 +71,11 @@ Example: `F:\Libraries\Pictures\Screenshot.png` becomes `/mnt/f/Libraries/Pictur
 
 ## Concurrent File Changes
 
-If a file changed after it was last read:
-
-1. Re-read it to capture the current state.
-2. Show a diff or concise summary of the unexpected changes.
-3. Ask whether the changes were intentional before editing further.
+Before editing, re-read any file that changed since you last inspected it. Preserve the current contents. Continue when the change comes from your own commands or coordinated work. For unexplained changes, summarize the difference and ask whether it was intentional before editing that file further. Continue independent work while waiting.
 
 ## Git Operations
 
-Perform Git operations only when the user explicitly requests them. This includes commits, pushes, pull requests, merges, amendments, resets, and force pushes. Require explicit confirmation for destructive operations such as hard resets or force-pushing a protected branch.
+Use read-only Git commands as needed to inspect changes and history. Change Git state only when the user explicitly requests it. This includes staging, committing, switching or creating branches, merging, rebasing, resetting, pushing, and creating pull requests. Existing authorization remains valid for the requested workflow. Confirm the exact target before destructive operations such as hard resets or force pushes.
 
 ### Commits
 

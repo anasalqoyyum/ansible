@@ -13,6 +13,12 @@ Pick model-invocation only when the agent must reach the skill on its own, or an
 
 Shared reference that two user-invoked skills both need can live in neither — with no descriptions, neither can fire the other. Push it to a plain file outside the skill system: external reference any skill can point at.
 
+## Cross-CLI invocation
+
+Use platform-neutral wording such as "invoke the named skill using the current CLI's skill mechanism." Do not assume a literal `Skill` tool, slash command, or dollar-prefixed command exists in every CLI.
+
+A user-only skill cannot be invoked automatically or by another skill. A workflow that depends on one must either tell the user to invoke it or perform a useful fallback from shared references. Keep Claude's `disable-model-invocation: true` and Codex's `policy.allow_implicit_invocation: false` aligned when a skill is intended to be user-only.
+
 ## Splitting by invocation
 
 The invocation cut of splitting (the sequence cut lives in `SKILL.md`): split off a model-invoked skill when you have a distinct leading word that should trigger it on its own — a trigger word you actually use in your prompts — or another skill must reach it. You pay context load for the new always-loaded description, so that independent reach has to be worth it.

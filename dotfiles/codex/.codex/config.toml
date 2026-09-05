@@ -14,6 +14,7 @@ hooks = true
 unified_exec = true
 wsl_remote_connections = true
 js_repl = true
+context_management.experimental_mode = true
 
 [notice]
 hide_full_access_warning = true

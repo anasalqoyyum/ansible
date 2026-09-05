@@ -1,8 +1,8 @@
 ---
-description: Review changes with parallel @code-review subagents
+description: Review changes with parallel @code-reviewer subagents
 agent: plan
 ---
-Review the code changes using THREE (3) @code-review subagents and correlate results into a summary ranked by severity. Use the provided user guidance to steer the review and focus on specific code paths, changes, and/or areas of concern. Once all three @code-review subagents return their findings and you have correlated and summarized the results, consult the @oracle subagent to perform a deep review on the findings focusing on accuracy and correctness by evaluating the surrounding code, system, subsystems, abstractions, and overall architecture of each item. Apply any recommendations from the oracle. NEVER SKIP ORACLE REVIEW.
+Review the code changes with the configured `@code-reviewer` subagent when independent review adds value, then correlate findings into a summary ranked by severity. For broad or high-risk changes, use up to three distinct reviewers and consult `@oracle` to check the findings for accuracy and correctness against the surrounding code, subsystems, abstractions, and architecture. For a small change, one reviewer or a direct review is enough; do not delegate merely to satisfy a fixed fan-out. Apply recommendations from the oracle when that review is run.
 
 Guidance: $ARGUMENTS
 

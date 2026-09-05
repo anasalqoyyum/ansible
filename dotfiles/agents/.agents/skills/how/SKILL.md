@@ -57,9 +57,7 @@ Then proceed to Step 3.
 
 ### Step 2b. Direct Explain (simple questions)
 
-Spawn one read-only subagent using the current session model to explore and explain in one pass.
-
-The agent does its own exploration (Glob, Grep, Read) and writes the explanation directly. Read `references/explainer-prompt.md` for the communication style and output format. Same structure, just no explorer findings as input.
+For a narrow question, explore directly and explain in one pass. Delegate only when separate evidence gathering or independent judgment earns the coordination cost. If delegating, use one read-only subagent with the current session model; it should do its own exploration (Glob, Grep, Read) and write the explanation directly. Read `references/explainer-prompt.md` for the communication style and output format. Same structure, just no explorer findings as input.
 
 Proceed to Step 4.
 

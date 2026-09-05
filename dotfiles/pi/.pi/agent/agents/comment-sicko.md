@@ -2,7 +2,6 @@
 name: comment-sicko
 description: Aggressively reviews comments and suppressions, reports deletions, and identifies code that must be reshaped during a no-comments pass.
 tools: read, grep, find, ls, bash
-model: openai-codex/gpt-5.6-luna
 thinking: max
 isolated: true
 ---
