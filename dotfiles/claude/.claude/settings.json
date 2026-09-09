@@ -6,7 +6,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "opus",
+  "model": "opus[1m]",
   "outputStyle": "Concise",
   "effortLevel": "high",
   "tui": "fullscreen",

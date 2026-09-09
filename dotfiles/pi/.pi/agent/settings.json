@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.85.0",
+  "lastChangelogVersion": "0.85.1",
   "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-luna",
+  "defaultModel": "gpt-6-astra",
   "defaultThinkingLevel": "max",
   "quietStartup": true,
   "packages": [
@@ -11,18 +11,19 @@
     "npm:@vanillagreen/pi-web-tools",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@juicesharp/rpiv-todo",
-    "npm:@tintinweb/pi-subagents",
-    "npm:pi-commandcode-provider"
+    "npm:@tintinweb/pi-subagents"
   ],
   "theme": "savy-dark",
   "transport": "websocket",
   "enableInstallTelemetry": false,
   "enabledModels": [
+    "openai-codex/gpt-6-astra",
     "openai-codex/gpt-5.6-luna",
     "openai-codex/gpt-5.6-sol",
     "deepseek/deepseek-v4-flash",
     "deepseek/deepseek-v4-flash-vision-exp",
-    "openrouter/z-ai/glm-5.3-flash"
+    "openrouter/z-ai/glm-5.3-flash",
+    "openrouter/google/gemini-3.8-flash"
   ],
   "editorPaddingX": 0,
   "collapseChangelog": true,

@@ -28,7 +28,8 @@ local inlay_hints_settings = {
   includeInlayVariableTypeHintsWhenTypeMatchesName = false,
 }
 
-local tsgo_inlay_hints_settings = {
+-- vscode-style inlay hint settings, used by `tsc` (TS7 native LSP) and vtsls
+local vscode_inlay_hints_settings = {
   enumMemberValues = { enabled = true },
   functionLikeReturnTypes = { enabled = false },
   parameterNames = {
@@ -89,6 +90,21 @@ local typescript_keys = {
   },
 }
 
+-- the native TS7 server only advertises unsuffixed code action kinds,
+-- and none of the `typescript.*` commands vtsls/ts_ls expose
+local tsc_keys = {
+  {
+    "<leader>cu",
+    LazyVim.lsp.action["source.removeUnusedImports"],
+    desc = "Remove unused imports",
+  },
+  {
+    "<leader>cD",
+    LazyVim.lsp.action["source.fixAll"],
+    desc = "Fix all diagnostics",
+  },
+}
+
 local filetypes = {
   "javascript",
   "javascriptreact",
@@ -98,6 +114,11 @@ local filetypes = {
   "typescript.tsx",
   "vue",
 }
+
+-- the native TS7 server has no tsserver plugin support, so it can't read `.vue` buffers
+local tsc_filetypes = vim.tbl_filter(function(ft)
+  return ft ~= "vue"
+end, filetypes)
 
 local tsPlugins = {
   {
@@ -129,20 +150,14 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        tsgo = {
-          enabled = vim.g.typescript_lsp == "tsgo",
-          filetypes = filetypes,
-          keys = typescript_keys,
+        tsc = {
+          enabled = vim.g.typescript_lsp == "tsc",
+          filetypes = tsc_filetypes,
+          keys = tsc_keys,
           settings = {
-            typescript = {
-              inlayHints = tsgo_inlay_hints_settings,
+            ["js/ts"] = {
+              inlayHints = vscode_inlay_hints_settings,
             },
-            completions = {
-              completeFunctionCalls = true,
-            },
-          },
-          init_options = {
-            plugins = tsPlugins,
           },
         },
         ts_ls = {
@@ -184,7 +199,7 @@ return {
               suggest = {
                 completeFunctionCalls = true,
               },
-              inlayHints = tsgo_inlay_hints_settings,
+              inlayHints = vscode_inlay_hints_settings,
             },
           },
           keys = typescript_keys,
