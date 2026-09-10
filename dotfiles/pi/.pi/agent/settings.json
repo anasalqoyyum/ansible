@@ -1,8 +1,8 @@
 {
   "lastChangelogVersion": "0.85.1",
-  "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-6-astra",
-  "defaultThinkingLevel": "max",
+  "defaultProvider": "deepseek",
+  "defaultModel": "deepseek-flash",
+  "defaultThinkingLevel": "high",
   "quietStartup": true,
   "packages": [
     "npm:@ff-labs/pi-fff",
@@ -36,5 +36,22 @@
     "mermaid": "streaming"
   },
   "tuiMode": "fullscreen",
-  "enableSkillCommands": false
+  "enableSkillCommands": false,
+  "tokenSpeed": {
+    "tpsSlow": 0,
+    "tpsMedium": 15,
+    "tpsFast": 30,
+    "tpsBlazing": 45,
+    "colorSlow": "#ff4444",
+    "colorMedium": "#ffaa00",
+    "colorFast": "#00ff88",
+    "colorBlazing": "#44ddff",
+    "display": "tps",
+    "useProviderTokens": false,
+    "countStrategy": "direct",
+    "endTpsBehavior": "average",
+    "icon": "",
+    "slidingWindow": 1000,
+    "updateInterval": 0
+  }
 }

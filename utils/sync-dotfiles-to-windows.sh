@@ -52,7 +52,7 @@ sync_dir() {
 
   mkdir -p "$target"
   echo "Syncing $name: $source -> $target"
-  rsync -aL --delete --filter=':- .gitignore' "$source/" "$target/"
+  rsync -aL --no-specials --delete --filter=':- .gitignore' "$source/" "$target/"
 }
 
 sync_file() {
