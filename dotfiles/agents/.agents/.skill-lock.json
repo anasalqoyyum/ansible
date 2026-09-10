@@ -6,36 +6,36 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/anomalyco/opentui.git",
       "skillPath": "packages/web/src/content/SKILL.md",
-      "skillFolderHash": "bc70c02e332df967636331e9bde11aa3e3204097",
+      "skillFolderHash": "0f56f62f3e7487cbe54e32a2c020b8ba462f9204",
       "installedAt": "2026-02-26T10:38:31.982Z",
-      "updatedAt": "2026-09-05T06:02:08.586Z"
+      "updatedAt": "2026-09-10T07:36:26.196Z"
     },
     "bkt": {
       "source": "avivsinai/bitbucket-cli",
       "sourceType": "github",
       "sourceUrl": "https://github.com/avivsinai/bitbucket-cli.git",
       "skillPath": "skills/bkt/SKILL.md",
-      "skillFolderHash": "45e929b64a1b243faebbdd56e3475abcb9d41ed6",
+      "skillFolderHash": "cf4a8e4af052a88f0846815105dd34fa9234633a",
       "installedAt": "2026-04-04T09:27:18.615Z",
-      "updatedAt": "2026-09-05T06:02:11.144Z"
+      "updatedAt": "2026-09-10T07:36:29.675Z"
     },
     "herdr": {
       "source": "herdrdev/herdr",
       "sourceType": "github",
       "sourceUrl": "https://github.com/herdrdev/herdr.git",
       "skillPath": "skills/herdr/SKILL.md",
-      "skillFolderHash": "f8bb649bb92ddc99e6af463ab9a635da98c7b129",
+      "skillFolderHash": "b9dcfddcfa7ce43e2e4cf60e724c519be553f149",
       "installedAt": "2026-07-30T03:30:44.750Z",
-      "updatedAt": "2026-09-05T06:02:14.693Z"
+      "updatedAt": "2026-09-10T07:36:32.780Z"
     },
     "impeccable": {
       "source": "pbakaus/impeccable",
       "sourceType": "github",
       "sourceUrl": "https://github.com/pbakaus/impeccable.git",
       "skillPath": ".agents/skills/impeccable/SKILL.md",
-      "skillFolderHash": "e72d2b2b92de6ef235a3be5ad99c4c6d626b7cde",
+      "skillFolderHash": "06efff78a5233850e8477632d577e700c9bd7994",
       "installedAt": "2026-07-30T10:12:48.883Z",
-      "updatedAt": "2026-09-05T06:02:20.767Z"
+      "updatedAt": "2026-09-10T07:36:37.358Z"
     },
     "imagegen-frontend-mobile": {
       "source": "Leonxlnx/taste-skill",
@@ -241,9 +241,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/dmmulroy/anti-slop.git",
       "skillPath": "skills/install-anti-slop/SKILL.md",
-      "skillFolderHash": "44a970ae13bc32ef7391b681208a384e1aae669b",
+      "skillFolderHash": "aaf5942ffe5b7be7fdec40d613d74b784dee6b39",
       "installedAt": "2026-08-15T03:07:47.344Z",
-      "updatedAt": "2026-09-05T06:02:56.125Z"
+      "updatedAt": "2026-09-10T07:36:37.954Z"
     },
     "bro": {
       "source": "backnotprop/bro",
