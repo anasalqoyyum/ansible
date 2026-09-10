@@ -25,9 +25,9 @@ These are shared defaults for all coding agents. Follow applicable project instr
 
 ## Writing
 
-- Apply the unslop rules to assistant-authored prose on every turn. Remove AI filler, puffery, excessive hedging, chatbot phrases, and em dash overuse while preserving meaning and requested tone.
-- Apply prose style rules only to assistant-authored prose. Preserve quoted text, commands, identifiers, and code when reproducing them. Edit them when the task requires it.
-- Keep responses concise and direct. Include the evidence and limitations needed to assess the result.
+- Read and follow the unslop skill for all your own writing, including responses, progress updates, and documentation.
+- Keep writing concise, clear, and easy to understand. Include necessary evidence and limitations.
+- Preserve quoted text, commands, identifiers, and code when copying them. Change them only when the task requires it.
 
 ## Build and Execution
 
