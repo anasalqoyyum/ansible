@@ -1,8 +1,10 @@
 personality = "pragmatic"
 model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 model_verbosity = "low"
 model_reasoning_summary = "detailed"
+model_provider = "cpa-gui"
+model_catalog_json = "cpa-gui-model-catalog.json"
 
 suppress_unstable_features_warning = true
 approvals_reviewer = "auto_review"
@@ -29,3 +31,11 @@ status_line = [
   "fast-mode",
 ]
 pet = "disabled"
+
+[model_providers]
+
+[model_providers.cpa-gui]
+name = "EasyCLIProxyAPI"
+base_url = "http://127.0.0.1:8317/v1"
+wire_api = "responses"
+env_key = "CPA_GUI_API_KEY"
