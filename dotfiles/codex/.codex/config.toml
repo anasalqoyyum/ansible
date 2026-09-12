@@ -11,6 +11,10 @@ approvals_reviewer = "auto_review"
 approval_policy = "never"
 sandbox_mode = "danger-full-access"
 
+[agents]
+default_subagent_model = "gpt-5.6-luna"
+default_subagent_reasoning_effort = "max"
+
 [features]
 default_mode_request_user_input = true
 hooks = true

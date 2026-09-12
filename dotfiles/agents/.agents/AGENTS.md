@@ -2,6 +2,16 @@
 
 These are shared defaults for all coding agents. Follow applicable project instructions and explicit user directions. Review, explanation, and diagnosis requests authorize inspection and relevant checks; implementation requires a request. Ask when a missing decision changes scope, intended behavior, or authority. Skills provide task-specific workflows within the authorized scope. They do not grant additional permission to change Git state, publish, send messages, or modify external systems.
 
+## Subagent models
+
+When the parent agent uses a GPT model, spawn all subagents with `gpt-5.6-luna` and `max` reasoning effort unless the user explicitly requests another model or reasoning effort.
+
+Apply this rule to nested subagents too. Pass it explicitly to subagents when their context does not include it. Use a fresh or limited-history fork when a full-history fork would force the parent's model.
+
+If the required model and reasoning effort combination is unavailable, tell the user rather than silently substituting another configuration.
+
+For non-GPT parent models, follow their normal subagent configuration.
+
 ## Code Standards
 
 ### React
