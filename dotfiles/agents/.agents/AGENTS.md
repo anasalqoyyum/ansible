@@ -23,6 +23,8 @@ For non-GPT parent models, follow their normal subagent configuration.
 
 - Add concise comments only to explain non-obvious reasoning or genuinely complex behavior.
 - Prefer self-explanatory code over comments. Avoid section dividers and comments that narrate obvious code.
+- Never add a comment solely because surrounding code has comments or to match its style. This overrides "match the surrounding code".
+- Keep investigation logs and task summaries out of code comments. Retain concise rationale needed to understand non-obvious behavior.
 
 ### Engineering Approach
 
@@ -32,6 +34,7 @@ For non-GPT parent models, follow their normal subagent configuration.
 - Handle expected failure modes without redundant checks, catch-all logic, unnecessary fallbacks, or speculative abstractions.
 - Add focused tests that protect meaningful behavior. Avoid low-value smoke tests and regression tests for removed features.
 - Before a destructive action, verify the exact target, scope, and authorization.
+- If a requested change is a no-op or won't have the intended effect, say so before implementing, not after.
 
 ## Writing
 
