@@ -84,6 +84,9 @@
     - name: Install AI tools
       ansible.builtin.import_tasks: tasks/ai-tools.yml
 
+    - name: Install BrowserSkill
+      ansible.builtin.import_tasks: tasks/browser-skill-setup.yml
+
     - name: Configure Git
       ansible.builtin.import_tasks: tasks/git-setup.yml
 

@@ -58,3 +58,4 @@ codex
 claude
 pi
 opencode
+tencent/browserskill

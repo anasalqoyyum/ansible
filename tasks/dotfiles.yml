@@ -45,6 +45,7 @@
       - --exclude=herdr/.config/herdr/.plugins.lock
       - --exclude=herdr/.config/herdr/plugins.json
       - --exclude=herdr/.config/herdr/plugins/
+      - --filter=P agents/.agents/skills/browser-skill/
       - --filter=P node_modules/
       - --exclude=node_modules/
       - "{{ playbook_dir }}/dotfiles/"
@@ -74,6 +75,7 @@
       - --exclude=herdr/.config/herdr/.plugins.lock
       - --exclude=herdr/.config/herdr/plugins.json
       - --exclude=herdr/.config/herdr/plugins/
+      - --filter=P agents/.agents/skills/browser-skill/
       - --filter=P node_modules/
       - --exclude=node_modules/
       - "{{ playbook_dir }}/dotfiles/"

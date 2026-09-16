@@ -1,0 +1,53 @@
+- name: Set up BrowserSkill
+  tags:
+    - install
+    - ai-tools
+    - browser-skill
+  block:
+    - name: Check whether BrowserSkill CLI is installed
+      ansible.builtin.stat:
+        path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/bsk"
+      register: browser_skill_cli
+
+    - name: Download BrowserSkill installer
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/Tencent/BrowserSkill/main/install.sh
+        dest: /tmp/install-browser-skill.sh
+        mode: "0755"
+      when: not browser_skill_cli.stat.exists
+
+    - name: Install BrowserSkill CLI
+      ansible.builtin.command: /bin/sh /tmp/install-browser-skill.sh
+      args:
+        chdir: "{{ ansible_facts['env']['HOME'] }}"
+        creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/bsk"
+      environment:
+        BSK_INSTALL_DIR: "{{ ansible_facts['env']['HOME'] }}/.local/bin"
+        PATH: "{{ ansible_facts['env']['HOME'] }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
+      when: not browser_skill_cli.stat.exists
+
+    - name: Install BrowserSkill for Codex
+      ansible.builtin.command:
+        argv:
+          - "{{ ansible_facts['env']['HOME'] }}/.local/bin/bsk"
+          - install-skill
+          - --harness
+          - codex
+          - --json
+      args:
+        creates: "{{ ansible_facts['env']['HOME'] }}/.agents/skills/browser-skill/SKILL.md"
+
+    - name: Install BrowserSkill for Claude Code
+      ansible.builtin.command:
+        argv:
+          - "{{ ansible_facts['env']['HOME'] }}/.local/bin/bsk"
+          - install-skill
+          - --harness
+          - claude-code
+          - --json
+      args:
+        creates: "{{ ansible_facts['env']['HOME'] }}/.claude/skills/browser-skill/SKILL.md"
+
+    - name: Verify BrowserSkill CLI
+      ansible.builtin.command: "{{ ansible_facts['env']['HOME'] }}/.local/bin/bsk --version"
+      changed_when: false
