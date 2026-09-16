@@ -3,6 +3,8 @@
 yabai -m config layout bsp
 yabai -m config split_type auto
 yabai -m config auto_balance off
+yabai -m config window_placement second_child
+yabai -m config window_insertion_point last
 
 yabai -m config top_padding 5
 yabai -m config bottom_padding 5
