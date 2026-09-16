@@ -34,7 +34,7 @@
       - mise
       - herdr
       - mole
-      - lgug2z/tap/komorebi-for-mac
+      - asmvik/formulae/yabai
       - asmvik/formulae/skhd
     state: present
     update_homebrew: true
@@ -85,7 +85,6 @@
       - localsend
       - steipete/tap/codexbar
       - zed
-      - amrbashir/tap/komorebi-switcher
     state: present
     install_options:
       - adopt

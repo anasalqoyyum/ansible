@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+# yabai's `space --focus` is a silent no-op without the scripting addition, so
+# switch spaces by focusing a window that lives there and letting macOS follow.
+# Spaces with no focusable window cannot be reached this way.
+
+set -eu
+
+window=$(yabai -m query --windows --space "$1" |
+  jq -r 'map(select(."is-minimized" == false and ."is-sticky" == false)) | first | .id // empty')
+
+[ -n "$window" ] && yabai -m window --focus "$window"
