@@ -37,6 +37,9 @@
     - name: Install core Homebrew packages
       ansible.builtin.import_tasks: tasks/core-brew-setup.yml
 
+    - name: Install InstantSpaceSwitcher CLI
+      ansible.builtin.import_tasks: tasks/instant-space-switcher-setup.yml
+
     - name: Install Rust
       ansible.builtin.import_tasks: tasks/rust-setup.yml
 

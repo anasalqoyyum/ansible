@@ -47,15 +47,25 @@ alt + shift - r         : yabai -m space --balance
 alt + shift - x         : yabai -m space --mirror x-axis
 alt + shift - y         : yabai -m space --mirror y-axis
 
-# Spaces (see focus-space: `space --focus` needs the scripting addition)
-alt - 1                 : "$HOME/.config/yabai/focus-space" 1
-alt - 2                 : "$HOME/.config/yabai/focus-space" 2
-alt - 3                 : "$HOME/.config/yabai/focus-space" 3
-alt - 4                 : "$HOME/.config/yabai/focus-space" 4
-alt - 5                 : "$HOME/.config/yabai/focus-space" 5
-alt - 6                 : "$HOME/.config/yabai/focus-space" 6
-alt - 7                 : "$HOME/.config/yabai/focus-space" 7
-alt - 8                 : "$HOME/.config/yabai/focus-space" 8
+# Previous Space bindings using the yabai focus helper
+# alt - 1               : "$HOME/.config/yabai/focus-space" 1
+# alt - 2               : "$HOME/.config/yabai/focus-space" 2
+# alt - 3               : "$HOME/.config/yabai/focus-space" 3
+# alt - 4               : "$HOME/.config/yabai/focus-space" 4
+# alt - 5               : "$HOME/.config/yabai/focus-space" 5
+# alt - 6               : "$HOME/.config/yabai/focus-space" 6
+# alt - 7               : "$HOME/.config/yabai/focus-space" 7
+# alt - 8               : "$HOME/.config/yabai/focus-space" 8
+
+# Spaces
+alt - 1                 : "$HOME/.local/bin/iss-cli" index 1
+alt - 2                 : "$HOME/.local/bin/iss-cli" index 2
+alt - 3                 : "$HOME/.local/bin/iss-cli" index 3
+alt - 4                 : "$HOME/.local/bin/iss-cli" index 4
+alt - 5                 : "$HOME/.local/bin/iss-cli" index 5
+alt - 6                 : "$HOME/.local/bin/iss-cli" index 6
+alt - 7                 : "$HOME/.local/bin/iss-cli" index 7
+alt - 8                 : "$HOME/.local/bin/iss-cli" index 8
 
 # Send focused window to space, without following it
 alt + shift - 1         : yabai -m window --space 1

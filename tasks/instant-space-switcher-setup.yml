@@ -1,0 +1,28 @@
+- name: Install InstantSpaceSwitcher CLI
+  vars:
+    instant_space_switcher_binary: "{{ ansible_facts['env']['HOME'] }}/.local/bin/iss-cli"
+  tags:
+    - install
+    - instant-space-switcher
+    - macos-only
+  block:
+    - name: Ensure local bin directory exists
+      ansible.builtin.file:
+        path: "{{ ansible_facts['env']['HOME'] }}/.local/bin"
+        state: directory
+        mode: "0755"
+
+    - name: Install InstantSpaceSwitcher CLI
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/files/macos/iss-cli"
+        dest: "{{ instant_space_switcher_binary }}"
+        mode: "0755"
+
+    - name: Verify InstantSpaceSwitcher CLI signature
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/codesign
+          - --verify
+          - "{{ instant_space_switcher_binary }}"
+      changed_when: false
+      when: not ansible_check_mode
