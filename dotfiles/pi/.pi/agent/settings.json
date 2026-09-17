@@ -38,20 +38,24 @@
   "tuiMode": "fullscreen",
   "enableSkillCommands": true,
   "tokenSpeed": {
-    "tpsSlow": 0,
-    "tpsMedium": 15,
-    "tpsFast": 30,
-    "tpsBlazing": 45,
-    "colorSlow": "#ff4444",
-    "colorMedium": "#ffaa00",
-    "colorFast": "#00ff88",
-    "colorBlazing": "#44ddff",
     "display": "tps",
     "useProviderTokens": false,
     "countStrategy": "direct",
     "endTpsBehavior": "average",
     "icon": "",
     "slidingWindow": 1000,
-    "updateInterval": 0
+    "updateInterval": 0,
+    "thresholds": {
+      "slow": 0,
+      "medium": 15,
+      "fast": 30,
+      "blazing": 45
+    },
+    "colors": {
+      "slow": "#ff4444",
+      "medium": "#ffaa00",
+      "fast": "#00ff88",
+      "blazing": "#44ddff"
+    }
   }
 }

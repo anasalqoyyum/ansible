@@ -92,4 +92,4 @@ Use read-only Git commands as needed to inspect changes and history. Change Git 
 
 ### Commits
 
-- Keep commit messages concise and use Conventional Commits, such as `fix(parser): handle empty input`.
+- Always use Conventional Commits with a scope that names the affected area, such as `fix(content): grammar fixes in about page`. Keep commit messages concise.
