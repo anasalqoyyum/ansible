@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.85.1",
+  "lastChangelogVersion": "0.86.0",
   "defaultProvider": "deepseek",
   "defaultModel": "deepseek-flash",
   "defaultThinkingLevel": "high",
@@ -57,5 +57,7 @@
       "fast": "#00ff88",
       "blazing": "#44ddff"
     }
-  }
+  },
+  "cacheWarming": "idle",
+  "showCacheMissNotices": true
 }
