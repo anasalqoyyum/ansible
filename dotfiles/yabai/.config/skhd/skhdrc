@@ -41,7 +41,7 @@ alt + shift - t         : yabai -m window --toggle float
 alt + shift - f         : yabai -m window --toggle zoom-fullscreen
 
 # Window manager options
-alt + shift - r         : yabai -m space --balance
+alt + shift - r         : yabai -m space --layout bsp
 
 # Layouts
 alt + shift - x         : yabai -m space --mirror x-axis

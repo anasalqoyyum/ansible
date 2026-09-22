@@ -5,30 +5,52 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 stop=false
-cleaned_up=false
+suppressed=false
+
+lid_is_closed() {
+  ioreg -r -k AppleClamshellState -d 4 2>/dev/null |
+    grep -q '"AppleClamshellState" = Yes'
+}
+
+awdl_is_up() {
+  ifconfig awdl0 2>/dev/null | grep -q '<[^>]*UP'
+}
+
+restore_awdl() {
+  [ "$suppressed" = true ] || return
+
+  echo "$(date '+%H:%M:%S') relinquishing AWDL control"
+  ifconfig awdl0 up 2>/dev/null || true
+  suppressed=false
+}
 
 cleanup() {
-  [ "$cleaned_up" = true ] && return
-  cleaned_up=true
-  trap - EXIT INT TERM
+  trap - INT TERM EXIT
 
-  echo
-  echo "Re-enabling AWDL..."
-  ifconfig awdl0 up 2>/dev/null || true
+  # Don't manipulate networking while the lid is closed. In that state
+  # macOS may be sleeping, entering sleep, or performing a DarkWake.
+  if ! lid_is_closed; then
+    restore_awdl
+  fi
 }
 
 trap 'stop=true' INT TERM
 trap cleanup EXIT
 
-echo "Suppressing AWDL. Ctrl-C to stop."
+echo "Suppressing AWDL while lid is open. Ctrl-C to stop."
 
 while [ "$stop" = false ]; do
-  if ifconfig awdl0 2>/dev/null | grep -q '<[^>]*UP'; then
+  if lid_is_closed; then
+    # Important: hand AWDL back to macOS before/while it transitions
+    # through sleep and DarkWake.
+    restore_awdl
+  elif awdl_is_up; then
     echo "$(date '+%H:%M:%S') awdl0 came up → disabling"
-    ifconfig awdl0 down || true
+    if ifconfig awdl0 down; then
+      suppressed=true
+    fi
   fi
 
-  # Backgrounded so a SIGINT during the wait is delivered immediately.
   sleep 1 &
   wait $! 2>/dev/null || true
 done
