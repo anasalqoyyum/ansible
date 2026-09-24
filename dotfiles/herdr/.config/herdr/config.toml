@@ -51,10 +51,10 @@ new_cwd = "follow"
 [keys]
 prefix = "ctrl+a"
 
-focus_pane_left = ["prefix+h", "alt+left"]
-focus_pane_down = ["prefix+j", "alt+down"]
-focus_pane_up = ["prefix+k", "alt+up"]
-focus_pane_right = ["prefix+l", "alt+right"]
+focus_pane_left = ["prefix+h"]
+focus_pane_down = ["prefix+j"]
+focus_pane_up = ["prefix+k"]
+focus_pane_right = ["prefix+l"]
 
 new_workspace = "prefix+n"
 switch_workspace = "prefix+shift+1..9"

@@ -1,9 +1,9 @@
 personality = "pragmatic"
-model = "gpt-5.6-sol"
+model = "gpt-6-sol"
 model_reasoning_effort = "medium"
 model_verbosity = "low"
 model_reasoning_summary = "detailed"
-model_provider = "cpa-gui"
+# model_provider = "cpa-gui"
 # model_catalog_json = "cpa-gui-model-catalog.json"
 
 suppress_unstable_features_warning = true
@@ -36,6 +36,7 @@ status_line = [
   "fast-mode",
 ]
 pet = "disabled"
+screen_reader_detection_done = true
 
 [model_providers]
 
