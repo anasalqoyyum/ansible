@@ -3,8 +3,7 @@ model = "gpt-6-sol"
 model_reasoning_effort = "medium"
 model_verbosity = "low"
 model_reasoning_summary = "detailed"
-# model_provider = "cpa-gui"
-# model_catalog_json = "cpa-gui-model-catalog.json"
+# model_provider = "cliproxyapi"
 
 suppress_unstable_features_warning = true
 approvals_reviewer = "auto_review"
@@ -20,10 +19,10 @@ default_mode_request_user_input = true
 hooks = true
 unified_exec = true
 wsl_remote_connections = true
-js_repl = true
 context_management.experimental_mode = true
 prevent_idle_sleep = true
 analytics_plan_history = true
+api_key_model_discovery = true # Required for model discovery in the CLIProxyAPI provider
 
 [notice]
 hide_full_access_warning = true
@@ -41,10 +40,11 @@ screen_reader_detection_done = true
 
 [model_providers]
 
-[model_providers.cpa-gui]
+[model_providers.cliproxyapi]
 name = "EasyCLIProxyAPI"
 base_url = "http://127.0.0.1:8317/v1"
+model_catalog_url = "http://127.0.0.1:8317/v1/models"
 wire_api = "responses"
 supports_websockets = true
-env_key = "CPA_GUI_API_KEY"
-# experimental_bearer_token = "cpa-gui-token"
+env_key = "CPA_PROXY_API_KEY"
+# experimental_bearer_token = "CPA_PROXY_API_KEY"
