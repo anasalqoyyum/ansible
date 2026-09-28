@@ -4,7 +4,7 @@ These are shared defaults for all coding agents. Follow applicable project instr
 
 ## Subagent models
 
-When the parent agent uses a GPT model, spawn all subagents with `gpt-5.6-luna` and `max` reasoning effort unless the user explicitly requests another model or reasoning effort.
+When the parent agent uses a GPT model, spawn all subagents with `gpt-6-luna` and `max` reasoning effort unless the user explicitly requests another model or reasoning effort.
 
 Apply this rule to nested subagents too. Pass it explicitly to subagents when their context does not include it. Use a fresh or limited-history fork when a full-history fork would force the parent's model.
 

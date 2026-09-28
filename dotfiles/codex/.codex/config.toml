@@ -23,6 +23,7 @@ wsl_remote_connections = true
 js_repl = true
 context_management.experimental_mode = true
 prevent_idle_sleep = true
+analytics_plan_history = true
 
 [notice]
 hide_full_access_warning = true
