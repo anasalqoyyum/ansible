@@ -1,12 +1,12 @@
 {
-  "lastChangelogVersion": "0.87.1",
+  "lastChangelogVersion": "0.99.1",
   "defaultProvider": "deepseek",
   "defaultModel": "deepseek-flash",
   "defaultThinkingLevel": "high",
+  "defaultTools": ["+codemode"],
   "quietStartup": true,
   "packages": [
     "npm:@ff-labs/pi-fff",
-    "npm:pi-mcp-adapter",
     "npm:@vanillagreen/pi-codex-minimal-tools",
     "npm:@vanillagreen/pi-web-tools",
     "npm:@juicesharp/rpiv-ask-user-question",
@@ -57,5 +57,8 @@
     }
   },
   "cacheWarming": "idle",
-  "showCacheMissNotices": true
+  "showCacheMissNotices": true,
+  "classifier": {
+    "model": "openrouter/~typesafe/jev-latest"
+  }
 }

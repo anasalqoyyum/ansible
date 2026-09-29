@@ -32,7 +32,11 @@ import type {
   ExtensionContext,
   ExtensionCommandContext
 } from '@earendil-works/pi-coding-agent'
-import { DynamicBorder, BorderedLoader } from '@earendil-works/pi-coding-agent'
+import {
+  BorderedLoader,
+  DynamicBorder,
+  getAgentDir
+} from '@earendil-works/pi-coding-agent'
 import {
   Container,
   fuzzyFilter,
@@ -379,6 +383,137 @@ function hasBlockingReviewFindings(messageText: string): boolean {
   }
 
   return hasNeedsAttentionVerdict(messageText)
+}
+
+/** How much classifier evidence it takes to override a clean tag result. */
+const CLASSIFIER_ESCALATION_THRESHOLD = 0.8
+
+/** Matches the default in extensions/classifier.ts until /classifier picks one. */
+const DEFAULT_CLASSIFIER_ID = '~typesafe/jev-latest'
+
+/** The state is sent twice per request, so long reviews are clipped. */
+const CLASSIFIER_STATE_CHARS = 12_000
+
+function clipForClassifier(messageText: string): string {
+  if (messageText.length <= CLASSIFIER_STATE_CHARS) {
+    return messageText
+  }
+
+  const half = Math.floor(CLASSIFIER_STATE_CHARS / 2)
+  return `${messageText.slice(0, half)}\n\n[... trimmed ...]\n\n${messageText.slice(-half)}`
+}
+
+/**
+ * Ask a classifier whether a review carries a blocking finding the severity
+ * tags missed. Returns null when no classifier model is available, so the
+ * caller falls back to the tag result alone.
+ */
+async function classifierEscalation(
+  ctx: ExtensionContext,
+  messageText: string
+): Promise<{ blocking: boolean; probability: number; model: string } | null> {
+  const available = await ctx.modelRegistry
+    .getAvailableOfType('classifier')
+    .catch(() => [])
+  if (available.length === 0) {
+    return null
+  }
+
+  let configured: string | undefined
+  try {
+    const raw = JSON.parse(
+      await fs.readFile(path.join(getAgentDir(), 'settings.json'), 'utf8')
+    ) as Record<string, unknown>
+    const block = raw.classifier
+    if (typeof block === 'object' && block !== null) {
+      const model = (block as Record<string, unknown>).model
+      if (typeof model === 'string') {
+        configured = model
+      }
+    }
+  } catch {
+    // Missing or unreadable settings, fall back to the first available model.
+  }
+
+  const configuredRef = configured ?? ''
+  const slash = configuredRef.indexOf('/')
+  const configuredModel =
+    slash > 0
+      ? available.find(
+          (model) =>
+            model.provider === configuredRef.slice(0, slash) &&
+            model.id === configuredRef.slice(slash + 1)
+        )
+      : undefined
+  const model =
+    configuredModel ??
+    available.find((candidate) => candidate.id === DEFAULT_CLASSIFIER_ID) ??
+    available[0]
+
+  const result = await ctx.modelRegistry.classify(
+    model,
+    {
+      state: { review: clipForClassifier(messageText) },
+      questions: {
+        blocking: {
+          type: 'bool',
+          instructions:
+            'Does this review contain at least one finding that must be fixed before the change is merged?',
+          criteria: {
+            true: 'At least one finding blocks the merge',
+            false: 'Only nits, questions, praise, or no findings at all'
+          }
+        }
+      }
+    },
+    { signal: ctx.signal, temperature: 1.3 }
+  )
+
+  if (result.stopReason !== 'stop') {
+    return null
+  }
+
+  const answer = result.answers.blocking
+  if (!answer || answer.type !== 'bool') {
+    return null
+  }
+
+  return {
+    blocking: answer.probability >= CLASSIFIER_ESCALATION_THRESHOLD,
+    probability: answer.probability,
+    model: `${result.provider}/${result.model}`
+  }
+}
+
+/**
+ * Blocking findings for the fix loop. The severity tags stay authoritative, so
+ * a classifier can only add a blocking verdict the tags missed, never remove
+ * one. Without a classifier this is the tag result alone.
+ */
+async function reviewHasBlockingFindings(
+  ctx: ExtensionContext,
+  messageText: string
+): Promise<boolean> {
+  if (hasBlockingReviewFindings(messageText)) {
+    return true
+  }
+
+  let escalated: Awaited<ReturnType<typeof classifierEscalation>>
+  try {
+    escalated = await classifierEscalation(ctx, messageText)
+  } catch {
+    return false
+  }
+
+  if (!escalated || !escalated.blocking) {
+    return false
+  }
+
+  ctx.ui.notify(
+    `Classifier ${escalated.model} rates a blocking finding at p ${escalated.probability.toFixed(2)} although no P0-P2 tag matched. Continuing the fix loop.`,
+    'info'
+  )
+  return true
 }
 
 // Review target types (matching Codex's approach)
@@ -1930,7 +2065,7 @@ export default function reviewExtension(pi: ExtensionAPI) {
           return
         }
 
-        if (!hasBlockingReviewFindings(reviewSnapshot.text)) {
+        if (!(await reviewHasBlockingFindings(ctx, reviewSnapshot.text))) {
           const finalized = await executeEndReviewAction(
             ctx,
             'returnAndSummarize',
