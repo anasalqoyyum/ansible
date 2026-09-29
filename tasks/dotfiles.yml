@@ -113,6 +113,63 @@
     - dotfiles
     - stow
 
+# Claude Code syncs claude.ai skills into ~/.claude/skills/synced, so that
+# directory must not be a symlink to the shared ~/.agents/skills.
+- name: Check Claude skills directory
+  ansible.builtin.stat:
+    path: "{{ lookup('env', 'HOME') }}/.claude/skills"
+  register: claude_skills_dir
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Remove legacy Claude skills symlink
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.claude/skills"
+    state: absent
+  when: claude_skills_dir.stat.islnk | default(false)
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Ensure Claude skills directory exists
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.claude/skills"
+    state: directory
+    mode: "0755"
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Find shared agent skills
+  ansible.builtin.find:
+    paths: "{{ lookup('env', 'HOME') }}/.agents/skills"
+    file_type: directory
+    # BrowserSkill installs its own Claude Code copy (tasks/browser-skill-setup.yml).
+    excludes:
+      - browser-skill
+  register: shared_agent_skills
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Link shared agent skills into Claude skills
+  ansible.builtin.file:
+    src: "{{ item.path }}"
+    dest: "{{ lookup('env', 'HOME') }}/.claude/skills/{{ item.path | basename }}"
+    state: link
+  loop: "{{ shared_agent_skills.files }}"
+  loop_control:
+    label: "{{ item.path | basename }}"
+  tags:
+    - install
+    - dotfiles
+    - stow
+
 - name: Ensure mise zsh shims activation is configured in .zprofile
   blockinfile:
     path: "{{ lookup('env', 'HOME') }}/.zprofile"

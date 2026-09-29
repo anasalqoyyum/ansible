@@ -32,12 +32,13 @@
     "toolSuccessBg": "#1D2A21",
     "toolErrorBg": "#2A1D1D",
 
-    "thinkingOffColor": "#666666",
-    "thinkingMinimalColor": "#81A2BE",
-    "thinkingLowColor": "#7AA6DA",
-    "thinkingMediumColor": "#7AA6DA",
-    "thinkingHighColor": "#B4CBFF",
-    "thinkingXhighColor": "#B4CBFF"
+    "thinkingOffColor": "#6b6b6b",
+    "thinkingMinimalColor": "#5c7c97",
+    "thinkingLowColor": "#5c7c97",
+    "thinkingMediumColor": "#598983",
+    "thinkingHighColor": "#9877a1",
+    "thinkingXhighColor": "#a872c1",
+    "thinkingMaxColor": "#d36f6f"
   },
   "colors": {
     "accent": "blue",
@@ -87,10 +88,10 @@
     "thinkingOff": "thinkingOffColor",
     "thinkingMinimal": "thinkingMinimalColor",
     "thinkingLow": "thinkingLowColor",
-    "thinkingMedium": "thinkingLowColor",
-    "thinkingHigh": "thinkingMediumColor",
-    "thinkingXhigh": "thinkingMediumColor",
-    "thinkingMax": "thinkingMediumColor",
+    "thinkingMedium": "thinkingMediumColor",
+    "thinkingHigh": "thinkingHighColor",
+    "thinkingXhigh": "thinkingXhighColor",
+    "thinkingMax": "thinkingMaxColor",
     "bashMode": "orange"
   },
   "export": {
