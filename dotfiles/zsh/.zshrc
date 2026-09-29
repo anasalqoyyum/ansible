@@ -94,40 +94,6 @@ zinit ice wait'2' lucid atload"zpcdreplay" atclone"./zplug.zsh" atpull"%atclone"
 zinit light g-plane/pnpm-shell-completion
 
 # Functions
-function sesh-sessions() {
-  {
-    exec </dev/tty
-    exec <&1
-    local session
-    session=$(sesh list -t -c | fzf --height 40% --reverse --border-label ' sesh ' --border --prompt '⚡  ')
-    zle reset-prompt > /dev/null 2>&1 || true
-    [[ -z "$session" ]] && return
-    sesh connect $session
-  }
-}
-function tms() {
-  local selected
-  selected=$(sesh list --icons | fzf --height 40% --layout reverse --border \
-    --no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
-    --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
-    --bind 'tab:down,btab:up' \
-    --bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list --icons)' \
-    --bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t --icons)' \
-    --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -c --icons)' \
-    --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z --icons)' \
-    --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
-    --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list --icons)' \
-  )
-
-  # Trim any leading/trailing whitespace and newlines
-  selected=$(echo "$selected" | xargs)
-
-  if [ -n "$selected" ]; then
-    sesh connect "$selected"
-  else
-    echo "No session selected."
-  fi
-}
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	yazi "$@" --cwd-file="$tmp"
@@ -291,12 +257,6 @@ if [[ -n "${terminfo[kend]}" ]]; then
   bindkey -M viins "${terminfo[kend]}"  end-of-line
   bindkey -M vicmd "${terminfo[kend]}"  end-of-line
 fi
-
-# sesh-sessions bindings (ALT+S)
-zle     -N             sesh-sessions
-bindkey -M emacs '\es' sesh-sessions
-bindkey -M vicmd '\es' sesh-sessions
-bindkey -M viins '\es' sesh-sessions
 
 # CTRL+X+E to edit the current command in editor
 autoload -U edit-command-line
