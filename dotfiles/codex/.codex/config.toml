@@ -18,11 +18,11 @@ default_subagent_reasoning_effort = "max"
 default_mode_request_user_input = true
 hooks = true
 unified_exec = true
-wsl_remote_connections = true
 context_management.experimental_mode = true
 prevent_idle_sleep = true
 analytics_plan_history = true
 api_key_model_discovery = true # Required for model discovery in the CLIProxyAPI provider
+# wsl_remote_connections = true # Enable only for Windows ChatGPT app
 
 [notice]
 hide_full_access_warning = true
