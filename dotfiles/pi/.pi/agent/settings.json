@@ -3,7 +3,9 @@
   "defaultProvider": "deepseek",
   "defaultModel": "deepseek-flash",
   "defaultThinkingLevel": "high",
-  "defaultTools": ["+codemode"],
+  "defaultTools": [
+    "+codemode"
+  ],
   "quietStartup": true,
   "packages": [
     "npm:@ff-labs/pi-fff",
@@ -19,9 +21,9 @@
   "transport": "websocket",
   "enableInstallTelemetry": false,
   "enabledModels": [
-    "openai-codex/gpt-6-astra",
-    "openai-codex/gpt-6-luna",
-    "openai-codex/gpt-6-sol",
+    "openai/gpt-6.1-sol",
+    "openai/gpt-6-astra",
+    "openai/gpt-6-luna",
     "deepseek/deepseek-flash"
   ],
   "editorPaddingX": 0,

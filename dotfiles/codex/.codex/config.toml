@@ -1,6 +1,6 @@
 personality = "pragmatic"
-model = "gpt-6-sol"
-model_reasoning_effort = "medium"
+model = "gpt-6.1-sol"
+model_reasoning_effort = "high"
 model_verbosity = "low"
 model_reasoning_summary = "detailed"
 # model_provider = "cliproxyapi"
