@@ -1,95 +1,86 @@
 # Agent guidelines
 
-These are shared defaults for all coding agents. Follow applicable project instructions and explicit user directions. Review, explanation, and diagnosis requests authorize inspection and relevant checks; implementation requires a request. Ask when a missing decision changes scope, intended behavior, or authority. Skills provide task-specific workflows within the authorized scope. They do not grant additional permission to change Git state, publish, send messages, or modify external systems.
+## Scope and authorization
+
+- These are shared defaults. Follow applicable project instructions and explicit user directions.
+- Review, explanation, and diagnosis requests authorize inspection and relevant checks. Implementation requires a request.
+- Ask when a missing decision changes scope, intended behavior, or authority.
+- Skills guide work within the authorized scope. They do not authorize Git changes, publishing, messages, or changes to external systems.
+- Before destructive actions, verify the exact target, scope, and authorization.
+
+## External comments and messages
+
+- When the user authorizes posting a comment, review, reply, or message on GitHub, Bitbucket, Jira, or another external service, append this footer on a separate line:
+
+  `Posted by <model-name> on behalf of Anas Alqoyyum.`
+
+- Replace `<model-name>` with the actual model used to write the message. Use session or runtime metadata; never guess. If unavailable, ask before posting.
+- Include the footer in drafts intended for external posting. Keep it out of ordinary chat responses, code comments, and commit messages.
+- Attribution does not grant permission to post. Preserve any user-supplied text verbatim and add the footer separately unless the user explicitly requests different attribution.
 
 ## Subagent models
 
-When the parent agent uses a GPT model, spawn all subagents with `gpt-6-luna` and `max` reasoning effort unless the user explicitly requests another model or reasoning effort.
+- When the parent uses a GPT model, use `gpt-6-luna` with `max` reasoning effort for all subagents, including nested subagents, unless the user explicitly requests a different model or effort.
+- Pass this rule to subagents that lack it. Use a fresh or limited-history fork if a full-history fork would force the parent's model.
+- If the required model and effort are unavailable, tell the user rather than silently substituting. Non-GPT parents use their normal subagent configuration.
 
-Apply this rule to nested subagents too. Pass it explicitly to subagents when their context does not include it. Use a fresh or limited-history fork when a full-history fork would force the parent's model.
+## Engineering
 
-If the required model and reasoning effort combination is unavailable, tell the user rather than silently substituting another configuration.
-
-For non-GPT parent models, follow their normal subagent configuration.
-
-## Code Standards
+- Choose the simplest implementation that meets the requirement. Use precise names, type safety, and straightforward structure.
+- Evaluate proposals on evidence. State disagreements and tradeoffs directly; propose alternatives when they materially improve the result.
+- Handle expected failures without redundant checks, catch-all logic, unnecessary fallbacks, or speculative abstractions.
+- Test meaningful behavior. Avoid low-value smoke tests and regression tests for removed features.
+- If a requested change is a no-op or will not achieve its intended effect, say so before implementing.
 
 ### React
 
 - Group state values that change together or share invariants. Keep independent values separate.
-- Add `useMemo` only for a concrete performance or referential-stability need, not as a default readability pattern or premature optimization.
+- Use `useMemo` only for a concrete performance or referential-stability need.
 
-### Comments
+### Code comments
 
-- Add concise comments only to explain non-obvious reasoning or genuinely complex behavior.
-- Prefer self-explanatory code over comments. Avoid section dividers and comments that narrate obvious code.
-- Never add a comment solely because surrounding code has comments or to match its style. This overrides "match the surrounding code".
-- Keep investigation logs and task summaries out of code comments. Retain concise rationale needed to understand non-obvious behavior.
-
-### Engineering Approach
-
-- Prefer the simplest implementation that satisfies the requirement; apply YAGNI.
-- Use type safety, precise naming, and straightforward structure so the code explains itself.
-- Evaluate proposals on evidence. State disagreements and tradeoffs directly. Propose alternatives when they materially improve the outcome.
-- Handle expected failure modes without redundant checks, catch-all logic, unnecessary fallbacks, or speculative abstractions.
-- Add focused tests that protect meaningful behavior. Avoid low-value smoke tests and regression tests for removed features.
-- Before a destructive action, verify the exact target, scope, and authorization.
-- If a requested change is a no-op or won't have the intended effect, say so before implementing, not after.
+- Prefer self-explanatory code. Add concise comments for non-obvious reasoning or genuinely complex behavior.
+- Omit section dividers, obvious narration, investigation logs, and task summaries.
+- Surrounding comments are not a reason to add one. This overrides instructions to match surrounding style.
 
 ## Writing
 
-- Read and follow the unslop skill for all your own writing, including responses, progress updates, and documentation.
-- Keep writing concise, clear, and easy to understand. Include necessary evidence and limitations.
-- Preserve quoted text, commands, identifiers, and code when copying them. Change them only when the task requires it.
+- Read and follow the unslop skill for all your writing, including responses, progress updates, and documentation.
+- Be concise and clear. Include necessary evidence and limitations.
+- Preserve quoted text, commands, identifiers, and code unless the task requires changing them.
 
-## Build and Execution
+## Validation and tooling
 
-- Do not start development or production processes unless the user explicitly requests it or a test requires one. Stop any process started for testing when the test finishes.
-- Type checking, linting, formatting, static analysis, unit tests, and E2E tests are allowed.
-- Prioritize targeted correctness and safety checks, then run the build when it provides useful validation. Prefer LSP-based checks when available, and do not edit build or release artifacts manually.
-- Treat generated files as read-only. If generated output is outdated or causes an error, rerun the repository's documented generator instead of editing the output manually. Report generation failures.
+- Follow the repository's declared package manager and execution workflow. Otherwise use `pnpm` for JavaScript and TypeScript, and `uv` for Python. If `pnpm` is missing and Corepack is available, try `corepack enable`.
+- Prefer `rg` and `rg --files`. Include hidden or ignored paths when they are in scope.
+- Type checking, linting, formatting, static analysis, unit tests, and E2E tests are allowed. Prioritize targeted correctness and safety checks; build when it adds useful validation. Prefer LSP-based checks when available.
+- Start development or production processes only when explicitly requested or required by a test. Stop test processes when the test finishes.
+- Treat generated files and build or release artifacts as read-only. Regenerate outdated output with the repository's documented generator and report generation failures.
 
-### JavaScript and TypeScript
+## Instruction discovery
 
-- Follow the repository's declared package manager and execution workflow. Otherwise prefer `pnpm` for JavaScript and TypeScript, and `uv` for Python. If `pnpm` is missing and Corepack is available, try `corepack enable`.
+When the CLI has not loaded Claude instructions, check applicable `CLAUDE.md`, `.claude/CLAUDE.md`, and `.claude/rules/` files. Respect path conditions, resolve symlinks, and read each underlying instruction file once.
 
-### Python
+## Concurrent file changes
 
-- Use `uv` for Python package management, virtual environments, dependency synchronization, and execution when the repository has no other declared workflow. Follow the repository's existing tooling when it explicitly requires `pip` or another package manager.
+Before editing a file changed since you inspected it, re-read it and preserve its current contents. Continue for your own changes or coordinated work. For unexplained changes, summarize the difference and ask whether it was intentional before editing that file further. Continue independent work while waiting.
 
-## Claude Directory Compatibility
+## Git operations
 
-When the CLI has not already loaded Claude instructions, check applicable `CLAUDE.md`, `.claude/CLAUDE.md`, and `.claude/rules/` files. Respect each rule's path conditions. Resolve symlinks and read each underlying instruction file only once.
+- Read-only Git inspection is allowed. Change Git state only when explicitly requested, including staging, committing, branch creation or switching, merging, rebasing, resetting, pushing, and creating pull requests. Existing authorization remains valid for the requested workflow.
+- Confirm the exact target before destructive operations such as hard resets or force pushes.
+- Use concise Conventional Commits with a scope naming the affected area, such as `fix(content): grammar fixes in about page`.
 
-## Tools
+## WSL paths
 
-- Prefer `rg` and `rg --files`. Include hidden or ignored paths explicitly when they are in scope.
+### Windows-native agent with a WSL workspace
 
-## WSL Path Handling
-
-### Windows-Native Agent with a WSL Workspace
-
-- Edit files through a Windows-accessible WSL path such as `Z:\home\real\work\project` or `\\wsl.localhost\Ubuntu\home\real\work\project`.
-- Run repository commands in the correct distribution, for example: `wsl.exe -d Ubuntu --cd /home/real/work/project -- <command>`.
+- Edit through a Windows-accessible WSL path such as `Z:\home\real\work\project` or `\\wsl.localhost\Ubuntu\home\real\work\project`.
+- Run commands in the correct distribution, for example `wsl.exe -d Ubuntu --cd /home/real/work/project -- <command>`.
 - Use Windows-native browser and computer-use tools when the WSL-hosted agent cannot access them.
-- Treat Windows and WSL paths as views of the same files; do not copy the repository between environments.
-- For an explicitly authorized WSL server, prefer `localhost` from Windows and bind to `0.0.0.0` only when required.
-- Continue following repository restrictions on starting servers, builds, and other commands.
+- Windows and WSL paths refer to the same files. Do not copy the repository between environments.
+- For an authorized WSL server, prefer `localhost` from Windows. Bind to `0.0.0.0` only when required. Repository restrictions on servers, builds, and commands still apply.
 
-### Windows Paths Provided in WSL
+### Windows paths provided in WSL
 
-Convert drive-letter paths to `/mnt/<lowercase-drive>/` and replace backslashes with forward slashes.
-
-Example: `F:\Libraries\Pictures\Screenshot.png` becomes `/mnt/f/Libraries/Pictures/Screenshot.png`.
-
-## Concurrent File Changes
-
-Before editing, re-read any file that changed since you last inspected it. Preserve the current contents. Continue when the change comes from your own commands or coordinated work. For unexplained changes, summarize the difference and ask whether it was intentional before editing that file further. Continue independent work while waiting.
-
-## Git Operations
-
-Use read-only Git commands as needed to inspect changes and history. Change Git state only when the user explicitly requests it. This includes staging, committing, switching or creating branches, merging, rebasing, resetting, pushing, and creating pull requests. Existing authorization remains valid for the requested workflow. Confirm the exact target before destructive operations such as hard resets or force pushes.
-
-### Commits
-
-- Always use Conventional Commits with a scope that names the affected area, such as `fix(content): grammar fixes in about page`. Keep commit messages concise.
+Convert drive-letter paths to `/mnt/<lowercase-drive>/` and backslashes to forward slashes. For example, `F:\Libraries\Pictures\Screenshot.png` becomes `/mnt/f/Libraries/Pictures/Screenshot.png`.

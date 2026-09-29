@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "0.99.1",
-  "defaultProvider": "deepseek",
-  "defaultModel": "deepseek-flash",
+  "defaultProvider": "openai",
+  "defaultModel": "gpt-6.1-sol",
   "defaultThinkingLevel": "high",
   "defaultTools": [
     "+codemode"
@@ -20,13 +20,13 @@
   "theme": "savy-dark",
   "transport": "websocket",
   "enableInstallTelemetry": false,
+  "editorPaddingX": 0,
   "enabledModels": [
     "openai/gpt-6.1-sol",
     "openai/gpt-6-astra",
     "openai/gpt-6-luna",
     "deepseek/deepseek-flash"
   ],
-  "editorPaddingX": 0,
   "collapseChangelog": true,
   "showHardwareCursor": false,
   "steeringMode": "all",
