@@ -27,11 +27,20 @@
     "openai/gpt-6-luna",
     "deepseek/deepseek-flash"
   ],
+  "modelThinkingLevels": {
+    "openai/gpt-6.1-sol": "high",
+    "deepseek/deepseek-flash": "max",
+    "openai/gpt-6-luna": "max",
+    "openai/gpt-6-astra": "high"
+  },
   "collapseChangelog": true,
   "showHardwareCursor": false,
   "steeringMode": "all",
+  "followUpMode": "one-at-a-time",
   "defaultProjectTrust": "always",
   "treeFilterMode": "default",
+  "cacheWarming": "idle",
+  "showCacheMissNotices": true,
   "markdown": {
     "mermaid": "streaming"
   },
@@ -58,8 +67,6 @@
       "blazing": "#44ddff"
     }
   },
-  "cacheWarming": "idle",
-  "showCacheMissNotices": true,
   "classifier": {
     "model": "openrouter/~typesafe/jev-latest"
   }
