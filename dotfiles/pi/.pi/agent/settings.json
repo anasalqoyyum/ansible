@@ -3,9 +3,7 @@
   "defaultProvider": "openai",
   "defaultModel": "gpt-6.1-sol",
   "defaultThinkingLevel": "high",
-  "defaultTools": [
-    "+codemode"
-  ],
+  "defaultTools": ["+codemode"],
   "quietStartup": "header",
   "packages": [
     "npm:@ff-labs/pi-fff",
@@ -13,8 +11,6 @@
     "npm:@vanillagreen/pi-web-tools",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@juicesharp/rpiv-todo",
-    "npm:@tintinweb/pi-subagents",
-    "npm:@narumitw/pi-usage",
     "npm:pi-token-speed"
   ],
   "theme": "savy-dark",

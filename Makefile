@@ -31,6 +31,7 @@ copy-local:
 		--exclude='/pi/.pi/agent/mcp-onboarding.json' \
 		--exclude='/pi/.pi/agent/run-history.jsonl' \
 		--exclude='/pi/.pi/agent/missions/' \
+		--exclude='/pi/.pi/agent/durable-subagents/' \
 		--exclude='/pi/.pi/agent/auth.json' \
 		--exclude='/pi/.pi/agent/mcp-auth.json' \
 		--exclude='/pi/.pi/agent/.cache/' \
