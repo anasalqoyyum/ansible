@@ -31,6 +31,25 @@
     - dotfiles
     - stow
 
+- name: Preserve local state behind legacy directory symlinks
+  ansible.builtin.command:
+    argv: >-
+      {{ [
+        ansible_playbook_python,
+        playbook_dir ~ '/utils/preserve-local-dotfiles.py',
+        '--source', playbook_dir ~ '/dotfiles',
+        '--dotfiles', lookup('env', 'HOME') ~ '/.dotfiles',
+        '--target', lookup('env', 'HOME')
+      ] + (['--dry-run'] if ansible_check_mode else []) }}
+  register: dotfiles_local_state
+  changed_when: dotfiles_local_state.stdout != ""
+  check_mode: false
+  delegate_to: localhost
+  tags:
+    - install
+    - dotfiles
+    - stow
+
 - name: Sync dotfiles from repo (idempotent)
   ansible.builtin.command:
     argv:
@@ -42,12 +61,9 @@
       - --exclude=.git
       - --exclude=.gitignore
       - --exclude=*.log
-      - --exclude=herdr/.config/herdr/.plugins.lock
-      - --exclude=herdr/.config/herdr/plugins.json
-      - --exclude=herdr/.config/herdr/plugins/
+      - "--exclude-from={{ playbook_dir }}/dotfiles/.sync-exclude"
       - --filter=P agents/.agents/skills/browser-skill/
       - --filter=P node_modules/
-      - --exclude=node_modules/
       - "{{ playbook_dir }}/dotfiles/"
       - "{{ lookup('env', 'HOME') }}/.dotfiles/"
   register: dotfiles_rsync
@@ -72,12 +88,9 @@
       - --exclude=.git
       - --exclude=.gitignore
       - --exclude=*.log
-      - --exclude=herdr/.config/herdr/.plugins.lock
-      - --exclude=herdr/.config/herdr/plugins.json
-      - --exclude=herdr/.config/herdr/plugins/
+      - "--exclude-from={{ playbook_dir }}/dotfiles/.sync-exclude"
       - --filter=P agents/.agents/skills/browser-skill/
       - --filter=P node_modules/
-      - --exclude=node_modules/
       - "{{ playbook_dir }}/dotfiles/"
       - "{{ lookup('env', 'HOME') }}/.dotfiles/"
   register: dotfiles_rsync_check

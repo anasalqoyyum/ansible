@@ -101,10 +101,36 @@ If the key source path does not exist, the SSH key copy step is skipped with a w
 - Dotfiles source: `dotfiles/`
 - Validation and helper commands: `Makefile`
 
-## Dotfiles Sync Helpers
+## Dotfiles sync helpers
 
+- Apply dotfiles on Linux: `make sync-dotfiles-linux`
+- Apply dotfiles on macOS: `make sync-dotfiles-macos`
+- Copy dotfiles to Windows: `make sync-dotfiles-windows`
 - Sync local dotfiles back into this repo: `make copy-local`
+- Test sync and migration behavior: `make test-dotfiles`
 - Clean `.DS_Store` files: `make clean-dsstore`
+
+Linux and macOS use Stow with `--no-folding`. Directories such as `~/.pi/agent`
+remain real directories, and only managed files link into `~/.dotfiles`. New auth
+files, caches, and sessions stay in your home directory, outside the repo sync.
+
+Before syncing, the playbook moves local-only entries and known runtime state out
+of any legacy Stow directory links. It preserves file permissions and refuses to
+overwrite unrelated local files. Check mode previews these moves without changing
+files. On this first
+migration, entries absent from the repo are kept as local state, including any
+previously removed configuration files. Stop apps that write to these directories
+before the first sync.
+
+Local `node_modules` under managed code stays in `~/.dotfiles` so imports through
+symlinked code still resolve. Rsync protects those dependencies from deletion.
+Windows uses file copies rather than Stow and keeps destination-only files, so
+removed repo files must be cleaned up manually there.
+
+`dotfiles/.sync-exclude` lists runtime paths excluded from both forward sync and
+`copy-local`, including Pi credentials, sessions, and caches. This also prevents
+old ignored runtime files in the repo directory from being copied back into your
+home. New runtime files live outside `~/.dotfiles` and its copy source.
 
 ## Reference
 

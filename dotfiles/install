@@ -108,7 +108,7 @@ echo "📂 Folders: ${folders[*]}"
 echo ""
 
 typeset -a stow_cmd
-stow_cmd=(stow -R)
+stow_cmd=(stow -R --no-folding)
 if [[ "$DRY_RUN" == true ]]; then
   stow_cmd+=(-n)
 fi

@@ -1,48 +1,24 @@
 HOME_DIR := $(HOME)
 DOTFILES_SRC := ./dotfiles/
 DOTFILES_DEST := $(HOME_DIR)/.dotfiles/
+DOTFILES_EXCLUDES := ./dotfiles/.sync-exclude
 DETECTED_WINDOWS_USER := $(shell if command -v cmd.exe >/dev/null 2>&1; then cmd.exe /c 'echo %USERNAME%' 2>/dev/null | tr -d '\r' | tail -n 1; fi)
 WINDOWS_USER := $(or $(WINDOWS_USER),$(DETECTED_WINDOWS_USER))
 WINDOWS_HOME := /mnt/c/Users/$(WINDOWS_USER)
 ZED_WINDOWS_DIR ?= $(WINDOWS_HOME)/AppData/Roaming/Zed
 ZED_DOTFILES_DIR := ./dotfiles/zed/.config/zed
 
-.PHONY: copy-local sync-dotfiles-linux sync-dotfiles-macos sync-dotfiles-windows sync-zed-windows clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
+.PHONY: test-dotfiles copy-local sync-dotfiles-linux sync-dotfiles-macos sync-dotfiles-windows sync-zed-windows clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
 
 VAULT_PASSWORD_FILE ?= .vault_pass
 
 copy-local:
 	rsync -a \
-		--exclude='.stow.log' \
-		--exclude='node_modules/' \
-		--exclude='/claude/.claude/hooks/herdr-agent-state.sh' \
-		--exclude='/herdr/.config/herdr/.plugins.lock' \
-		--exclude='/herdr/.config/herdr/plugins.json' \
-		--exclude='/herdr/.config/herdr/plugins/' \
-		--exclude='/herdr/.config/herdr/release-notes.json' \
-		--exclude='/herdr/.config/herdr/sessions/' \
-		--exclude='/herdr/.config/herdr/session.json' \
-		--exclude='/herdr/.config/herdr/herdr-server.log' \
-		--exclude='/opencode/.config/opencode/plugins/herdr-agent-state.js' \
-		--exclude='/opencode/.config/opencode/herdr-tui-session.js' \
-		--exclude='/pi/.pi/agent/extensions/herdr-agent-state.ts' \
-		--exclude='/pi/.pi/agent/mcp-cache.json' \
-		--exclude='/pi/.pi/agent/mcp-npx-cache.json' \
-		--exclude='/pi/.pi/agent/mcp-onboarding.json' \
-		--exclude='/pi/.pi/agent/run-history.jsonl' \
-		--exclude='/pi/.pi/agent/missions/' \
-		--exclude='/pi/.pi/agent/durable-subagents/' \
-		--exclude='/pi/.pi/agent/auth.json' \
-		--exclude='/pi/.pi/agent/mcp-auth.json' \
-		--exclude='/pi/.pi/agent/.cache/' \
-		--exclude='/pi/.pi/agent/cache/' \
-		--exclude='/pi/.pi/agent/models-store.json' \
-		--exclude='/pi/.pi/agent/npm/package.json' \
-		--exclude='/pi/.pi/agent/npm/package-lock.json' \
-		--exclude='/pi/.pi/agent/sessions/' \
-		--exclude='/pi/.pi/agent/vstack/sessions/' \
-		--exclude='/pi/.pi/agent/todos/' \
+		--exclude-from="$(DOTFILES_EXCLUDES)" \
 		"$(DOTFILES_DEST)" "$(DOTFILES_SRC)"
+
+test-dotfiles:
+	uv run --no-project --with pyyaml python -B -m unittest discover -s tests -p 'test_dotfiles.py' -v
 
 bootstrap-collections:
 	ansible-galaxy collection install -r requirements.yml
