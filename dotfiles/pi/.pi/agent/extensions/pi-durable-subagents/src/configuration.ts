@@ -15,6 +15,7 @@ const roleFrontmatter = Type.Object({
   model: Type.Optional(Type.String()),
   thinking: Type.Optional(Type.String()),
   tools: Type.Optional(stringList),
+  approved: Type.Optional(Type.Boolean()),
 });
 
 const ruleFrontmatter = Type.Object({ paths: Type.Optional(stringList) });
@@ -40,11 +41,15 @@ function strings(value: string | string[]): string[] {
     .filter(Boolean);
 }
 
+export type RoleSource = 'builtin' | 'user' | 'project';
+
 export type Role = {
   name: string;
   description: string;
   instructions: string;
   tools: string[];
+  source: RoleSource;
+  approved: boolean;
   model?: string;
   thinking?: ModelThinkingLevel;
   error?: string;
@@ -57,6 +62,8 @@ const defaults: Role[] = [
     instructions:
       'Complete the assigned task. Make only authorized changes. Report what changed, checks run, and limitations. Do not delegate or change Git state without explicit authorization.',
     tools: availableTools,
+    source: 'builtin',
+    approved: false,
   },
   {
     name: 'Explore',
@@ -64,6 +71,8 @@ const defaults: Role[] = [
     instructions:
       'Inspect the repository to locate files, symbols, and references. Do not edit files or change Git state. Use bash only for read-only inspection. Report precise paths and evidence.',
     tools: ['read', 'bash'],
+    source: 'builtin',
+    approved: false,
   },
   {
     name: 'Plan',
@@ -71,25 +80,32 @@ const defaults: Role[] = [
     instructions:
       'Inspect the repository and propose an implementation plan with affected files, risks, and validation. Do not implement changes or change Git state. Use bash only for read-only inspection.',
     tools: ['read', 'bash'],
+    source: 'builtin',
+    approved: false,
   },
 ];
 
 export function loadRoles(project: string, agentDir = getAgentDir()): Map<string, Role> {
   const roles = new Map(defaults.map((role) => [role.name, role]));
 
-  for (const directory of [join(agentDir, 'agents'), join(project, '.pi', 'agents')]) {
-    if (!existsSync(directory)) continue;
+  const directories: { path: string; source: RoleSource }[] = [
+    { path: join(agentDir, 'agents'), source: 'user' },
+    { path: join(project, '.pi', 'agents'), source: 'project' },
+  ];
 
-    for (const file of readdirSync(directory)
+  for (const directory of directories) {
+    if (!existsSync(directory.path)) continue;
+
+    for (const file of readdirSync(directory.path)
       .filter((file) => file.endsWith('.md'))
       .sort()) {
-      const path = join(directory, file);
+      const path = join(directory.path, file);
       const { frontmatter, body } = parseFrontmatter(readFileSync(path, 'utf8'));
 
       if (!Check(roleFrontmatter, frontmatter)) throw new Error(`Invalid frontmatter in ${path}`);
 
       const extra = Object.keys(frontmatter).filter(
-        (key) => !['name', 'description', 'model', 'thinking', 'tools'].includes(key),
+        (key) => !['name', 'description', 'model', 'thinking', 'tools', 'approved'].includes(key),
       );
 
       const name = frontmatter.name ?? basename(file, '.md');
@@ -99,6 +115,8 @@ export function loadRoles(project: string, agentDir = getAgentDir()): Map<string
         description: frontmatter.description ?? name,
         instructions: body,
         tools: frontmatter.tools === undefined ? availableTools : strings(frontmatter.tools),
+        source: directory.source,
+        approved: frontmatter.approved === true,
       };
 
       if (extra.length) role.error = `Unsupported frontmatter in ${path}: ${extra.join(', ')}`;

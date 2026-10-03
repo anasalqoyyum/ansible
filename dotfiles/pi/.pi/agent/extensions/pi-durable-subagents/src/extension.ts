@@ -9,13 +9,20 @@ import {
 import { LiveDoc } from '@earendil-works/pi-durable';
 import { modelsFromPi } from './models.ts';
 import { context, openRuntime, type Runtime } from './runtime.ts';
-import { resolveConfiguration } from './configuration.ts';
+import { loadRoles, resolveConfiguration } from './configuration.ts';
+import { policyEntrySchema, policyEntryType, requiresWriteAuthorization } from './policy.ts';
 import { reportDelivery } from './reports.ts';
 import { worktreeServices } from './worktrees.ts';
 import { createFleetUI, type FleetUI } from './ui.ts';
 import type { AgentRecord, Result } from './state.ts';
 
 const reportDetails = Type.Object({ reportId: Type.String() });
+
+const agentCall = Type.Object({
+  subagent_type: Type.Optional(Type.String()),
+  resume: Type.Optional(Type.String()),
+  description: Type.Optional(Type.String()),
+});
 
 function reportIds(ctx: ExtensionContext): Set<string> {
   const ids = new Set<string>();
@@ -54,6 +61,7 @@ export default function durableSubagents(pi: ExtensionAPI) {
   let delivery: ReturnType<typeof reportDelivery> | undefined;
   let unsubscribe: (() => void) | undefined;
   let initializing: Promise<void> | undefined;
+  let allowWriteChildren = false;
 
   const failures = (message: string, ctx: ExtensionContext) => ctx.ui.notify(message, 'error');
 
@@ -134,8 +142,46 @@ export default function durableSubagents(pi: ExtensionAPI) {
     return runtime;
   };
 
+  const resumedAgent = async (ctx: ExtensionContext, id: string) => {
+    try {
+      return await (await ready(ctx)).get(id);
+    } catch {
+      return undefined;
+    }
+  };
+
+  const writePolicyReason = (role: string) =>
+    `Subagent role "${role}" can write files and was not authorized. Implement the work in the parent, or ask the user to run /agents implement on to allow write-capable subagents for this session.`;
+
+  const showWritePolicy = (ctx: ExtensionContext) => {
+    if (!ctx.hasUI) return;
+    ctx.ui.setStatus(
+      'durable-subagents-policy',
+      allowWriteChildren ? 'subagents: writes allowed' : undefined,
+    );
+  };
+
+  const restoreWritePolicy = (ctx: ExtensionContext) => {
+    allowWriteChildren = false;
+
+    for (const entry of ctx.sessionManager.getBranch()) {
+      if (entry.type !== 'custom' || entry.customType !== policyEntryType) continue;
+
+      if (Check(policyEntrySchema, entry.data)) allowWriteChildren = entry.data.allowWrites;
+    }
+
+    showWritePolicy(ctx);
+  };
+
+  const setWritePolicy = (allow: boolean, ctx: ExtensionContext) => {
+    allowWriteChildren = allow;
+    pi.appendEntry(policyEntryType, { allowWrites: allow });
+    showWritePolicy(ctx);
+  };
+
   pi.on('session_start', async (_event, ctx) => {
     await close();
+    restoreWritePolicy(ctx);
     await initialize(ctx);
   });
   pi.on('session_shutdown', close);
@@ -146,11 +192,59 @@ export default function durableSubagents(pi: ExtensionAPI) {
     await delivery?.settled();
   });
 
+  pi.on('tool_call', async (event, ctx) => {
+    if (event.toolName !== 'Agent' || allowWriteChildren) return;
+
+    const input = event.input;
+
+    if (!Check(agentCall, input)) return;
+    const roles = loadRoles(ctx.cwd, getAgentDir());
+    let requires = false;
+    let label = '';
+
+    if (input.resume) {
+      const agent = await resumedAgent(ctx, input.resume);
+
+      if (!agent) return;
+      const role = roles.get(agent.configuration.role);
+
+      requires = role ? requiresWriteAuthorization(role) : true;
+      label = agent.configuration.role;
+    } else {
+      const role = roles.get(input.subagent_type ?? 'general-purpose');
+
+      if (!role) return;
+      requires = requiresWriteAuthorization(role);
+      label = role.name;
+    }
+
+    if (!requires) return;
+
+    if (!ctx.hasUI) return { block: true, reason: writePolicyReason(label) };
+    const once = 'Allow once';
+    const session = 'Allow for this session';
+
+    const choice = await ctx.ui.select(
+      `Subagent "${label}" can write files.${input.description ? `\n${input.description}` : ''}`,
+      [once, session, 'Deny'],
+    );
+
+    if (choice === once) return;
+
+    if (choice === session) {
+      setWritePolicy(true, ctx);
+
+      return;
+    }
+
+    return { block: true, reason: writePolicyReason(label) };
+  });
+
   pi.registerTool({
     name: 'Agent',
     label: 'Agent',
     description:
-      'Delegate to a persistent Durable child. Types: Explore, Plan, general-purpose, or a custom .pi/agents definition. Background is the default; foreground waits and is cancelled by parent Esc. Explore and Plan have no write/edit tools, but their shell access is prompt-restricted, not sandboxed. No MCP, workflows, scheduling, nested delegation, or legacy isolated/max_turns fields. Worktree isolation starts from recorded HEAD without parent uncommitted changes.',
+      'Delegate to a persistent Durable child. Prefer read-only roles (Explore, Plan, custom read-only agents) for investigation and review, and implement changes in the parent unless the user asks for a subagent. Write-capable roles require explicit user authorization. Types: Explore, Plan, general-purpose, or a custom .pi/agents definition. Background is the default; foreground waits and is cancelled by parent Esc. Explore and Plan have no write/edit tools, but their shell access is prompt-restricted, not sandboxed. No MCP, workflows, scheduling, nested delegation, or legacy isolated/max_turns fields. Worktree isolation starts from recorded HEAD without parent uncommitted changes.',
     parameters: Type.Object(
       {
         prompt: Type.String(),
@@ -381,10 +475,25 @@ export default function durableSubagents(pi: ExtensionAPI) {
   });
   pi.registerCommand('agents', {
     description:
-      'Durable agents for this parent session. /agents [id], /agents stop ID, /agents cleanup ID PATH',
+      'Durable agents for this parent session. /agents [id], /agents implement on|off, /agents stop ID, /agents cleanup ID PATH',
     async handler(args, ctx) {
-      await ready(ctx);
       const input = args.trim();
+
+      if (input === 'implement on' || input === 'implement off') {
+        const allow = input === 'implement on';
+
+        setWritePolicy(allow, ctx);
+        ctx.ui.notify(
+          allow
+            ? 'Write-capable subagents are allowed for this session'
+            : 'Write-capable subagents require authorization',
+          'info',
+        );
+
+        return;
+      }
+
+      await ready(ctx);
 
       if (input.startsWith('stop ')) {
         await runtime!.stop(input.slice(5));

@@ -20,6 +20,11 @@ test('installed Pi CLI auto-discovers the local extension with no package declar
       'dir',
     );
     await writeFile(join(directory, 'settings.json'), JSON.stringify({ packages: [] }));
+    await mkdir(join(directory, 'agents'), { recursive: true });
+    await writeFile(
+      join(directory, 'agents', 'cli-writer.md'),
+      '---\nname: cli-writer\ndescription: CLI proof writer\n---\nComplete the assigned task.',
+    );
 
     const command = execute(
       'pi',

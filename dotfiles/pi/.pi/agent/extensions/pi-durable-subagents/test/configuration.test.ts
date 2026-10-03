@@ -9,7 +9,12 @@ import {
   fauxAssistantMessage,
   fauxToolCall,
 } from '@earendil-works/pi-ai/providers/faux';
-import { applies, loadInstructions, resolveConfiguration } from '../src/configuration.ts';
+import {
+  applies,
+  loadInstructions,
+  loadRoles,
+  resolveConfiguration,
+} from '../src/configuration.ts';
 import { openRuntime, context } from '../src/runtime.ts';
 
 async function fixture() {
@@ -120,6 +125,7 @@ test('role and scoped-rule schemas reject malformed values without coercion', as
       'model: 42',
       'thinking: [max]',
       'tools: [read, 42]',
+      'approved: maybe',
     ]) {
       await writeFile(role, `---\n${fields}\n---\nInvalid role`);
       await assert.rejects(resolveConfiguration(f.input), /Invalid frontmatter/);
@@ -146,6 +152,43 @@ test('role and scoped-rule schemas reject malformed values without coercion', as
       loadInstructions(f.project, f.agentDir).find((entry) => entry.path === rule)?.paths,
       ['src/a.ts,src/b.ts'],
     );
+  } finally {
+    await rm(f.directory, { recursive: true, force: true });
+  }
+});
+
+test('role provenance and project approval parse without coercion', async () => {
+  const f = await fixture();
+
+  try {
+    const builtin = loadRoles(f.project, f.agentDir).get('general-purpose');
+
+    assert.equal(builtin?.source, 'builtin');
+    assert.equal(builtin?.approved, false);
+    await writeFile(
+      join(f.agentDir, 'agents', 'writer.md'),
+      '---\nname: writer\ntools: [read, write]\n---\nUser writer',
+    );
+    await mkdir(join(f.project, '.pi', 'agents'), { recursive: true });
+    await writeFile(
+      join(f.project, '.pi', 'agents', 'reviewer.md'),
+      '---\nname: reviewer\ntools: [read, write]\n---\nProject reviewer',
+    );
+    await writeFile(
+      join(f.project, '.pi', 'agents', 'approved.md'),
+      '---\nname: approved\ntools: [read, write]\napproved: true\n---\nApproved writer',
+    );
+    const roles = loadRoles(f.project, f.agentDir);
+
+    assert.equal(roles.get('writer')?.source, 'user');
+    assert.equal(roles.get('reviewer')?.source, 'project');
+    assert.equal(roles.get('reviewer')?.approved, false);
+    assert.equal(roles.get('approved')?.approved, true);
+    await writeFile(
+      join(f.agentDir, 'agents', 'general-purpose.md'),
+      '---\ntools: [read, bash]\n---\nUser override',
+    );
+    assert.equal(loadRoles(f.project, f.agentDir).get('general-purpose')?.source, 'user');
   } finally {
     await rm(f.directory, { recursive: true, force: true });
   }

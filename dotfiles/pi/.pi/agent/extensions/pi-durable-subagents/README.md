@@ -4,7 +4,7 @@ Local Pi extension for child execution and persistence through `@earendil-works/
 
 ## Operations
 
-- `Agent` accepts `prompt`, `description`, `subagent_type`, `name`, `run_in_background`, `model`, `thinking`, `inherit_context`, `isolation`, and `resume`. Background execution is the default. Foreground execution returns the child's final answer through the original call and cancels on parent Esc.
+- `Agent` accepts `prompt`, `description`, `subagent_type`, `name`, `run_in_background`, `model`, `thinking`, `inherit_context`, `isolation`, and `resume`. Background execution is the default. Foreground execution returns the child's final answer through the original call and cancels on parent Esc. Write-capable roles require authorization; see [Write authorization](#write-authorization).
 - `get_subagent_result` accepts `agent_id`, optional `wait`, and optional `verbose`. IDs or unique names work. Failed and stopped work returns an error result. Verbose retrieval includes saved entries.
 - `steer_subagent` accepts `agent_id`, `message`, and optional `follow_up`. Steering enters at the next tool-round boundary; follow-ups enter after the current answer. Either can continue an idle child.
 - `stop_subagent` cancels active tools and queued requests, including reporter tasks that have not submitted their input yet. The transcript and checkout remain available.
@@ -22,7 +22,7 @@ Finished agents show status-specific icons and linger for four seconds before di
 
 The bordered inspector supports arrows, Page Up/Down, Home/End, and Markdown or raw output with `m`. Enter or `s` opens an inline steering composer; `f` opens an inline follow-up composer, including for a finished agent. Enter sends; Esc or an empty submission cancels the composer without closing the inspector. Admission errors retain the draft for retry. Press `x` twice to stop without closing the inspector. Esc closes it when no composer is open. It attaches a current Durable snapshot before listening for updates. Assistant text, thinking, tool arguments, tool output, and tool results are inspectable during and after execution. Token and estimated cost totals come from Durable's usage document, not SDK session impersonation. Parent SDK totals do not separately account for this child ledger.
 
-`/agents stop ID` stops one agent. `/agents cleanup ID EXACT_PATH` removes a clean, owned checkout after confirmation. Programmatic execution works without a terminal; custom screens are TUI-only.
+`/agents implement on` and `/agents implement off` toggle session authorization for write-capable subagents. `/agents stop ID` stops one agent. `/agents cleanup ID EXACT_PATH` removes a clean, owned checkout after confirmation. Programmatic execution works without a terminal; custom screens are TUI-only.
 
 ## Models and credentials
 
@@ -56,7 +56,7 @@ Inspect the requested files. Do not change files or Git state.
 Use bash only for read-only inspection.
 ```
 
-Only `name`, `description`, `model`, `thinking`, and `tools` are supported. Tools can be a YAML string array or a comma-separated string. Unsupported fields fail when that role is selected; malformed YAML or invalid field types fail discovery. A definition without a name uses its filename. A custom definition without a tools field gets all four coding tools. `Explore` and `Plan`, including overrides of those names, cannot select `write` or `edit`.
+Only `name`, `description`, `model`, `thinking`, `tools`, and `approved` are supported. Tools can be a YAML string array or a comma-separated string. Unsupported fields fail when that role is selected; malformed YAML or invalid field types fail discovery. A definition without a name uses its filename. A custom definition without a tools field gets all four coding tools. `Explore` and `Plan`, including overrides of those names, cannot select `write` or `edit`.
 
 Instructions load independently of parent-history inheritance. The extension reads user instructions, then ancestors from the filesystem root through the parent launch cwd. It reads `AGENTS.md`, `CLAUDE.md`, `.claude/CLAUDE.md`, and Markdown files below `.claude/rules/`. `AGENTS.override.md` replaces AGENTS/CLAUDE in its own directory. Realpath deduplication prevents a symlinked instruction file from being included twice.
 
@@ -72,6 +72,18 @@ Follow the project's TypeScript conventions in these files.
 Patterns are globs relative to the directory containing `.claude`. Their matching examples are tested with Node's `path.matchesGlob`. Unscoped rules apply to all work. Scoped rules are saved in the initial prompt with their path conditions. They are instructions for the model, not filesystem permissions or dynamically activated hooks. Nested instruction files below the launch cwd are not automatically discovered. Full Claude frontmatter compatibility is not claimed.
 
 Parent history is a separate opt-in and is supplied as serialized context. It does not load the parent's extensions or MCP tools. History can contain sensitive tool output; only inherit it when needed.
+
+## Write authorization
+
+A role is write-capable when its `tools` include `write` or `edit`. The parent may run those roles without a dialog when the role itself is the authorization:
+
+- Roles installed in `~/.pi/agent/agents/` are trusted.
+- Project roles in `.pi/agents/` are trusted only with `approved: true` in their frontmatter.
+- Built-in `general-purpose` and any other built-in write-capable role require authorization.
+
+Otherwise the extension asks before the child starts, or blocks the call. The dialog offers `Allow once`, `Allow for this session`, and `Deny`. A session authorization is stored as a `durable-subagents.policy` custom entry in the parent session, survives reload and session switching, and is managed with `/agents implement on` and `/agents implement off`. The footer shows `subagents: writes allowed` while it is on.
+
+Without an interactive UI, print and JSON modes block a write-capable call that needs authorization and return an explanatory result: implement in the parent, or ask the user to run `/agents implement on`. Read-only roles are never gated. Resuming a child re-resolves its role name against current definitions, so a removed or renamed definition falls back to the authorization rules above.
 
 ## Coding tools and replay
 

@@ -29,7 +29,7 @@ async function until(check: () => boolean) {
   throw new Error('SDK condition timed out');
 }
 
-async function fixture() {
+async function fixture(options: { allowWrites?: boolean } = {}) {
   const directory = await mkdtemp(join(tmpdir(), 'extension-test-'));
   const previous = process.env.PI_CODING_AGENT_DIR;
   process.env.PI_CODING_AGENT_DIR = directory;
@@ -88,10 +88,15 @@ async function fixture() {
     };
   };
 
+  const sessionManager = SessionManager.create(directory, join(directory, 'sessions'));
+
+  if (options.allowWrites !== false)
+    sessionManager.appendCustomEntry('durable-subagents.policy', { allowWrites: true });
+
   const runtime = await createAgentSessionRuntime(create, {
     cwd: directory,
     agentDir: directory,
-    sessionManager: SessionManager.create(directory, join(directory, 'sessions')),
+    sessionManager,
   });
 
   const errors: string[] = [];
@@ -207,6 +212,59 @@ test('isolated real Pi loader has one implementation, foreground answer, strict 
     await f.runtime.session.prompt('Original parent can retrieve');
     assert.deepEqual(f.errors, []);
     assert.ok(!f.runtime.diagnostics.some((diagnostic) => diagnostic.type === 'error'));
+  } finally {
+    await f.cleanup();
+  }
+});
+
+test('write-capable subagents are blocked without session authorization while read-only roles run', async () => {
+  const f = await fixture({ allowWrites: false });
+
+  try {
+    f.faux.setResponses([
+      fauxAssistantMessage(
+        fauxToolCall('Agent', {
+          prompt: 'child task',
+          description: 'blocked child',
+          name: 'blocked',
+          run_in_background: false,
+        }),
+        { stopReason: 'toolUse' },
+      ),
+      (request) => {
+        assert.ok(
+          request.messages.some(
+            (message) =>
+              message.role === 'toolResult' &&
+              message.isError &&
+              JSON.stringify(message).includes('implement on'),
+          ),
+        );
+
+        return fauxAssistantMessage('parent implemented');
+      },
+      fauxAssistantMessage(
+        fauxToolCall('Agent', {
+          prompt: 'inspect files',
+          description: 'read-only child',
+          subagent_type: 'Explore',
+          name: 'scout',
+          run_in_background: false,
+        }),
+        { stopReason: 'toolUse' },
+      ),
+      fauxAssistantMessage('scout answer'),
+      (request) => {
+        assert.ok(JSON.stringify(request.messages).includes('scout answer'));
+
+        return fauxAssistantMessage('parent done');
+      },
+    ]);
+    await f.runtime.session.prompt('Delegate write work');
+    assert.equal(f.runtime.session.getLastAssistantText(), 'parent implemented');
+    await f.runtime.session.prompt('Delegate read-only work');
+    assert.equal(f.runtime.session.getLastAssistantText(), 'parent done');
+    assert.deepEqual(f.errors, []);
   } finally {
     await f.cleanup();
   }

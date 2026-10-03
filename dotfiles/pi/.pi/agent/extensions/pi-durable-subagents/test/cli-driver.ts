@@ -9,6 +9,7 @@ export default function driver(pi: ExtensionAPI) {
       fauxToolCall('Agent', {
         prompt: 'reply marker',
         description: 'CLI proof',
+        subagent_type: 'cli-writer',
         run_in_background: false,
       }),
       { stopReason: 'toolUse' },
