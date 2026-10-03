@@ -11,7 +11,6 @@
  */
 
 import {
-  complete,
   type Model,
   type Api,
   type UserMessage
@@ -484,25 +483,16 @@ export default function (pi: ExtensionAPI) {
         loader.onAbort = () => done(null)
 
         const doExtract = async () => {
-          const auth =
-            await ctx.modelRegistry.getApiKeyAndHeaders(extractionModel)
-          if (auth.ok === false) {
-            throw new Error(auth.error)
-          }
           const userMessage: UserMessage = {
             role: 'user',
             content: [{ type: 'text', text: lastAssistantText! }],
             timestamp: Date.now()
           }
 
-          const response = await complete(
+          const response = await ctx.modelRegistry.complete(
             extractionModel,
             { systemPrompt: SYSTEM_PROMPT, messages: [userMessage] },
-            {
-              apiKey: auth.apiKey,
-              headers: auth.headers,
-              signal: loader.signal
-            }
+            { signal: loader.signal }
           )
 
           if (response.stopReason === 'aborted') {

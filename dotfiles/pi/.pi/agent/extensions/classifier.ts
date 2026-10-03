@@ -287,6 +287,7 @@ export default function classifierExtension(pi: ExtensionAPI) {
               text: 'No classifier model has working credentials. Set an API key for typesafe, openrouter, cloudflare-workers-ai, vercel-ai-gateway, or opencode.'
             }
           ],
+          details: undefined,
           structuredContent: {
             model: '',
             stopReason: 'error',
@@ -304,6 +305,7 @@ export default function classifierExtension(pi: ExtensionAPI) {
 
       return {
         content: [{ type: 'text' as const, text: formatAnswers(result) }],
+        details: undefined,
         structuredContent: {
           model: `${result.provider}/${result.model}`,
           stopReason: result.stopReason,

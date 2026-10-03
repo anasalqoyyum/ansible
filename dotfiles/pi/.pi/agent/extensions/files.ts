@@ -170,6 +170,9 @@ const extractFileReferencesFromContent = (content: unknown): string[] => {
 
 const extractFileReferencesFromEntry = (entry: SessionEntry): string[] => {
   if (entry.type === "message") {
+    if (!("content" in entry.message)) {
+      return [];
+    }
     return extractFileReferencesFromContent(entry.message.content);
   }
 

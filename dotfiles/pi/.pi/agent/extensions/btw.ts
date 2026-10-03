@@ -2,7 +2,6 @@ import {
   buildSessionContext,
   createAgentSession,
   createExtensionRuntime,
-  codingTools,
   SessionManager,
   type AgentSession,
   type AgentSessionEvent,
@@ -234,7 +233,9 @@ function createBtwResourceLoader(
     getThemes: () => ({ themes: [], diagnostics: [] }),
     getAgentsFiles: () => ({ agentsFiles: [] }),
     getSystemPrompt: () => systemPrompt,
+    getSystemPromptSource: () => undefined,
     getAppendSystemPrompt: () => appendSystemPrompt,
+    getAppendSystemPromptSources: () => [],
     extendResources: () => {},
     reload: async () => {}
   }
@@ -276,7 +277,7 @@ function parseBtwModelArgs(
 ):
   | { action: 'show' }
   | { action: 'clear' }
-  | { action: 'set'; model: SessionModel }
+  | { action: 'set'; provider: string; id: string; api: string }
   | { action: 'invalid'; message: string } {
   const trimmed = args.trim()
   if (!trimmed) {
@@ -296,7 +297,7 @@ function parseBtwModelArgs(
   }
 
   const [provider, id, api] = parts
-  return { action: 'set', model: { provider, id, api } }
+  return { action: 'set', provider, id, api }
 }
 
 function parseBtwThinkingArgs(
@@ -321,6 +322,14 @@ function formatModelRef(
   model: Pick<SessionModel, 'provider' | 'id' | 'api'>
 ): string {
   return `${model.provider}/${model.id} (${model.api})`
+}
+
+function resolveBtwModelReference(
+  ctx: ExtensionContext,
+  reference: Pick<SessionModel, 'provider' | 'id' | 'api'>
+): SessionModel | null {
+  const model = ctx.modelRegistry.find(reference.provider, reference.id)
+  return model ? { ...model, api: reference.api } : null
 }
 
 function buildBtwSeedState(
@@ -1868,25 +1877,26 @@ export default function (pi: ExtensionAPI) {
       throw new Error(settings.fallbackReason || 'No active model selected.')
     }
 
-    const { session } = await createAgentSession({
-      sessionManager: SessionManager.inMemory(),
-      model: settings.model,
-      modelRegistry: ctx.modelRegistry as AgentSession['modelRegistry'],
-      thinkingLevel: settings.thinkingLevel,
-      tools: codingTools,
-      resourceLoader: createBtwResourceLoader(ctx)
-    })
-
+    const sessionManager = SessionManager.inMemory()
     const { messages: seedMessages, sideThreadStartIndex } = buildBtwSeedState(
       ctx,
       pendingThread,
       mode,
       settings.model
     )
-    if (seedMessages.length > 0) {
-      session.agent.state.messages =
-        seedMessages as typeof session.state.messages
+    for (const message of seedMessages) {
+      sessionManager.appendMessage(message)
     }
+
+    // Extensions get a ModelRegistry, not the session's ModelRuntime, so the subsession
+    // creates one from the configured credentials and model catalog.
+    const { session } = await createAgentSession({
+      sessionManager,
+      model: settings.model,
+      thinkingLevel: settings.thinkingLevel,
+      tools: ['read', 'bash', 'edit', 'write'],
+      resourceLoader: createBtwResourceLoader(ctx)
+    })
 
     return { session, mode, subscriptions: new Set(), sideThreadStartIndex }
   }
@@ -2097,10 +2107,20 @@ export default function (pi: ExtensionAPI) {
         return true
       }
 
-      await setBtwModelOverride(
-        ctx,
-        parsed.action === 'clear' ? null : parsed.model
-      )
+      if (parsed.action === 'clear') {
+        await setBtwModelOverride(ctx, null)
+        return true
+      }
+
+      const model = resolveBtwModelReference(ctx, parsed)
+      if (!model) {
+        const message = `No model ${parsed.provider}/${parsed.id} in the catalog. Check /model or models.json.`
+        setOverlayStatus(message, ctx)
+        notify(ctx, message, 'error')
+        return true
+      }
+
+      await setBtwModelOverride(ctx, model)
       return true
     }
 
@@ -2285,18 +2305,20 @@ export default function (pi: ExtensionAPI) {
     let lastResetIndex = -1
 
     for (let i = 0; i < branch.length; i++) {
-      if (isCustomEntry(branch[i], BTW_MODEL_OVERRIDE_TYPE)) {
-        const details = branch[i].data as BtwModelOverrideDetails | undefined
+      const entry = branch[i]
+
+      if (isCustomEntry(entry, BTW_MODEL_OVERRIDE_TYPE)) {
+        const details = entry.data as BtwModelOverrideDetails | undefined
         btwModelOverride =
           details?.action === 'set'
-            ? { provider: details.provider, id: details.id, api: details.api }
+            ? resolveBtwModelReference(ctx, details)
             : details?.action === 'clear'
               ? null
               : btwModelOverride
       }
 
-      if (isCustomEntry(branch[i], BTW_THINKING_OVERRIDE_TYPE)) {
-        const details = branch[i].data as BtwThinkingOverrideDetails | undefined
+      if (isCustomEntry(entry, BTW_THINKING_OVERRIDE_TYPE)) {
+        const details = entry.data as BtwThinkingOverrideDetails | undefined
         btwThinkingOverride =
           details?.action === 'set'
             ? details.thinkingLevel
@@ -2305,10 +2327,9 @@ export default function (pi: ExtensionAPI) {
               : btwThinkingOverride
       }
 
-      if (isCustomEntry(branch[i], BTW_RESET_TYPE)) {
+      if (isCustomEntry(entry, BTW_RESET_TYPE)) {
         lastResetIndex = i
-        const details = (branch[i] as unknown as { data?: BtwResetDetails })
-          .data
+        const details = entry.data as BtwResetDetails | undefined
         pendingMode = details?.mode ?? 'contextual'
       }
     }
@@ -2505,7 +2526,6 @@ export default function (pi: ExtensionAPI) {
     const { session } = await createAgentSession({
       sessionManager: SessionManager.inMemory(),
       model,
-      modelRegistry: ctx.modelRegistry as AgentSession['modelRegistry'],
       thinkingLevel: 'off',
       tools: [],
       resourceLoader: createBtwResourceLoader(ctx, [

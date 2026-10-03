@@ -8,9 +8,9 @@
 
 import { Type } from 'typebox'
 import {
-  complete,
   type Api,
   type Model,
+  type ProviderHeaders,
   type UserMessage
 } from '@earendil-works/pi-ai'
 import type {
@@ -99,28 +99,29 @@ function getConditionText(mode: LoopMode, condition?: string): string {
   }
 }
 
-async function selectSummaryModel(
-  ctx: ExtensionContext
-): Promise<{
-  model: Model<Api>
-  apiKey?: string
-  headers?: Record<string, string>
-} | null> {
+function selectSummaryModel(ctx: ExtensionContext): Model<Api> | null {
   if (!ctx.model) return null
 
   if (ctx.model.provider === 'anthropic') {
     const haikuModel = ctx.modelRegistry.find('anthropic', HAIKU_MODEL_ID)
-    if (haikuModel) {
-      const auth = await ctx.modelRegistry.getApiKeyAndHeaders(haikuModel)
-      if (auth.ok) {
-        return { model: haikuModel, apiKey: auth.apiKey, headers: auth.headers }
-      }
+    if (haikuModel && ctx.modelRegistry.hasConfiguredAuth(haikuModel)) {
+      return haikuModel
     }
   }
 
-  const auth = await ctx.modelRegistry.getApiKeyAndHeaders(ctx.model)
-  if (!auth.ok) return null
-  return { model: ctx.model, apiKey: auth.apiKey, headers: auth.headers }
+  return ctx.modelRegistry.hasConfiguredAuth(ctx.model) ? ctx.model : null
+}
+
+/** Header values of null delete a header; compact() only accepts concrete strings. */
+function definedHeaders(
+  headers: ProviderHeaders | undefined
+): Record<string, string> | undefined {
+  if (!headers) return undefined
+  return Object.fromEntries(
+    Object.entries(headers).filter(
+      (entry): entry is [string, string] => entry[1] !== null
+    )
+  )
 }
 
 async function summarizeBreakoutCondition(
@@ -129,7 +130,7 @@ async function summarizeBreakoutCondition(
   condition?: string
 ): Promise<string> {
   const fallback = summarizeCondition(mode, condition)
-  const selection = await selectSummaryModel(ctx)
+  const selection = selectSummaryModel(ctx)
   if (!selection) return fallback
 
   const conditionText = getConditionText(mode, condition)
@@ -139,11 +140,16 @@ async function summarizeBreakoutCondition(
     timestamp: Date.now()
   }
 
-  const response = await complete(
-    selection.model,
-    { systemPrompt: SUMMARY_SYSTEM_PROMPT, messages: [userMessage] },
-    { apiKey: selection.apiKey, headers: selection.headers }
-  )
+  let response
+  try {
+    response = await ctx.modelRegistry.complete(
+      selection,
+      { systemPrompt: SUMMARY_SYSTEM_PROMPT, messages: [userMessage] },
+      { signal: ctx.signal }
+    )
+  } catch {
+    return fallback
+  }
 
   if (response.stopReason === 'aborted' || response.stopReason === 'error') {
     return fallback
@@ -240,6 +246,7 @@ export default function loopExtension(pi: ExtensionAPI): void {
     if (!loopState.active || !loopState.mode || !loopState.prompt) return
     if (ctx.hasPendingMessages()) return
 
+    const prompt = loopState.prompt
     const loopCount = (loopState.loopCount ?? 0) + 1
     loopState = { ...loopState, loopCount }
     persistState(loopState)
@@ -248,7 +255,7 @@ export default function loopExtension(pi: ExtensionAPI): void {
     pi.sendMessage(
       {
         customType: 'loop',
-        content: loopState.prompt,
+        content: prompt,
         display: true
       },
       {
@@ -473,7 +480,7 @@ export default function loopExtension(pi: ExtensionAPI): void {
         event.preparation,
         ctx.model,
         auth.apiKey ?? '',
-        auth.headers,
+        definedHeaders(auth.headers),
         instructionParts,
         event.signal
       )
