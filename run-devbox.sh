@@ -10,8 +10,8 @@ if [[ $EUID -eq 0 ]]; then
 fi
 # shellcheck source=/dev/null
 source /etc/os-release
-if [[ $ID != ubuntu || $VERSION_ID != 24.04 ]] || grep -qi microsoft /proc/sys/kernel/osrelease; then
-  echo "The devbox profile requires native Ubuntu Desktop 24.04 LTS." >&2
+if [[ $ID != ubuntu || $VERSION_ID != 26.04 ]] || grep -qi microsoft /proc/sys/kernel/osrelease; then
+  echo "The devbox profile requires native Ubuntu Desktop 26.04 LTS." >&2
   exit 1
 fi
 

@@ -4,7 +4,7 @@ Ansible playbooks for bootstrapping a personal setup on:
 
 - WSL/Linux (`local-linux.yml`)
 - macOS (`local-macos.yml`)
-- Dedicated Ubuntu Desktop 24.04 devbox (`local-devbox.yml`)
+- Dedicated Ubuntu Desktop 26.04 LTS devbox (`local-devbox.yml`)
 
 ## Quick Start
 

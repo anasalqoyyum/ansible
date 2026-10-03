@@ -10,17 +10,17 @@
     devbox_ssh_client_address: "100.64.0.1"
     devbox_ssh_client_host: "{{ devbox_ssh_client_address }}"
   pre_tasks:
-    - name: Require native Ubuntu Desktop 24.04 on x86_64 as a regular user
+    - name: Require native Ubuntu Desktop 26.04 on x86_64 as a regular user
       ansible.builtin.assert:
         that:
           - ansible_facts['distribution'] == "Ubuntu"
-          - ansible_facts['distribution_version'] == "24.04"
+          - ansible_facts['distribution_version'] == "26.04"
           - ansible_facts['architecture'] == "x86_64"
           - ansible_facts['service_mgr'] == "systemd"
           - "'microsoft' not in (ansible_facts['kernel'] | lower)"
           - ansible_facts['user_id'] != "root"
           - lookup('env', 'HOME') == ansible_facts['user_dir']
-        fail_msg: "Run the devbox profile as the development user on native Ubuntu Desktop 24.04 LTS."
+        fail_msg: "Run the devbox profile as the development user on native Ubuntu Desktop 26.04 LTS."
       tags: [always]
 
   tasks:

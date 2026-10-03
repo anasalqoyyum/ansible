@@ -1,7 +1,7 @@
 # Dedicated Ubuntu devbox
 
 Target: Beelink SER5 MAX, Ryzen 7 5800H, 32 GB RAM, 1 TB SSD, Ubuntu Desktop
-24.04 LTS on x86_64. Run provisioning as your regular development user. Do not
+26.04 LTS on x86_64. Run provisioning as your regular development user. Do not
 run the bootstrap with `sudo`, or use this profile inside WSL.
 
 ## Before installing
@@ -477,7 +477,7 @@ Record the following acceptance results on the actual Beelink:
 
 ## Upstream references
 
-- [Tailscale's Ubuntu 24.04 package instructions](https://pkgs.tailscale.com/stable/#ubuntu-noble)
+- [Tailscale's Ubuntu 26.04 package instructions](https://pkgs.tailscale.com/stable/#ubuntu-resolute)
 - [Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
 - [TigerVNC Xvnc options](https://tigervnc.org/doc/Xvnc.html)
 - [BrowserSkill installation guide](https://github.com/Tencent/BrowserSkill/blob/main/AGENT_INSTALL.md)
