@@ -116,7 +116,6 @@
 - name: Install Pi with the native installer
   ansible.builtin.shell: |
     set -o pipefail
-    export NPM_CONFIG_PREFIX="$HOME/.local"
     curl -fsSL https://pi.dev/install.sh | /bin/sh
   args:
     executable: /bin/bash
