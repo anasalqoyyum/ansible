@@ -1,0 +1,28 @@
+- name: Disable suspend and hibernation targets
+  become: true
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    masked: true
+  loop:
+    - sleep.target
+    - suspend.target
+    - hibernate.target
+    - hybrid-sleep.target
+    - suspend-then-hibernate.target
+
+- name: Create logind configuration directory
+  become: true
+  ansible.builtin.file:
+    path: /etc/systemd/logind.conf.d
+    state: directory
+    mode: "0755"
+
+- name: Disable logind automatic idle suspend
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/systemd/logind.conf.d/60-devbox.conf
+    mode: "0644"
+    content: |
+      [Login]
+      IdleAction=ignore
+  # Apply at the next boot without interrupting active login sessions.

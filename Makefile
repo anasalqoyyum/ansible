@@ -8,7 +8,7 @@ WINDOWS_HOME := /mnt/c/Users/$(WINDOWS_USER)
 ZED_WINDOWS_DIR ?= $(WINDOWS_HOME)/AppData/Roaming/Zed
 ZED_DOTFILES_DIR := ./dotfiles/zed/.config/zed
 
-.PHONY: test-dotfiles copy-local sync-dotfiles-linux sync-dotfiles-macos sync-dotfiles-windows sync-zed-windows clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
+.PHONY: setup-devbox test-devbox check-devbox validate-devbox ssh-devbox-vault test-dotfiles copy-local sync-dotfiles-linux sync-dotfiles-macos sync-dotfiles-windows sync-zed-windows clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
 
 VAULT_PASSWORD_FILE ?= .vault_pass
 
@@ -16,6 +16,12 @@ copy-local:
 	rsync -a \
 		--exclude-from="$(DOTFILES_EXCLUDES)" \
 		"$(DOTFILES_DEST)" "$(DOTFILES_SRC)"
+
+setup-devbox:
+	bash run-devbox.sh
+
+test-devbox:
+	uv run --no-project --with pyyaml --with ansible-core python -B -m unittest discover -s tests -p 'test_devbox.py' -v
 
 test-dotfiles:
 	uv run --no-project --with pyyaml python -B -m unittest discover -s tests -p 'test_dotfiles.py' -v
@@ -26,15 +32,24 @@ bootstrap-collections:
 syntax-check:
 	ansible-playbook local-linux.yml --syntax-check
 	ansible-playbook local-macos.yml --syntax-check
+	ansible-playbook local-devbox.yml --syntax-check
 
 lint:
-	uvx --from ansible-lint ansible-lint local-linux.yml local-macos.yml tasks/*.yml
+	uvx --from ansible-lint ansible-lint local-linux.yml local-macos.yml local-devbox.yml tasks/*.yml
 
 check-linux:
 	ansible-playbook local-linux.yml --check --diff --skip-tags "ssh"
 
 check-macos:
 	ansible-playbook local-macos.yml --check --diff --skip-tags "ssh"
+
+check-devbox:
+	ansible-playbook local-devbox.yml --check --diff --skip-tags "ssh" --ask-become-pass
+
+validate-devbox: validate test-dotfiles test-devbox check-devbox
+
+ssh-devbox-vault:
+	ansible-playbook local-devbox.yml --tags "ssh" --ask-vault-pass
 
 validate: bootstrap-collections syntax-check lint
 

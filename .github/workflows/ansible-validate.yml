@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.11"
 
@@ -23,6 +23,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install ansible uv
+
+      - name: Install dotfiles test dependencies
+        run: sudo apt-get update && sudo apt-get install -y stow zsh rsync openssh-server
+
+      - name: Test dotfiles and devbox
+        run: make test-dotfiles test-devbox
 
       - name: Install collections
         run: ansible-galaxy collection install -r requirements.yml

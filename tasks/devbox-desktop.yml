@@ -1,0 +1,78 @@
+- name: Install virtual desktop packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - tigervnc-standalone-server
+      - xfce4
+      - dbus-x11
+      - xauth
+      - x11-utils
+      - fonts-liberation
+    state: present
+    install_recommends: false
+
+- name: Install Google Chrome stable
+  become: true
+  ansible.builtin.apt:
+    deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+- name: Create private agent browser and service directories
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/{{ item }}"
+    state: directory
+    mode: "0700"
+  loop:
+    - .local/share/devbox
+    - .local/share/devbox/chrome
+    - .local/libexec/devbox
+    - .config/systemd/user
+
+- name: Install virtual display helpers
+  ansible.builtin.copy:
+    src: "devbox/{{ item }}"
+    dest: "{{ ansible_facts['user_dir'] }}/.local/libexec/devbox/{{ item }}"
+    mode: "0755"
+  loop:
+    - start-display
+    - wait-display
+  notify: Restart devbox graphical services
+
+- name: Install persistent graphical service units
+  ansible.builtin.template:
+    src: "devbox/{{ item }}.j2"
+    dest: "{{ ansible_facts['user_dir'] }}/.config/systemd/user/{{ item }}"
+    mode: "0644"
+  loop:
+    - devbox-display.service
+    - devbox-desktop.service
+    - devbox-chrome.service
+    - devbox-browser-skill.service
+  notify: Restart devbox graphical services
+
+- name: Enable user services before login and after logout
+  become: true
+  ansible.builtin.command:
+    argv: [loginctl, enable-linger, "{{ ansible_facts['user_id'] }}"]
+    creates: "/var/lib/systemd/linger/{{ ansible_facts['user_id'] }}"
+
+- name: Start the development user's systemd manager
+  become: true
+  ansible.builtin.systemd_service:
+    name: "user@{{ ansible_facts['user_uid'] }}.service"
+    state: started
+
+- name: Enable and start persistent graphical services
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    scope: user
+    daemon_reload: true
+    enabled: true
+    state: started
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ ansible_facts['user_uid'] }}"
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts['user_uid'] }}/bus"
+  loop:
+    - devbox-display.service
+    - devbox-desktop.service
+    - devbox-chrome.service
+    - devbox-browser-skill.service

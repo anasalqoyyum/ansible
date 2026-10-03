@@ -4,15 +4,21 @@ Ansible playbooks for bootstrapping a personal setup on:
 
 - WSL/Linux (`local-linux.yml`)
 - macOS (`local-macos.yml`)
+- Dedicated Ubuntu Desktop 24.04 devbox (`local-devbox.yml`)
 
 ## Quick Start
 
 - Linux/WSL: `bash run-linux.sh`
 - macOS: `bash run-macos.sh`
+- Devbox: `bash run-devbox.sh` or `make setup-devbox`
 
-Both scripts install Ansible (if missing), install required collections from `requirements.yml`, and run the matching playbook.
+The scripts install Ansible (if missing), install required collections from `requirements.yml`, and run the matching playbook.
 
 ## New Machine How-To
+
+For the always-on Beelink, follow [docs/devbox.md](docs/devbox.md), including the
+manual authentication and reboot acceptance tests. Repositories belong under
+`~/repo/` and worktrees under `~/repo/worktrees/<project-name>/`.
 
 Read [PREREQUISITES.md](PREREQUISITES.md) before setting up a new machine.
 
@@ -62,6 +68,8 @@ Optional dry-run checks:
 
 - Linux/WSL: `make check-linux`
 - macOS: `make check-macos`
+- Provisioned devbox: `make check-devbox`
+- Regression tests: `make test-dotfiles test-devbox`
 
 Convenience targets:
 

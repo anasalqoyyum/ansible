@@ -1,0 +1,20 @@
+[Unit]
+Description=Persistent devbox XFCE desktop
+Wants=devbox-display.service
+After=devbox-display.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Environment=DISPLAY=:20
+Environment=XAUTHORITY=%t/devbox/Xauthority
+Environment=XDG_CURRENT_DESKTOP=XFCE
+Environment=XDG_SESSION_TYPE=x11
+UnsetEnvironment=SESSION_MANAGER WAYLAND_DISPLAY
+ExecStartPre=%h/.local/libexec/devbox/wait-display
+ExecStart=/usr/bin/dbus-run-session -- /usr/bin/xfce4-session
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

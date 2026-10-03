@@ -1,0 +1,19 @@
+[Unit]
+Description=Persistent devbox agent Chrome profile
+Wants=devbox-display.service devbox-desktop.service
+After=devbox-display.service devbox-desktop.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Environment=DISPLAY=:20
+Environment=XAUTHORITY=%t/devbox/Xauthority
+UnsetEnvironment=SESSION_MANAGER WAYLAND_DISPLAY
+UMask=0077
+ExecStartPre=%h/.local/libexec/devbox/wait-display
+ExecStart=/usr/bin/dbus-run-session -- /usr/bin/google-chrome --user-data-dir=%h/.local/share/devbox/chrome --ozone-platform=x11 --password-store=basic --no-first-run --no-default-browser-check --disable-session-crashed-bubble about:blank
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

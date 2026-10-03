@@ -1,0 +1,15 @@
+[Unit]
+Description=Persistent devbox BrowserSkill daemon
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Environment=BSK_AUTO_START=0
+Environment=BSK_AUTO_UPDATE=off
+UMask=0077
+ExecStart=%h/.local/bin/bsk daemon start --foreground
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
