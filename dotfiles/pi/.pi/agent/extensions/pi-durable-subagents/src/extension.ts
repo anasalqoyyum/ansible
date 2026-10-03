@@ -55,6 +55,36 @@ function response(result: Result, agent: AgentRecord) {
   };
 }
 
+const agentGuidelines = [
+  'When the target is known, use a direct tool such as read, grep, or bash. Reserve Agent for open-ended search or a task that matches a role.',
+  'Never delegate understanding. Do not ask a child to implement "based on the findings." Reach the conclusion yourself, then implement in the parent or hand the child the specific change with paths and line numbers.',
+  "Trust but verify. A child's summary describes intent, not outcome. Before reporting delegated code as done, inspect the changed files, the worktree status, or the transcript.",
+];
+
+const fallbackRoles = ['general-purpose', 'Explore', 'Plan'].map((name) => `- ${name}`).join('\n');
+
+function roleLines(project: string): string {
+  try {
+    return [...loadRoles(project).values()]
+      .map((role) => `- ${role.name}: ${role.description}`)
+      .join('\n');
+  } catch {
+    // A malformed role file must not stop the extension from loading; the role fails when selected.
+    return fallbackRoles;
+  }
+}
+
+function agentDescription(project: string): string {
+  return [
+    'Delegate to a persistent Durable child. Prefer read-only roles for investigation and review, and implement changes in the parent unless the user asks for a subagent. Write-capable roles require explicit user authorization.',
+    '',
+    'Roles:',
+    roleLines(project),
+    '',
+    'Custom roles come from .pi/agents or the user agent directory and override same-name built-ins. Background is the default; foreground waits and is cancelled by parent Esc. Prompts must be self-contained; pass inherit_context to supply the parent conversation. Explore and Plan have no write/edit tools, but their shell access is prompt-restricted, not sandboxed. No MCP, workflows, scheduling, nested delegation, or legacy isolated/max_turns fields. Worktree isolation starts from recorded HEAD without parent uncommitted changes.',
+  ].join('\n');
+}
+
 export default function durableSubagents(pi: ExtensionAPI) {
   let runtime: Runtime | undefined;
   let ui: FleetUI | undefined;
@@ -62,6 +92,7 @@ export default function durableSubagents(pi: ExtensionAPI) {
   let unsubscribe: (() => void) | undefined;
   let initializing: Promise<void> | undefined;
   let allowWriteChildren = false;
+  let project = process.cwd();
 
   const failures = (message: string, ctx: ExtensionContext) => ctx.ui.notify(message, 'error');
 
@@ -180,9 +211,11 @@ export default function durableSubagents(pi: ExtensionAPI) {
   };
 
   pi.on('session_start', async (_event, ctx) => {
+    project = ctx.cwd;
     await close();
     restoreWritePolicy(ctx);
     await initialize(ctx);
+    pi.setActiveTools(pi.getActiveTools());
   });
   pi.on('session_shutdown', close);
   pi.on('message_end', async () => {
@@ -243,8 +276,10 @@ export default function durableSubagents(pi: ExtensionAPI) {
   pi.registerTool({
     name: 'Agent',
     label: 'Agent',
-    description:
-      'Delegate to a persistent Durable child. Prefer read-only roles (Explore, Plan, custom read-only agents) for investigation and review, and implement changes in the parent unless the user asks for a subagent. Write-capable roles require explicit user authorization. Types: Explore, Plan, general-purpose, or a custom .pi/agents definition. Background is the default; foreground waits and is cancelled by parent Esc. Explore and Plan have no write/edit tools, but their shell access is prompt-restricted, not sandboxed. No MCP, workflows, scheduling, nested delegation, or legacy isolated/max_turns fields. Worktree isolation starts from recorded HEAD without parent uncommitted changes.',
+    description: agentDescription(project),
+    promptSnippet: 'Launch a persistent Durable child for investigation or a delegated task',
+    promptGuidelines: agentGuidelines,
+    prepareLoadout: () => ({ descriptions: { Agent: agentDescription(project) } }),
     parameters: Type.Object(
       {
         prompt: Type.String(),

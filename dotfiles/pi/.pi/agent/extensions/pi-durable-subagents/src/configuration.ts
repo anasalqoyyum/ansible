@@ -58,7 +58,7 @@ export type Role = {
 const defaults: Role[] = [
   {
     name: 'general-purpose',
-    description: 'Research and implementation',
+    description: 'Research and implementation. Write-capable; calls require authorization.',
     instructions:
       'Complete the assigned task. Make only authorized changes. Report what changed, checks run, and limitations. Do not delegate or change Git state without explicit authorization.',
     tools: availableTools,
@@ -67,7 +67,8 @@ const defaults: Role[] = [
   },
   {
     name: 'Explore',
-    description: 'Locate files and symbols',
+    description:
+      'Locate files, symbols, and references. Read-only; not for code review or open-ended analysis.',
     instructions:
       'Inspect the repository to locate files, symbols, and references. Do not edit files or change Git state. Use bash only for read-only inspection. Report precise paths and evidence.',
     tools: ['read', 'bash'],
@@ -76,7 +77,8 @@ const defaults: Role[] = [
   },
   {
     name: 'Plan',
-    description: 'Design implementation plans',
+    description:
+      'Design implementation plans with affected files, risks, and validation. Read-only.',
     instructions:
       'Inspect the repository and propose an implementation plan with affected files, risks, and validation. Do not implement changes or change Git state. Use bash only for read-only inspection.',
     tools: ['read', 'bash'],

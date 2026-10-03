@@ -42,6 +42,8 @@ Resolved instructions, model, thinking, allowlist, history, and cwd are saved at
 
 Built-in roles are `Explore`, `Plan`, and `general-purpose`. Load basic Markdown definitions from `~/.pi/agent/agents/` and the launch directory's `.pi/agents/`. `PI_CODING_AGENT_DIR` changes the user location. Project definitions override same-name user definitions; both override built-ins.
 
+The Agent tool description lists every discovered role with its description, so the parent routes on what a role is for rather than its name. The same description tells the parent to prefer read-only roles, implement changes itself unless the user asks for a subagent, reach its own conclusion before delegating implementation, and verify delegated code before reporting it done.
+
 Supported frontmatter:
 
 ```yaml

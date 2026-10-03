@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -29,10 +29,28 @@ async function until(check: () => boolean) {
   throw new Error('SDK condition timed out');
 }
 
-async function fixture(options: { allowWrites?: boolean } = {}) {
+async function fixture(
+  options: {
+    allowWrites?: boolean;
+    agents?: Record<string, string>;
+    projectAgents?: Record<string, string>;
+  } = {},
+) {
   const directory = await mkdtemp(join(tmpdir(), 'extension-test-'));
   const previous = process.env.PI_CODING_AGENT_DIR;
   process.env.PI_CODING_AGENT_DIR = directory;
+
+  for (const [location, agents] of [
+    ['agents', options.agents],
+    [join('.pi', 'agents'), options.projectAgents],
+  ] as const) {
+    if (!agents) continue;
+    await mkdir(join(directory, location), { recursive: true });
+
+    for (const [name, content] of Object.entries(agents))
+      await writeFile(join(directory, location, `${name}.md`), content);
+  }
+
   const faux = fauxProvider();
 
   const models = await ModelRuntime.create({
@@ -470,6 +488,62 @@ test('real SDK Esc cancels a foreground child but not a background child; failur
   } finally {
     releaseBackground?.();
     releaseFailure?.();
+    await f.cleanup();
+  }
+});
+
+test('Agent tool advertises discovered role descriptions and delegation guidelines', async () => {
+  const f = await fixture({
+    agents: {
+      auditor: '---\nname: auditor\ndescription: Audit authentication code\n---\nAudit.',
+    },
+  });
+
+  try {
+    const definition = f.runtime.session.getToolDefinition('Agent');
+
+    assert.ok(definition);
+    assert.match(definition.description, /- general-purpose: Research and implementation\./);
+    assert.match(definition.description, /- Explore: Locate files, symbols, and references\./);
+    assert.match(
+      definition.description,
+      /- Plan: Design implementation plans with affected files, risks, and validation\./,
+    );
+    assert.match(definition.description, /- auditor: Audit authentication code/);
+    assert.match(
+      definition.description,
+      /implement changes in the parent unless the user asks for a subagent\./,
+    );
+    assert.equal(
+      definition.promptSnippet,
+      'Launch a persistent Durable child for investigation or a delegated task',
+    );
+    assert.deepEqual(definition.promptGuidelines, [
+      'When the target is known, use a direct tool such as read, grep, or bash. Reserve Agent for open-ended search or a task that matches a role.',
+      'Never delegate understanding. Do not ask a child to implement "based on the findings." Reach the conclusion yourself, then implement in the parent or hand the child the specific change with paths and line numbers.',
+      "Trust but verify. A child's summary describes intent, not outcome. Before reporting delegated code as done, inspect the changed files, the worktree status, or the transcript.",
+    ]);
+    assert.deepEqual(f.errors, []);
+  } finally {
+    await f.cleanup();
+  }
+});
+
+test('session start rebuilds the Agent description from the session cwd', async () => {
+  const f = await fixture({
+    projectAgents: {
+      'project-reader':
+        '---\nname: project-reader\ndescription: Read project files\ntools: [read]\n---\nRead.',
+    },
+  });
+
+  try {
+    const declared = f.runtime.session.state.tools.find((tool) => tool.name === 'Agent');
+
+    assert.ok(declared);
+    assert.match(declared.description, /- project-reader: Read project files/);
+    assert.deepEqual(f.errors, []);
+  } finally {
     await f.cleanup();
   }
 });
