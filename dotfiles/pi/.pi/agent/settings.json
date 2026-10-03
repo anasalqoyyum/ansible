@@ -3,7 +3,9 @@
   "defaultProvider": "openai",
   "defaultModel": "gpt-6.1-sol",
   "defaultThinkingLevel": "high",
-  "defaultTools": ["+codemode"],
+  "defaultTools": [
+    "+codemode"
+  ],
   "quietStartup": "header",
   "packages": [
     "npm:@ff-labs/pi-fff",
@@ -11,7 +13,8 @@
     "npm:@vanillagreen/pi-web-tools",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@juicesharp/rpiv-todo",
-    "npm:pi-token-speed"
+    "npm:pi-token-speed",
+    "git:github.com/anasalqoyyum/pi-durable-subagents"
   ],
   "theme": "savy-dark",
   "transport": "websocket",
