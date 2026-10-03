@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+umask 077
+
+# Generate a local X cookie, never an SSH key or a stored login credential.
+: > "$XAUTHORITY"
+xauth -f "$XAUTHORITY" add "$DISPLAY" . "$(mcookie)"
+exec /usr/bin/Xtigervnc "$DISPLAY" \
+  -auth "$XAUTHORITY" -nolisten tcp \
+  -geometry 1920x1080 -depth 24 \
+  -rfbport -1 -rfbunixpath "$XDG_RUNTIME_DIR/devbox/vnc.sock" -rfbunixmode 0600 \
+  -SecurityTypes None -AlwaysShared \
+  -MaxDisconnectionTime 0 -MaxIdleTime 0 -MaxConnectionTime 0

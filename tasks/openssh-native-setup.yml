@@ -1,0 +1,93 @@
+- name: Install native OpenSSH server
+  become: true
+  ansible.builtin.apt:
+    name: openssh-server
+    state: present
+
+- name: Ensure SSH directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/.ssh"
+    state: directory
+    mode: "0700"
+
+- name: Require a single OpenSSH public key
+  ansible.builtin.assert:
+    that:
+      - devbox_public_key.splitlines() | length == 1
+      - devbox_public_key is match('^(ssh-ed25519|ssh-rsa|ecdsa-sha2-[^ ]+|sk-[^ ]+) [A-Za-z0-9+/=]+( .*)?$')
+    fail_msg: "devbox_authorized_key_file must contain one OpenSSH public key."
+  vars:
+    devbox_public_key: "{{ lookup('file', devbox_authorized_key_file) | trim }}"
+  no_log: true
+
+- name: Authorize the existing public key without replacing other keys
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_facts['user_dir'] }}/.ssh/authorized_keys"
+    line: "{{ lookup('file', devbox_authorized_key_file) | trim }}"
+    create: true
+    mode: "0600"
+  no_log: true
+  diff: false
+
+- name: Configure key-only SSH authentication
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/ssh/sshd_config.d/00-devbox.conf
+    mode: "0644"
+    content: |
+      PubkeyAuthentication yes
+      PasswordAuthentication no
+      KbdInteractiveAuthentication no
+      AuthenticationMethods publickey
+      PermitRootLogin no
+  notify: Restart native SSH
+
+- name: Validate complete SSH configuration
+  become: true
+  ansible.builtin.command: /usr/sbin/sshd -t
+  changed_when: false
+  check_mode: false
+  when: not ansible_check_mode
+
+- name: Inspect effective SSH authentication settings
+  become: true
+  ansible.builtin.command: /usr/sbin/sshd -T
+  register: devbox_sshd_settings
+  changed_when: false
+  check_mode: false
+  when: not ansible_check_mode
+
+- name: Require effective key-only SSH authentication
+  ansible.builtin.assert:
+    that:
+      - "'pubkeyauthentication yes' in devbox_sshd_settings.stdout_lines"
+      - "'passwordauthentication no' in devbox_sshd_settings.stdout_lines"
+      - "'kbdinteractiveauthentication no' in devbox_sshd_settings.stdout_lines"
+      - "'authenticationmethods publickey' in devbox_sshd_settings.stdout_lines"
+      - "'permitrootlogin no' in devbox_sshd_settings.stdout_lines"
+    fail_msg: "Existing sshd configuration overrides devbox authentication. Resolve it at the local console."
+  when: not ansible_check_mode
+
+- name: Disable socket activation for predictable SSH service startup
+  become: true
+  ansible.builtin.systemd_service:
+    name: ssh.socket
+    enabled: false
+    state: stopped
+
+- name: Enable and start native OpenSSH
+  become: true
+  ansible.builtin.systemd_service:
+    name: ssh.service
+    enabled: true
+    state: started
+
+- name: Apply SSH configuration before checking connectivity
+  ansible.builtin.meta: flush_handlers
+
+- name: Verify native SSH is listening
+  ansible.builtin.wait_for:
+    host: 127.0.0.1
+    port: 22
+    timeout: 15
+  when: not ansible_check_mode

@@ -24,6 +24,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible uv
 
+      - name: Install dotfiles test dependencies
+        run: sudo apt-get update && sudo apt-get install -y stow zsh rsync
+
+      - name: Test dotfiles and devbox
+        run: make test-dotfiles test-devbox
+
       - name: Install collections
         run: ansible-galaxy collection install -r requirements.yml
 

@@ -158,6 +158,53 @@ class DotfilesTest(unittest.TestCase):
         self.assertEqual(settings.read_text(), "updated settings\n")
         self.assert_runtime_state(paths)
 
+    def test_codex_runtime_state_and_managed_browser_skill_survive_updates(self):
+        self.env["STOW_FOLDERS"] = "pi,demo,codex,agents"
+        self.write(
+            self.source / "codex/.codex/config.toml",
+            'approval_policy = "never"\nsandbox_mode = "danger-full-access"\n',
+        )
+        self.write(
+            self.source / "agents/.agents/skills/browser-skill/SKILL.md",
+            "managed skill\n",
+        )
+        self.rsync()
+        self.run_command(
+            ["stow", "-R", "pi", "demo", "codex", "agents"], cwd=self.dotfiles
+        )
+        paths = {
+            ".codex/auth.json": "local codex auth\n",
+            ".codex/sessions/run.jsonl": "local session\n",
+            ".codex/cache/data.bin": "local cache\n",
+        }
+        for relative, content in paths.items():
+            self.write(self.home / relative, content)
+        (self.home / ".codex/auth.json").chmod(0o600)
+        self.write(
+            self.source / "agents/.agents/skills/browser-skill/SKILL.md",
+            "updated managed skill\n",
+        )
+        for _ in range(2):
+            self.sync()
+            for relative, content in paths.items():
+                path = self.home / relative
+                self.assertEqual(path.read_text(), content)
+                self.assertFalse(path.resolve().is_relative_to(self.dotfiles))
+            self.assertEqual(
+                (self.home / ".codex/auth.json").stat().st_mode & 0o777, 0o600
+            )
+            self.assertEqual(
+                (self.home / ".agents/skills/browser-skill/SKILL.md").read_text(),
+                "updated managed skill\n",
+            )
+        self.assertIn(
+            'approval_policy = "never"', (self.home / ".codex/config.toml").read_text()
+        )
+        self.assertIn(
+            'sandbox_mode = "danger-full-access"',
+            (self.home / ".codex/config.toml").read_text(),
+        )
+
     def test_migration_preserves_auth_sessions_caches_and_other_apps(self):
         self.legacy_install()
         self.assertTrue((self.home / ".pi").is_symlink())

@@ -51,6 +51,7 @@
     dest: "{{ dest_key }}"
     mode: "0600"
   no_log: true
+  diff: false
   when: private_key_source.stat.exists
   tags:
     - never
@@ -73,6 +74,8 @@
     src: "{{ playbook_dir }}/.ssh/config"
     dest: "{{ lookup('env', 'HOME') }}/.ssh/config"
     mode: "0600"
+  no_log: true
+  diff: false
   when: ssh_config_source.stat.exists
   tags:
     - never

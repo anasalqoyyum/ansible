@@ -9,7 +9,7 @@
       - clang
       - cmake
       - curl
-      - fuse
+      - "{{ core_fuse_package | default('fuse') }}"
       - ffmpeg
       - git
       - jq

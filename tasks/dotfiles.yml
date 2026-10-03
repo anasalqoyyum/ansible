@@ -157,13 +157,47 @@
     - dotfiles
     - stow
 
+- name: Check for a standalone Claude BrowserSkill copy
+  ansible.builtin.stat:
+    path: "{{ lookup('env', 'HOME') }}/.claude/skills/browser-skill"
+  register: claude_browser_skill
+  tags: [install, dotfiles, stow]
+
+- name: Preserve a standalone Claude BrowserSkill copy before linking
+  when:
+    - claude_browser_skill.stat.isdir | default(false)
+    - not (claude_browser_skill.stat.islnk | default(false))
+  tags: [install, dotfiles, stow]
+  block:
+    - name: Create local skill backup directory
+      ansible.builtin.file:
+        path: "{{ lookup('env', 'HOME') }}/.local/state/ansible"
+        state: directory
+        mode: "0700"
+
+    - name: Check for an existing BrowserSkill backup
+      ansible.builtin.stat:
+        path: "{{ lookup('env', 'HOME') }}/.local/state/ansible/browser-skill-claude-backup"
+      register: claude_browser_skill_backup
+
+    - name: Refuse to overwrite a previous skill backup
+      ansible.builtin.assert:
+        that: not claude_browser_skill_backup.stat.exists
+        fail_msg: "Preserve the existing BrowserSkill backup elsewhere before migrating another standalone copy."
+
+    - name: Move the standalone skill to its local backup
+      ansible.builtin.command:
+        argv:
+          - mv
+          - "{{ lookup('env', 'HOME') }}/.claude/skills/browser-skill"
+          - "{{ lookup('env', 'HOME') }}/.local/state/ansible/browser-skill-claude-backup"
+      when: not ansible_check_mode
+      changed_when: true
+
 - name: Find shared agent skills
   ansible.builtin.find:
     paths: "{{ lookup('env', 'HOME') }}/.agents/skills"
     file_type: directory
-    # BrowserSkill installs its own Claude Code copy (tasks/browser-skill-setup.yml).
-    excludes:
-      - browser-skill
   register: shared_agent_skills
   tags:
     - install
@@ -176,6 +210,10 @@
     dest: "{{ lookup('env', 'HOME') }}/.claude/skills/{{ item.path | basename }}"
     state: link
   loop: "{{ shared_agent_skills.files }}"
+  when: >-
+    not (ansible_check_mode and item.path | basename == 'browser-skill'
+         and claude_browser_skill.stat.isdir | default(false)
+         and not (claude_browser_skill.stat.islnk | default(false)))
   loop_control:
     label: "{{ item.path | basename }}"
   tags:

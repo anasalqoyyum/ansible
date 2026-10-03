@@ -1,0 +1,17 @@
+[Unit]
+Description=Persistent devbox virtual display
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Environment=DISPLAY=:20
+Environment=XAUTHORITY=%t/devbox/Xauthority
+RuntimeDirectory=devbox
+RuntimeDirectoryMode=0700
+UMask=0077
+ExecStart=%h/.local/libexec/devbox/start-display
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

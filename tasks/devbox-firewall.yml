@@ -1,0 +1,31 @@
+- name: Install UFW
+  become: true
+  ansible.builtin.apt:
+    name: ufw
+    state: present
+
+- name: Allow SSH over Tailscale
+  become: true
+  community.general.ufw:
+    rule: allow
+    direction: in
+    interface: tailscale0
+    to_port: "22"
+    proto: tcp
+
+- name: Deny unsolicited incoming traffic
+  become: true
+  community.general.ufw:
+    default: deny
+    direction: incoming
+
+- name: Allow outgoing traffic
+  become: true
+  community.general.ufw:
+    default: allow
+    direction: outgoing
+
+- name: Enable firewall
+  become: true
+  community.general.ufw:
+    state: enabled

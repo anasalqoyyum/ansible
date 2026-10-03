@@ -26,28 +26,7 @@
         PATH: "{{ ansible_facts['env']['HOME'] }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
       when: not browser_skill_cli.stat.exists
 
-    - name: Install BrowserSkill for Codex
-      ansible.builtin.command:
-        argv:
-          - "{{ ansible_facts['env']['HOME'] }}/.local/bin/bsk"
-          - install-skill
-          - --harness
-          - codex
-          - --json
-      args:
-        creates: "{{ ansible_facts['env']['HOME'] }}/.agents/skills/browser-skill/SKILL.md"
-
-    - name: Install BrowserSkill for Claude Code
-      ansible.builtin.command:
-        argv:
-          - "{{ ansible_facts['env']['HOME'] }}/.local/bin/bsk"
-          - install-skill
-          - --harness
-          - claude-code
-          - --json
-      args:
-        creates: "{{ ansible_facts['env']['HOME'] }}/.claude/skills/browser-skill/SKILL.md"
-
     - name: Verify BrowserSkill CLI
       ansible.builtin.command: "{{ ansible_facts['env']['HOME'] }}/.local/bin/bsk --version"
       changed_when: false
+      when: not ansible_check_mode

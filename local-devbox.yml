@@ -1,0 +1,116 @@
+- name: Configure dedicated Ubuntu development box
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  vars:
+    core_fuse_package: libfuse2t64
+    source_key: "{{ lookup('env', 'ANSIBLE_SOURCE_SSH_KEY') | default('./.ssh/id_ed25519', true) }}"
+    dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
+    devbox_authorized_key_file: "{{ playbook_dir }}/.ssh/id_ed25519.pub"
+  pre_tasks:
+    - name: Require native Ubuntu Desktop 24.04 on x86_64 as a regular user
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['distribution'] == "Ubuntu"
+          - ansible_facts['distribution_version'] == "24.04"
+          - ansible_facts['architecture'] == "x86_64"
+          - ansible_facts['service_mgr'] == "systemd"
+          - "'microsoft' not in (ansible_facts['kernel'] | lower)"
+          - ansible_facts['user_id'] != "root"
+          - lookup('env', 'HOME') == ansible_facts['user_dir']
+        fail_msg: "Run the devbox profile as the development user on native Ubuntu Desktop 24.04 LTS."
+      tags: [always]
+
+  tasks:
+    - name: Configure SSH
+      ansible.builtin.import_tasks: tasks/ssh.yml
+
+    - name: Install core packages
+      ansible.builtin.import_tasks: tasks/core-setup.yml
+
+    - name: Install Linux tools
+      ansible.builtin.import_tasks: tasks/linux-tools-setup.yml
+
+    - name: Install Rust
+      ansible.builtin.import_tasks: tasks/rust-setup.yml
+
+    - name: Install Rust tools
+      ansible.builtin.import_tasks: tasks/rust-tools-setup.yml
+
+    - name: Install mise
+      ansible.builtin.import_tasks: tasks/mise.yml
+
+    - name: Install Herdr
+      ansible.builtin.import_tasks: tasks/herdr-setup.yml
+
+    - name: Configure Zsh
+      ansible.builtin.import_tasks: tasks/zsh-setup.yml
+
+    - name: Configure Docker
+      ansible.builtin.import_tasks: tasks/docker-setup.yml
+
+    - name: Configure dotfiles
+      ansible.builtin.import_tasks: tasks/dotfiles.yml
+
+    - name: Install Herdr plugins
+      ansible.builtin.import_tasks: tasks/herdr-plugins.yml
+
+    - name: Install mise tools
+      ansible.builtin.import_tasks: tasks/mise-tools-setup.yml
+
+    - name: Install AI tools
+      ansible.builtin.import_tasks: tasks/ai-tools.yml
+
+    - name: Install BrowserSkill
+      ansible.builtin.import_tasks: tasks/browser-skill-setup.yml
+
+    - name: Configure Git
+      ansible.builtin.import_tasks: tasks/git-setup.yml
+
+    - name: Install AGS CLI
+      ansible.builtin.import_tasks: tasks/ags-cli-setup.yml
+
+    - name: Configure devbox repository directories
+      ansible.builtin.import_tasks: tasks/devbox-directories.yml
+      tags: [devbox, devbox-directories]
+
+    - name: Configure Tailscale
+      ansible.builtin.import_tasks: tasks/tailscale-setup.yml
+      tags: [devbox, tailscale]
+
+    - name: Configure native OpenSSH server
+      ansible.builtin.import_tasks: tasks/openssh-native-setup.yml
+      tags: [devbox, openssh-server]
+
+    - name: Configure devbox firewall
+      ansible.builtin.import_tasks: tasks/devbox-firewall.yml
+      tags: [devbox, firewall]
+
+    - name: Configure unattended power management
+      ansible.builtin.import_tasks: tasks/devbox-power.yml
+      tags: [devbox, power]
+
+    - name: Configure persistent agent desktop
+      ansible.builtin.import_tasks: tasks/devbox-desktop.yml
+      tags: [devbox, devbox-desktop]
+  handlers:
+    - name: Restart native SSH
+      become: true
+      ansible.builtin.systemd_service:
+        name: ssh.service
+        state: restarted
+
+    - name: Restart devbox graphical services
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        scope: user
+        daemon_reload: true
+        state: restarted
+      environment:
+        XDG_RUNTIME_DIR: "/run/user/{{ ansible_facts['user_uid'] }}"
+        DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts['user_uid'] }}/bus"
+      loop:
+        - devbox-display.service
+        - devbox-desktop.service
+        - devbox-chrome.service
+        - devbox-browser-skill.service

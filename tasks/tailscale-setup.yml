@@ -1,0 +1,34 @@
+- name: Install Tailscale archive keyring
+  become: true
+  ansible.builtin.get_url:
+    url: https://pkgs.tailscale.com/stable/ubuntu/noble.noarmor.gpg
+    dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
+    mode: "0644"
+  register: tailscale_keyring
+
+- name: Configure official Tailscale apt repository
+  become: true
+  ansible.builtin.get_url:
+    url: https://pkgs.tailscale.com/stable/ubuntu/noble.tailscale-keyring.list
+    dest: /etc/apt/sources.list.d/tailscale.list
+    mode: "0644"
+  register: tailscale_apt_source
+
+- name: Install Tailscale
+  become: true
+  ansible.builtin.apt:
+    name: tailscale
+    state: present
+    update_cache: true
+    cache_valid_time: "{{ 0 if tailscale_apt_source.changed or tailscale_keyring.changed else 3600 }}"
+
+- name: Enable and start Tailscale
+  become: true
+  ansible.builtin.systemd_service:
+    name: tailscaled.service
+    enabled: true
+    state: started
+
+- name: Explain first Tailscale login
+  ansible.builtin.debug:
+    msg: "Run sudo tailscale up once, authenticate in your browser, then test SSH over the tailnet. See docs/devbox.md."

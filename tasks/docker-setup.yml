@@ -3,7 +3,8 @@
     url: https://get.docker.com
     dest: /tmp/get-docker.sh
     mode: "0755"
-    force: true
+    force: false
+  when: "'microsoft' in (ansible_facts['kernel'] | lower)"
   tags:
     - install
     - docker
@@ -13,9 +14,45 @@
   args:
     creates: /usr/bin/docker
   become: true
+  when: "'microsoft' in (ansible_facts['kernel'] | lower)"
   tags:
     - install
     - docker
+
+- name: Install Docker from its official Ubuntu repository on native Linux
+  when: "'microsoft' not in (ansible_facts['kernel'] | lower)"
+  become: true
+  tags:
+    - install
+    - docker
+  block:
+    - name: Create apt keyring directory
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: "0755"
+
+    - name: Install Docker signing key
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: "0644"
+
+    - name: Configure Docker apt repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_facts['distribution_release'] }} stable"
+        filename: docker
+        state: present
+
+    - name: Install Docker Engine and Compose plugins
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
 
 - name: Set user to Docker Group
   user:
@@ -36,12 +73,12 @@
     - install
     - docker
 
-- name: Install docker-compose v1 (legacy)
+- name: Install standalone Docker Compose
   get_url:
     url: https://github.com/docker/compose/releases/download/v2.39.2/docker-compose-linux-x86_64
     dest: /usr/local/bin/docker-compose
     mode: "0755"
-    force: true
+    force: false
   become: true
   tags:
     - install
@@ -53,6 +90,20 @@
   become: true
   changed_when: false
   failed_when: false
+  when: "'microsoft' in (ansible_facts['kernel'] | lower)"
+  tags:
+    - install
+    - docker
+
+- name: Enable Docker on native Linux
+  become: true
+  ansible.builtin.systemd_service:
+    name: docker.service
+    enabled: true
+    state: started
+  when:
+    - "'microsoft' not in (ansible_facts['kernel'] | lower)"
+    - ansible_facts['service_mgr'] == "systemd"
   tags:
     - install
     - docker

@@ -17,12 +17,29 @@
     - dotfiles
     - gh-extensions
 
+- name: Check GitHub authentication before managing extensions
+  ansible.builtin.command:
+    argv:
+      - "{{ gh_executable.stdout }}"
+      - auth
+      - status
+  register: gh_authentication
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  no_log: true
+  tags:
+    - install
+    - dotfiles
+    - gh-extensions
+
 - name: List installed gh extensions
   ansible.builtin.command:
     argv:
       - "{{ gh_executable.stdout }}"
       - extension
       - list
+  when: gh_authentication.rc == 0
   register: gh_extensions
   changed_when: false
   check_mode: false
@@ -41,7 +58,18 @@
   loop:
     - dlvhdr/gh-dash
     - github/gh-stack
-  when: item not in gh_extensions.stdout
+  when:
+    - gh_authentication.rc == 0
+    - item not in gh_extensions.stdout
+  tags:
+    - install
+    - dotfiles
+    - gh-extensions
+
+- name: Explain GitHub extension authentication
+  ansible.builtin.debug:
+    msg: "Run gh auth login, then rerun the playbook with --tags gh-extensions to install GitHub extensions."
+  when: gh_authentication.rc != 0
   tags:
     - install
     - dotfiles
