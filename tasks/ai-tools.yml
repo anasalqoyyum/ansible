@@ -113,83 +113,18 @@
     - install
     - ai-tools
 
-- name: Install Pi
+- name: Install Pi with the native installer
+  ansible.builtin.shell: |
+    set -o pipefail
+    export NPM_CONFIG_PREFIX="$HOME/.local"
+    curl -fsSL https://pi.dev/install.sh | /bin/sh
+  args:
+    executable: /bin/bash
+  environment:
+    PATH: "{{ ai_tools_path }}"
   when:
     - not ansible_check_mode
     - pi_binary.rc != 0
-  tags:
-    - install
-    - ai-tools
-  block:
-    - name: Install Pi with the native installer
-      ansible.builtin.shell: |
-        set -o pipefail
-        export NPM_CONFIG_PREFIX="$HOME/.local"
-        curl -fsSL https://pi.dev/install.sh | /bin/sh
-      args:
-        executable: /bin/bash
-      environment:
-        PATH: "{{ ai_tools_path }}"
-        BUN_INSTALL: "{{ ai_tools_bun_install }}"
-      when: ai_tools_curl_available
-
-    - name: Install Pi with Bun
-      ansible.builtin.command:
-        argv:
-          - bun
-          - install
-          - --global
-          - "@earendil-works/pi-coding-agent"
-      environment:
-        PATH: "{{ ai_tools_path }}"
-        BUN_INSTALL: "{{ ai_tools_bun_install }}"
-      when: not ai_tools_curl_available
-
-    - name: Verify Pi installation
-      ansible.builtin.command: pi --version
-      environment:
-        PATH: "{{ ai_tools_path }}"
-      changed_when: false
-  rescue:
-    - name: Install Pi with Bun after native installer failure
-      ansible.builtin.command:
-        argv:
-          - bun
-          - install
-          - --global
-          - "@earendil-works/pi-coding-agent"
-      environment:
-        PATH: "{{ ai_tools_path }}"
-        BUN_INSTALL: "{{ ai_tools_bun_install }}"
-      when: ai_tools_curl_available
-
-- name: Check Pi in the user local bin directory
-  ansible.builtin.stat:
-    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/pi"
-    follow: false
-  register: pi_local_binary
-  tags:
-    - install
-    - ai-tools
-
-- name: Check Pi in the Bun global bin directory
-  ansible.builtin.stat:
-    path: "{{ ansible_facts['env']['HOME'] }}/.bun/bin/pi"
-    follow: false
-  register: pi_bun_binary
-  tags:
-    - install
-    - ai-tools
-
-- name: Expose the Bun Pi install through the user local bin directory
-  ansible.builtin.file:
-    src: "{{ ansible_facts['env']['HOME'] }}/.bun/bin/pi"
-    dest: "{{ ansible_facts['env']['HOME'] }}/.local/bin/pi"
-    state: link
-  when:
-    - not ansible_check_mode
-    - not pi_local_binary.stat.exists
-    - pi_bun_binary.stat.exists
   tags:
     - install
     - ai-tools
