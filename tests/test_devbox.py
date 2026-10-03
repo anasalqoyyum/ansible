@@ -179,8 +179,16 @@ class DevboxTest(unittest.TestCase):
                 config.write_text(
                     baseline + f"Match {condition}\n"
                     "  PasswordAuthentication yes\n"
-                    "  AuthenticationMethods any\n"
+                    "  AuthenticationMethods password\n"
                 )
+                global_settings = subprocess.run(
+                    ["/usr/sbin/sshd", "-T", "-f", str(config)],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                ).stdout.splitlines()
+                self.assertIn("passwordauthentication no", global_settings)
+                self.assertIn("authenticationmethods publickey", global_settings)
                 with self.assertRaises(subprocess.CalledProcessError) as error:
                     self.play(tasks, variables)
                 self.assertIn(
