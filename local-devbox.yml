@@ -7,6 +7,8 @@
     source_key: "{{ lookup('env', 'ANSIBLE_SOURCE_SSH_KEY') | default('./.ssh/id_ed25519', true) }}"
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
     devbox_authorized_key_file: "{{ playbook_dir }}/.ssh/id_ed25519.pub"
+    devbox_ssh_client_address: "100.64.0.1"
+    devbox_ssh_client_host: "{{ devbox_ssh_client_address }}"
   pre_tasks:
     - name: Require native Ubuntu Desktop 24.04 on x86_64 as a regular user
       ansible.builtin.assert:

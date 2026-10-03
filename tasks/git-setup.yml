@@ -23,6 +23,9 @@
       - "{{ gh_executable.stdout }}"
       - auth
       - status
+      - --active
+      - --hostname
+      - github.com
   register: gh_authentication
   changed_when: false
   failed_when: false

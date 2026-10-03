@@ -1,4 +1,6 @@
+import grp
 import os
+import pwd
 import subprocess
 import tempfile
 import unittest
@@ -83,6 +85,7 @@ class DevboxTest(unittest.TestCase):
         names = {
             "Ensure SSH directory exists",
             "Require a single OpenSSH public key",
+            "Validate the OpenSSH public key blob",
             "Authorize the existing public key without replacing other keys",
         }
         tasks = [
@@ -97,6 +100,93 @@ class DevboxTest(unittest.TestCase):
         self.assertEqual(ssh_dir.stat().st_mode & 0o777, 0o700)
         self.assert_no_changes(self.play(tasks, variables))
         self.assert_no_changes(self.play(tasks, variables, check=True))
+
+    def test_invalid_public_key_is_rejected_before_enrollment(self):
+        source = self.root / "invalid.pub"
+        source.write_text("ssh-ed25519 AAAA\n")
+        ssh_dir = self.home / ".ssh"
+        ssh_dir.mkdir()
+        authorized = ssh_dir / "authorized_keys"
+        existing = (REPO / ".ssh/id_ed25519.pub").read_text()
+        authorized.write_text(existing)
+        names = {
+            "Require a single OpenSSH public key",
+            "Validate the OpenSSH public key blob",
+            "Authorize the existing public key without replacing other keys",
+        }
+        tasks = [
+            t for t in self.tasks("openssh-native-setup.yml") if t["name"] in names
+        ]
+        for check in [False, True]:
+            with self.subTest(check=check):
+                with self.assertRaises(subprocess.CalledProcessError) as error:
+                    self.play(
+                        tasks,
+                        {"devbox_authorized_key_file": str(source)},
+                        check=check,
+                    )
+                self.assertIn(
+                    "Validate the OpenSSH public key blob", error.exception.stdout
+                )
+                self.assertNotIn("ssh-ed25519 AAAA", error.exception.stdout)
+                self.assertEqual(authorized.read_text(), existing)
+
+    def test_ssh_validation_rejects_matching_authentication_overrides(self):
+        host_key = self.root / "host-key"
+        subprocess.run(
+            ["ssh-keygen", "-q", "-t", "ed25519", "-N", "", "-f", str(host_key)],
+            check=True,
+            capture_output=True,
+        )
+        config = self.root / "sshd_config"
+        config.write_text(
+            f"HostKey {host_key}\n"
+            "PubkeyAuthentication yes\n"
+            "PasswordAuthentication no\n"
+            "KbdInteractiveAuthentication no\n"
+            "AuthenticationMethods publickey\n"
+            "PermitRootLogin no\n"
+        )
+        baseline = config.read_text()
+        names = {
+            "Inspect effective SSH authentication settings",
+            "Require effective key-only SSH authentication",
+        }
+        tasks = [
+            t for t in self.tasks("openssh-native-setup.yml") if t["name"] in names
+        ]
+        inspection = tasks[0]
+        inspection["become"] = False
+        inspection["ansible.builtin.command"]["argv"] = (
+            "{{ ['/usr/sbin/sshd', '-T', '-f', sshd_config] + item }}"
+        )
+        user = pwd.getpwuid(os.getuid()).pw_name
+        group = grp.getgrgid(os.getgid()).gr_name
+        variables = {
+            "sshd_config": str(config),
+            "ansible_facts": {"user_id": user},
+            "devbox_ssh_client_address": "100.100.100.100",
+            "devbox_ssh_client_host": "client.example.com",
+        }
+        self.assert_no_changes(self.play(tasks, variables))
+        for condition in [
+            f"User {user}",
+            f"Group {group}",
+            "Address 100.100.100.100",
+            "Host client.example.com",
+        ]:
+            with self.subTest(condition=condition):
+                config.write_text(
+                    baseline + f"Match {condition}\n"
+                    "  PasswordAuthentication yes\n"
+                    "  AuthenticationMethods any\n"
+                )
+                with self.assertRaises(subprocess.CalledProcessError) as error:
+                    self.play(tasks, variables)
+                self.assertIn(
+                    "Existing sshd configuration overrides devbox authentication",
+                    error.exception.stdout,
+                )
 
     def test_vault_copies_do_not_expose_decrypted_files_in_diffs(self):
         password_file = self.root / "vault-password"
@@ -189,7 +279,13 @@ class DevboxTest(unittest.TestCase):
         gh.write_text("""#!/usr/bin/env bash
 set -euo pipefail
 case "$1 $2" in
-  "auth status") test -f "$HOME/authenticated" ;;
+  "auth status")
+    if [ -f "$HOME/stale-account" ]; then
+      case " $* " in *" --active "*) ;; *) exit 1 ;; esac
+      case " $* " in *" --hostname github.com "*) ;; *) exit 1 ;; esac
+    fi
+    test -f "$HOME/authenticated"
+    ;;
   "extension list") cat "$HOME/installed-extensions" 2>/dev/null || true ;;
   "extension install") printf '%s\\n' "$3" >> "$HOME/installed-extensions" ;;
   *) exit 2 ;;
@@ -203,6 +299,7 @@ esac
         installed = self.home / "installed-extensions"
         self.assertFalse(installed.exists())
         (self.home / "authenticated").touch()
+        (self.home / "stale-account").touch()
         self.play(tasks)
         self.assertEqual(
             installed.read_text().splitlines(), ["dlvhdr/gh-dash", "github/gh-stack"]

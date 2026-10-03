@@ -20,6 +20,13 @@
     devbox_public_key: "{{ lookup('file', devbox_authorized_key_file) | trim }}"
   no_log: true
 
+- name: Validate the OpenSSH public key blob
+  ansible.builtin.command:
+    argv: [ssh-keygen, -l, -f, "{{ devbox_authorized_key_file }}"]
+  changed_when: false
+  check_mode: false
+  no_log: true
+
 - name: Authorize the existing public key without replacing other keys
   ansible.builtin.lineinfile:
     path: "{{ ansible_facts['user_dir'] }}/.ssh/authorized_keys"
@@ -51,7 +58,13 @@
 
 - name: Inspect effective SSH authentication settings
   become: true
-  ansible.builtin.command: /usr/sbin/sshd -T
+  ansible.builtin.command:
+    argv: "{{ ['/usr/sbin/sshd', '-T'] + item }}"
+  loop:
+    - []
+    - ["-C", "user={{ ansible_facts['user_id'] }},host={{ devbox_ssh_client_host }},addr={{ devbox_ssh_client_address }}"]
+  loop_control:
+    label: "{{ 'global' if item | length == 0 else 'development user' }}"
   register: devbox_sshd_settings
   changed_when: false
   check_mode: false
@@ -60,12 +73,15 @@
 - name: Require effective key-only SSH authentication
   ansible.builtin.assert:
     that:
-      - "'pubkeyauthentication yes' in devbox_sshd_settings.stdout_lines"
-      - "'passwordauthentication no' in devbox_sshd_settings.stdout_lines"
-      - "'kbdinteractiveauthentication no' in devbox_sshd_settings.stdout_lines"
-      - "'authenticationmethods publickey' in devbox_sshd_settings.stdout_lines"
-      - "'permitrootlogin no' in devbox_sshd_settings.stdout_lines"
+      - "'pubkeyauthentication yes' in item.stdout_lines"
+      - "'passwordauthentication no' in item.stdout_lines"
+      - "'kbdinteractiveauthentication no' in item.stdout_lines"
+      - "'authenticationmethods publickey' in item.stdout_lines"
+      - "'permitrootlogin no' in item.stdout_lines"
     fail_msg: "Existing sshd configuration overrides devbox authentication. Resolve it at the local console."
+  loop: "{{ devbox_sshd_settings.results }}"
+  loop_control:
+    label: "{{ 'global' if item.item | length == 0 else 'development user' }}"
   when: not ansible_check_mode
 
 - name: Disable socket activation for predictable SSH service startup

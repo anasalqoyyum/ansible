@@ -91,6 +91,20 @@ Ubuntu's SSH socket activation to the enabled `ssh.service` and verifies that
 port 22 answers locally. Verify a real key-authenticated connection before
 removing the monitor; the port check alone cannot prove authentication works.
 
+SSH validation checks both the global settings and settings for your development
+user. It uses `100.64.0.1` as a representative Tailscale client address and host.
+If an existing SSH configuration uses `Match Address` or `Match Host`, supply
+your connecting computer's actual Tailscale IP and host name so those rules are
+evaluated:
+
+```bash
+bash run-devbox.sh \
+  -e 'devbox_ssh_client_address=<client-tailscale-ip>' \
+  -e 'devbox_ssh_client_host=<client-host-name>'
+```
+
+Repeat validation for each allowed client when their matching rules differ.
+
 Private SSH keys and SSH client config are not restored by the bootstrap.
 Restore the existing Vault-managed files explicitly, without rotation:
 
