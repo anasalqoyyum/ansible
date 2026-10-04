@@ -4,7 +4,7 @@ This repository supports three environments:
 
 - Windows through WSL 2 and Ubuntu (`local-linux.yml`)
 - macOS natively (`local-macos.yml`)
-- Native Ubuntu Desktop 24.04 LTS (`local-devbox.yml`), documented in [docs/devbox.md](docs/devbox.md)
+- Native Ubuntu Desktop 26.04 LTS (`local-devbox.yml`), documented in [docs/devbox.md](docs/devbox.md)
 
 WSL is a Windows feature; it is not used on macOS.
 

@@ -1,6 +1,6 @@
 # Dedicated Ubuntu devbox
 
-Target: Beelink SER5 MAX, Ryzen 7 5800H, 32 GB RAM, 1 TB SSD, Ubuntu Desktop
+Target: Geekom A5, Ryzen 7 7730U, 32 GB RAM, 1 TB SSD, Ubuntu Desktop
 26.04 LTS on x86_64. Run provisioning as your regular development user. Do not
 run the bootstrap with `sudo`, or use this profile inside WSL.
 
@@ -42,7 +42,7 @@ Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 
 | Automatic | Manual or interactive |
 | --- | --- |
-| Reuse shared Git, Zsh, tmux, Neovim, Stow, mise, language runtimes, Rust, Cargo, Docker/Compose, AI CLIs, and BrowserSkill CLI tasks | Install Ubuntu and choose disk unlock behavior |
+| Reuse shared Git, Zsh, Herdr, Neovim, Stow, mise, language runtimes, Rust, Cargo, Docker/Compose, AI CLIs, and BrowserSkill CLI tasks | Install Ubuntu and choose disk unlock behavior |
 | Sync managed dotfiles without replacing local auth, sessions, or caches | Authenticate Tailscale, GitHub, Codex, and other AI tools |
 | Create `~/repo/` and `~/repo/worktrees/` | Clone your development repositories when needed |
 | Install, enable, and start native OpenSSH and Tailscale | Restore outbound SSH files using Ansible Vault if wanted |
@@ -185,7 +185,7 @@ Chrome is launched explicitly by systemd. BrowserSkill CLI does not launch it.
 No HDMI dummy plug is needed for this virtual display. It does not depend on the
 AMD GPU detecting a monitor. Hardware-accelerated rendering and the physical
 GNOME desktop are outside this virtual display setup; verify your applications'
-rendering on the Beelink.
+rendering on the Geekom A5.
 
 VNC has no TCP listener on the devbox. Its Unix socket is mode `0600` inside a
 private runtime directory. SSH authenticates access and forwards it to a local
@@ -281,17 +281,20 @@ git worktree add \
   ~/repo/worktrees/project-a/issue-102 \
   -b fix/issue-102 main
 
-tmux new-session -s issue-101 -c ~/repo/worktrees/project-a/issue-101
-codex
-# Detach with Ctrl-b, then d. From another SSH shell:
-tmux new-session -s issue-102 -c ~/repo/worktrees/project-a/issue-102
-codex
-# Reconnect later:
-tmux attach -t issue-101
+# Open one Herdr workspace per worktree in the named main session.
+herdr --session main workspace create \
+  --cwd ~/repo/worktrees/project-a/issue-101 --label issue-101
+herdr --session main workspace create \
+  --cwd ~/repo/worktrees/project-a/issue-102 --label issue-102
+
+# Attach, run codex in each workspace root pane, and switch workspaces with
+# prefix (Ctrl-a) + shift + 1..9. Detach with prefix + d and reattach later
+# with the same command.
+herdr --session main
 ```
 
 Install dependencies in each worktree using that project's package manager.
-Run frontend servers in separate tmux windows, with distinct explicit ports:
+Run frontend servers in separate Herdr panes, with distinct explicit ports:
 
 ```bash
 # In issue-101, for a Vite project:
@@ -313,22 +316,28 @@ BrowserSkill session against the intended URL. If you want to view an app on you
 client browser, forward its port with SSH, for example
 `ssh -N -L 127.0.0.1:3001:127.0.0.1:3001 <user>@<devbox>`.
 
-Tmux survives client disconnects and logout. It does not survive a reboot or
-power failure. Worktree files survive; restart development servers and Codex
-sessions after boot. This setup does not automatically replay agent tasks.
+Herdr survives client disconnects and logout; reattach with
+`herdr --session main`. Pane processes do not survive a reboot or power failure,
+although Herdr resumes supported agent conversations when its server restarts.
+Worktree files survive; restart development servers after boot. This setup does
+not automatically replay agent tasks.
 
 ## Power recovery
 
-Configure the SER5 MAX's BIOS manually while a keyboard and monitor are attached:
+Configure the Geekom A5's BIOS manually while a keyboard and monitor are attached:
 press Delete during power-on and find **Auto Power On**, **AC Power Loss**, or
 **Restore on AC Power Loss**. Select **Always On / Power On**, rather than
 Previous State, and save using the key shown by your BIOS.
 
-Firmware menu paths vary. Beelink's AMD guidance places AC Power Loss under
-Advanced → AMD CBS; some firmware nests it under FCH Common Options and AC Loss
-Control. Other revisions expose Auto Power On in a different menu. Check the
-exact 5800H unit and firmware; do not flash another SER5 variant's BIOS to obtain
-this setting. See [Beelink's AMD power recovery guide](https://www.bee-link.com/blogs/knowledge-base-guides/set-auto-power-on-of-ser-4800).
+Firmware menu paths vary. GEEKOM's A5 guidance places AC loss control under
+Advanced → AMD CBS → FCH Common Options → Ac Power Loss Options, with
+**Ac Loss Control** set to **Always On**. Related A5-series firmware exposes the
+same behavior as **Power On Automatically After Power Loss** set to **S0 State**.
+Some A5 units hide the Advanced menu; GEEKOM's [BIOS unlock
+tool](https://service.geekompc.com/faq/bios-unlock-tool-user-guide/) is a utility
+program rather than a boot-time key combination. Check the exact 7730U unit and
+firmware; do not flash another model's BIOS to obtain this setting. See
+[GEEKOM's A5 power-on guide](https://help.geekompc.com/hc/en-us/articles/11004517115919-Enable-Power-On-Auto-Start-Function-on-A5-5800H).
 
 Ansible masks suspend/hibernate targets and sets logind's idle action to ignore.
 The logind drop-in applies on the next reboot. Normal CPU idle states, frequency
@@ -434,7 +443,7 @@ Repository checks:
 
 ```bash
 make bootstrap-collections syntax-check lint test-dotfiles test-devbox
-# On the provisioned Beelink:
+# On the provisioned Geekom A5:
 make check-devbox
 ```
 
@@ -450,7 +459,7 @@ public-key enrollment, Vault copy redaction, GitHub authentication gating, share
 BrowserSkill linking, and preservation of Codex authentication/session state during dotfiles sync. They do
 not establish physical hardware or authenticated browser operation.
 
-Record the following acceptance results on the actual Beelink:
+Record the following acceptance results on the actual Geekom A5:
 
 1. Shut down cleanly, remove AC, then restore it. The machine powers on without
    touching the power button. Once this passes, test outage recovery with work
@@ -465,8 +474,8 @@ Record the following acceptance results on the actual Beelink:
 6. A fresh Codex session discovers the managed skill, opens an Agent Window,
    interacts with a local application, and saves a readable screenshot through
    BrowserSkill. Stop its test session afterward.
-7. Disconnect SSH and VNC, wait, reconnect, and confirm the same tmux processes,
-   browser windows, and BrowserSkill sessions are still present.
+7. Disconnect SSH and VNC, wait, reconnect, and confirm the same Herdr workspaces
+   and panes, browser windows, and BrowserSkill sessions are still present.
 8. Run two Codex sessions in separate worktrees under
    `~/repo/worktrees/project-a/`, with frontend ports 3001 and 3002 and different
    BrowserSkill session IDs. Each agent reaches its own app and screenshot.

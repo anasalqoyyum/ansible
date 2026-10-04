@@ -16,7 +16,7 @@ The scripts install Ansible (if missing), install required collections from `req
 
 ## New Machine How-To
 
-For the always-on Beelink, follow [docs/devbox.md](docs/devbox.md), including the
+For the always-on Geekom A5, follow [docs/devbox.md](docs/devbox.md), including the
 manual authentication and reboot acceptance tests. Repositories belong under
 `~/repo/` and worktrees under `~/repo/worktrees/<project-name>/`.
 
