@@ -16,5 +16,8 @@
   },
   "tui": "fullscreen",
   "autoMemoryEnabled": false,
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "enabledPlugins": {
+    "cc-plugin-you-should-know@builtin": true
+  }
 }

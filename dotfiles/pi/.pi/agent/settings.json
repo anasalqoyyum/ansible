@@ -14,7 +14,8 @@
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@juicesharp/rpiv-todo",
     "npm:pi-token-speed",
-    "git:github.com/anasalqoyyum/pi-durable-subagents"
+    "git:github.com/anasalqoyyum/pi-durable-subagents",
+    "git:github.com/aliceisjustplaying/pi-you-should-know"
   ],
   "theme": "savy-dark",
   "transport": "websocket",

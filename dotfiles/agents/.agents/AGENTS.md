@@ -57,6 +57,15 @@
 - Start development or production processes only when explicitly requested or required by a test. Stop test processes when the test finishes.
 - Treat generated files and build or release artifacts as read-only. Regenerate outdated output with the repository's documented generator and report generation failures.
 
+## Screenshots
+
+Save every screenshot you capture to the user's `Screenshots` folder under Pictures, creating the folder when missing. Give each file a new, descriptive name.
+
+- Windows: `[Environment]::GetFolderPath('MyPictures')` in PowerShell, plus `\Screenshots`. The Pictures folder may be relocated off `C:`, so resolve it rather than assuming a drive.
+- WSL: the same Windows folder, converted with `wslpath "$(powershell.exe -NoProfile -Command "[Environment]::GetFolderPath('MyPictures')" | tr -d '\r')"`, plus `/Screenshots`.
+- macOS: `~/Pictures/Screenshots`.
+- Linux outside WSL: `$(xdg-user-dir PICTURES)/Screenshots`, usually `~/Pictures/Screenshots`.
+
 ## Instruction discovery
 
 When the CLI has not loaded Claude instructions, check applicable `CLAUDE.md`, `.claude/CLAUDE.md`, and `.claude/rules/` files. Respect path conditions, resolve symlinks, and read each underlying instruction file once.
