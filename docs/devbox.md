@@ -171,7 +171,9 @@ Ghostty uses the latest stable `.deb` from
 build linked by [Ghostty's install docs](https://ghostty.org/docs/install/binary#debian-and-ubuntu).
 This may be newer than Ubuntu's official package. It is a third-party build, not
 an official Ghostty binary. Ansible selects the Ubuntu 26.04 amd64 asset directly
-instead of executing the community install script.
+instead of executing the community install script. The Ghostty tasks also install
+`wl-clipboard`, which provides `wl-copy` and `wl-paste` for CLI clipboard access
+on Wayland. Install just this dependency with `--tags clipboard`.
 
 T3 Code uses the newest published nightly from
 [pingdotgg/t3code](https://github.com/pingdotgg/t3code/releases), sorted by

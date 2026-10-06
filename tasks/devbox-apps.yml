@@ -56,6 +56,7 @@
         - /opt/helium
         - /usr/local/bin
         - /usr/local/share/applications
+        - /usr/local/share/pixmaps
       register: devbox_helium_directories
 
     - name: Download or update Helium AppImage
@@ -65,8 +66,32 @@
         checksum: "{{ devbox_helium_assets[0].digest }}"
         dest: /opt/helium/helium.AppImage
         mode: "0755"
+      register: devbox_helium_download
       # Check mode cannot use directories that it only predicts creating.
       when: not ansible_check_mode or not devbox_helium_directories.changed
+
+    - name: Extract the bundled Helium icon
+      become: true
+      ansible.builtin.command:
+        argv:
+          - /opt/helium/helium.AppImage
+          - --appimage-extract
+          - helium.png
+        chdir: /opt/helium
+        creates: "{{ omit if devbox_helium_download.changed else '/opt/helium/squashfs-root/helium.png' }}"
+      register: devbox_helium_icon
+      when: not ansible_check_mode or not devbox_helium_directories.changed
+
+    - name: Install the Helium launcher icon
+      become: true
+      ansible.builtin.copy:
+        src: /opt/helium/squashfs-root/helium.png
+        dest: /usr/local/share/pixmaps/helium.png
+        remote_src: true
+        mode: "0644"
+      when:
+        - not ansible_check_mode or not devbox_helium_directories.changed
+        - not ansible_check_mode or not devbox_helium_icon.changed
 
     - name: Link Helium command
       become: true
@@ -88,7 +113,7 @@
           Name=Helium
           GenericName=Web Browser
           Exec=/usr/local/bin/helium %U
-          Icon=web-browser
+          Icon=/usr/local/share/pixmaps/helium.png
           Terminal=false
           StartupNotify=true
           Categories=Network;WebBrowser;
@@ -98,6 +123,15 @@
 - name: Install latest Ghostty release
   tags: [ghostty]
   block:
+    - name: Install Wayland clipboard utilities
+      tags: [clipboard]
+      become: true
+      ansible.builtin.apt:
+        name: wl-clipboard
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
     - name: Query latest Ghostty Ubuntu release
       ansible.builtin.uri:
         url: https://api.github.com/repos/mkasberg/ghostty-ubuntu/releases/latest

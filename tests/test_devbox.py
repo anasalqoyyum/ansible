@@ -414,6 +414,7 @@ esac
         }
         tasks = self.application_tasks(releases)
         output = self.play(tasks, tags="ghostty,t3code")
+        self.assertIn("wl-clipboard", output)
         self.assertIn("https://example.com/ghostty-amd64-26.04.deb", output)
         self.assertIn("https://example.com/t3-0.0.10-nightly.2-amd64.deb", output)
         self.assertNotIn("https://example.com/t3-0.0.12-amd64.deb", output)
@@ -450,6 +451,15 @@ esac
                     "TASK [Install or update T3 Code nightly]", error.exception.stdout
                 )
 
+    def test_clipboard_utilities_install_without_querying_application_releases(self):
+        tasks = self.application_tasks({})
+        for check in [False, True]:
+            with self.subTest(check=check):
+                output = self.play(tasks, check=check, tags="clipboard")
+                self.assertIn("wl-clipboard", output)
+                self.assertNotIn("TASK [Query latest Ghostty Ubuntu release]", output)
+                self.assert_no_changes(output)
+
     def test_ghostty_selection_requires_the_target_ubuntu_and_architecture(self):
         tasks = self.application_tasks(
             {
@@ -465,7 +475,17 @@ esac
 
     def test_helium_install_is_executable_idempotent_and_tracks_latest_release(self):
         path = "/repos/imputnet/helium-linux/releases/latest"
-        image = b"helium-appimage-fixture-v1"
+        def appimage(version):
+            return (
+                '#!/bin/sh\n'
+                'set -eu\n'
+                'test "$1" = --appimage-extract\n'
+                'test "$2" = helium.png\n'
+                'mkdir -p squashfs-root\n'
+                f"printf 'helium-icon-{version}' > squashfs-root/helium.png\n"
+            ).encode()
+
+        image = appimage("v1")
         releases = {path: {"assets": []}, "/helium.AppImage": image}
         tasks = self.application_tasks(releases)
         asset = {
@@ -489,16 +509,36 @@ esac
             self.root / "usr/local/share/applications/helium.desktop"
         ).read_text()
         self.assertIn(f"Exec={self.root}/usr/local/bin/helium %U", desktop)
+        icon = self.root / "usr/local/share/pixmaps/helium.png"
+        self.assertIn(f"Icon={icon}", desktop)
+        self.assertEqual(icon.read_bytes(), b"helium-icon-v1")
+        self.assertEqual(icon.stat().st_mode & 0o777, 0o644)
         self.assertNotIn("--no-sandbox", desktop)
         self.assert_no_changes(self.play(tasks, tags="helium"))
         self.assert_no_changes(self.play(tasks, check=True, tags="helium"))
-        image = b"helium-appimage-fixture-v2"
+        icon.unlink()
+        self.play(tasks, check=True, tags="helium")
+        self.assertFalse(icon.exists())
+        self.play(tasks, tags="helium")
+        self.assertEqual(icon.read_bytes(), b"helium-icon-v1")
+        extracted_icon = installed.parent / "squashfs-root/helium.png"
+        extracted_icon.unlink()
+        self.play(tasks, check=True, tags="helium")
+        self.assertFalse(extracted_icon.exists())
+        self.play(tasks, tags="helium")
+        self.assertEqual(extracted_icon.read_bytes(), b"helium-icon-v1")
+        image = appimage("v2")
         releases["/helium.AppImage"] = image
         asset["name"] = "helium-0.11.0-x86_64.AppImage"
         asset["digest"] = f"sha256:{hashlib.sha256(image).hexdigest()}"
+        self.play(tasks, check=True, tags="helium")
+        self.assertEqual(installed.read_bytes(), appimage("v1"))
+        self.assertEqual(icon.read_bytes(), b"helium-icon-v1")
         self.play(tasks, tags="helium")
         self.assertEqual(installed.read_bytes(), image)
+        self.assertEqual(icon.read_bytes(), b"helium-icon-v2")
         self.assert_no_changes(self.play(tasks, tags="helium"))
+        self.assert_no_changes(self.play(tasks, check=True, tags="helium"))
 
     def test_helium_rejects_missing_architecture_and_checksum(self):
         path = "/repos/imputnet/helium-linux/releases/latest"
