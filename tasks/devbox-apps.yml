@@ -177,6 +177,7 @@
           - hyprlock
           - hypridle
           - hyprpaper
+          - playerctl
         state: present
         install_recommends: false
         update_cache: true

@@ -1,0 +1,27 @@
+#!/bin/sh
+# Usage: network-toggle wifi|ethernet
+# Connects the first device of that type, or disconnects it after confirming,
+# since dropping the only link also drops SSH and Tailscale.
+set -eu
+
+type=$1
+
+if [ "$type" = wifi ] && [ "$(nmcli radio wifi)" = disabled ]; then
+  nmcli radio wifi on
+  exit 0
+fi
+
+device=$(nmcli -t -f DEVICE,TYPE device | awk -F: -v type="$type" '$2 == type { print $1; exit }')
+[ -n "$device" ] || exit 0
+
+case $(nmcli -g GENERAL.STATE device show "$device") in
+  100*)
+    answer=$(printf 'Disconnect %s\nCancel\n' "$device" | fuzzel --dmenu --lines 2 --prompt "$device > ")
+    if [ "$answer" = "Disconnect $device" ]; then
+      nmcli device disconnect "$device"
+    fi
+    ;;
+  *)
+    nmcli device connect "$device"
+    ;;
+esac

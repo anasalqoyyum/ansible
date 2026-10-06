@@ -1,0 +1,16 @@
+#!/bin/sh
+# Lists PipeWire audio outputs in fuzzel and makes the chosen one the default.
+set -eu
+
+sinks=$(pw-dump | jq -r '.[]
+  | select(.type == "PipeWire:Interface:Node" and .info.props["media.class"] == "Audio/Sink")
+  | "\(.id)\t\(.info.props["node.description"])"')
+[ -n "$sinks" ] || exit 0
+
+current_id=$(wpctl inspect @DEFAULT_AUDIO_SINK@ | awk 'NR == 1 { sub(",", "", $2); print $2 }')
+current=$(printf '%s\n' "$sinks" | awk -F '\t' -v id="$current_id" '$1 == id { print $2 }')
+
+index=$(printf '%s\n' "$sinks" | cut -f2 \
+  | fuzzel --dmenu --index --lines "$(printf '%s\n' "$sinks" | wc -l)" --prompt "output > " --select "$current") || exit 0
+
+wpctl set-default "$(printf '%s\n' "$sinks" | sed -n "$((index + 1))p" | cut -f1)"

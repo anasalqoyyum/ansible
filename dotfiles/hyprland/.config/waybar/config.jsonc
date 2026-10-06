@@ -6,29 +6,70 @@
   "margin-left": 5,
   "margin-right": 5,
   "spacing": 8,
-  "modules-left": ["hyprland/workspaces"],
+  "modules-left": ["hyprland/workspaces", "mpris"],
   "modules-center": ["hyprland/window"],
-  "modules-right": ["pulseaudio", "cpu", "memory", "tray", "clock"],
+  "modules-right": ["network#wifi", "network#wired", "pulseaudio", "cpu", "memory", "tray", "clock", "custom/power"],
   "hyprland/workspaces": {
-    "format": "{id}"
+    "format": "{id}",
+    "persistent-workspaces": {
+      "*": 5
+    }
+  },
+  "mpris": {
+    "format": "󰝚 {dynamic}",
+    "format-paused": "",
+    "format-stopped": "",
+    "dynamic-order": ["artist", "title"],
+    "dynamic-len": 50,
+    "tooltip-format": "{player}: {dynamic}"
   },
   "hyprland/window": {
     "max-length": 80,
     "separate-outputs": true
   },
+  "network#wifi": {
+    "interface": "wl*",
+    "format-wifi": "{icon} {essid}",
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+    "format-disconnected": "󰖪",
+    "format-disabled": "󰖪",
+    "tooltip-format-wifi": "{ifname}: {ipaddr}/{cidr} via {gwaddr}\n{signalStrength}% at {frequency} GHz",
+    "on-click": "~/.config/waybar/network-toggle wifi",
+    "on-click-right": "ghostty -e nmtui"
+  },
+  "network#wired": {
+    "interface": "en*",
+    "format-ethernet": "󰈀 {ipaddr}",
+    "format-linked": "󰈀 no ip",
+    "format-disconnected": "",
+    "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr} via {gwaddr}",
+    "on-click": "~/.config/waybar/network-toggle ethernet",
+    "on-click-right": "ghostty -e nmtui"
+  },
   "pulseaudio": {
-    "format": "vol {volume}%",
-    "format-muted": "muted",
-    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+    "format": "{icon} {volume}%",
+    "format-muted": "󰖁 {volume}%",
+    "format-icons": {
+      "headphone": "󰋋",
+      "default": ["󰕿", "󰖀", "󰕾"]
+    },
+    "tooltip-format": "{desc}",
+    "on-click": "~/.config/waybar/audio-output",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
   },
   "cpu": {
-    "format": "cpu {usage}%"
+    "format": "󰘚 {usage}%"
   },
   "memory": {
-    "format": "mem {percentage}%"
+    "format": "󰍛 {percentage}%"
   },
   "tray": {
     "spacing": 8
+  },
+  "custom/power": {
+    "format": "⏻",
+    "tooltip-format": "Power menu",
+    "on-click": "~/.config/waybar/power-menu"
   },
   "clock": {
     "format": "{:%a %d %b %H:%M}"

@@ -24,6 +24,10 @@ tooltip {
   border: none;
   border-radius: 6px;
   background: transparent;
+  color: #c5c8c6;
+}
+
+#workspaces button.empty {
   color: #666666;
 }
 
@@ -42,10 +46,16 @@ tooltip {
   color: #cc6666;
 }
 
+#mpris {
+  padding: 0 8px;
+  color: #b4cbff;
+}
+
 #window {
   color: #c5c8c6;
 }
 
+#network,
 #pulseaudio,
 #cpu,
 #memory,
@@ -55,12 +65,19 @@ tooltip {
   color: #c5c8c6;
 }
 
+#network.disconnected,
+#network.disabled,
 #pulseaudio.muted {
   color: #666666;
 }
 
 #clock {
   color: #b4cbff;
+}
+
+#custom-power {
+  padding: 0 12px 0 8px;
+  color: #cc6666;
 }
 
 #tray > .needs-attention {

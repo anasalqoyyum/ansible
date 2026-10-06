@@ -59,7 +59,8 @@ Logs are at `/tmp/yabai_$USER.err.log` and `/tmp/skhd_$USER.err.log`.
 1. Provisioning installs Hyprland, its desktop portal, `hyprpolkitagent`, Waybar, fuzzel, hyprlock, hypridle, and hyprpaper from the Ubuntu archive, and copies `bg/underwater.png` to `~/.local/share/backgrounds/` for the wallpaper and lock screen. Install or update just these with `ansible-playbook local-devbox.yml --tags hyprland --ask-become-pass`.
 2. Provisioning logs your user in to Hyprland automatically at boot. To use GNOME once, log out and choose Ubuntu from the session menu; the next provisioning run makes Hyprland the saved session again. See [the devbox guide](../docs/devbox.md#hyprland).
 3. Hyprland, Waybar, fuzzel, and hyprlock use the savy-dark Ghostty palette.
-4. Reload after a config change with `hyprctl reload`. Check a config without a running session with `Hyprland --verify-config`.
+4. Reload after a config change with `hyprctl reload`. Check a config without a running session with `Hyprland --verify-config`. Restart Waybar with `pkill -x waybar; hyprctl dispatch exec waybar`.
+5. Waybar shows workspaces 1–5, the playing track (hidden when nothing plays), Wi-Fi and wired status, volume, CPU, memory, the tray, the clock, and a power menu. Click Wi-Fi or wired to connect or disconnect (disconnecting asks first) and right-click either for `nmtui`. Click the volume to choose an audio output and right-click to mute. The power menu offers lock, display off, log out, restart, and shut down; sleep is absent because the devbox masks suspend. The helper scripts live in `dotfiles/hyprland/.config/waybar/`.
 
 Hyprland is only for the physical desktop. SSH, Tailscale, and Docker do not depend on which session is logged in, or whether anyone is logged in at all.
 

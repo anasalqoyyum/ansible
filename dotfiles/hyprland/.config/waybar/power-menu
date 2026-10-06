@@ -1,0 +1,14 @@
+#!/bin/sh
+# Suspend is masked on the devbox (tasks/devbox-power.yml), so "Display off"
+# stands in for sleep.
+set -eu
+
+choice=$(printf 'Lock\nDisplay off\nLog out\nRestart\nShut down\n' | fuzzel --dmenu --lines 5 --prompt "power > ")
+
+case $choice in
+  Lock) loginctl lock-session ;;
+  "Display off") hyprctl dispatch dpms off ;;
+  "Log out") hyprctl dispatch exit ;;
+  Restart) systemctl reboot ;;
+  "Shut down") systemctl poweroff ;;
+esac
