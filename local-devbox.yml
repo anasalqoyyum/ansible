@@ -69,6 +69,10 @@
     - name: Configure Git
       ansible.builtin.import_tasks: tasks/git-setup.yml
 
+    - name: Install devbox applications
+      ansible.builtin.import_tasks: tasks/devbox-apps.yml
+      tags: [devbox, devbox-apps, install]
+
     - name: Configure devbox repository directories
       ansible.builtin.import_tasks: tasks/devbox-directories.yml
       tags: [devbox, devbox-directories]

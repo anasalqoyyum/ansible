@@ -1,0 +1,174 @@
+- name: Install latest Chrome stable
+  tags: [chrome, devbox-desktop]
+  block:
+    - name: Install or update Google Chrome stable
+      become: true
+      ansible.builtin.apt:
+        deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        update_cache: true
+        cache_valid_time: 3600
+
+- name: Install latest Helium AppImage
+  tags: [helium]
+  block:
+    - name: Query latest Helium Linux release
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/imputnet/helium-linux/releases/latest
+        headers:
+          Accept: application/vnd.github+json
+        return_content: true
+      register: devbox_helium_release
+      check_mode: false
+      changed_when: false
+
+    - name: Select Helium AppImage for x86_64
+      ansible.builtin.set_fact:
+        devbox_helium_assets: >-
+          {{ devbox_helium_release.json.assets
+             | selectattr('name', 'match', '^helium-.*-x86_64\.AppImage$')
+             | list }}
+
+    - name: Require a matching Helium AppImage
+      ansible.builtin.assert:
+        that: devbox_helium_assets | length == 1
+        fail_msg: "The latest Helium release has no unique x86_64 AppImage."
+
+    - name: Require the Helium AppImage checksum
+      ansible.builtin.assert:
+        that: devbox_helium_assets[0].digest | default('') is match('^sha256:[0-9a-f]{64}$')
+        fail_msg: "The Helium AppImage is missing its SHA-256 release digest."
+
+    - name: Install Helium AppImage FUSE runtime
+      become: true
+      ansible.builtin.apt:
+        name: libfuse2t64
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Create Helium installation and launcher directories
+      become: true
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - /opt/helium
+        - /usr/local/bin
+        - /usr/local/share/applications
+      register: devbox_helium_directories
+
+    - name: Download or update Helium AppImage
+      become: true
+      ansible.builtin.get_url:
+        url: "{{ devbox_helium_assets[0].browser_download_url }}"
+        checksum: "{{ devbox_helium_assets[0].digest }}"
+        dest: /opt/helium/helium.AppImage
+        mode: "0755"
+      # Check mode cannot use directories that it only predicts creating.
+      when: not ansible_check_mode or not devbox_helium_directories.changed
+
+    - name: Link Helium command
+      become: true
+      ansible.builtin.file:
+        src: /opt/helium/helium.AppImage
+        dest: /usr/local/bin/helium
+        state: link
+        force: true
+      when: not ansible_check_mode or not devbox_helium_directories.changed
+
+    - name: Install Helium desktop launcher
+      become: true
+      ansible.builtin.copy:
+        dest: /usr/local/share/applications/helium.desktop
+        mode: "0644"
+        content: |
+          [Desktop Entry]
+          Type=Application
+          Name=Helium
+          GenericName=Web Browser
+          Exec=/usr/local/bin/helium %U
+          Icon=web-browser
+          Terminal=false
+          StartupNotify=true
+          Categories=Network;WebBrowser;
+          MimeType=text/html;x-scheme-handler/http;x-scheme-handler/https;
+      when: not ansible_check_mode or not devbox_helium_directories.changed
+
+- name: Install latest Ghostty release
+  tags: [ghostty]
+  block:
+    - name: Query latest Ghostty Ubuntu release
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/mkasberg/ghostty-ubuntu/releases/latest
+        headers:
+          Accept: application/vnd.github+json
+        return_content: true
+      register: devbox_ghostty_release
+      check_mode: false
+      changed_when: false
+
+    - name: Select Ghostty package for Ubuntu 26.04 on amd64
+      ansible.builtin.set_fact:
+        devbox_ghostty_assets: >-
+          {{ devbox_ghostty_release.json.assets
+             | selectattr('name', 'match', '^ghostty_.*_amd64_26\.04\.deb$')
+             | list }}
+
+    - name: Require a matching Ghostty Ubuntu package
+      ansible.builtin.assert:
+        that: devbox_ghostty_assets | length == 1
+        fail_msg: "The latest Ghostty release has no unique Ubuntu 26.04 amd64 package."
+
+    - name: Install or update Ghostty
+      become: true
+      ansible.builtin.apt:
+        deb: "{{ devbox_ghostty_assets[0].browser_download_url }}"
+        update_cache: true
+        cache_valid_time: 3600
+
+- name: Install latest T3 Code nightly
+  tags: [t3code]
+  block:
+    - name: Query T3 Code releases including nightlies
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/pingdotgg/t3code/releases?per_page=100
+        headers:
+          Accept: application/vnd.github+json
+        return_content: true
+      register: devbox_t3code_releases
+      check_mode: false
+      changed_when: false
+
+    - name: Select published T3 Code nightlies by publication time
+      ansible.builtin.set_fact:
+        devbox_t3code_nightlies: >-
+          {{ devbox_t3code_releases.json
+             | rejectattr('draft')
+             | selectattr('tag_name', 'search', '-nightly\.')
+             | sort(attribute='published_at', reverse=true)
+             | list }}
+
+    - name: Require a published T3 Code nightly
+      ansible.builtin.assert:
+        that: devbox_t3code_nightlies | length > 0
+        fail_msg: "No published T3 Code nightly was found in the latest 100 releases."
+
+    - name: Select the newest T3 Code nightly amd64 package
+      ansible.builtin.set_fact:
+        devbox_t3code_assets: >-
+          {{ devbox_t3code_nightlies[0].assets
+             | selectattr('name', 'match', '^T3-Code-.*-amd64\.deb$')
+             | list }}
+
+    - name: Require an amd64 package from the newest T3 Code nightly
+      ansible.builtin.assert:
+        that: devbox_t3code_assets | length == 1
+        fail_msg: "The newest T3 Code nightly has no unique amd64 Debian package."
+
+    - name: Install or update T3 Code nightly
+      become: true
+      ansible.builtin.apt:
+        deb: "{{ devbox_t3code_assets[0].browser_download_url }}"
+        update_cache: true
+        cache_valid_time: 3600

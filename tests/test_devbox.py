@@ -1,9 +1,13 @@
 import grp
+import hashlib
+import json
 import os
 import pwd
 import subprocess
 import tempfile
+import threading
 import unittest
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 import yaml
@@ -314,6 +318,215 @@ esac
         )
         self.assert_no_changes(self.play(tasks))
 
+    def application_tasks(self, releases):
+        class Handler(BaseHTTPRequestHandler):
+            def respond(self, send_body):
+                payload = releases[self.path]
+                binary = isinstance(payload, bytes)
+                body = payload if binary else json.dumps(payload).encode()
+                self.send_response(200)
+                self.send_header(
+                    "Content-Type",
+                    "application/octet-stream" if binary else "application/json",
+                )
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                if send_body:
+                    self.wfile.write(body)
+
+            def do_GET(self):
+                self.respond(True)
+
+            def do_HEAD(self):
+                self.respond(False)
+
+            def log_message(self, *args):
+                pass
+
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        self.addCleanup(server.server_close)
+        self.addCleanup(thread.join)
+        self.addCleanup(server.shutdown)
+        self.application_url = f"http://127.0.0.1:{server.server_port}"
+        tasks = yaml.safe_load(
+            (REPO / "tasks/devbox-apps.yml")
+            .read_text()
+            .replace("/opt/helium", str(self.root / "opt/helium"))
+            .replace("/usr/local", str(self.root / "usr/local"))
+        )
+        for block in tasks:
+            for task in block["block"]:
+                task.pop("become", None)
+                if "ansible.builtin.uri" in task:
+                    task["ansible.builtin.uri"]["url"] = task["ansible.builtin.uri"][
+                        "url"
+                    ].replace("https://api.github.com", self.application_url)
+                if "ansible.builtin.apt" in task:
+                    package = task.pop("ansible.builtin.apt")
+                    task["ansible.builtin.debug"] = {
+                        "msg": package.get("deb", package.get("name"))
+                    }
+        return tasks
+
+    def nightly_release(self, version, published_at, draft=False):
+        return {
+            "tag_name": f"v{version}",
+            "draft": draft,
+            "published_at": published_at,
+            "assets": [
+                {
+                    "name": f"T3-Code-{version}-{arch}.deb",
+                    "browser_download_url": f"https://example.com/t3-{version}-{arch}.deb",
+                }
+                for arch in ["arm64", "amd64"]
+            ],
+        }
+
+    def test_applications_select_latest_matching_releases_and_refresh_in_check_mode(
+        self,
+    ):
+        ghostty_path = "/repos/mkasberg/ghostty-ubuntu/releases/latest"
+        t3code_path = "/repos/pingdotgg/t3code/releases?per_page=100"
+        releases = {
+            ghostty_path: {
+                "assets": [
+                    {
+                        "name": f"ghostty_1.3.1_{arch}_{ubuntu}.deb",
+                        "browser_download_url": f"https://example.com/ghostty-{arch}-{ubuntu}.deb",
+                    }
+                    for arch, ubuntu in [
+                        ("amd64", "24.04"),
+                        ("arm64", "26.04"),
+                        ("amd64", "26.04"),
+                    ]
+                ]
+            },
+            t3code_path: [
+                self.nightly_release("0.0.10-nightly.1", "2026-04-01T00:00:00Z"),
+                self.nightly_release("0.0.12", "2026-04-04T00:00:00Z"),
+                self.nightly_release(
+                    "0.0.10-nightly.3", "2026-04-03T00:00:00Z", draft=True
+                ),
+                self.nightly_release("0.0.10-nightly.2", "2026-04-02T00:00:00Z"),
+            ],
+        }
+        tasks = self.application_tasks(releases)
+        output = self.play(tasks, tags="ghostty,t3code")
+        self.assertIn("https://example.com/ghostty-amd64-26.04.deb", output)
+        self.assertIn("https://example.com/t3-0.0.10-nightly.2-amd64.deb", output)
+        self.assertNotIn("https://example.com/t3-0.0.12-amd64.deb", output)
+        releases[t3code_path].append(
+            self.nightly_release("0.0.10-nightly.4", "2026-04-05T00:00:00Z")
+        )
+        output = self.play(tasks, check=True, tags="ghostty,t3code")
+        self.assertIn("https://example.com/t3-0.0.10-nightly.4-amd64.deb", output)
+        self.assertNotIn("https://example.com/t3-0.0.10-nightly.2-amd64.deb", output)
+        self.assert_no_changes(output)
+
+    def test_nightly_selection_fails_without_falling_back_to_stable_or_older_builds(
+        self,
+    ):
+        path = "/repos/pingdotgg/t3code/releases?per_page=100"
+        older = self.nightly_release("0.0.10-nightly.1", "2026-04-01T00:00:00Z")
+        newer = self.nightly_release("0.0.10-nightly.2", "2026-04-02T00:00:00Z")
+        newer["assets"] = []
+        releases = {path: [older, newer]}
+        tasks = self.application_tasks(releases)
+        for candidates, message in [
+            ([older, newer], "newest T3 Code nightly has no unique amd64"),
+            (
+                [self.nightly_release("0.0.12", "2026-04-03T00:00:00Z")],
+                "No published T3 Code nightly",
+            ),
+        ]:
+            with self.subTest(message=message):
+                releases[path] = candidates
+                with self.assertRaises(subprocess.CalledProcessError) as error:
+                    self.play(tasks, tags="t3code")
+                self.assertIn(message, error.exception.stdout)
+                self.assertNotIn(
+                    "TASK [Install or update T3 Code nightly]", error.exception.stdout
+                )
+
+    def test_ghostty_selection_requires_the_target_ubuntu_and_architecture(self):
+        tasks = self.application_tasks(
+            {
+                "/repos/mkasberg/ghostty-ubuntu/releases/latest": {
+                    "assets": [{"name": "ghostty_1.3.1_amd64_24.04.deb"}]
+                }
+            }
+        )
+        with self.assertRaises(subprocess.CalledProcessError) as error:
+            self.play(tasks, tags="ghostty")
+        self.assertIn("no unique Ubuntu 26.04 amd64 package", error.exception.stdout)
+        self.assertNotIn("TASK [Install or update Ghostty]", error.exception.stdout)
+
+    def test_helium_install_is_executable_idempotent_and_tracks_latest_release(self):
+        path = "/repos/imputnet/helium-linux/releases/latest"
+        image = b"helium-appimage-fixture-v1"
+        releases = {path: {"assets": []}, "/helium.AppImage": image}
+        tasks = self.application_tasks(releases)
+        asset = {
+            "name": "helium-0.10.0-x86_64.AppImage",
+            "browser_download_url": f"{self.application_url}/helium.AppImage",
+            "digest": f"sha256:{hashlib.sha256(image).hexdigest()}",
+        }
+        releases[path]["assets"] = [
+            {"name": "helium-0.10.0-arm64.AppImage"},
+            {"name": "helium-0.10.0-x86_64.AppImage.zsync"},
+            asset,
+        ]
+        installed = self.root / "opt/helium/helium.AppImage"
+        self.play(tasks, check=True, tags="helium")
+        self.assertFalse(installed.exists())
+        self.play(tasks, tags="helium")
+        self.assertEqual(installed.read_bytes(), image)
+        self.assertEqual(installed.stat().st_mode & 0o777, 0o755)
+        self.assertEqual((self.root / "usr/local/bin/helium").resolve(), installed)
+        desktop = (
+            self.root / "usr/local/share/applications/helium.desktop"
+        ).read_text()
+        self.assertIn(f"Exec={self.root}/usr/local/bin/helium %U", desktop)
+        self.assertNotIn("--no-sandbox", desktop)
+        self.assert_no_changes(self.play(tasks, tags="helium"))
+        self.assert_no_changes(self.play(tasks, check=True, tags="helium"))
+        image = b"helium-appimage-fixture-v2"
+        releases["/helium.AppImage"] = image
+        asset["name"] = "helium-0.11.0-x86_64.AppImage"
+        asset["digest"] = f"sha256:{hashlib.sha256(image).hexdigest()}"
+        self.play(tasks, tags="helium")
+        self.assertEqual(installed.read_bytes(), image)
+        self.assert_no_changes(self.play(tasks, tags="helium"))
+
+    def test_helium_rejects_missing_architecture_and_checksum(self):
+        path = "/repos/imputnet/helium-linux/releases/latest"
+        releases = {path: {"assets": []}}
+        tasks = self.application_tasks(releases)
+        for assets, message in [
+            ([{"name": "helium-0.10.0-arm64.AppImage"}], "no unique x86_64 AppImage"),
+            ([{"name": "helium-0.10.0-x86_64.AppImage"}], "missing its SHA-256"),
+        ]:
+            with self.subTest(message=message):
+                releases[path]["assets"] = assets
+                with self.assertRaises(subprocess.CalledProcessError) as error:
+                    self.play(tasks, tags="helium")
+                self.assertIn(message, error.exception.stdout)
+                self.assertFalse((self.root / "opt/helium").exists())
+
+    def test_chrome_is_available_without_the_virtual_desktop(self):
+        tasks = self.application_tasks({})
+        expected = (
+            "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+        )
+        self.assertIn(expected, self.play(tasks, tags="chrome"))
+        self.assertIn(expected, self.play(tasks, tags="devbox-desktop"))
+        self.assertNotIn(
+            "ansible.builtin.apt:\\n    deb:",
+            (REPO / "tasks/devbox-desktop.yml").read_text(),
+        )
+
     def test_profile_preserves_shared_setup_and_excludes_wsl(self):
         play = yaml.safe_load((REPO / "local-devbox.yml").read_text())[0]
         imports = [t["ansible.builtin.import_tasks"] for t in play["tasks"]]
@@ -323,10 +536,19 @@ esac
             "browser-skill-setup",
             "mise-tools-setup",
             "ai-tools",
+            "devbox-apps",
         ]:
             self.assertEqual(imports.count(f"tasks/{required}.yml"), 1)
         for excluded in ["win32yank-setup", "cuda-wsl-setup", "openssh-wsl-setup"]:
             self.assertNotIn(f"tasks/{excluded}.yml", imports)
+        apps = next(
+            t
+            for t in play["tasks"]
+            if t["ansible.builtin.import_tasks"] == "tasks/devbox-apps.yml"
+        )
+        self.assertIn("devbox", apps["tags"])
+        self.assertIn("devbox-apps", apps["tags"])
+        self.assertNotIn("never", apps["tags"])
         bsk_tasks = (REPO / "tasks/browser-skill-setup.yml").read_text()
         self.assertNotIn("install-skill", bsk_tasks)
         docker_tasks = self.tasks("docker-setup.yml")

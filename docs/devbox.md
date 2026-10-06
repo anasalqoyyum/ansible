@@ -58,10 +58,11 @@ Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 | --- | --- |
 | Reuse shared Git, Zsh, Herdr, Neovim, Stow, mise, language runtimes, Rust, Cargo, Docker/Compose, AI CLIs, and BrowserSkill CLI tasks | Install Ubuntu unencrypted, without third-party drivers or extra media formats |
 | Sync managed dotfiles without replacing local auth, sessions, or caches | Authenticate Tailscale, GitHub, Codex, and other AI tools |
+| Install or update Chrome stable, the latest Helium AppImage, Ghostty's latest community Ubuntu package, and the newest T3 Code nightly | Sign in to browsers and T3 Code as needed |
 | Create `~/repo/` and `~/repo/worktrees/` | Clone your development repositories when needed |
 | Install, enable, and start native OpenSSH and Tailscale | Restore outbound SSH files using Ansible Vault if wanted |
 | Authorize the existing `.ssh/id_ed25519.pub` without removing other authorized keys | Install and connect the BrowserSkill Chrome extension |
-| Install Chrome, a virtual display, and XFCE only with `--tags devbox-desktop` | Configure BIOS power recovery and test the actual machine |
+| Configure Chrome's agent profile, a virtual display, and XFCE only with `--tags devbox-desktop` | Configure BIOS power recovery and test the actual machine |
 | Mask suspend/hibernate targets without changing CPU idle states | Revoke the devbox's credentials if the machine is lost or stolen |
 
 The BrowserSkill skill comes from
@@ -137,6 +138,48 @@ in the repository; the intentional private-key destination is mode `0600`.
 Log out and reconnect after provisioning for Docker group membership and shell
 changes. Membership in the Docker group gives effective root privileges. The
 physical GNOME desktop and the virtual XFCE desktop are separate sessions.
+
+## Desktop applications
+
+Normal provisioning installs Chrome, Helium, Ghostty, and T3 Code for the physical
+Ubuntu desktop. They do not require the opt-in virtual desktop. To install or
+update just these applications:
+
+```bash
+ansible-playbook local-devbox.yml --tags devbox-apps --ask-become-pass
+```
+
+Use `--tags chrome`, `--tags helium`, `--tags ghostty`, or `--tags t3code` to update
+only one. Each run resolves the current release rather than keeping a pinned
+version.
+
+Chrome uses Google's current stable amd64 `.deb`. The `devbox-desktop` tag also
+installs Chrome so the opt-in agent desktop still works on its own.
+
+Helium uses the latest x86_64 AppImage from
+[imputnet/helium-linux](https://github.com/imputnet/helium-linux/releases), linked
+by [Helium's download page](https://helium.computer/download). Ansible verifies
+the GitHub release asset's SHA-256 digest and installs it at
+`/opt/helium/helium.AppImage`, with a `helium` command and an application-menu
+launcher. The `helium` tag installs `libfuse2t64` without replacing Ubuntu's FUSE 3.
+On its first launch, Helium may ask for administrator authorization to install
+its AppArmor profile, as implemented by its upstream AppImage wrapper. The
+launcher does not disable the Chromium sandbox or change your default browser.
+
+Ghostty uses the latest stable `.deb` from
+[ghostty-ubuntu](https://github.com/mkasberg/ghostty-ubuntu/releases), the community
+build linked by [Ghostty's install docs](https://ghostty.org/docs/install/binary#debian-and-ubuntu).
+This may be newer than Ubuntu's official package. It is a third-party build, not
+an official Ghostty binary. Ansible selects the Ubuntu 26.04 amd64 asset directly
+instead of executing the community install script.
+
+T3 Code uses the newest published nightly from
+[pingdotgg/t3code](https://github.com/pingdotgg/t3code/releases), sorted by
+publication time among the latest 100 releases. It installs the amd64 `.deb`,
+never the stable release. Provisioning fails if no nightly is found or the newest
+nightly lacks that package; it does not silently install an older build.
+Applications are installed but not launched. Updates happen when you rerun these
+tasks, not through a scheduled Ansible job.
 
 ## Tailscale and SSH
 
