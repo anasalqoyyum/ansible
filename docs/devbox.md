@@ -59,7 +59,7 @@ Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 | --- | --- |
 | Reuse shared Git, Zsh, Herdr, Neovim, Stow, mise, language runtimes, Rust, Cargo, Docker/Compose, AI CLIs, and BrowserSkill CLI tasks | Install Ubuntu unencrypted, without third-party drivers or extra media formats |
 | Sync managed dotfiles without replacing local auth, sessions, or caches | Authenticate Tailscale, GitHub, Codex, and other AI tools |
-| Install or update Chrome stable, the latest Helium AppImage, Ghostty's latest community Ubuntu package, and the newest T3 Code nightly | Sign in to browsers and T3 Code as needed |
+| Install or update Chrome stable, the latest Helium AppImage, Ghostty's latest community Ubuntu package, and the newest T3 Code nightly; install Zed | Sign in to browsers, T3 Code, and Zed as needed |
 | Install Hyprland with Waybar, fuzzel, a wallpaper, and an idle lock screen, and log in to it automatically at boot | Reboot once for automatic login to take effect |
 | Create `~/repo/` and `~/repo/worktrees/` | Clone your development repositories when needed |
 | Install, enable, and start native OpenSSH and Tailscale | Restore outbound SSH files using Ansible Vault if wanted |
@@ -143,7 +143,7 @@ physical GNOME desktop and the virtual XFCE desktop are separate sessions.
 
 ## Desktop applications
 
-Normal provisioning installs Chrome, Helium, Ghostty, and T3 Code for the physical
+Normal provisioning installs Chrome, Helium, Ghostty, Zed, and T3 Code for the physical
 Ubuntu desktop. They do not require the opt-in virtual desktop. To install or
 update just these applications:
 
@@ -151,9 +151,9 @@ update just these applications:
 ansible-playbook local-devbox.yml --tags devbox-apps --ask-become-pass
 ```
 
-Use `--tags chrome`, `--tags helium`, `--tags ghostty`, or `--tags t3code` to update
-only one. Each run resolves the current release rather than keeping a pinned
-version.
+Use `--tags chrome`, `--tags helium`, `--tags ghostty`, `--tags zed`, or
+`--tags t3code` to update only one. Each run resolves the current release rather
+than keeping a pinned version, except Zed, which updates itself.
 
 Chrome uses Google's current stable amd64 `.deb`. The `devbox-desktop` tag also
 installs Chrome so the opt-in agent desktop still works on its own.
@@ -176,6 +176,11 @@ an official Ghostty binary. Ansible selects the Ubuntu 26.04 amd64 asset directl
 instead of executing the community install script. The Ghostty tasks also install
 `wl-clipboard`, which provides `wl-copy` and `wl-paste` for CLI clipboard access
 on Wayland. Install just this dependency with `--tags clipboard`.
+
+Zed uses the official installer, `curl -fsSL https://zed.dev/install.sh | sh`,
+which unpacks the stable release into `~/.local/zed.app` and links
+`~/.local/bin/zed`. It runs only when `~/.local/bin/zed` is missing, because Zed
+updates itself. Its settings come from the shared `dotfiles/zed` package.
 
 T3 Code uses the newest published nightly from
 [pingdotgg/t3code](https://github.com/pingdotgg/t3code/releases), sorted by

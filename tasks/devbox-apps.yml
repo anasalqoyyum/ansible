@@ -210,6 +210,14 @@
         dest: "{{ ansible_facts['user_dir'] }}/.local/share/backgrounds/underwater.png"
         mode: "0644"
 
+# Zed updates itself afterwards, so the installer only runs once.
+- name: Install Zed
+  tags: [zed]
+  ansible.builtin.shell:
+    cmd: set -o pipefail && curl -fsSL https://zed.dev/install.sh | sh
+    executable: /bin/bash
+    creates: "{{ ansible_facts['user_dir'] }}/.local/bin/zed"
+
 - name: Install latest T3 Code nightly
   tags: [t3code]
   block:
