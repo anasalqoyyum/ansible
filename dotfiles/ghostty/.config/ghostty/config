@@ -29,6 +29,7 @@ theme = "savy-dark"
 # copy to clipboard on select
 copy-on-select = clipboard
 confirm-close-surface = false
+keybind = ctrl+v=paste_from_clipboard
 
 # cmd+` to toggle quick terminal
 keybind = global:cmd+backquote=toggle_quick_terminal
