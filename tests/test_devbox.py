@@ -356,8 +356,8 @@ esac
             .replace("/opt/helium", str(self.root / "opt/helium"))
             .replace("/usr/local", str(self.root / "usr/local"))
         )
-        for block in tasks:
-            for task in block["block"]:
+        for entry in tasks:
+            for task in entry.get("block", [entry]):
                 task.pop("become", None)
                 if "ansible.builtin.uri" in task:
                     task["ansible.builtin.uri"]["url"] = task["ansible.builtin.uri"][
