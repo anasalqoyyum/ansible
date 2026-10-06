@@ -47,9 +47,9 @@ keyring. Keep sensitive personal browsing in another profile, avoid saving
 passwords there, and protect physical access. The directory is mode `0700`.
 Logged-in websites still grant agents the permissions of those accounts.
 
-Provisioning enables UFW with incoming traffic denied and SSH allowed through
-`tailscale0`. Run the first bootstrap locally, since a LAN SSH connection could
-be blocked. Existing UFW rules are retained, so audit them on an existing system.
+Provisioning enables UFW with incoming traffic denied except SSH on port 22,
+which is open on every interface, including the LAN and Tailscale. SSH accepts
+keys only. Existing UFW rules are retained, so audit them on an existing system.
 Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 
 ## What Ansible does
@@ -61,7 +61,7 @@ Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 | Create `~/repo/` and `~/repo/worktrees/` | Clone your development repositories when needed |
 | Install, enable, and start native OpenSSH and Tailscale | Restore outbound SSH files using Ansible Vault if wanted |
 | Authorize the existing `.ssh/id_ed25519.pub` without removing other authorized keys | Install and connect the BrowserSkill Chrome extension |
-| Install Chrome, a virtual display, and XFCE; enable persistent user services | Configure BIOS power recovery and test the actual machine |
+| Install Chrome, a virtual display, and XFCE only with `--tags devbox-desktop` | Configure BIOS power recovery and test the actual machine |
 | Mask suspend/hibernate targets without changing CPU idle states | Revoke the devbox's credentials if the machine is lost or stolen |
 
 The BrowserSkill skill comes from
@@ -172,8 +172,8 @@ sudo ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub
 
 This uses ordinary OpenSSH key authentication over Tailscale, not Tailscale SSH.
 You do not need `tailscale up --ssh`. Avoid router port forwarding. UFW permits
-SSH through `tailscale0`; do not add an unrestricted `ufw allow 22` rule for this
-workflow. Tailscale can use relays when direct connectivity is unavailable.
+SSH on every interface, so LAN SSH also works without Tailscale. Tailscale can
+use relays when direct connectivity is unavailable.
 
 Authenticate the other tools interactively, for example `gh auth login` and
 `codex login` (or `codex login --device-auth` for an SSH-only login). Follow the
@@ -186,7 +186,16 @@ provisioning.
 
 ## Remote desktop and Chrome
 
-The following user services start at boot, even before an SSH or physical login:
+This desktop is opt-in and not installed by bootstrap. Its services left GNOME
+autologin on the physical monitor at a black screen, so install it only on a
+headless box:
+
+```bash
+ansible-playbook local-devbox.yml --tags devbox-desktop --ask-become-pass
+```
+
+Once installed, the following user services start at boot, even before an SSH
+or physical login:
 
 | Service | Responsibility |
 | --- | --- |

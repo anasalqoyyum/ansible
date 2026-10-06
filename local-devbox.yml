@@ -69,9 +69,6 @@
     - name: Configure Git
       ansible.builtin.import_tasks: tasks/git-setup.yml
 
-    - name: Install AGS CLI
-      ansible.builtin.import_tasks: tasks/ags-cli-setup.yml
-
     - name: Configure devbox repository directories
       ansible.builtin.import_tasks: tasks/devbox-directories.yml
       tags: [devbox, devbox-directories]
@@ -92,9 +89,11 @@
       ansible.builtin.import_tasks: tasks/devbox-power.yml
       tags: [devbox, power]
 
+    # Opt-in with --tags devbox-desktop: its lingering user services leave GNOME
+    # autologin on the physical monitor at a black screen.
     - name: Configure persistent agent desktop
       ansible.builtin.import_tasks: tasks/devbox-desktop.yml
-      tags: [devbox, devbox-desktop]
+      tags: [never, devbox-desktop]
   handlers:
     - name: Restart native SSH
       become: true

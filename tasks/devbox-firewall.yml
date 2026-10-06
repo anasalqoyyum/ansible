@@ -4,12 +4,11 @@
     name: ufw
     state: present
 
-- name: Allow SSH over Tailscale
+- name: Allow SSH on all interfaces
   become: true
   community.general.ufw:
     rule: allow
     direction: in
-    interface: tailscale0
     to_port: "22"
     proto: tcp
 
