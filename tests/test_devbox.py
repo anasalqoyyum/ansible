@@ -76,6 +76,50 @@ class DevboxTest(unittest.TestCase):
         self.assert_no_changes(self.play(tasks, check=True))
         self.assertEqual(sorted(p.name for p in self.home.iterdir()), ["repo"])
 
+    def test_cliproxyapi_bootstrap_preserves_management_key_and_custom_configuration(self):
+        names = {
+            "Create private CLIProxyAPI directories",
+            "Check for existing CLIProxyAPI configuration",
+            "Initialize CLIProxyAPI management key",
+            "Initialize CLIProxyAPI configuration without replacing existing credentials",
+        }
+        tasks = [t for t in self.tasks("devbox-cliproxyapi.yml") if t["name"] in names]
+        for task in tasks:
+            task.pop("notify", None)
+        config_dir = self.home / ".config/cliproxyapi"
+        self.play(tasks, check=True)
+        self.assertFalse(config_dir.exists())
+
+        self.play(tasks)
+        key_file = config_dir / "management-key"
+        config_file = config_dir / "config.yaml"
+        key = key_file.read_text().strip()
+        config = yaml.safe_load(config_file.read_text())
+        self.assertEqual(len(key), 64)
+        self.assertEqual(config["management"]["secret-key"], key)
+        self.assertFalse(config["management"]["disable-control-panel"])
+        self.assertFalse(config["management"]["allow-remote"])
+        self.assertEqual(config["server"]["host"], "127.0.0.1")
+        self.assertNotEqual(config["access"]["api-keys"][0], key)
+        for path in [key_file, config_file]:
+            self.assertEqual(path.stat().st_mode & 0o777, 0o600)
+
+        config["management"]["secret-key"] = "$2a$existing-password-hash"
+        config["server"]["port"] = 18317
+        customized = yaml.safe_dump(config)
+        config_file.write_text(customized)
+        credentials = self.home / ".cli-proxy-api/provider.json"
+        credentials.write_text('{"token": "credential-fixture"}\n')
+        self.assert_no_changes(self.play(tasks))
+        self.assert_no_changes(self.play(tasks, check=True))
+        self.assertEqual(key_file.read_text().strip(), key)
+        self.assertEqual(config_file.read_text(), customized)
+        self.assertEqual(credentials.read_text(), '{"token": "credential-fixture"}\n')
+        key_file.unlink()
+        self.assert_no_changes(self.play(tasks))
+        self.assertFalse(key_file.exists())
+        self.assertEqual(config_file.read_text(), customized)
+
     def test_public_key_enrollment_preserves_existing_keys(self):
         # Fixture is a valid public key, never a private credential.
         public_key = (REPO / ".ssh/id_ed25519.pub").read_text().strip()

@@ -59,6 +59,7 @@ Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 | --- | --- |
 | Reuse shared Git, Zsh, Herdr, Neovim, Stow, mise, language runtimes, Rust, Cargo, Docker/Compose, AI CLIs, and BrowserSkill CLI tasks | Install Ubuntu unencrypted, without third-party drivers or extra media formats |
 | Sync managed dotfiles without replacing local auth, sessions, or caches | Authenticate Tailscale, GitHub, Codex, and other AI tools |
+| Install CLIProxyAPI core and keep it running with a lingering systemd user service | Authenticate upstream providers and set the client API key |
 | Install or update Chrome stable, the latest Helium AppImage, Ghostty's latest community Ubuntu package, and the newest T3 Code nightly; install Zed | Sign in to browsers, T3 Code, and Zed as needed |
 | Install Hyprland with Waybar, fuzzel, a wallpaper, and an idle lock screen, and log in to it automatically at boot | Reboot once for automatic login to take effect |
 | Create `~/repo/` and `~/repo/worktrees/` | Clone your development repositories when needed |
@@ -140,6 +141,41 @@ in the repository; the intentional private-key destination is mode `0600`.
 Log out and reconnect after provisioning for Docker group membership and shell
 changes. Membership in the Docker group gives effective root privileges. The
 physical GNOME desktop and the virtual XFCE desktop are separate sessions.
+
+## CLIProxyAPI core
+
+The devbox profile installs the latest Linux amd64 release of
+[CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI/releases), verifies
+its SHA-256 digest, and enables `cli-proxy-api.service` as a systemd user service.
+User lingering starts it at boot before login and keeps it running after logout.
+Systemd restarts the process if it exits. Install or update only the core with:
+
+```bash
+ansible-playbook local-devbox.yml --tags cliproxyapi --ask-become-pass
+```
+
+The API listens at `http://127.0.0.1:8317/v1`. Its configuration is
+`~/.config/cliproxyapi/config.yaml`, with a generated client key under
+`access.api-keys`. Set `CPA_PROXY_API_KEY` to that key when using the managed
+Codex provider. The control panel is enabled at
+`http://127.0.0.1:8317/management.html` on new installations. The initial management
+password is saved in `~/.config/cliproxyapi/management-key` with user-only
+permissions. CLIProxyAPI hashes the password in `config.yaml` on startup, so use the saved password to
+sign in. Management access is restricted to localhost.
+Provisioning preserves existing configuration and OAuth credentials in
+`~/.cli-proxy-api`. Authenticate a provider before making model requests, for
+example:
+
+```bash
+cli-proxy-api -config "$HOME/.config/cliproxyapi/config.yaml" -codex-login
+systemctl --user status cli-proxy-api.service
+journalctl --user -u cli-proxy-api.service -f
+```
+
+After editing the configuration, use
+`systemctl --user restart cli-proxy-api.service` to apply it.
+This service is devbox-only. The macOS profile already installs the
+`cliproxyapi` Homebrew formula, but does not start it with `brew services`.
 
 ## Desktop applications
 

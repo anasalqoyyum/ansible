@@ -1,0 +1,14 @@
+[Unit]
+Description=CLIProxyAPI core
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.config/cliproxyapi
+ExecStart=%h/.local/bin/cli-proxy-api -config %h/.config/cliproxyapi/config.yaml
+Restart=always
+RestartSec=5
+UMask=0077
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,145 @@
+- name: Query latest CLIProxyAPI release
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/router-for-me/CLIProxyAPI/releases/latest
+    headers:
+      Accept: application/vnd.github+json
+    return_content: true
+  register: devbox_cliproxyapi_release
+  check_mode: false
+  changed_when: false
+
+- name: Select CLIProxyAPI Linux amd64 archive
+  ansible.builtin.set_fact:
+    devbox_cliproxyapi_assets: >-
+      {{ devbox_cliproxyapi_release.json.assets
+         | selectattr('name', 'match', '^CLIProxyAPI_.*_linux_amd64\.tar\.gz$')
+         | list }}
+
+- name: Require a matching CLIProxyAPI archive
+  ansible.builtin.assert:
+    that: devbox_cliproxyapi_assets | length == 1
+    fail_msg: "The latest CLIProxyAPI release has no unique Linux amd64 archive."
+
+- name: Require the CLIProxyAPI archive checksum
+  ansible.builtin.assert:
+    that: devbox_cliproxyapi_assets[0].digest | default('') is match('^sha256:[0-9a-f]{64}$')
+    fail_msg: "The CLIProxyAPI archive is missing its SHA-256 release digest."
+
+- name: Create private CLIProxyAPI directories
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/{{ item }}"
+    state: directory
+    mode: "0700"
+  loop:
+    - .local/share/cliproxyapi
+    - .cache/cliproxyapi
+    - .config/cliproxyapi
+    - .cli-proxy-api
+  register: devbox_cliproxyapi_directories
+
+- name: Create CLIProxyAPI command and service directories
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode }}"
+  loop:
+    - { path: .local/bin, mode: "0755" }
+    - { path: .config/systemd/user, mode: "0700" }
+  register: devbox_cliproxyapi_service_directories
+
+- name: Download or update CLIProxyAPI archive
+  ansible.builtin.get_url:
+    url: "{{ devbox_cliproxyapi_assets[0].browser_download_url }}"
+    checksum: "{{ devbox_cliproxyapi_assets[0].digest }}"
+    dest: "{{ ansible_facts['user_dir'] }}/.cache/cliproxyapi/release.tar.gz"
+    mode: "0600"
+  when: not ansible_check_mode or not devbox_cliproxyapi_directories.changed
+
+- name: Unpack CLIProxyAPI release
+  ansible.builtin.unarchive:
+    src: "{{ ansible_facts['user_dir'] }}/.cache/cliproxyapi/release.tar.gz"
+    dest: "{{ ansible_facts['user_dir'] }}/.local/share/cliproxyapi"
+    remote_src: true
+  register: devbox_cliproxyapi_unpack
+  notify: Restart CLIProxyAPI
+  when: not ansible_check_mode or not devbox_cliproxyapi_directories.changed
+
+- name: Link CLIProxyAPI command
+  ansible.builtin.file:
+    src: "{{ ansible_facts['user_dir'] }}/.local/share/cliproxyapi/cli-proxy-api"
+    dest: "{{ ansible_facts['user_dir'] }}/.local/bin/cli-proxy-api"
+    state: link
+  when:
+    - not ansible_check_mode or not devbox_cliproxyapi_directories.changed
+    - not ansible_check_mode or not devbox_cliproxyapi_unpack.changed
+
+- name: Check for existing CLIProxyAPI configuration
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['user_dir'] }}/.config/cliproxyapi/config.yaml"
+  register: devbox_cliproxyapi_config
+
+- name: Initialize CLIProxyAPI management key
+  ansible.builtin.copy:
+    dest: "{{ ansible_facts['user_dir'] }}/.config/cliproxyapi/management-key"
+    mode: "0600"
+    force: false
+    content: "{{ lookup('ansible.builtin.password', '/dev/null', length=64, chars=['ascii_letters', 'digits']) }}\n"
+  register: devbox_cliproxyapi_management_key
+  no_log: true
+  when:
+    - not devbox_cliproxyapi_config.stat.exists
+    - not ansible_check_mode or not devbox_cliproxyapi_directories.changed
+
+- name: Initialize CLIProxyAPI configuration without replacing existing credentials
+  ansible.builtin.copy:
+    dest: "{{ ansible_facts['user_dir'] }}/.config/cliproxyapi/config.yaml"
+    mode: "0600"
+    force: false
+    content: |
+      config-version: 8
+      server:
+        host: "127.0.0.1"
+        port: 8317
+      management:
+        allow-remote: false
+        secret-key: "{{ lookup('ansible.builtin.file', ansible_facts['user_dir'] ~ '/.config/cliproxyapi/management-key') }}"
+        disable-control-panel: false
+      access:
+        api-keys:
+          - "{{ lookup('ansible.builtin.password', '/dev/null', length=64, chars=['ascii_letters', 'digits']) }}"
+      oauth:
+        auth-dir: "{{ ansible_facts['user_dir'] }}/.cli-proxy-api"
+  no_log: true
+  notify: Restart CLIProxyAPI
+  when:
+    - not devbox_cliproxyapi_config.stat.exists
+    - not ansible_check_mode or not devbox_cliproxyapi_directories.changed
+    - not ansible_check_mode or not devbox_cliproxyapi_management_key.changed
+
+- name: Install CLIProxyAPI user service
+  ansible.builtin.template:
+    src: devbox/cli-proxy-api.service.j2
+    dest: "{{ ansible_facts['user_dir'] }}/.config/systemd/user/cli-proxy-api.service"
+    mode: "0644"
+  register: devbox_cliproxyapi_unit
+  notify: Restart CLIProxyAPI
+  when: not ansible_check_mode or not devbox_cliproxyapi_service_directories.changed
+
+- name: Enable CLIProxyAPI before login and after logout
+  tags: [cliproxyapi-linger]
+  become: true
+  ansible.builtin.command:
+    argv: [loginctl, enable-linger, "{{ ansible_facts['user_id'] }}"]
+    creates: "/var/lib/systemd/linger/{{ ansible_facts['user_id'] }}"
+
+- name: Enable and start CLIProxyAPI
+  ansible.builtin.systemd_service:
+    name: cli-proxy-api.service
+    scope: user
+    daemon_reload: "{{ devbox_cliproxyapi_unit.changed }}"
+    enabled: true
+    state: started
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ ansible_facts['user_uid'] }}"
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts['user_uid'] }}/bus"
+  when: not ansible_check_mode
