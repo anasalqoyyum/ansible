@@ -161,6 +161,55 @@
         update_cache: true
         cache_valid_time: 3600
 
+- name: Install Hyprland session
+  tags: [hyprland]
+  block:
+    - name: Install Hyprland, its portal, polkit agent, bar, launcher, lock screen, and wallpaper
+      become: true
+      ansible.builtin.apt:
+        name:
+          - hyprland
+          - xdg-desktop-portal-hyprland
+          - xwayland
+          - hyprpolkitagent
+          - waybar
+          - fuzzel
+          - hyprlock
+          - hypridle
+          - hyprpaper
+        state: present
+        install_recommends: false
+        update_cache: true
+        cache_valid_time: 3600
+      register: devbox_hyprland_packages
+
+    # These packages enable their units for graphical-session.target, which the
+    # GNOME session also reaches. hyprland.conf starts them instead.
+    - name: Keep Hyprland session services out of GNOME sessions
+      become: true
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        scope: global
+        enabled: false
+      loop:
+        - waybar.service
+        - hyprpolkitagent.service
+        - hypridle.service
+        - hyprpaper.service
+      when: not ansible_check_mode or not devbox_hyprland_packages.changed
+
+    - name: Create the wallpaper directory
+      ansible.builtin.file:
+        path: "{{ ansible_facts['user_dir'] }}/.local/share/backgrounds"
+        state: directory
+        mode: "0755"
+
+    - name: Install the Hyprland wallpaper
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/bg/underwater.png"
+        dest: "{{ ansible_facts['user_dir'] }}/.local/share/backgrounds/underwater.png"
+        mode: "0644"
+
 - name: Install latest T3 Code nightly
   tags: [t3code]
   block:

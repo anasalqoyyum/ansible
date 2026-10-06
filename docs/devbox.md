@@ -34,11 +34,12 @@ Use these installer choices:
 Ansible does not configure disk encryption or unlocking. Adding encryption later
 means reinstalling Ubuntu and repeating the acceptance tests.
 
-Physical GNOME auto-login is not needed and is not configured. Instead, a
-systemd user manager starts a separate virtual XFCE desktop at boot through
-`loginctl enable-linger`. This desktop already belongs to your user: anyone who
-can access its forwarded VNC connection can act as you. The physical Ubuntu login
-screen can remain locked. This is intended for a dedicated, single-user machine.
+The physical monitor logs your user in to Hyprland automatically at boot (see
+[Hyprland](#hyprland)). Anyone at the keyboard can act as you without a password,
+except for sudo. The opt-in agent desktop is a separate virtual XFCE desktop that
+a systemd user manager starts at boot through `loginctl enable-linger`. It also
+belongs to your user: anyone who can access its forwarded VNC connection can act
+as you. This is intended for a dedicated, single-user machine.
 
 Chrome uses a dedicated directory, `~/.local/share/devbox/chrome`, and
 `--password-store=basic` so a login-unlocked GNOME keyring is not required after
@@ -59,6 +60,7 @@ Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 | Reuse shared Git, Zsh, Herdr, Neovim, Stow, mise, language runtimes, Rust, Cargo, Docker/Compose, AI CLIs, and BrowserSkill CLI tasks | Install Ubuntu unencrypted, without third-party drivers or extra media formats |
 | Sync managed dotfiles without replacing local auth, sessions, or caches | Authenticate Tailscale, GitHub, Codex, and other AI tools |
 | Install or update Chrome stable, the latest Helium AppImage, Ghostty's latest community Ubuntu package, and the newest T3 Code nightly | Sign in to browsers and T3 Code as needed |
+| Install Hyprland with Waybar, fuzzel, a wallpaper, and an idle lock screen, and log in to it automatically at boot | Reboot once for automatic login to take effect |
 | Create `~/repo/` and `~/repo/worktrees/` | Clone your development repositories when needed |
 | Install, enable, and start native OpenSSH and Tailscale | Restore outbound SSH files using Ansible Vault if wanted |
 | Authorize the existing `.ssh/id_ed25519.pub` without removing other authorized keys | Install and connect the BrowserSkill Chrome extension |
@@ -183,6 +185,35 @@ nightly lacks that package; it does not silently install an older build.
 Applications are installed but not launched. Updates happen when you rerun these
 tasks, not through a scheduled Ansible job.
 
+### Hyprland
+
+Hyprland, a BSP tiling Wayland compositor, is installed from the Ubuntu archive
+as the physical monitor's session, with the `hyprland` tag. Keybindings follow
+komorebi and yabai; see [window management](../misc/window-management.md).
+
+Provisioning enables GDM automatic login for your user in `/etc/gdm3/custom.conf`
+and saves Hyprland as your login session in AccountsService. GDM reads both at
+startup, so the change takes effect at the next boot; provisioning does not
+restart GDM, which would end the running desktop. To use GNOME once, log out with
+`ctrl + alt + delete` and choose Ubuntu from the session menu. GDM saves that
+choice, and the next provisioning run sets Hyprland again.
+
+hypridle locks the session with hyprlock after 5 minutes without input and turns
+the monitor off 30 seconds later. After a reboot, the auto-login desktop is
+therefore open at the monitor for up to 5 minutes. Lock it immediately with
+`super + l`. hyprlock checks your login password through PAM. hypridle never
+suspends the machine.
+
+If hyprlock crashes, Hyprland keeps the session locked behind a crash screen.
+Restart the lock screen over SSH:
+
+```bash
+hyprctl --instance 0 dispatch exec hyprlock
+```
+
+Hyprland does not touch SSH, Tailscale, Docker, or power settings, which work
+whether or not anyone is logged in on the monitor.
+
 ## Tailscale and SSH
 
 On the devbox, authenticate once:
@@ -232,8 +263,8 @@ provisioning.
 ## Remote desktop and Chrome
 
 This desktop is opt-in and not installed by bootstrap. Its services left GNOME
-autologin on the physical monitor at a black screen, so install it only on a
-headless box:
+autologin on the physical monitor at a black screen. The Hyprland auto-login has
+not been tested alongside it, so install it only on a headless box:
 
 ```bash
 ansible-playbook local-devbox.yml --tags devbox-desktop --ask-become-pass

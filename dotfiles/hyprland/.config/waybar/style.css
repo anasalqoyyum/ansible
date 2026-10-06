@@ -1,0 +1,68 @@
+/* Colours follow the savy-dark Ghostty theme. */
+* {
+  font-family: "GoogleSansCode Nerd Font", monospace;
+  font-size: 13px;
+  min-height: 0;
+}
+
+window#waybar {
+  background-color: rgba(10, 10, 10, 0.92);
+  color: #f5f5f5;
+  border: 1px solid #343a47;
+  border-radius: 8px;
+}
+
+tooltip {
+  background-color: #1d1f21;
+  border: 1px solid #343a47;
+  border-radius: 8px;
+}
+
+#workspaces button {
+  padding: 0 8px;
+  margin: 3px 2px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #666666;
+}
+
+#workspaces button:hover {
+  background: #1d1f21;
+  box-shadow: none;
+  color: #f5f5f5;
+}
+
+#workspaces button.active {
+  background: #343a47;
+  color: #b4cbff;
+}
+
+#workspaces button.urgent {
+  color: #cc6666;
+}
+
+#window {
+  color: #c5c8c6;
+}
+
+#pulseaudio,
+#cpu,
+#memory,
+#tray,
+#clock {
+  padding: 0 8px;
+  color: #c5c8c6;
+}
+
+#pulseaudio.muted {
+  color: #666666;
+}
+
+#clock {
+  color: #b4cbff;
+}
+
+#tray > .needs-attention {
+  color: #cc6666;
+}

@@ -73,6 +73,10 @@
       ansible.builtin.import_tasks: tasks/devbox-apps.yml
       tags: [devbox, devbox-apps, install]
 
+    - name: Log in to Hyprland automatically
+      ansible.builtin.import_tasks: tasks/devbox-session.yml
+      tags: [devbox, hyprland, devbox-session]
+
     - name: Configure devbox repository directories
       ansible.builtin.import_tasks: tasks/devbox-directories.yml
       tags: [devbox, devbox-directories]

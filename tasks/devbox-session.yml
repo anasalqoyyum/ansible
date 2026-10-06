@@ -1,0 +1,45 @@
+- name: Log the development user in automatically at boot
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/gdm3/custom.conf
+    regexp: "^{{ item.option }}="
+    line: "{{ item.option }}={{ item.value }}"
+    insertafter: '^\[daemon\]'
+  loop:
+    - { option: AutomaticLoginEnable, value: "true" }
+    - { option: AutomaticLogin, value: "{{ ansible_facts['user_id'] }}" }
+
+# GDM starts the session saved in AccountsService, for both automatic and
+# manual logins. Choosing another session at the login screen overwrites it
+# until the next provisioning run.
+- name: Read the saved login session
+  ansible.builtin.command:
+    argv:
+      - busctl
+      - get-property
+      - org.freedesktop.Accounts
+      - "/org/freedesktop/Accounts/User{{ ansible_facts['user_uid'] }}"
+      - org.freedesktop.Accounts.User
+      - Session
+      - SessionType
+  register: devbox_saved_session
+  check_mode: false
+  changed_when: false
+
+- name: Save Hyprland as the login session
+  become: true
+  ansible.builtin.command:
+    argv:
+      - busctl
+      - call
+      - org.freedesktop.Accounts
+      - "/org/freedesktop/Accounts/User{{ ansible_facts['user_uid'] }}"
+      - org.freedesktop.Accounts.User
+      - "{{ item.method }}"
+      - s
+      - "{{ item.value }}"
+  loop:
+    - { method: SetSession, value: hyprland, line: 0 }
+    - { method: SetSessionType, value: wayland, line: 1 }
+  when: devbox_saved_session.stdout_lines[item.line] != 's "' ~ item.value ~ '"'
+  changed_when: true

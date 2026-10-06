@@ -4,8 +4,9 @@
 | --- | --- | --- |
 | Windows | Komorebi | whkd |
 | macOS | yabai | skhd |
+| Ubuntu devbox | Hyprland (dwindle layout) | built in |
 
-Config lives in `dotfiles/komorebi` (Windows) and `dotfiles/yabai` (macOS). Both are stowed by the usual dotfiles flow; the Windows files are pushed to the Windows home directory by `make sync-dotfiles-windows`.
+Config lives in `dotfiles/komorebi` (Windows), `dotfiles/yabai` (macOS), and `dotfiles/hyprland` (devbox, including the Waybar config). Both are stowed by the usual dotfiles flow; the Windows files are pushed to the Windows home directory by `make sync-dotfiles-windows`.
 
 ## Windows
 
@@ -53,9 +54,22 @@ launchctl list | grep -E 'yabai|skhd'
 
 Logs are at `/tmp/yabai_$USER.err.log` and `/tmp/skhd_$USER.err.log`.
 
+## Ubuntu devbox
+
+1. Provisioning installs Hyprland, its desktop portal, `hyprpolkitagent`, Waybar, fuzzel, hyprlock, hypridle, and hyprpaper from the Ubuntu archive, and copies `bg/underwater.png` to `~/.local/share/backgrounds/` for the wallpaper and lock screen. Install or update just these with `ansible-playbook local-devbox.yml --tags hyprland --ask-become-pass`.
+2. Provisioning logs your user in to Hyprland automatically at boot. To use GNOME once, log out and choose Ubuntu from the session menu; the next provisioning run makes Hyprland the saved session again. See [the devbox guide](../docs/devbox.md#hyprland).
+3. Hyprland, Waybar, fuzzel, and hyprlock use the savy-dark Ghostty palette.
+4. Reload after a config change with `hyprctl reload`. Check a config without a running session with `Hyprland --verify-config`.
+
+Hyprland is only for the physical desktop. SSH, Tailscale, and Docker do not depend on which session is logged in, or whether anyone is logged in at all.
+
+The Waybar, `hyprpolkitagent`, hypridle, and hyprpaper packages enable their user services for every graphical session, including GNOME. Provisioning disables them globally, and `hyprland.conf` starts them with `exec-once` instead.
+
+Extra devbox bindings: `alt + return` opens Ghostty, `alt + space` opens fuzzel, `alt + shift + m` shows minimized windows, `super + l` locks the screen, and `ctrl + alt + delete` exits Hyprland.
+
 ## Shortcuts
 
-Identical on both platforms: `alt + q` close, `alt + m` minimize, `alt + shift + h/j/k/l` focus, `alt + shift + t` float, `alt + shift + f` fullscreen/monocle, `alt + shift + r` retile/balance, `alt + shift + x` / `alt + shift + y` flip/mirror layout, `alt + 1..8` focus workspace, `alt + shift + 1..8` send window to workspace.
+Identical on all platforms, except for the Hyprland gaps listed below: `alt + q` close, `alt + m` minimize, `alt + shift + h/j/k/l` focus, `alt + shift + t` float, `alt + shift + f` fullscreen/monocle, `alt + shift + r` retile/balance, `alt + shift + x` / `alt + shift + y` flip/mirror layout, `alt + 1..8` focus workspace, `alt + shift + 1..8` send window to workspace.
 
 Note that yabai targets native macOS Space numbers starting at `1`, while `komorebic` workspace indices are zero-based. The chords match even though the arguments differ:
 
@@ -80,3 +94,12 @@ macOS gaps relative to Komorebi:
 - Promote maps to `yabai -m window --swap first`, which swaps with the first window in the Space rather than Komorebi's promote-to-primary.
 - Unstack has no clean yabai equivalent and is left unbound.
 - `Alt+N` cannot reach an empty Space (see the SIP section above). Komorebi has no such restriction.
+
+Hyprland follows the Windows chords (`alt + shift + arrows` to move, `alt + shift + return` to promote). Its gaps relative to Komorebi:
+
+- Minimize sends the window to the `special:minimized` workspace. `alt + shift + m` toggles it so you can pick a window back up.
+- Promote runs dwindle's `movetoroot`.
+- Stacks are Hyprland groups. `ctrl + alt + shift + arrow` only joins a neighbour that is already a group, so start one with `alt + shift + g` first. `alt + ;` unstacks, and `alt + [` / `alt + ]` cycle the group.
+- Flip and mirror act on the focused split, not the whole workspace: `alt + shift + x` swaps the two halves, and `alt + shift + y` toggles their orientation.
+- Retile (`alt + shift + r`) has no dwindle equivalent and is left unbound.
+- Workspaces are created on demand, so `alt + N` reaches empty workspaces.

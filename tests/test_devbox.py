@@ -595,6 +595,34 @@ esac
         legacy = next(t for t in docker_tasks if "iptables" in t["name"])
         self.assertIn("'microsoft' in", legacy["when"])
 
+    def test_gdm_autologin_preserves_existing_settings(self):
+        config = self.root / "custom.conf"
+        stock = (
+            "[daemon]\n"
+            "# Enabling automatic login\n"
+            "#  AutomaticLoginEnable = true\n"
+            "#  AutomaticLogin = user1\n"
+            "\n"
+            "[security]\n"
+            "\n"
+            "[debug]\n"
+            "#Enable=true\n"
+        )
+        config.write_text(stock)
+        task = self.tasks("devbox-session.yml")[0]
+        del task["become"]
+        task["ansible.builtin.lineinfile"]["path"] = str(config)
+        variables = {"ansible_facts": {"user_id": "dev"}}
+        self.play([task], variables, check=True)
+        self.assertEqual(config.read_text(), stock)
+        self.play([task], variables)
+        lines = config.read_text().splitlines()
+        daemon = lines[: lines.index("[security]")]
+        self.assertIn("AutomaticLoginEnable=true", daemon)
+        self.assertIn("AutomaticLogin=dev", daemon)
+        self.assertIn("#Enable=true", lines)
+        self.assert_no_changes(self.play([task], variables))
+
     def test_virtual_display_exposes_only_a_private_socket(self):
         script = (REPO / "files/devbox/start-display").read_text()
         self.assertIn("-rfbport -1", script)
