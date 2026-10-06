@@ -23,5 +23,8 @@ if ! command -v ansible-playbook >/dev/null 2>&1; then
   sudo apt install -y ansible
 fi
 
+# shellcheck source=utils/use-classic-sudo.sh
+source utils/use-classic-sudo.sh
+
 ansible-galaxy collection install -r requirements.yml
 ansible-playbook local-devbox.yml --ask-become-pass --skip-tags "macos-only,ssh" "$@"
