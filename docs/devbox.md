@@ -12,13 +12,27 @@ password for sudo and physical recovery. Choose a hostname such as `devbox`.
 Have the existing SSH private key on your connecting computer and the Ansible
 Vault password available for the optional outbound-key restore.
 
-Decide how the disk will unlock **during installation**. Passphrase-based LUKS
-full-disk encryption stops boot before networking, Tailscale, and these services
-start. It needs someone at the console after each reboot unless you separately
-configure and test an unattended unlock mechanism. An unencrypted installation
-boots unattended but offers less protection against physical theft. TPM or
-network unlock has its own recovery and security requirements; this profile does
-not configure it. Ansible never disables encryption or changes disk unlocking.
+Use these installer choices:
+
+- Leave disk encryption off. The devbox must boot unattended after a power cut.
+  Passphrase-based LUKS stops boot before networking and Tailscale start, so
+  nobody can unlock it remotely. TPM-backed unlock is also out, because a
+  firmware, Secure Boot, or kernel change can drop it back to a passphrase
+  prompt. Anyone who takes the machine or its SSD can read the disk. If that
+  happens, remove the device from Tailscale, revoke its GitHub and AI tool
+  sessions, sign out the agent Chrome profile's websites, and rotate the
+  outbound SSH key if you restored it.
+- Leave **Install third-party software for graphics and Wi-Fi hardware**
+  unchecked. The 7730U's Radeon graphics use Ubuntu's open-source `amdgpu`
+  driver, and the devbox uses Ethernet. If `ubuntu-drivers devices` lists a
+  driver later, install it with `sudo ubuntu-drivers install`.
+- Leave **Download and install support for additional media formats**
+  unchecked. Nothing plays media on the devbox, and Chrome bundles its own
+  codecs. Run `sudo apt install ubuntu-restricted-extras` later if you need them.
+- Leave **Use Active Directory** unchecked and create a local user.
+
+Ansible does not configure disk encryption or unlocking. Adding encryption later
+means reinstalling Ubuntu and repeating the acceptance tests.
 
 Physical GNOME auto-login is not needed and is not configured. Instead, a
 systemd user manager starts a separate virtual XFCE desktop at boot through
@@ -42,13 +56,13 @@ Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 
 | Automatic | Manual or interactive |
 | --- | --- |
-| Reuse shared Git, Zsh, Herdr, Neovim, Stow, mise, language runtimes, Rust, Cargo, Docker/Compose, AI CLIs, and BrowserSkill CLI tasks | Install Ubuntu and choose disk unlock behavior |
+| Reuse shared Git, Zsh, Herdr, Neovim, Stow, mise, language runtimes, Rust, Cargo, Docker/Compose, AI CLIs, and BrowserSkill CLI tasks | Install Ubuntu unencrypted, without third-party drivers or extra media formats |
 | Sync managed dotfiles without replacing local auth, sessions, or caches | Authenticate Tailscale, GitHub, Codex, and other AI tools |
 | Create `~/repo/` and `~/repo/worktrees/` | Clone your development repositories when needed |
 | Install, enable, and start native OpenSSH and Tailscale | Restore outbound SSH files using Ansible Vault if wanted |
 | Authorize the existing `.ssh/id_ed25519.pub` without removing other authorized keys | Install and connect the BrowserSkill Chrome extension |
 | Install Chrome, a virtual display, and XFCE; enable persistent user services | Configure BIOS power recovery and test the actual machine |
-| Mask suspend/hibernate targets without changing CPU idle states | Decide whether unattended disk unlocking meets your requirements |
+| Mask suspend/hibernate targets without changing CPU idle states | Revoke the devbox's credentials if the machine is lost or stolen |
 
 The BrowserSkill skill comes from
 `dotfiles/agents/.agents/skills/browser-skill/`. Codex reads the shared agent skills;
@@ -432,9 +446,10 @@ that Chrome and the foreground daemon are running. Inspect errors before
 starting another daemon or deleting runtime state. Extension permissions,
 website login/CAPTCHA, and account reauthentication can still need a human.
 
-If boot stops at disk unlock, Ansible cannot fix it remotely because networking
-has not started. Keep the encryption recovery material and physical console
-access available. A hard outage can lose unsaved application data even when all
+The disk is unencrypted, so boot has no unlock prompt. If boot still stops at
+the console, for example at a filesystem check or the GRUB menu, Ansible cannot
+fix it remotely because networking has not started. Keep physical console access
+available. A hard outage can lose unsaved application data even when all
 services subsequently recover.
 
 ## Validation before removing the monitor
@@ -464,8 +479,8 @@ Record the following acceptance results on the actual Geekom A5:
 1. Shut down cleanly, remove AC, then restore it. The machine powers on without
    touching the power button. Once this passes, test outage recovery with work
    saved and a backup available.
-2. Ubuntu reaches its services without a keyboard/monitor or disk-unlock prompt.
-   If encryption is enabled, prove the chosen unattended unlock and recovery.
+2. Ubuntu reaches its services without a keyboard, monitor, or disk-unlock
+   prompt.
 3. Tailscale reconnects after reboot; the device remains authorized.
 4. From outside the home network, key-authenticated SSH works through Tailscale.
    Confirm no router port-forwarding rules are needed.
