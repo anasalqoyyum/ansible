@@ -1,0 +1,60 @@
+- name: Create desktop font and toolkit configuration directories
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - .local/share/fonts
+    - .config/fontconfig/conf.d
+    - .config/gtk-3.0
+    - .config/gtk-4.0
+
+- name: Install the bundled desktop and monospace fonts
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/fonts/{{ item }}/"
+    dest: "{{ ansible_facts['user_dir'] }}/.local/share/fonts/{{ item }}/"
+    mode: "0644"
+    directory_mode: "0755"
+  loop:
+    - Noto Sans
+    - Google Sans Code
+  notify: Refresh font cache
+
+- name: Set the default desktop and monospace font families
+  ansible.builtin.copy:
+    src: devbox/fonts.conf
+    dest: "{{ ansible_facts['user_dir'] }}/.config/fontconfig/conf.d/60-devbox-fonts.conf"
+    mode: "0644"
+  notify: Refresh font cache
+
+- name: Set GTK desktop fonts
+  community.general.ini_file:
+    path: "{{ ansible_facts['user_dir'] }}/.config/{{ item }}/settings.ini"
+    section: Settings
+    option: gtk-font-name
+    value: Noto Sans 11
+    mode: "0644"
+    no_extra_spaces: true
+  loop:
+    - gtk-3.0
+    - gtk-4.0
+
+- name: Read desktop interface font settings
+  ansible.builtin.command:
+    argv: [gsettings, get, org.gnome.desktop.interface, "{{ item.key }}"]
+  loop: &desktop_font_settings
+    - { key: font-name, value: Noto Sans 11 }
+    - { key: document-font-name, value: Noto Sans 11 }
+    - { key: monospace-font-name, value: GoogleSansCode Nerd Font 11 }
+  register: devbox_desktop_fonts
+  changed_when: false
+  check_mode: false
+
+- name: Apply desktop interface font settings
+  ansible.builtin.command:
+    argv: [gsettings, set, org.gnome.desktop.interface, "{{ item.key }}", "{{ item.value }}"]
+  loop: *desktop_font_settings
+  loop_control:
+    index_var: font_setting_index
+  when: devbox_desktop_fonts.results[font_setting_index].stdout != "'" ~ item.value ~ "'"
+  changed_when: true

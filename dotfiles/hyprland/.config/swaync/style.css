@@ -1,0 +1,18 @@
+* {
+  font-family: "Noto Sans", "GoogleSansCode Nerd Font", sans-serif;
+  font-size: 13px;
+}
+
+.control-center {
+  background: rgba(10, 10, 10, 0.95);
+  color: #f5f5f5;
+  border: 1px solid #343a47;
+  border-radius: 8px;
+}
+
+.notification {
+  background: #1d1f21;
+  color: #f5f5f5;
+  border: 1px solid #343a47;
+  border-radius: 8px;
+}

@@ -228,6 +228,7 @@
           - hyprpolkitagent
           - waybar
           - fuzzel
+          - fonts-noto-core
           - hyprlock
           - hypridle
           - hyprpaper
@@ -235,7 +236,11 @@
           - grim
           - slurp
           - wl-clipboard
+          - cliphist
+          - hyprpicker
+          - sway-notification-center
           - xdg-user-dirs
+          - xdg-utils
         state: present
         install_recommends: false
         update_cache: true
@@ -255,6 +260,7 @@
         - hyprpolkitagent.service
         - hypridle.service
         - hyprpaper.service
+        - swaync.service
       when: not ansible_check_mode or not devbox_hyprland_packages.changed
 
     - name: Create the wallpaper directory

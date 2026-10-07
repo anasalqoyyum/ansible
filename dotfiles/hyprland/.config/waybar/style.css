@@ -1,6 +1,6 @@
 /* Colours follow the savy-dark Ghostty theme. */
 * {
-  font-family: "GoogleSansCode Nerd Font", monospace;
+  font-family: "Noto Sans", "GoogleSansCode Nerd Font", sans-serif;
   font-size: 13px;
   min-height: 0;
 }
@@ -59,6 +59,7 @@ tooltip {
 #pulseaudio,
 #cpu,
 #memory,
+#custom-notification,
 #tray,
 #clock {
   padding: 0 8px;
@@ -73,6 +74,11 @@ tooltip {
 
 #clock {
   color: #b4cbff;
+}
+
+#custom-notification.dnd-notification,
+#custom-notification.dnd-none {
+  color: #f0c674;
 }
 
 #custom-power {

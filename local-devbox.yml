@@ -77,6 +77,10 @@
       ansible.builtin.import_tasks: tasks/devbox-apps.yml
       tags: [devbox, devbox-apps, install]
 
+    - name: Install and configure devbox desktop fonts
+      ansible.builtin.import_tasks: tasks/devbox-fonts.yml
+      tags: [devbox, fonts]
+
     - name: Log in to Hyprland automatically
       ansible.builtin.import_tasks: tasks/devbox-session.yml
       tags: [devbox, hyprland, devbox-session]
@@ -107,6 +111,11 @@
       ansible.builtin.import_tasks: tasks/devbox-desktop.yml
       tags: [never, devbox-desktop]
   handlers:
+    - name: Refresh font cache
+      ansible.builtin.command:
+        argv: [fc-cache, -f, "{{ ansible_facts['user_dir'] }}/.local/share/fonts"]
+      changed_when: true
+
     - name: Restart CLIProxyAPI
       ansible.builtin.systemd_service:
         name: cli-proxy-api.service

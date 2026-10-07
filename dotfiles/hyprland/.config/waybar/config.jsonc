@@ -8,7 +8,7 @@
   "spacing": 8,
   "modules-left": ["hyprland/workspaces", "mpris"],
   "modules-center": ["hyprland/window"],
-  "modules-right": ["network#wifi", "network#wired", "pulseaudio", "cpu", "memory", "tray", "clock", "custom/power"],
+  "modules-right": ["network#wifi", "network#wired", "pulseaudio", "cpu", "memory", "custom/notification", "tray", "clock", "custom/power"],
   "hyprland/workspaces": {
     "format": "{id}",
     "persistent-workspaces": {
@@ -16,7 +16,7 @@
     }
   },
   "mpris": {
-    "format": "󰝚 {dynamic}",
+    "format": "<span font_desc=\"GoogleSansCode Nerd Font\">󰝚</span> {dynamic}",
     "format-paused": "",
     "format-stopped": "",
     "dynamic-order": ["artist", "title"],
@@ -29,26 +29,26 @@
   },
   "network#wifi": {
     "interface": "wl*",
-    "format-wifi": "{icon} {essid}",
+    "format-wifi": "<span font_desc=\"GoogleSansCode Nerd Font\">{icon}</span> {essid}",
     "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
-    "format-disconnected": "󰖪",
-    "format-disabled": "󰖪",
+    "format-disconnected": "<span font_desc=\"GoogleSansCode Nerd Font\">󰖪</span>",
+    "format-disabled": "<span font_desc=\"GoogleSansCode Nerd Font\">󰖪</span>",
     "tooltip-format-wifi": "{ifname}: {ipaddr}/{cidr} via {gwaddr}\n{signalStrength}% at {frequency} GHz",
     "on-click": "~/.config/waybar/network-toggle wifi",
     "on-click-right": "ghostty -e nmtui"
   },
   "network#wired": {
     "interface": "en*",
-    "format-ethernet": "󰈀 {ipaddr}",
-    "format-linked": "󰈀 no ip",
+    "format-ethernet": "<span font_desc=\"GoogleSansCode Nerd Font\">󰈀</span> {ipaddr}",
+    "format-linked": "<span font_desc=\"GoogleSansCode Nerd Font\">󰈀</span> no ip",
     "format-disconnected": "",
     "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr} via {gwaddr}",
     "on-click": "~/.config/waybar/network-toggle ethernet",
     "on-click-right": "ghostty -e nmtui"
   },
   "pulseaudio": {
-    "format": "{icon} {volume}%",
-    "format-muted": "󰖁 {volume}%",
+    "format": "<span font_desc=\"GoogleSansCode Nerd Font\">{icon}</span> {volume}%",
+    "format-muted": "<span font_desc=\"GoogleSansCode Nerd Font\">󰖁</span> {volume}%",
     "format-icons": {
       "headphone": "󰋋",
       "default": ["󰕿", "󰖀", "󰕾"]
@@ -58,10 +58,28 @@
     "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
   },
   "cpu": {
-    "format": "󰘚 {usage}%"
+    "format": "<span font_desc=\"GoogleSansCode Nerd Font\">󰘚</span> {usage}%"
   },
   "memory": {
-    "format": "󰍛 {percentage}%"
+    "format": "<span font_desc=\"GoogleSansCode Nerd Font\">󰍛</span> {percentage}%"
+  },
+  "custom/notification": {
+    "format": "<span font_desc=\"GoogleSansCode Nerd Font\">{icon}</span>",
+    "format-icons": {
+      "notification": "󱅫",
+      "none": "󰂜",
+      "dnd-notification": "󰂠",
+      "dnd-none": "󰪓",
+      "inhibited-notification": "󰂛",
+      "inhibited-none": "󰪑",
+      "dnd-inhibited-notification": "󰂛",
+      "dnd-inhibited-none": "󰪑"
+    },
+    "return-type": "json",
+    "exec": "swaync-client --subscribe-waybar",
+    "on-click": "swaync-client --toggle-panel --skip-wait",
+    "on-click-right": "swaync-client --toggle-dnd --skip-wait",
+    "escape": true
   },
   "tray": {
     "spacing": 8

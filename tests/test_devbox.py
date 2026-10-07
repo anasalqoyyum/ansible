@@ -810,5 +810,62 @@ class ScreenshotTest(unittest.TestCase):
         self.assertEqual(clipboard.read_text(), "existing clipboard")
 
 
+class ClipboardHistoryTest(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="clipboard-history-test-")
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.bin = self.root / "bin"
+        self.bin.mkdir()
+        self.env = {
+            **os.environ,
+            "PATH": f"{self.bin}:{os.environ['PATH']}",
+            "TEST_ROOT": str(self.root),
+        }
+        self.command(
+            "cliphist",
+            'case "$1" in\n'
+            '  list) printf "1\\ttext entry\\n2\\timage entry\\n" ;;\n'
+            '  decode) IFS= read -r selection\n'
+            '    printf "%s" "$selection" > "$TEST_ROOT/selected"\n'
+            '    cat "$TEST_ROOT/image.png" ;;\n'
+            'esac',
+        )
+        self.command("fuzzel", "sed -n '2p'")
+        self.command("wl-copy", 'cat > "$TEST_ROOT/clipboard"')
+        self.clipboard = self.root / "clipboard"
+        self.clipboard.write_bytes(b"existing clipboard")
+
+    def command(self, name, body):
+        path = self.bin / name
+        path.write_text(f"#!/bin/sh\nset -eu\n{body}\n")
+        path.chmod(0o755)
+
+    def pick(self):
+        return subprocess.run(
+            [str(REPO / "dotfiles/hyprland/.config/hypr/clipboard-history")],
+            env=self.env,
+            capture_output=True,
+            text=True,
+        )
+
+    def test_selected_image_is_restored_without_changing_its_bytes(self):
+        image = b"\x89PNG\r\n\x1a\n\x00binary-fixture\xff\n"
+        (self.root / "image.png").write_bytes(image)
+        result = self.pick()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((self.root / "selected").read_text(), "2\timage entry")
+        self.assertEqual(self.clipboard.read_bytes(), image)
+
+    def test_cancel_and_empty_selection_preserve_the_clipboard(self):
+        for body in ["cat >/dev/null; exit 1", "cat >/dev/null; exit 0"]:
+            with self.subTest(selector=body):
+                self.command("fuzzel", body)
+                result = self.pick()
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(self.clipboard.read_bytes(), b"existing clipboard")
+                self.assertFalse((self.root / "selected").exists())
+
+
 if __name__ == "__main__":
     unittest.main()

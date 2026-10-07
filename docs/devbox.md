@@ -297,6 +297,26 @@ restart GDM, which would end the running desktop. To use GNOME once, log out wit
 `ctrl + alt + delete` and choose Ubuntu from the session menu. GDM saves that
 choice, and the next provisioning run sets Hyprland again.
 
+SwayNotificationCenter displays notifications and keeps their history. Click
+the bell in Waybar to open its panel, or right-click to toggle Do Not Disturb.
+The bell changes its icon and turns yellow when Do Not Disturb is enabled.
+
+Press `super + v` to choose a previous clipboard item in fuzzel. Cliphist records
+text and images, and selecting an entry copies its original contents back to
+the clipboard for pasting. History persists locally; clear it with `cliphist wipe`.
+Press `super + shift + c` to pick a screen color with hyprpicker and copy its hex
+value. Escape cancels either picker.
+
+The `fonts` tag installs the bundled Noto Sans and Google Sans Code Nerd Fonts.
+Noto Sans is the desktop default for fontconfig, GTK, Waybar, fuzzel, Hyprland
+group labels, and hyprlock. Google Sans Code is the monospace default and an icon
+fallback in Waybar. The standard Noto Sans family comes from `fonts-noto-core`.
+Install or refresh the fonts with:
+
+```bash
+ansible-playbook local-devbox.yml --tags fonts
+```
+
 hypridle locks the session with hyprlock after 5 minutes without input and turns
 the monitor off 30 seconds later. After a reboot, the auto-login desktop is
 therefore open at the monitor for up to 5 minutes. Lock it immediately with
