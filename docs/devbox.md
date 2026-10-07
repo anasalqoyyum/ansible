@@ -43,7 +43,8 @@ as you. This is intended for a dedicated, single-user machine.
 
 Chrome uses a dedicated directory, `~/.local/share/devbox/chrome`, and
 `--password-store=basic` so a login-unlocked GNOME keyring is not required after
-boot. Chrome's basic store does not provide the protection of a locked desktop
+boot. The normal Chrome and Helium launchers also use `--password-store=basic`.
+Chrome's basic store does not provide the protection of a locked desktop
 keyring. Keep sensitive personal browsing in another profile, avoid saving
 passwords there, and protect physical access. The directory is mode `0700`.
 Logged-in websites still grant agents the permissions of those accounts.
@@ -225,6 +226,54 @@ never the stable release. Provisioning fails if no nightly is found or the newes
 nightly lacks that package; it does not silently install an older build.
 Applications are installed but not launched. Updates happen when you rerun these
 tasks, not through a scheduled Ansible job.
+
+### Keyring and SSH-only use
+
+Automatic desktop login and SSH public-key login do not supply a password to
+unlock GNOME Keyring. Apps that depend on it can wait for a graphical password
+prompt after reboot. SSH, Tailscale, and Docker do not need the desktop keyring.
+
+Provisioning installs `google-chrome` and `helium` command wrappers with
+`--password-store=basic`. Their application-menu launchers use those wrappers,
+including Chrome's New Window and Incognito actions. The Chrome launcher
+overrides the packaged desktop entry under `/usr/local/share/applications`.
+Launching `/usr/bin/google-chrome-stable` or `/opt/helium/helium.AppImage`
+directly bypasses the wrappers. GNOME Keyring and its existing secrets remain
+unchanged.
+
+Before applying this to existing browser profiles, close both browsers and back
+up `~/.config/google-chrome` and `~/.config/net.imput.helium` if they exist.
+Passwords and cookies encrypted with the previous keyring backend may be
+unavailable with `basic`, so expect to sign in again. Restore the old launch
+settings and profile backup if you need to return to the keyring backend.
+The basic backend does not provide keyring encryption for browser secrets.
+
+After reviewing that tradeoff, apply only the launcher changes:
+
+```bash
+ansible-playbook local-devbox.yml --tags keyring --ask-become-pass
+```
+
+This does not open browsers, change the login password, or unlock the keyring.
+Launch each browser again and verify its command line on `chrome://version`.
+
+Lazygit uses Git's authentication. For SSH remotes, load the outbound key with
+`ssh-add ~/.ssh/id_ed25519` after connecting, or forward your client's SSH agent
+with `ssh -A <user>@<devbox>`. `ssh-add -l` should then list an available key.
+The local agent loses its loaded keys after reboot. Unattended Git operations
+still require an available agent; these browser settings do not unlock SSH keys.
+
+GitHub CLI credentials are separate. If `gh` also prompts for the desktop
+keyring, authenticate once with file storage:
+
+```bash
+gh auth login --hostname github.com --git-protocol ssh --skip-ssh-key --insecure-storage
+chmod 600 ~/.config/gh/hosts.yml
+```
+
+This stores the token in plain text in your user-only GitHub CLI configuration.
+Provisioning does not migrate or print existing tokens. For unattended jobs,
+`GH_TOKEN` supplied by the job's secret configuration also avoids the keyring.
 
 ### Hyprland
 

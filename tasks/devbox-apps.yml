@@ -8,6 +8,55 @@
         update_cache: true
         cache_valid_time: 3600
 
+    - name: Create Chrome launcher directories
+      tags: [keyring]
+      become: true
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - /usr/local/bin
+        - /usr/local/share/applications
+
+    - name: Install Chrome command without a desktop keyring
+      tags: [keyring]
+      become: true
+      ansible.builtin.copy:
+        dest: /usr/local/bin/google-chrome
+        mode: "0755"
+        content: |
+          #!/bin/sh
+          exec /usr/bin/google-chrome-stable --password-store=basic "$@"
+
+    - name: Install Chrome desktop launcher without a desktop keyring
+      tags: [keyring]
+      become: true
+      ansible.builtin.copy:
+        dest: /usr/local/share/applications/google-chrome.desktop
+        mode: "0644"
+        content: |
+          [Desktop Entry]
+          Type=Application
+          Name=Google Chrome
+          GenericName=Web Browser
+          Exec=/usr/local/bin/google-chrome %U
+          Icon=google-chrome
+          Terminal=false
+          StartupNotify=true
+          Categories=Network;WebBrowser;
+          MimeType=text/html;x-scheme-handler/http;x-scheme-handler/https;
+          StartupWMClass=Google-chrome
+          Actions=new-window;new-private-window;
+
+          [Desktop Action new-window]
+          Name=New Window
+          Exec=/usr/local/bin/google-chrome
+
+          [Desktop Action new-private-window]
+          Name=New Incognito Window
+          Exec=/usr/local/bin/google-chrome --incognito
+
 - name: Install latest Helium AppImage
   tags: [helium]
   block:
@@ -47,6 +96,7 @@
         cache_valid_time: 3600
 
     - name: Create Helium installation and launcher directories
+      tags: [keyring]
       become: true
       ansible.builtin.file:
         path: "{{ item }}"
@@ -93,13 +143,16 @@
         - not ansible_check_mode or not devbox_helium_directories.changed
         - not ansible_check_mode or not devbox_helium_icon.changed
 
-    - name: Link Helium command
+    - name: Install Helium command without a desktop keyring
+      tags: [keyring]
       become: true
-      ansible.builtin.file:
-        src: /opt/helium/helium.AppImage
+      ansible.builtin.copy:
         dest: /usr/local/bin/helium
-        state: link
-        force: true
+        follow: false
+        mode: "0755"
+        content: |
+          #!/bin/sh
+          exec /opt/helium/helium.AppImage --password-store=basic "$@"
       when: not ansible_check_mode or not devbox_helium_directories.changed
 
     - name: Install Helium desktop launcher

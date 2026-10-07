@@ -399,6 +399,7 @@ esac
             .read_text()
             .replace("/opt/helium", str(self.root / "opt/helium"))
             .replace("/usr/local", str(self.root / "usr/local"))
+            .replace("/usr/bin/google-chrome-stable", str(self.root / "chrome"))
         )
         for entry in tasks:
             for task in entry.get("block", [entry]):
@@ -548,7 +549,12 @@ esac
         self.play(tasks, tags="helium")
         self.assertEqual(installed.read_bytes(), image)
         self.assertEqual(installed.stat().st_mode & 0o777, 0o755)
-        self.assertEqual((self.root / "usr/local/bin/helium").resolve(), installed)
+        launcher = self.root / "usr/local/bin/helium"
+        self.assertFalse(launcher.is_symlink())
+        self.assertIn(
+            f'exec {installed} --password-store=basic "$@"', launcher.read_text()
+        )
+        self.assertEqual(launcher.stat().st_mode & 0o777, 0o755)
         desktop = (
             self.root / "usr/local/share/applications/helium.desktop"
         ).read_text()
@@ -609,6 +615,58 @@ esac
         self.assertNotIn(
             "ansible.builtin.apt:\\n    deb:",
             (REPO / "tasks/devbox-desktop.yml").read_text(),
+        )
+
+    def test_keyring_launchers_preserve_arguments_and_replace_the_helium_symlink(self):
+        tasks = self.application_tasks({})
+        helium = self.root / "opt/helium/helium.AppImage"
+        helium.parent.mkdir(parents=True)
+        binary = (
+            "#!/usr/bin/env python3\n"
+            "import json, os, sys\n"
+            "print(json.dumps(sys.argv[1:]))\n"
+            "sys.exit(int(os.environ.get('TEST_BROWSER_EXIT', '0')))\n"
+        )
+        chrome = self.root / "chrome"
+        for path in [chrome, helium]:
+            path.write_text(binary)
+            path.chmod(0o755)
+        helium_launcher = self.root / "usr/local/bin/helium"
+        helium_launcher.parent.mkdir(parents=True)
+        helium_launcher.symlink_to(helium)
+
+        output = self.play(tasks, tags="keyring")
+        self.assertNotIn("TASK [Query latest Helium Linux release]", output)
+        self.assertNotIn("TASK [Install or update Google Chrome stable]", output)
+        self.assertFalse(helium_launcher.is_symlink())
+        self.assertEqual(helium.read_text(), binary)
+        self.assert_no_changes(self.play(tasks, tags="keyring"))
+        self.assert_no_changes(self.play(tasks, tags="keyring", check=True))
+
+        arguments = ["--incognito", "https://example.com/a path?x=1&y=2"]
+        for name in ["google-chrome", "helium"]:
+            with self.subTest(browser=name):
+                result = subprocess.run(
+                    [str(self.root / "usr/local/bin" / name), *arguments],
+                    env={**self.env, "TEST_BROWSER_EXIT": "23"},
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(result.returncode, 23, result.stderr)
+                self.assertEqual(
+                    json.loads(result.stdout), ["--password-store=basic", *arguments]
+                )
+
+        desktop = (
+            self.root / "usr/local/share/applications/google-chrome.desktop"
+        ).read_text()
+        commands = [line for line in desktop.splitlines() if line.startswith("Exec=")]
+        self.assertEqual(len(commands), 3)
+        self.assertTrue(
+            all(
+                f"Exec={self.root}/usr/local/bin/google-chrome" in line
+                for line in commands
+            )
         )
 
     def test_profile_preserves_shared_setup_and_excludes_wsl(self):
