@@ -232,6 +232,15 @@ Hyprland, a BSP tiling Wayland compositor, is installed from the Ubuntu archive
 as the physical monitor's session, with the `hyprland` tag. Keybindings follow
 komorebi and yabai; see [window management](../misc/window-management.md).
 
+Ubuntu 26.04 packages the GUI dialog helpers as `hyprland-qtutils`. Provisioning
+installs it to provide `hyprland-dialog` and resolve the missing
+`hyprland-guiutils` warning.
+
+Press `super + shift + s` and drag to select a screenshot area. `slurp` selects
+the area, `grim` captures it, and `wl-clipboard` copies the PNG for pasting.
+The image is also saved in your XDG Pictures directory under `Screenshots`,
+with a unique timestamped filename. Press Escape to cancel.
+
 Provisioning enables GDM automatic login for your user in `/etc/gdm3/custom.conf`
 and saves Hyprland as your login session in AccountsService. GDM reads both at
 startup, so the change takes effect at the next boot; provisioning does not

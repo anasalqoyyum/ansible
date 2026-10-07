@@ -683,5 +683,74 @@ esac
         self.assertIn("--user-data-dir=%h/.local/share/devbox/chrome", chrome)
 
 
+class ScreenshotTest(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix="screenshot-test-")
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.bin = self.root / "bin"
+        self.bin.mkdir()
+        self.pictures = self.root / "Custom Pictures"
+        self.env = {
+            **os.environ,
+            "PATH": f"{self.bin}:{os.environ['PATH']}",
+            "TEST_ROOT": str(self.root),
+            "TEST_PICTURES": str(self.pictures),
+        }
+        self.command("slurp", "printf '10,20 100x80\\n'")
+        self.command("xdg-user-dir", 'printf "%s\\n" "$TEST_PICTURES"')
+        self.command(
+            "grim",
+            'test "$1" = -g\n'
+            'test "$2" = "10,20 100x80"\n'
+            'printf "png-fixture" > "$3"',
+        )
+        self.command(
+            "wl-copy",
+            'test "$1" = --type\n'
+            'test "$2" = image/png\n'
+            'cat > "$TEST_ROOT/clipboard"',
+        )
+
+    def command(self, name, body):
+        path = self.bin / name
+        path.write_text(f"#!/bin/sh\nset -eu\n{body}\n")
+        path.chmod(0o755)
+
+    def capture(self):
+        return subprocess.run(
+            [str(REPO / "dotfiles/hyprland/.config/hypr/screenshot-area")],
+            env=self.env,
+            capture_output=True,
+            text=True,
+        )
+
+    def test_capture_saves_unique_files_and_copies_the_same_image(self):
+        for _ in range(2):
+            result = self.capture()
+            self.assertEqual(result.returncode, 0, result.stderr)
+        files = list((self.pictures / "Screenshots").glob("*.png"))
+        self.assertEqual(len(files), 2)
+        for path in files:
+            self.assertEqual(path.read_bytes(), (self.root / "clipboard").read_bytes())
+            self.assertEqual(path.stat().st_mode & 0o777, 0o600)
+
+    def test_cancel_leaves_files_and_clipboard_untouched(self):
+        self.command("slurp", "exit 1")
+        clipboard = self.root / "clipboard"
+        clipboard.write_text("existing clipboard")
+        self.assertEqual(self.capture().returncode, 0)
+        self.assertFalse(self.pictures.exists())
+        self.assertEqual(clipboard.read_text(), "existing clipboard")
+
+    def test_capture_failure_removes_empty_file_and_preserves_clipboard(self):
+        self.command("grim", "exit 1")
+        clipboard = self.root / "clipboard"
+        clipboard.write_text("existing clipboard")
+        self.assertEqual(self.capture().returncode, 1)
+        self.assertEqual(list((self.pictures / "Screenshots").iterdir()), [])
+        self.assertEqual(clipboard.read_text(), "existing clipboard")
+
+
 if __name__ == "__main__":
     unittest.main()

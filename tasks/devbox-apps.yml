@@ -164,11 +164,12 @@
 - name: Install Hyprland session
   tags: [hyprland]
   block:
-    - name: Install Hyprland, its portal, polkit agent, bar, launcher, lock screen, and wallpaper
+    - name: Install Hyprland and its desktop utilities
       become: true
       ansible.builtin.apt:
         name:
           - hyprland
+          - hyprland-qtutils
           - xdg-desktop-portal-hyprland
           - xwayland
           - hyprpolkitagent
@@ -178,6 +179,10 @@
           - hypridle
           - hyprpaper
           - playerctl
+          - grim
+          - slurp
+          - wl-clipboard
+          - xdg-user-dirs
         state: present
         install_recommends: false
         update_cache: true
