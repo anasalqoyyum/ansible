@@ -76,6 +76,21 @@ def unfold_parent(target, staged, home):
         target.mkdir(mode=staged.stat().st_mode & 0o777)
 
 
+def normalize_absolute_links(staged, target, dry_run):
+    if staged.name == "node_modules":
+        return
+    if target.is_symlink():
+        if os.readlink(target) == str(staged):
+            if not dry_run:
+                target.unlink()
+                target.symlink_to(os.path.relpath(staged, target.parent))
+            print(f"{'Would make relative' if dry_run else 'Made relative'} {target}")
+        return
+    if is_directory(staged) and is_directory(target):
+        for child in sorted(staged.iterdir()):
+            normalize_absolute_links(child, target / child.name, dry_run)
+
+
 def preserve(source, dotfiles, home, dry_run=False):
     moves = []
     if not dotfiles.exists():
@@ -85,17 +100,21 @@ def preserve(source, dotfiles, home, dry_run=False):
         for pattern in (source / ".sync-exclude").read_text().splitlines()
         if pattern.startswith("/")
     }
-    for package in sorted(dotfiles.iterdir()):
-        if is_directory(package) and not package.name.startswith("."):
-            for child in sorted(package.iterdir()):
-                moves.extend(
-                    find_folded_state(
-                        source / package.name / child.name,
-                        child,
-                        home / child.name,
-                        local_paths,
-                    )
+    packages = [
+        package
+        for package in sorted(dotfiles.iterdir())
+        if is_directory(package) and not package.name.startswith(".")
+    ]
+    for package in packages:
+        for child in sorted(package.iterdir()):
+            moves.extend(
+                find_folded_state(
+                    source / package.name / child.name,
+                    child,
+                    home / child.name,
+                    local_paths,
                 )
+            )
 
     # Validate every destination before changing any links or moving local files.
     for staged, target in moves:
@@ -110,6 +129,10 @@ def preserve(source, dotfiles, home, dry_run=False):
                 target.unlink()
             shutil.move(str(staged), str(target))
         print(f"{'Would preserve' if dry_run else 'Preserved'} {target}")
+
+    for package in packages:
+        for child in sorted(package.iterdir()):
+            normalize_absolute_links(child, home / child.name, dry_run)
 
 
 def main():

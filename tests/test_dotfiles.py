@@ -305,6 +305,76 @@ class DotfilesTest(unittest.TestCase):
         self.assertEqual((self.home / ".pi").resolve(), external)
         self.assertEqual((external / "auth.json").read_text(), "external auth\n")
 
+    def test_absolute_hyprland_file_links_are_repaired_before_stowing(self):
+        self.env["STOW_FOLDERS"] = "pi,demo,hyprland"
+        paths = [
+            ".config/hypr/clipboard-history",
+            ".config/hypr/hyprtoolkit.conf",
+            ".config/swaync/config.json",
+            ".config/swaync/style.css",
+        ]
+        for relative in paths:
+            self.write(self.source / "hyprland" / relative, "managed config\n")
+        self.rsync()
+        for relative in paths:
+            target = self.home / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.symlink_to(self.dotfiles / "hyprland" / relative)
+
+        self.sync()
+        for relative in paths:
+            target = self.home / relative
+            self.assertFalse(os.path.isabs(os.readlink(target)))
+            self.assertEqual(target.resolve(), self.dotfiles / "hyprland" / relative)
+            self.assertEqual(target.read_text(), "managed config\n")
+        self.assertEqual(self.preserve().stdout, "")
+        self.sync()
+
+    def test_absolute_directory_links_without_local_state_are_repaired(self):
+        self.rsync()
+        (self.home / ".pi").symlink_to(self.dotfiles / "pi/.pi")
+        self.sync()
+        self.assertFalse((self.home / ".pi").is_symlink())
+        self.assertEqual(
+            (self.home / ".pi/agent/settings.json").read_text(), "managed settings\n"
+        )
+        self.assertEqual(self.preserve().stdout, "")
+
+    def test_absolute_link_repair_dry_run_changes_nothing(self):
+        self.rsync()
+        (self.home / ".pi").symlink_to(self.dotfiles / "pi/.pi")
+        target = self.home / ".config/demo/config.ini"
+        target.parent.mkdir(parents=True)
+        target.symlink_to(self.dotfiles / "demo/.config/demo/config.ini")
+        before = self.snapshot()
+        result = self.preserve(dry_run=True)
+        self.assertIn("Would make relative", result.stdout)
+        self.assertEqual(self.snapshot(), before)
+
+    def test_absolute_link_repair_preserves_unrelated_links_and_regular_files(self):
+        self.rsync()
+        external = self.root / "external.ini"
+        self.write(external, "external config\n")
+        directory = self.home / ".config/demo"
+        directory.mkdir(parents=True)
+        target = directory / "config.ini"
+        target.symlink_to(external)
+        self.assertEqual(self.preserve().stdout, "")
+        self.assertEqual(os.readlink(target), str(external))
+        self.assertEqual(external.read_text(), "external config\n")
+
+        target.unlink()
+        target.write_text("local config\n")
+        self.assertEqual(self.preserve().stdout, "")
+        self.assertEqual(target.read_text(), "local config\n")
+
+        target.unlink()
+        indirect = self.root / "indirect.ini"
+        indirect.symlink_to(self.dotfiles / "demo/.config/demo/config.ini")
+        target.symlink_to(indirect)
+        self.assertEqual(self.preserve().stdout, "")
+        self.assertEqual(os.readlink(target), str(indirect))
+
     def test_auth_exclusions_protect_staging_in_normal_and_check_sync(self):
         self.rsync()
         for name in ["auth.json", "mcp-auth.json"]:
