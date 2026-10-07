@@ -61,7 +61,7 @@ Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 | Reuse shared Git, Zsh, Herdr, Neovim, Stow, mise, language runtimes, Rust, Cargo, Docker/Compose, AI CLIs, and BrowserSkill CLI tasks | Install Ubuntu unencrypted, without third-party drivers or extra media formats |
 | Sync managed dotfiles without replacing local auth, sessions, or caches | Authenticate Tailscale, GitHub, Codex, and other AI tools |
 | Install CLIProxyAPI core and keep it running with a lingering systemd user service | Authenticate upstream providers and set the client API key |
-| Install or update Chrome stable, the latest Helium AppImage, Ghostty's latest community Ubuntu package, Obsidian, OBS Studio, and the newest T3 Code nightly; install Zed | Sign in to browsers, Obsidian Sync, T3 Code, and Zed as needed |
+| Install or update Chrome stable, the latest Helium AppImage, Ghostty's latest community Ubuntu package, Obsidian, OBS Studio, Spotify, and the newest T3 Code nightly; install Zed | Sign in to browsers, Obsidian Sync, Spotify, T3 Code, and Zed as needed |
 | Install Hyprland with Waybar, fuzzel, a wallpaper, and an idle lock screen, and log in to it automatically at boot | Reboot once for automatic login to take effect |
 | Create `~/repo/` and `~/repo/worktrees/` | Clone your development repositories when needed |
 | Install, enable, and start native OpenSSH and Tailscale | Restore outbound SSH files using Ansible Vault if wanted |
@@ -181,7 +181,7 @@ This service is devbox-only. The macOS profile already installs the
 ## Desktop applications
 
 Normal provisioning installs Chrome, Helium, Ghostty, Zed, Obsidian, OBS Studio,
-and T3 Code for the physical Ubuntu desktop. They do not require the opt-in
+Spotify, and T3 Code for the physical Ubuntu desktop. They do not require the opt-in
 virtual desktop. To install or update just these applications:
 
 ```bash
@@ -189,7 +189,7 @@ ansible-playbook local-devbox.yml --tags devbox-apps --ask-become-pass
 ```
 
 Use `--tags chrome`, `--tags helium`, `--tags ghostty`, `--tags zed`,
-`--tags obsidian`, `--tags obs-studio`, or `--tags t3code` to update only one.
+`--tags obsidian`, `--tags obs-studio`, `--tags spotify`, or `--tags t3code` to update only one.
 Each run resolves the current release rather than keeping a pinned version,
 except Zed, which updates itself.
 
@@ -234,6 +234,15 @@ Install or update just these two apps with:
 ```bash
 . ./utils/use-classic-sudo.sh
 ansible-playbook local-devbox.yml --tags obsidian,obs-studio --ask-become-pass
+```
+
+Spotify uses its official stable Debian repository to install or update
+`spotify-client` for amd64. The repository uses Spotify's signing key through
+`Signed-By`. Install or update it with:
+
+```bash
+. ./utils/use-classic-sudo.sh
+ansible-playbook local-devbox.yml --tags spotify --ask-become-pass
 ```
 
 T3 Code uses the newest published nightly from
@@ -332,8 +341,11 @@ the bell in Waybar to open its panel, or right-click to toggle Do Not Disturb.
 The bell changes its icon and turns yellow when Do Not Disturb is enabled.
 
 Press `super + v` to choose a previous clipboard item in fuzzel. Cliphist records
-text and images, and selecting an entry copies its original contents back to
-the clipboard for pasting. History persists locally; clear it with `cliphist wipe`.
+text and images. Selecting an entry restores its original contents to the
+clipboard and pastes into the window that was active before the picker opened.
+It sends `ctrl + v`, or `ctrl + shift + v` for Ghostty. The application must
+support pasting the selected content. History persists locally; clear it with
+`cliphist wipe`.
 Press `super + shift + c` to pick a screen color with hyprpicker and copy its hex
 value. Escape cancels either picker.
 

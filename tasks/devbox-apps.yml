@@ -363,6 +363,35 @@
         update_cache: true
         cache_valid_time: 3600
 
+- name: Install Spotify from its official Debian repository
+  tags: [spotify]
+  become: true
+  block:
+    - name: Install the Debian repository management library for Spotify
+      ansible.builtin.apt:
+        name: python3-debian
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Configure the Spotify Debian repository
+      ansible.builtin.deb822_repository:
+        name: spotify
+        types: [deb]
+        uris: https://repository.spotify.com
+        suites: stable
+        components: [non-free]
+        architectures: [amd64]
+        signed_by: https://download.spotify.com/debian/pubkey_5384CE82BA52C83A.asc
+        state: present
+
+    - name: Install or update Spotify
+      ansible.builtin.apt:
+        name: spotify-client
+        state: latest
+        install_recommends: false
+        update_cache: true
+
 - name: Install latest T3 Code nightly
   tags: [t3code]
   block:

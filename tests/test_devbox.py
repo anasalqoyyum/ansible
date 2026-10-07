@@ -875,6 +875,18 @@ class ClipboardHistoryTest(unittest.TestCase):
         )
         self.command("fuzzel", "sed -n '2p'")
         self.command("wl-copy", 'cat > "$TEST_ROOT/clipboard"')
+        self.active_window = self.root / "active-window.json"
+        self.active_window.write_text(
+            json.dumps({"address": "0x1234", "class": "helium"})
+        )
+        self.command(
+            "hyprctl",
+            'case "$1" in\n'
+            '  activewindow) cat "$TEST_ROOT/active-window.json" ;;\n'
+            '  dispatch) printf "%s\\n" "$@" > "$TEST_ROOT/paste-command"\n'
+            '    cp "$TEST_ROOT/clipboard" "$TEST_ROOT/pasted" ;;\n'
+            'esac',
+        )
         self.clipboard = self.root / "clipboard"
         self.clipboard.write_bytes(b"existing clipboard")
 
@@ -898,6 +910,54 @@ class ClipboardHistoryTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual((self.root / "selected").read_text(), "2\timage entry")
         self.assertEqual(self.clipboard.read_bytes(), image)
+        self.assertEqual((self.root / "pasted").read_bytes(), image)
+        self.assertEqual(
+            (self.root / "paste-command").read_text().splitlines(),
+            ["dispatch", "sendshortcut", "CTRL,v,address:0x1234"],
+        )
+
+    def test_paste_targets_the_window_from_before_the_picker_opened(self):
+        (self.root / "image.png").write_bytes(b"selected text\n")
+        self.command(
+            "fuzzel",
+            'printf \'{"address":"0x5678","class":"other-app"}\' '
+            '> "$TEST_ROOT/active-window.json"\n'
+            "sed -n '1p'",
+        )
+        result = self.pick()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            (self.root / "paste-command").read_text().splitlines(),
+            ["dispatch", "sendshortcut", "CTRL,v,address:0x1234"],
+        )
+
+    def test_ghostty_receives_its_terminal_paste_shortcut(self):
+        self.active_window.write_text(
+            json.dumps({"address": "0x1234", "class": "com.mitchellh.ghostty"})
+        )
+        (self.root / "image.png").write_bytes(b"selected text\n")
+        result = self.pick()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            (self.root / "paste-command").read_text().splitlines(),
+            ["dispatch", "sendshortcut", "CTRL SHIFT,v,address:0x1234"],
+        )
+
+    def test_no_active_window_restores_clipboard_without_pasting(self):
+        self.active_window.write_text("{}")
+        (self.root / "image.png").write_bytes(b"selected text\n")
+        result = self.pick()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.clipboard.read_bytes(), b"selected text\n")
+        self.assertFalse((self.root / "paste-command").exists())
+
+    def test_copy_failure_does_not_send_a_paste_shortcut(self):
+        (self.root / "image.png").write_bytes(b"selected text\n")
+        self.command("wl-copy", "cat >/dev/null; exit 1")
+        result = self.pick()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(self.clipboard.read_bytes(), b"existing clipboard")
+        self.assertFalse((self.root / "paste-command").exists())
 
     def test_cancel_and_empty_selection_preserve_the_clipboard(self):
         for body in ["cat >/dev/null; exit 1", "cat >/dev/null; exit 0"]:
@@ -907,6 +967,7 @@ class ClipboardHistoryTest(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertEqual(self.clipboard.read_bytes(), b"existing clipboard")
                 self.assertFalse((self.root / "selected").exists())
+                self.assertFalse((self.root / "paste-command").exists())
 
 
 if __name__ == "__main__":

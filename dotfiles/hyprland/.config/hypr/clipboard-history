@@ -1,7 +1,19 @@
 #!/bin/bash
 set -euo pipefail
 
+active_window=$(hyprctl activewindow -j)
+
 selection=$(cliphist list | fuzzel --dmenu --with-nth=2 --no-run-if-empty --prompt "clipboard > ") || exit 0
 [ -n "$selection" ] || exit 0
 
 printf '%s\n' "$selection" | cliphist decode | wl-copy
+
+address=$(jq -r '.address // empty' <<<"$active_window")
+[ -n "$address" ] || exit 0
+
+modifiers=CTRL
+if [ "$(jq -r '.class // empty' <<<"$active_window")" = com.mitchellh.ghostty ]; then
+  modifiers='CTRL SHIFT'
+fi
+
+hyprctl dispatch sendshortcut "$modifiers,v,address:$address"
