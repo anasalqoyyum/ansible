@@ -283,6 +283,86 @@
     executable: /bin/bash
     creates: "{{ ansible_facts['user_dir'] }}/.local/bin/zed"
 
+- name: Install latest Obsidian stable
+  tags: [obsidian]
+  block:
+    - name: Query latest Obsidian release
+      ansible.builtin.uri:
+        url: https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest
+        headers:
+          Accept: application/vnd.github+json
+        return_content: true
+      register: devbox_obsidian_release
+      check_mode: false
+      changed_when: false
+
+    - name: Select Obsidian Debian package for amd64
+      ansible.builtin.set_fact:
+        devbox_obsidian_assets: >-
+          {{ devbox_obsidian_release.json.assets
+             | selectattr('name', 'match', '^obsidian_[^/]+_amd64\.deb$')
+             | list }}
+
+    - name: Require a matching Obsidian package
+      ansible.builtin.assert:
+        that: devbox_obsidian_assets | length == 1
+        fail_msg: "The latest Obsidian release has no unique amd64 Debian package."
+
+    - name: Require the Obsidian package checksum
+      ansible.builtin.assert:
+        that: devbox_obsidian_assets[0].digest | default('') is match('^sha256:[0-9a-f]{64}$')
+        fail_msg: "The Obsidian package is missing its SHA-256 release digest."
+
+    - name: Create the Obsidian package cache
+      ansible.builtin.file:
+        path: "{{ ansible_facts['user_dir'] }}/.cache/ansible/obsidian"
+        state: directory
+        mode: "0755"
+      register: devbox_obsidian_cache
+
+    - name: Download or update the verified Obsidian package
+      ansible.builtin.get_url:
+        url: "{{ devbox_obsidian_assets[0].browser_download_url }}"
+        checksum: "{{ devbox_obsidian_assets[0].digest }}"
+        dest: "{{ ansible_facts['user_dir'] }}/.cache/ansible/obsidian/obsidian-amd64.deb"
+        mode: "0644"
+      when: not ansible_check_mode or not devbox_obsidian_cache.changed
+
+    - name: Install or update Obsidian
+      become: true
+      ansible.builtin.apt:
+        deb: "{{ ansible_facts['user_dir'] }}/.cache/ansible/obsidian/obsidian-amd64.deb"
+        update_cache: true
+        cache_valid_time: 3600
+      when: not ansible_check_mode or not devbox_obsidian_cache.changed
+
+- name: Install OBS Studio from its official Ubuntu repository
+  tags: [obs-studio]
+  become: true
+  block:
+    - name: Install the Debian repository management library
+      ansible.builtin.apt:
+        name: python3-debian
+        state: present
+
+    - name: Configure the OBS Studio Ubuntu PPA
+      ansible.builtin.deb822_repository:
+        name: obsproject-obs-studio
+        types: [deb]
+        uris: https://ppa.launchpadcontent.net/obsproject/obs-studio/ubuntu
+        suites: resolute
+        components: [main]
+        signed_by: https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xBC7345F522079769F5BBE987EFC71127F425E228
+        state: present
+
+    - name: Install or update OBS Studio
+      ansible.builtin.apt:
+        name: obs-studio
+        state: latest
+        install_recommends: false
+        update_cache: true
+        cache_valid_time: 3600
+
 - name: Install latest T3 Code nightly
   tags: [t3code]
   block:

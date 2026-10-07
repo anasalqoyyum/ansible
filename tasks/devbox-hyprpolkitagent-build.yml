@@ -1,0 +1,13 @@
+- name: "Build and install {{ devbox_hyprpolkitagent_component.source }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      cmake --fresh -S {{ (devbox_hyprpolkitagent_cache ~ '/' ~ devbox_hyprpolkitagent_component.source) | quote }} \
+        -B {{ (devbox_hyprpolkitagent_cache ~ '/' ~ devbox_hyprpolkitagent_component.source ~ '/build') | quote }} \
+        -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX={{ devbox_hyprpolkitagent_prefix | quote }} \
+        -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_RPATH={{ (devbox_hyprpolkitagent_prefix ~ '/lib') | quote }}
+      cmake --build {{ (devbox_hyprpolkitagent_cache ~ '/' ~ devbox_hyprpolkitagent_component.source ~ '/build') | quote }} --parallel 4
+      cmake --install {{ (devbox_hyprpolkitagent_cache ~ '/' ~ devbox_hyprpolkitagent_component.source ~ '/build') | quote }}
+    creates: "{{ devbox_hyprpolkitagent_prefix }}/{{ devbox_hyprpolkitagent_component.installed }}"
+  environment:
+    PKG_CONFIG_PATH: "{{ devbox_hyprpolkitagent_prefix }}/lib/pkgconfig"

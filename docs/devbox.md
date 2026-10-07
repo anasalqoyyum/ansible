@@ -61,7 +61,7 @@ Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 | Reuse shared Git, Zsh, Herdr, Neovim, Stow, mise, language runtimes, Rust, Cargo, Docker/Compose, AI CLIs, and BrowserSkill CLI tasks | Install Ubuntu unencrypted, without third-party drivers or extra media formats |
 | Sync managed dotfiles without replacing local auth, sessions, or caches | Authenticate Tailscale, GitHub, Codex, and other AI tools |
 | Install CLIProxyAPI core and keep it running with a lingering systemd user service | Authenticate upstream providers and set the client API key |
-| Install or update Chrome stable, the latest Helium AppImage, Ghostty's latest community Ubuntu package, and the newest T3 Code nightly; install Zed | Sign in to browsers, T3 Code, and Zed as needed |
+| Install or update Chrome stable, the latest Helium AppImage, Ghostty's latest community Ubuntu package, Obsidian, OBS Studio, and the newest T3 Code nightly; install Zed | Sign in to browsers, Obsidian Sync, T3 Code, and Zed as needed |
 | Install Hyprland with Waybar, fuzzel, a wallpaper, and an idle lock screen, and log in to it automatically at boot | Reboot once for automatic login to take effect |
 | Create `~/repo/` and `~/repo/worktrees/` | Clone your development repositories when needed |
 | Install, enable, and start native OpenSSH and Tailscale | Restore outbound SSH files using Ansible Vault if wanted |
@@ -180,17 +180,18 @@ This service is devbox-only. The macOS profile already installs the
 
 ## Desktop applications
 
-Normal provisioning installs Chrome, Helium, Ghostty, Zed, and T3 Code for the physical
-Ubuntu desktop. They do not require the opt-in virtual desktop. To install or
-update just these applications:
+Normal provisioning installs Chrome, Helium, Ghostty, Zed, Obsidian, OBS Studio,
+and T3 Code for the physical Ubuntu desktop. They do not require the opt-in
+virtual desktop. To install or update just these applications:
 
 ```bash
 ansible-playbook local-devbox.yml --tags devbox-apps --ask-become-pass
 ```
 
-Use `--tags chrome`, `--tags helium`, `--tags ghostty`, `--tags zed`, or
-`--tags t3code` to update only one. Each run resolves the current release rather
-than keeping a pinned version, except Zed, which updates itself.
+Use `--tags chrome`, `--tags helium`, `--tags ghostty`, `--tags zed`,
+`--tags obsidian`, `--tags obs-studio`, or `--tags t3code` to update only one.
+Each run resolves the current release rather than keeping a pinned version,
+except Zed, which updates itself.
 
 Chrome uses Google's current stable amd64 `.deb`. The `devbox-desktop` tag also
 installs Chrome so the opt-in agent desktop still works on its own.
@@ -218,6 +219,22 @@ Zed uses the official installer, `curl -fsSL https://zed.dev/install.sh | sh`,
 which unpacks the stable release into `~/.local/zed.app` and links
 `~/.local/bin/zed`. It runs only when `~/.local/bin/zed` is missing, because Zed
 updates itself. Its settings come from the shared `dotfiles/zed` package.
+
+Obsidian uses the latest stable amd64 `.deb` from the official
+[Obsidian releases](https://github.com/obsidianmd/obsidian-releases/releases).
+Provisioning verifies its SHA-256 release digest before installing it.
+
+OBS Studio uses the official `ppa:obsproject/obs-studio` Ubuntu repository and
+updates to the newest package available for Ubuntu 26.04. On Hyprland, add a
+Screen Capture source using PipeWire and choose the screen or window through
+the desktop portal. The profile already installs Hyprland's desktop portal
+backend.
+Install or update just these two apps with:
+
+```bash
+. ./utils/use-classic-sudo.sh
+ansible-playbook local-devbox.yml --tags obsidian,obs-studio --ask-become-pass
+```
 
 T3 Code uses the newest published nightly from
 [pingdotgg/t3code](https://github.com/pingdotgg/t3code/releases), sorted by
@@ -284,6 +301,19 @@ komorebi and yabai; see [window management](../misc/window-management.md).
 Ubuntu 26.04 packages the GUI dialog helpers as `hyprland-qtutils`. Provisioning
 installs it to provide `hyprland-dialog` and resolve the missing
 `hyprland-guiutils` warning.
+
+The authentication agent is built from `hyprpolkitagent` v0.2.0 with the
+Hyprtoolkit revision pinned by that release. Ubuntu still packages v0.1.3.
+The build installs under `~/.local/share/hyprpolkitagent/0.2.0`, with its own
+toolkit library, and Hyprland starts `~/.local/libexec/hyprpolkitagent`.
+The system Hyprland libraries remain managed by Ubuntu. Repeat provisioning
+skips completed builds. Install it separately with `--tags hyprpolkitagent`.
+The toolkit build locks a popup's weak parent pointer before casting it to
+avoid a compilation bug in Ubuntu's Hyprutils 0.11.0 headers.
+
+The managed `~/.config/hypr/hyprtoolkit.conf` sets the authentication dialog's
+dark colors, blue accents, rounded controls, and Noto Sans font. Palette edits
+apply to the next dialog without restarting the agent.
 
 Press `super + shift + s` and drag to select a screenshot area. `slurp` selects
 the area, `grim` captures it, and `wl-clipboard` copies the PNG for pasting.

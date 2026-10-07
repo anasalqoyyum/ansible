@@ -402,6 +402,7 @@ esac
             .replace("/usr/bin/google-chrome-stable", str(self.root / "chrome"))
         )
         for entry in tasks:
+            entry.pop("become", None)
             for task in entry.get("block", [entry]):
                 task.pop("become", None)
                 if "ansible.builtin.uri" in task:
@@ -413,6 +414,9 @@ esac
                     task["ansible.builtin.debug"] = {
                         "msg": package.get("deb", package.get("name"))
                     }
+                if "ansible.builtin.deb822_repository" in task:
+                    repository = task.pop("ansible.builtin.deb822_repository")
+                    task["ansible.builtin.debug"] = {"msg": repository["uris"]}
         return tasks
 
     def nightly_release(self, version, published_at, draft=False):
@@ -668,6 +672,44 @@ esac
                 for line in commands
             )
         )
+
+    def test_obsidian_verifies_the_selected_package_before_installation(self):
+        path = "/repos/obsidianmd/obsidian-releases/releases/latest"
+        package = b"obsidian-package-fixture"
+        asset = {
+            "name": "obsidian_1.14.4_amd64.deb",
+            "browser_download_url": "",
+            "digest": f"sha256:{hashlib.sha256(package).hexdigest()}",
+        }
+        releases = {path: {"assets": [asset]}, "/obsidian.deb": package}
+        tasks = self.application_tasks(releases)
+        asset["browser_download_url"] = f"{self.application_url}/obsidian.deb"
+        cache = self.home / ".cache/ansible/obsidian/obsidian-amd64.deb"
+        self.play(tasks, tags="obsidian")
+        self.assertEqual(cache.read_bytes(), package)
+        self.assert_no_changes(self.play(tasks, tags="obsidian"))
+
+        releases["/obsidian.deb"] = b"tampered-package-fixture"
+        cache.unlink()
+        with self.assertRaises(subprocess.CalledProcessError) as error:
+            self.play(tasks, tags="obsidian")
+        self.assertNotIn("TASK [Install or update Obsidian]", error.exception.stdout)
+        self.assertFalse(cache.exists())
+
+    def test_obsidian_rejects_missing_architecture_and_checksum(self):
+        path = "/repos/obsidianmd/obsidian-releases/releases/latest"
+        releases = {path: {"assets": []}}
+        tasks = self.application_tasks(releases)
+        for assets, message in [
+            ([{"name": "obsidian_1.14.4_arm64.deb"}], "no unique amd64"),
+            ([{"name": "obsidian_1.14.4_amd64.deb"}], "missing its SHA-256"),
+        ]:
+            with self.subTest(message=message):
+                releases[path]["assets"] = assets
+                with self.assertRaises(subprocess.CalledProcessError) as error:
+                    self.play(tasks, tags="obsidian")
+                self.assertIn(message, error.exception.stdout)
+                self.assertNotIn("TASK [Install or update Obsidian]", error.exception.stdout)
 
     def test_profile_preserves_shared_setup_and_excludes_wsl(self):
         play = yaml.safe_load((REPO / "local-devbox.yml").read_text())[0]

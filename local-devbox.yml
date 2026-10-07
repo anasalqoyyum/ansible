@@ -81,6 +81,10 @@
       ansible.builtin.import_tasks: tasks/devbox-fonts.yml
       tags: [devbox, fonts]
 
+    - name: Install the themed Hyprland authentication agent
+      ansible.builtin.import_tasks: tasks/devbox-hyprpolkitagent.yml
+      tags: [devbox, devbox-apps, install, hyprland, hyprpolkitagent]
+
     - name: Log in to Hyprland automatically
       ansible.builtin.import_tasks: tasks/devbox-session.yml
       tags: [devbox, hyprland, devbox-session]

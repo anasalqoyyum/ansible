@@ -1,0 +1,100 @@
+- name: Install hyprpolkitagent 0.2.0 with its pinned toolkit
+  vars:
+    devbox_hyprpolkitagent_cache: "{{ ansible_facts['user_dir'] }}/.cache/ansible/hyprpolkitagent"
+    devbox_hyprpolkitagent_prefix: "{{ ansible_facts['user_dir'] }}/.local/share/hyprpolkitagent/0.2.0"
+    devbox_hyprtoolkit_revision: be487c470a1a10011fb8dccf9fc0f12f1e006cac
+  block:
+    - name: Install authentication agent and toolkit build dependencies
+      become: true
+      ansible.builtin.apt:
+        name:
+          - build-essential
+          - cmake
+          - pkg-config
+          - hyprwayland-scanner
+          - libhyprutils-dev
+          - libhyprgraphics-dev
+          - libhyprlang-dev
+          - libaquamarine-dev
+          - libsdbus-c++-dev
+          - libpixman-1-dev
+          - libdrm-dev
+          - libxkbcommon-dev
+          - libgles-dev
+          - libegl-dev
+          - libgl-dev
+          - libopengl-dev
+          - libiniparser-dev
+          - libgbm-dev
+          - libpango1.0-dev
+          - libwayland-dev
+          - wayland-protocols
+          - libabsl-dev
+        state: present
+        install_recommends: false
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Create authentication agent build and launcher directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ devbox_hyprpolkitagent_cache }}"
+        - "{{ ansible_facts['user_dir'] }}/.local/libexec"
+      register: devbox_hyprpolkitagent_directories
+
+    - name: Download verified authentication agent and toolkit sources
+      ansible.builtin.get_url:
+        url: "https://github.com/hyprwm/{{ item.project }}/archive/{{ item.ref }}.tar.gz"
+        checksum: "sha256:{{ item.sha256 }}"
+        dest: "{{ devbox_hyprpolkitagent_cache }}/{{ item.project }}.tar.gz"
+        mode: "0644"
+      loop:
+        - project: hyprpolkitagent
+          ref: refs/tags/v0.2.0
+          sha256: dcb1147e28efe03f308513f9dad69ab54e3cb9eca38795c4498d968b4f5ec602
+        - project: hyprtoolkit
+          ref: "{{ devbox_hyprtoolkit_revision }}"
+          sha256: fea7cf6aaeea2143836c21ee0c5f499e738820b7192218779760dab725a6909b
+      when: not ansible_check_mode or not devbox_hyprpolkitagent_directories.changed
+
+    - name: Extract authentication agent and toolkit sources
+      ansible.builtin.unarchive:
+        src: "{{ devbox_hyprpolkitagent_cache }}/{{ item.project }}.tar.gz"
+        dest: "{{ devbox_hyprpolkitagent_cache }}"
+        remote_src: true
+        creates: "{{ devbox_hyprpolkitagent_cache }}/{{ item.directory }}"
+      loop:
+        - { project: hyprpolkitagent, directory: hyprpolkitagent-0.2.0 }
+        - { project: hyprtoolkit, directory: "hyprtoolkit-{{ devbox_hyprtoolkit_revision }}" }
+      when: not ansible_check_mode
+
+    # Ubuntu's Hyprutils 0.11.0 cannot instantiate its weak-pointer cast.
+    - name: Use the supported shared-pointer cast for toolkit popup parents
+      ansible.builtin.replace:
+        path: "{{ devbox_hyprpolkitagent_cache }}/hyprtoolkit-{{ devbox_hyprtoolkit_revision }}/src/window/WaylandPopup.cpp"
+        regexp: 'dynamicPointerCast<CWaylandLayer>\(m_parent\)'
+        replace: 'dynamicPointerCast<CWaylandLayer>(m_parent.lock())'
+      when: not ansible_check_mode
+
+    - name: Build and install the private toolkit and authentication agent
+      ansible.builtin.include_tasks:
+        file: devbox-hyprpolkitagent-build.yml
+        apply:
+          tags: [devbox, devbox-apps, install, hyprland, hyprpolkitagent]
+      loop:
+        - source: "hyprtoolkit-{{ devbox_hyprtoolkit_revision }}"
+          installed: lib/pkgconfig/hyprtoolkit.pc
+        - source: hyprpolkitagent-0.2.0
+          installed: libexec/hyprpolkitagent
+      loop_control:
+        loop_var: devbox_hyprpolkitagent_component
+
+    - name: Select the user-local authentication agent
+      ansible.builtin.file:
+        src: "{{ devbox_hyprpolkitagent_prefix }}/libexec/hyprpolkitagent"
+        dest: "{{ ansible_facts['user_dir'] }}/.local/libexec/hyprpolkitagent"
+        state: link
+        force: true
