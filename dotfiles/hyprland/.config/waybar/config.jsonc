@@ -6,22 +6,26 @@
   "margin-left": 5,
   "margin-right": 5,
   "spacing": 8,
-  "modules-left": ["hyprland/workspaces", "mpris"],
+  "modules-left": ["hyprland/workspaces", "custom/media"],
   "modules-center": ["hyprland/window"],
-  "modules-right": ["network#wifi", "network#wired", "pulseaudio", "cpu", "memory", "custom/notification", "tray", "clock", "custom/power"],
+  "modules-right": ["tray", "network#wifi", "network#wired", "pulseaudio", "cpu", "memory", "custom/notification", "clock", "custom/power"],
   "hyprland/workspaces": {
     "format": "{id}",
     "persistent-workspaces": {
       "*": 5
     }
   },
-  "mpris": {
-    "format": "<span font_desc=\"GoogleSansCode Nerd Font\">󰝚</span> {dynamic}",
-    "format-paused": "",
-    "format-stopped": "",
-    "dynamic-order": ["artist", "title"],
-    "dynamic-len": 50,
-    "tooltip-format": "{player}: {dynamic}"
+  "custom/media": {
+    "format": "<span font_desc=\"GoogleSansCode Nerd Font\">󰝚</span> {text}",
+    "exec": "python3 ~/.config/waybar/media-player.py",
+    "return-type": "json",
+    "interval": 1,
+    "max-length": 50,
+    "hide-empty-text": true,
+    "escape": true,
+    "on-click": "python3 ~/.config/waybar/media-player.py play-pause",
+    "on-click-middle": "python3 ~/.config/waybar/media-player.py previous",
+    "on-click-right": "python3 ~/.config/waybar/media-player.py next"
   },
   "hyprland/window": {
     "max-length": 80,
