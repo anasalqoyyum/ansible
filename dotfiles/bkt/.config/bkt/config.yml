@@ -1,0 +1,11 @@
+version: 1
+active_context: accelbyte
+contexts:
+  accelbyte:
+    host: api.bitbucket.org
+    workspace: accelbyte
+hosts:
+  api.bitbucket.org:
+    kind: cloud
+    base_url: https://api.bitbucket.org/2.0
+    username: anas@accelbyte.net
