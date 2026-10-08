@@ -1,0 +1,56 @@
+- name: Install NetworkManager VPN clients and graphical controls
+  become: true
+  ansible.builtin.apt:
+    name:
+      - network-manager
+      - network-manager-applet
+      - nm-connection-editor
+      - gnome-control-center
+      - openvpn
+      - network-manager-openvpn
+      - network-manager-openvpn-gnome
+      - wireguard-tools
+    state: present
+    install_recommends: false
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Create the user application launcher directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts['user_dir'] }}/.local/share/applications"
+    state: directory
+    mode: "0755"
+
+- name: Install the VPN connections launcher
+  ansible.builtin.copy:
+    dest: "{{ ansible_facts['user_dir'] }}/.local/share/applications/vpn-connections.desktop"
+    mode: "0644"
+    content: |
+      [Desktop Entry]
+      Type=Application
+      Name=VPN Connections
+      GenericName=OpenVPN and WireGuard Client
+      Comment=Import, connect, and disconnect OpenVPN and WireGuard profiles
+      Exec=env XDG_CURRENT_DESKTOP=GNOME gnome-control-center network
+      Icon=network-vpn
+      Terminal=false
+      StartupNotify=true
+      Categories=Network;
+      Keywords=VPN;OpenVPN;WireGuard;
+
+- name: Read NetworkManager tray icon visibility
+  ansible.builtin.command:
+    argv: [gsettings, get, org.gnome.nm-applet, show-applet]
+  register: devbox_vpn_applet_visibility
+  changed_when: false
+  check_mode: false
+  environment:
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts['user_uid'] }}/bus"
+
+- name: Hide the NetworkManager tray icon
+  ansible.builtin.command:
+    argv: [gsettings, set, org.gnome.nm-applet, show-applet, "false"]
+  when: devbox_vpn_applet_visibility.stdout != "false"
+  changed_when: true
+  environment:
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts['user_uid'] }}/bus"

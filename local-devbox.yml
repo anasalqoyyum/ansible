@@ -77,6 +77,10 @@
       ansible.builtin.import_tasks: tasks/devbox-apps.yml
       tags: [devbox, devbox-apps, install]
 
+    - name: Install graphical OpenVPN and WireGuard clients
+      ansible.builtin.import_tasks: tasks/devbox-vpn.yml
+      tags: [devbox, devbox-apps, install, vpn]
+
     - name: Install and configure devbox desktop fonts
       ansible.builtin.import_tasks: tasks/devbox-fonts.yml
       tags: [devbox, fonts]

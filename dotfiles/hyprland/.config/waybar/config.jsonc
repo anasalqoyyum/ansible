@@ -39,7 +39,7 @@
     "format-disabled": "<span font_desc=\"GoogleSansCode Nerd Font\">󰖪</span>",
     "tooltip-format-wifi": "{ifname}: {ipaddr}/{cidr} via {gwaddr}\n{signalStrength}% at {frequency} GHz",
     "on-click": "~/.config/waybar/network-toggle wifi",
-    "on-click-right": "ghostty -e nmtui"
+    "on-click-right": "env XDG_CURRENT_DESKTOP=GNOME gnome-control-center network"
   },
   "network#wired": {
     "interface": "en*",
@@ -48,7 +48,7 @@
     "format-disconnected": "",
     "tooltip-format-ethernet": "{ifname}: {ipaddr}/{cidr} via {gwaddr}",
     "on-click": "~/.config/waybar/network-toggle ethernet",
-    "on-click-right": "ghostty -e nmtui"
+    "on-click-right": "env XDG_CURRENT_DESKTOP=GNOME gnome-control-center network"
   },
   "pulseaudio": {
     "format": "<span font_desc=\"GoogleSansCode Nerd Font\">{icon}</span> {volume}%",

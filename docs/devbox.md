@@ -62,6 +62,7 @@ Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 | Sync managed dotfiles without replacing local auth, sessions, or caches | Authenticate Tailscale, GitHub, Codex, and other AI tools |
 | Install CLIProxyAPI core and keep it running with a lingering systemd user service | Authenticate upstream providers and set the client API key |
 | Install or update Chrome stable, the latest Helium AppImage, Ghostty's latest community Ubuntu package, Obsidian, OBS Studio, Spotify, and the newest T3 Code nightly; install Zed | Sign in to browsers, Obsidian Sync, Spotify, T3 Code, and Zed as needed |
+| Install OpenVPN and WireGuard clients with graphical connection controls | Import your VPN profiles and test connections to your VPN servers |
 | Install Hyprland with Waybar, fuzzel, a wallpaper, and an idle lock screen, and log in to it automatically at boot | Reboot once for automatic login to take effect |
 | Create `~/repo/` and `~/repo/worktrees/` | Clone your development repositories when needed |
 | Install, enable, and start native OpenSSH and Tailscale | Restore outbound SSH files using Ansible Vault if wanted |
@@ -252,6 +253,28 @@ never the stable release. Provisioning fails if no nightly is found or the newes
 nightly lacks that package; it does not silently install an older build.
 Applications are installed but not launched. Updates happen when you rerun these
 tasks, not through a scheduled Ansible job.
+
+### OpenVPN and WireGuard
+
+The devbox profile installs OpenVPN, its NetworkManager GUI plugin, WireGuard
+tools, and GNOME Network settings for graphical connection controls. WireGuard
+support is built into NetworkManager. Install only these clients with:
+
+```bash
+. ./utils/use-classic-sudo.sh
+ansible-playbook local-devbox.yml --tags vpn --ask-become-pass
+```
+
+Open **VPN Connections** from the application menu, or right-click a Waybar
+network icon, to open Network settings. Click **Add VPN**, choose the file import
+option, and select your OpenVPN `.ovpn` or WireGuard `.conf` file. You can also
+select **WireGuard** to enter a configuration manually. Use the switch next to
+each profile to connect or disconnect. The NetworkManager applet runs in the
+background to handle authentication prompts, with its tray icon hidden.
+
+Profiles stay on the machine and are not managed by this repository. Importing a
+profile does not verify a connection; connect with your own server configuration
+to test authentication, routing, and DNS.
 
 ### Keyring and SSH-only use
 
