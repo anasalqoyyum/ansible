@@ -16,6 +16,12 @@ copy-local:
 	rsync -a \
 		--exclude-from="$(DOTFILES_EXCLUDES)" \
 		"$(DOTFILES_DEST)" "$(DOTFILES_SRC)"
+	if [ -d "$(DOTFILES_DEST)agents/.agents/skills" ]; then \
+		mkdir -p "$(DOTFILES_SRC)agents/.agents/skills" && \
+		rsync -a --delete \
+			--exclude-from="$(DOTFILES_EXCLUDES)" \
+			"$(DOTFILES_DEST)agents/.agents/skills/" "$(DOTFILES_SRC)agents/.agents/skills/"; \
+	fi
 
 setup-devbox:
 	bash run-devbox.sh

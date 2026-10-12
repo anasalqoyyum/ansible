@@ -62,7 +62,7 @@
       - --exclude=.gitignore
       - --exclude=*.log
       - "--exclude-from={{ playbook_dir }}/dotfiles/.sync-exclude"
-      - --filter=P agents/.agents/skills/browser-skill/
+      - --filter=P agents/.agents/skills/**
       - --filter=P node_modules/
       - "{{ playbook_dir }}/dotfiles/"
       - "{{ lookup('env', 'HOME') }}/.dotfiles/"
@@ -89,7 +89,7 @@
       - --exclude=.gitignore
       - --exclude=*.log
       - "--exclude-from={{ playbook_dir }}/dotfiles/.sync-exclude"
-      - --filter=P agents/.agents/skills/browser-skill/
+      - --filter=P agents/.agents/skills/**
       - --filter=P node_modules/
       - "{{ playbook_dir }}/dotfiles/"
       - "{{ lookup('env', 'HOME') }}/.dotfiles/"

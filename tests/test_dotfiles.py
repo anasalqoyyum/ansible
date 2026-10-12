@@ -205,6 +205,63 @@ class DotfilesTest(unittest.TestCase):
             (self.home / ".codex/config.toml").read_text(),
         )
 
+    def test_agents_skills_is_one_link_so_replaced_skills_reach_dotfiles(self):
+        self.env["STOW_FOLDERS"] = "agents"
+        self.write(self.source / "agents/.agents/skills/old/SKILL.md", "old\n")
+        self.write(self.source / "agents/.agents/skills/kept/SKILL.md", "v1\n")
+        self.rsync()
+        self.run_command(["stow", "-R", "--no-folding", "agents"], cwd=self.dotfiles)
+        self.sync()
+        skills = self.home / ".agents/skills"
+        self.assertEqual(os.readlink(skills), "../.dotfiles/agents/.agents/skills")
+
+        shutil.rmtree(skills / "kept")
+        self.write(skills / "kept/SKILL.md", "v2\n")
+        self.write(skills / "new/SKILL.md", "new\n")
+        shutil.rmtree(skills / "old")
+
+        output = self.root / "copy-output"
+        self.write(output / "agents/.agents/skills/old/SKILL.md", "old\n")
+        self.run_command(
+            [
+                "make",
+                "--no-print-directory",
+                "copy-local",
+                f"DOTFILES_SRC={output}/",
+                f"DOTFILES_DEST={self.dotfiles}/",
+                "DETECTED_WINDOWS_USER=",
+                "WINDOWS_USER=fixture",
+            ],
+            cwd=REPO,
+        )
+        copied = output / "agents/.agents/skills"
+        self.assertEqual(
+            sorted(path.name for path in copied.iterdir()), ["kept", "new"]
+        )
+        self.assertEqual((copied / "kept/SKILL.md").read_text(), "v2\n")
+
+    def test_sync_keeps_agents_skills_link_and_skills_missing_from_repo(self):
+        self.env["STOW_FOLDERS"] = "agents"
+        self.write(self.source / "agents/.agents/skills/demo/SKILL.md", "repo\n")
+        self.sync()
+        skills = self.home / ".agents/skills"
+        self.write(skills / "new/SKILL.md", "new\n")
+        for _ in range(2):
+            self.sync()
+            self.assertEqual(os.readlink(skills), "../.dotfiles/agents/.agents/skills")
+            self.assertEqual((skills / "new/SKILL.md").read_text(), "new\n")
+
+    def test_agents_skills_with_unmanaged_files_is_not_replaced(self):
+        self.env["STOW_FOLDERS"] = "agents"
+        self.write(self.source / "agents/.agents/skills/demo/SKILL.md", "repo\n")
+        self.write(self.home / ".agents/skills/demo/SKILL.md", "local\n")
+        with self.assertRaises(subprocess.CalledProcessError):
+            self.sync()
+        self.assertFalse((self.home / ".agents/skills").is_symlink())
+        self.assertEqual(
+            (self.home / ".agents/skills/demo/SKILL.md").read_text(), "local\n"
+        )
+
     def test_migration_preserves_auth_sessions_caches_and_other_apps(self):
         self.legacy_install()
         self.assertTrue((self.home / ".pi").is_symlink())

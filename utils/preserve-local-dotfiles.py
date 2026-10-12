@@ -6,6 +6,10 @@ import shutil
 from pathlib import Path
 
 
+# Linked as whole directories by dotfiles/install; rsync protects their contents.
+DIRECTORY_LINKS = {Path(".agents/skills")}
+
+
 def exists(path):
     return os.path.lexists(path)
 
@@ -32,8 +36,8 @@ def find_local_state(source, staged, target, local_paths):
     return result
 
 
-def find_folded_state(source, staged, target, local_paths):
-    if not is_directory(staged):
+def find_folded_state(source, staged, target, local_paths, home):
+    if not is_directory(staged) or target.relative_to(home) in DIRECTORY_LINKS:
         return []
     if target.is_symlink():
         if target.resolve() == staged.resolve():
@@ -45,7 +49,7 @@ def find_folded_state(source, staged, target, local_paths):
     for child in sorted(staged.iterdir()):
         result.extend(
             find_folded_state(
-                source / child.name, child, target / child.name, local_paths
+                source / child.name, child, target / child.name, local_paths, home
             )
         )
     return result
@@ -113,6 +117,7 @@ def preserve(source, dotfiles, home, dry_run=False):
                     child,
                     home / child.name,
                     local_paths,
+                    home,
                 )
             )
 
