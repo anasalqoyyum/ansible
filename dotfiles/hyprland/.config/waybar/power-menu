@@ -7,7 +7,8 @@ choice=$(printf 'Lock\nDisplay off\nLog out\nRestart\nShut down\n' | fuzzel --dm
 
 case $choice in
   Lock) loginctl lock-session ;;
-  "Display off") hyprctl dispatch dpms off ;;
+  # Wait for the Enter key release, which key_press_enables_dpms treats as wake input.
+  "Display off") sleep 1 && hyprctl dispatch dpms off ;;
   "Log out") hyprctl dispatch exit ;;
   Restart) systemctl reboot ;;
   "Shut down") systemctl poweroff ;;
