@@ -107,14 +107,74 @@ fi
 echo "📂 Folders: ${folders[*]}"
 echo ""
 
+# Linked whole so tools that replace files inside them write into the dotfiles.
+typeset -a directory_links=(agents/.agents/skills)
+
 typeset -a stow_cmd
 stow_cmd=(stow -R --no-folding --ignore='(^|/)node_modules$')
+for entry in "${directory_links[@]}"; do
+  stow_cmd+=("--ignore=^${${entry#*/}//./\\.}")
+done
 if [[ "$DRY_RUN" == true ]]; then
   stow_cmd+=(-n)
 fi
 if [[ "$VERBOSE" == true ]]; then
   stow_cmd+=(-v)
 fi
+
+link_directory() {
+  local package=$1 relative=$2
+  local staged="$PWD/$package/$relative"
+  local target="${PWD:h}/$relative"
+  local up="" part
+  for part in ${(s:/:)relative:h}; do
+    up+="../"
+  done
+  local link="$up${PWD:t}/$package/$relative"
+
+  if [[ -L "$target" ]]; then
+    [[ "$(readlink "$target")" == "$link" ]] && return 0
+    echo "❌ $target links to $(readlink "$target"), expected $link" >&2
+    return 1
+  fi
+
+  if [[ -e "$target" ]]; then
+    local -a unmanaged
+    local entry counterpart
+    for entry in "$target"/**/*(DN^/); do
+      counterpart="$staged/${entry#$target/}"
+      if [[ -L "$entry" ]]; then
+        [[ "${entry:A}" == "${counterpart:A}" ]] || unmanaged+=("$entry")
+      elif ! cmp -s "$entry" "$counterpart"; then
+        unmanaged+=("$entry")
+      fi
+    done
+    if [[ ${#unmanaged[@]} -gt 0 ]]; then
+      echo "❌ $target has ${#unmanaged[@]} file(s) missing from or different in $staged:" >&2
+      printf "   • %s\n" "${unmanaged[@]:0:10}" >&2
+      echo "   Merge them into $staged, then remove $target and rerun." >&2
+      return 1
+    fi
+  fi
+
+  if [[ "$DRY_RUN" == true ]]; then
+    echo "Would link $target -> $link"
+    return 0
+  fi
+  rm -rf "$target"
+  mkdir -p "${target:h}"
+  ln -s "$link" "$target"
+  echo "Linked $target -> $link"
+}
+
+link_directories() {
+  local folder=$1 entry
+  for entry in "${directory_links[@]}"; do
+    if [[ "${entry%%/*}" == "$folder" ]]; then
+      link_directory "$folder" "${entry#*/}" || return 1
+    fi
+  done
+}
 
 # Track outcomes.
 typeset -a failed_folders skipped_folders
@@ -134,7 +194,8 @@ for folder in "${folders[@]}"; do
   echo -n "🔗 Stowing $folder... "
 
   tmp_log=$(mktemp)
-  if "${stow_cmd[@]}" "$folder" >"$tmp_log" 2>&1; then
+  if "${stow_cmd[@]}" "$folder" >"$tmp_log" 2>&1 \
+      && link_directories "$folder" >>"$tmp_log"; then
     cat "$tmp_log" >> "$LOG_FILE"
     rm -f "$tmp_log"
     echo "✓"
