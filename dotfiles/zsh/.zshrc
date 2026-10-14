@@ -221,6 +221,16 @@ function cserve() {
   fi
   OPENCODE_SERVER_PASSWORD="$pass" opencode serve --hostname 0.0.0.0 --port 4096 
 }
+function lg() {
+  export LAZYGIT_NEW_DIR_FILE=~/.lazygit/newdir
+
+  lazygit "$@"
+
+  if [ -f "$LAZYGIT_NEW_DIR_FILE" ]; then
+    cd "$(cat "$LAZYGIT_NEW_DIR_FILE")"
+    rm -f "$LAZYGIT_NEW_DIR_FILE" > /dev/null
+  fi
+}
 
 # Keybinds
 # Useful keybinds set by other plugins
@@ -317,7 +327,6 @@ export PATH
 # Aliases
 alias vs="code ."
 alias vc="cursor ."
-alias lg="lazygit"
 alias lz="lazydocker"
 alias exp="explorer.exe ."
 alias nv="nvim"
