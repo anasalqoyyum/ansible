@@ -3,6 +3,7 @@ import hashlib
 import json
 import os
 import pwd
+import shutil
 import subprocess
 import tempfile
 import threading
@@ -34,7 +35,7 @@ class DevboxTest(unittest.TestCase):
     def tasks(self, filename):
         return yaml.safe_load((REPO / "tasks" / filename).read_text())
 
-    def play(self, tasks, variables=None, check=False, tags=None):
+    def play(self, tasks, variables=None, check=False, tags=None, handlers=None):
         playbook = self.root / "test.yml"
         playbook.write_text(
             yaml.safe_dump(
@@ -49,6 +50,7 @@ class DevboxTest(unittest.TestCase):
                             **(variables or {}),
                         },
                         "tasks": tasks,
+                        "handlers": handlers or [],
                     }
                 ],
                 sort_keys=False,
@@ -119,6 +121,86 @@ class DevboxTest(unittest.TestCase):
         self.assert_no_changes(self.play(tasks))
         self.assertFalse(key_file.exists())
         self.assertEqual(config_file.read_text(), customized)
+
+    def test_cliproxyapi_rerun_recovers_a_missed_restart(self):
+        binary = self.home / ".local/share/cliproxyapi/cli-proxy-api"
+        binary.parent.mkdir(parents=True)
+        shutil.copyfile("/bin/sh", binary)
+        binary.chmod(0o755)
+        processes = []
+
+        def start():
+            process = subprocess.Popen(
+                [str(binary), "-c", "read -r line"], stdin=subprocess.PIPE
+            )
+            processes.append(process)
+            return process
+
+        def stop():
+            for process in processes:
+                if process.poll() is None:
+                    process.terminate()
+                process.wait()
+                process.stdin.close()
+
+        self.addCleanup(stop)
+        old_process = start()
+        replacement = binary.with_suffix(".new")
+        shutil.copyfile(binary, replacement)
+        replacement.chmod(0o755)
+        replacement.replace(binary)
+        self.assertTrue(os.readlink(f"/proc/{old_process.pid}/exe").endswith(" (deleted)"))
+
+        pid_file = self.root / "pid"
+        pid_file.write_text(str(old_process.pid) + "\n")
+        commands = self.root / "bin"
+        commands.mkdir()
+        systemctl = commands / "systemctl"
+        systemctl.write_text(
+            "#!/bin/sh\nset -eu\n"
+            'test "$*" = "--user show cli-proxy-api.service --property=MainPID --value"\n'
+            f'cat "{pid_file}"\n'
+        )
+        systemctl.chmod(0o755)
+        self.env["PATH"] = f"{commands}:{self.env['PATH']}"
+        tasks = self.tasks("devbox-cliproxyapi.yml")
+        start_index = next(
+            i
+            for i, task in enumerate(tasks)
+            if task["name"] == "Enable and start CLIProxyAPI"
+        )
+        tasks = tasks[start_index + 1 :]
+        restarted = self.root / "restarted"
+        handlers = [
+            {
+                "name": "Restart CLIProxyAPI",
+                "ansible.builtin.copy": {
+                    "dest": str(restarted),
+                    "content": "restart requested\n",
+                    "mode": "0600",
+                },
+            }
+        ]
+        variables = {
+            "ansible_facts": {
+                "user_dir": str(self.home),
+                "user_uid": os.getuid(),
+            },
+        }
+        output = self.play(tasks, variables, handlers=handlers)
+        self.assertIn("RUNNING HANDLER [Restart CLIProxyAPI]", output)
+        self.assertTrue(restarted.exists())
+
+        restarted.unlink()
+        self.assert_no_changes(self.play(tasks, variables, check=True, handlers=handlers))
+        self.assertFalse(restarted.exists())
+
+        old_process.terminate()
+        old_process.wait()
+        pid_file.write_text(str(start().pid) + "\n")
+        self.assert_no_changes(self.play(tasks, variables, handlers=handlers))
+        self.assertFalse(restarted.exists())
+        self.assert_no_changes(self.play(tasks, variables, check=True, handlers=handlers))
 
     def test_public_key_enrollment_preserves_existing_keys(self):
         # Fixture is a valid public key, never a private credential.

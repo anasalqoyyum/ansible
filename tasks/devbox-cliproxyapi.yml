@@ -143,3 +143,26 @@
     XDG_RUNTIME_DIR: "/run/user/{{ ansible_facts['user_uid'] }}"
     DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts['user_uid'] }}/bus"
   when: not ansible_check_mode
+
+- name: Read the running CLIProxyAPI process ID
+  ansible.builtin.command:
+    argv: [systemctl, --user, show, cli-proxy-api.service, --property=MainPID, --value]
+  register: devbox_cliproxyapi_pid
+  changed_when: false
+  environment:
+    XDG_RUNTIME_DIR: "/run/user/{{ ansible_facts['user_uid'] }}"
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts['user_uid'] }}/bus"
+  when: not ansible_check_mode
+
+- name: Check whether CLIProxyAPI is running the installed executable
+  ansible.builtin.command:
+    argv:
+      - test
+      - "{{ ansible_facts['user_dir'] }}/.local/share/cliproxyapi/cli-proxy-api"
+      - -ef
+      - "/proc/{{ devbox_cliproxyapi_pid.stdout }}/exe"
+  register: devbox_cliproxyapi_executable_check
+  changed_when: devbox_cliproxyapi_executable_check.rc == 1
+  failed_when: devbox_cliproxyapi_executable_check.rc not in [0, 1]
+  notify: Restart CLIProxyAPI
+  when: not ansible_check_mode

@@ -156,6 +156,10 @@ Systemd restarts the process if it exits. Install or update only the core with:
 ansible-playbook local-devbox.yml --tags cliproxyapi --ask-become-pass
 ```
 
+Rerunning also restarts the service if its running executable differs from the
+installed binary, recovering a missed restart even when no files change.
+An up-to-date running service is left alone.
+
 The API listens at `http://127.0.0.1:8317/v1`. Its configuration is
 `~/.config/cliproxyapi/config.yaml`, with a generated client key under
 `access.api-keys`. Set `CPA_PROXY_API_KEY` to that key when using the managed
