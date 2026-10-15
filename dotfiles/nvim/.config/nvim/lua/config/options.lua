@@ -30,7 +30,21 @@ vim.opt.background = "dark" -- always prefer dark mode
 -- kinda broke lazy package manager and flash.nvim border (but nice rounded)
 -- vim.o.winborder = "rounded"
 
-if vim.fn.has("wsl") == 1 then
+if vim.env.HERDR_ENV == "1" then
+  local osc52 = require("vim.ui.clipboard.osc52")
+
+  vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+      ["+"] = osc52.copy("+"),
+      ["*"] = osc52.copy("*"),
+    },
+    paste = {
+      ["+"] = osc52.paste("+"),
+      ["*"] = osc52.paste("*"),
+    },
+  }
+elseif vim.fn.has("wsl") == 1 then
   local config_path = vim.fn.stdpath("config")
   local copy_script = config_path .. "/scripts/wsl-copy.sh"
   local paste_script = config_path .. "/scripts/wsl-paste.sh"
