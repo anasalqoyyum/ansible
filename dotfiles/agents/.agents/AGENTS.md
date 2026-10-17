@@ -4,9 +4,23 @@
 
 - These are shared defaults. Follow applicable project instructions and explicit user directions.
 - Review, explanation, and diagnosis requests authorize inspection and relevant checks. Implementation requires a request.
-- Ask when a missing decision changes scope, intended behavior, or authority.
 - Skills guide work within the authorized scope. They do not authorize Git changes, publishing, messages, or changes to external systems.
-- Before destructive actions, verify the exact target, scope, and authorization.
+
+## Two-way doors swing freely
+
+- A **two-way door** is a decision you can undo, such as a local code edit or disposable test data.
+- A **one-way door** is an action with consequences you cannot reliably undo, such as deleting production data, deploying to users, force-pushing a shared branch, deleting someone else's work, or sending a message.
+- A **rubber stamp** is a question whose only sensible answer is yes. It costs a round trip and teaches nothing.
+
+Within the authorized scope, walk through two-way doors and report what you did. Reversibility alone does not grant authorization. Destructive or externally visible actions require authorization even when technically reversible. The Git operations section sets an additional boundary for Git changes.
+
+Before a one-way door or destructive action, verify the exact target, scope, and existing authorization. Stop for authorization only if it is missing. Once granted, authorization stays valid for that specific work, including delegated work. Quote the user's authorization when delegating and keep the same limits. It does not cover unrelated actions.
+
+Skip rubber-stamp questions. If inspection or an authorized check can answer a question, run it. When a check fails, investigate and attempt a fix within scope. Escalate only when the failure changes the decision, requires broader authority, or cannot be resolved safely.
+
+Ask when a missing preference or product decision affects the result, intended behavior is genuinely ambiguous, or authority is missing. Ask one question at a time, give your recommendation, and use the built-in question tool when available and appropriate. Accept "no" and continue any independent work within scope.
+
+Revisit an approved decision only when new information changes its scope, stakes, or safety. Explain what changed before asking again.
 
 ## External comments and messages
 
@@ -16,7 +30,7 @@
 
 - Replace `<model-name>` with the actual model used to write the message. Use session or runtime metadata; never guess. If unavailable, ask before posting.
 - Include the footer in drafts intended for external posting. Keep it out of ordinary chat responses, code comments, and commit messages.
-- Attribution does not grant permission to post. Preserve any user-supplied text verbatim and add the footer separately unless the user explicitly requests different attribution.
+- Preserve any user-supplied text verbatim and add the footer separately unless the user explicitly requests different attribution.
 
 ## Subagent models
 
@@ -46,7 +60,7 @@
 ## Writing
 
 - Read and follow the unslop skill for all your writing, including responses, progress updates, and documentation.
-- Be concise and clear. Include necessary evidence and limitations.
+- Include necessary evidence and limitations.
 - Preserve quoted text, commands, identifiers, and code unless the task requires changing them.
 
 ## Validation and tooling
@@ -76,8 +90,7 @@ Before editing a file changed since you inspected it, re-read it and preserve it
 
 ## Git operations
 
-- Read-only Git inspection is allowed. Change Git state only when explicitly requested, including staging, committing, branch creation or switching, merging, rebasing, resetting, pushing, and creating pull requests. Existing authorization remains valid for the requested workflow.
-- Confirm the exact target before destructive operations such as hard resets or force pushes.
+- Read-only Git inspection is allowed. Change Git state only when explicitly requested, including staging, committing, branch creation or switching, merging, rebasing, resetting, pushing, and creating pull requests.
 - Use concise Conventional Commits with a scope naming the affected area, such as `fix(content): grammar fixes in about page`.
 
 ## WSL paths
