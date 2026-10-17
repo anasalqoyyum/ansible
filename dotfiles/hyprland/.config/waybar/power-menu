@@ -3,10 +3,11 @@
 # stands in for sleep.
 set -eu
 
-choice=$(printf 'Lock\nDisplay off\nLog out\nRestart\nShut down\n' | fuzzel --dmenu --lines 5 --prompt "power > ")
+choice=$(printf 'Lock\nLock & display off\nDisplay off\nLog out\nRestart\nShut down\n' | fuzzel --dmenu --lines 6 --prompt "power > ")
 
 case $choice in
   Lock) loginctl lock-session ;;
+  "Lock & display off") loginctl lock-session && sleep 5 && hyprctl dispatch dpms off ;;
   # Wait for the Enter key release, which key_press_enables_dpms treats as wake input.
   "Display off") sleep 1 && hyprctl dispatch dpms off ;;
   "Log out") hyprctl dispatch exit ;;
