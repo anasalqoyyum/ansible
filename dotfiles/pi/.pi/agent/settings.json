@@ -15,7 +15,9 @@
     "npm:@juicesharp/rpiv-todo",
     "npm:pi-token-speed",
     "git:github.com/anasalqoyyum/pi-durable-subagents",
-    "git:github.com/aliceisjustplaying/pi-you-should-know"
+    "git:github.com/aliceisjustplaying/pi-you-should-know",
+    "npm:pi-advisor-flow",
+    "npm:pi-context-view"
   ],
   "theme": "savy-dark",
   "transport": "websocket",
