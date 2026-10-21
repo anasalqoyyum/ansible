@@ -864,6 +864,41 @@ esac
         self.assertNotIn("--no-sandbox", chrome)
         self.assertIn("--user-data-dir=%h/.local/share/devbox/chrome", chrome)
 
+    def test_pi_osc52_gate_exports_only_inside_herdr(self):
+        tasks = self.tasks("devbox-pi-clipboard.yml")
+        zshenv = self.home / ".zshenv"
+        existing = "# existing content\n"
+        zshenv.write_text(existing)
+
+        self.play(tasks, check=True)
+        self.assertEqual(zshenv.read_text(), existing)
+
+        self.play(tasks)
+        self.assertIn(existing, zshenv.read_text())
+        self.assertIn("PI_CLIPBOARD_OSC52=1", zshenv.read_text())
+        self.assert_no_changes(self.play(tasks))
+
+        def child_env(**env):
+            base = {
+                key: value
+                for key, value in os.environ.items()
+                if key not in {"HERDR_ENV", "PI_CLIPBOARD_OSC52", "ZDOTDIR"}
+            }
+            # Read the value from a child that does not source zsh startup files,
+            # so a plain assignment without `export` fails the test.
+            result = subprocess.run(
+                ["zsh", "-c", 'sh -c \'echo "${PI_CLIPBOARD_OSC52:-unset}"\''],
+                env={**base, "HOME": str(self.home), **env},
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            return result.stdout.strip()
+
+        self.assertEqual(child_env(HERDR_ENV="1"), "1")
+        self.assertEqual(child_env(HERDR_ENV=""), "unset")
+        self.assertEqual(child_env(), "unset")
+
 
 class ScreenshotTest(unittest.TestCase):
     def setUp(self):

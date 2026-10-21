@@ -609,6 +609,21 @@ although Herdr resumes supported agent conversations when its server restarts.
 Worktree files survive; restart development servers after boot. This setup does
 not automatically replay agent tasks.
 
+Herdr forwards OSC 52 clipboard writes from pane processes to the attached
+client, so agent copies can reach the client machine's clipboard. Provisioning
+writes a marked block into `~/.zshenv` that exports `PI_CLIPBOARD_OSC52=1` when
+`HERDR_ENV` is set, which makes Pi emit OSC 52 alongside its local write. This
+covers normal interactive and noninteractive zsh startup inside a Herdr pane,
+including agent processes that never read `.zshrc`. Shells that skip startup
+files (`zsh -f`, a different `ZDOTDIR`) or processes started directly without a
+shell are not covered. The block sets the override inside Herdr; it does not
+unset an inherited value outside Herdr. WSL panes write the Windows clipboard and
+macOS panes write the host clipboard, so the devbox profile is the only place
+that installs the block. Relaunch Pi from a shell that has sourced `~/.zshenv`;
+an already running Pi keeps its original environment. The copy also requires an
+attached client and a client terminal that accepts OSC 52. Reapply with
+`--tags clipboard`.
+
 ## Power recovery
 
 Configure the Geekom A5's BIOS manually while a keyboard and monitor are attached:

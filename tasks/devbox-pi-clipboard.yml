@@ -1,0 +1,18 @@
+- name: Enable Pi OSC 52 clipboard forwarding under Herdr
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts['user_dir'] }}/.zshenv"
+    create: true
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - pi osc52"
+    insertafter: EOF
+    block: |
+      # Herdr forwards OSC 52 from pane processes to the attached client, so
+      # agents in devbox panes can copy into the client clipboard. WSL writes the
+      # Windows clipboard and macOS writes its own, so this stays devbox-only.
+      if [[ -n ${HERDR_ENV:-} ]]; then
+        export PI_CLIPBOARD_OSC52=1
+      fi
+  tags:
+    - install
+    - dotfiles
+    - devbox
+    - clipboard
