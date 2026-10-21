@@ -71,6 +71,6 @@
     }
   },
   "classifier": {
-    "model": "openrouter/~typesafe/jev-latest"
+    "model": "kenari/jev-1-13:free"
   }
 }

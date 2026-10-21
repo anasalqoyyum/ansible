@@ -40,6 +40,7 @@ const MAX_STATE_CHARS = 64_000
 
 /** Tried in order when nothing is configured, so a fresh machine still works. */
 const PREFERRED_MODELS = [
+  'kenari/jev-1-13:free',
   'openrouter/~typesafe/jev-latest',
   'openrouter/typesafe/jev-1.13',
   'typesafe/jev-latest',
@@ -284,7 +285,7 @@ export default function classifierExtension(pi: ExtensionAPI) {
           content: [
             {
               type: 'text' as const,
-              text: 'No classifier model has working credentials. Set an API key for typesafe, openrouter, cloudflare-workers-ai, vercel-ai-gateway, or opencode.'
+              text: 'No classifier model has working credentials. Set an API key for kenari, typesafe, openrouter, cloudflare-workers-ai, vercel-ai-gateway, or opencode.'
             }
           ],
           details: undefined,
@@ -326,7 +327,7 @@ export default function classifierExtension(pi: ExtensionAPI) {
       const available = await ctx.modelRegistry.getAvailableOfType('classifier')
       if (available.length === 0) {
         ctx.ui.notify(
-          'No classifier model has working credentials. Set an API key for typesafe, openrouter, cloudflare-workers-ai, vercel-ai-gateway, or opencode.',
+          'No classifier model has working credentials. Set an API key for kenari, typesafe, openrouter, cloudflare-workers-ai, vercel-ai-gateway, or opencode.',
           'warning'
         )
         return
