@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.2.0",
+  "lastChangelogVersion": "1.3.0",
   "defaultProvider": "openai",
   "defaultModel": "gpt-6.1-sol",
   "defaultThinkingLevel": "high",
@@ -17,7 +17,8 @@
     "git:github.com/anasalqoyyum/pi-durable-subagents",
     "git:github.com/aliceisjustplaying/pi-you-should-know",
     "npm:pi-advisor-flow",
-    "npm:pi-context-view"
+    "npm:pi-context-view",
+    "git:github.com/anasalqoyyum/pi-kenari"
   ],
   "theme": "savy-dark",
   "transport": "websocket",
