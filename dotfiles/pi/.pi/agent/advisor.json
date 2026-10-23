@@ -1,0 +1,5 @@
+{
+  "advisor": "openai/gpt-6-astra",
+  "advisorEffort": "high",
+  "advisorFallbackModel": "kenari/grok-4-7"
+}
