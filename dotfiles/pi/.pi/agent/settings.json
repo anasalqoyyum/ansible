@@ -15,10 +15,10 @@
     "npm:@juicesharp/rpiv-todo",
     "npm:pi-token-speed",
     "git:github.com/anasalqoyyum/pi-durable-subagents",
+    "git:github.com/anasalqoyyum/pi-kenari",
     "git:github.com/aliceisjustplaying/pi-you-should-know",
     "npm:pi-advisor-flow",
-    "npm:pi-context-view",
-    "git:github.com/anasalqoyyum/pi-kenari"
+    "npm:pi-context-view"
   ],
   "theme": "savy-dark",
   "transport": "websocket",
@@ -27,14 +27,19 @@
   "enabledModels": [
     "openai/gpt-6.1-sol",
     "openai/gpt-6-astra",
-    "openai/gpt-6-luna",
+    "kenari/claude-sonnet-5-5",
+    "kenari/glm-5-3-flash",
+    "kenari/deepseek-v4-1-flash",
     "deepseek/deepseek-flash"
   ],
   "modelThinkingLevels": {
     "openai/gpt-6.1-sol": "high",
-    "deepseek/deepseek-flash": "max",
     "openai/gpt-6-luna": "max",
-    "openai/gpt-6-astra": "high"
+    "openai/gpt-6-astra": "high",
+    "deepseek/deepseek-flash": "max",
+    "kenari/glm-5-3-flash": "max",
+    "kenari/claude-sonnet-5-5": "high",
+    "kenari/deepseek-v4-1-flash": "max"
   },
   "collapseChangelog": true,
   "showHardwareCursor": false,
