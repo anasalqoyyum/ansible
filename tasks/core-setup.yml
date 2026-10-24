@@ -10,6 +10,7 @@
       - cmake
       - curl
       - "{{ core_fuse_package | default('fuse') }}"
+      - fastfetch
       - ffmpeg
       - git
       - jq
