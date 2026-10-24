@@ -38,9 +38,9 @@
       - xdg-utils
       - xz-utils
       - zlib1g-dev
-    state: present
+    state: latest
     update_cache: true
-    cache_valid_time: 3600
+    cache_valid_time: 0
   tags:
     - install
     - core

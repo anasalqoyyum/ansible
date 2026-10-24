@@ -2,7 +2,8 @@
   become: true
   ansible.builtin.apt:
     name: openssh-server
-    state: present
+    state: latest
+    update_cache: true
 
 - name: Ensure SSH directory exists
   ansible.builtin.file:

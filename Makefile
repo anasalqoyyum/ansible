@@ -8,7 +8,7 @@ WINDOWS_HOME := /mnt/c/Users/$(WINDOWS_USER)
 ZED_WINDOWS_DIR ?= $(WINDOWS_HOME)/AppData/Roaming/Zed
 ZED_DOTFILES_DIR := ./dotfiles/zed/.config/zed
 
-.PHONY: setup-devbox test-devbox check-devbox validate-devbox ssh-devbox-vault test-dotfiles copy-local sync-dotfiles-linux sync-dotfiles-macos sync-dotfiles-windows sync-zed-windows clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
+.PHONY: setup-devbox test-devbox test-tool-upgrades check-devbox validate-devbox ssh-devbox-vault test-dotfiles copy-local sync-dotfiles-linux sync-dotfiles-macos sync-dotfiles-windows sync-zed-windows clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
 
 VAULT_PASSWORD_FILE ?= .vault_pass
 
@@ -28,6 +28,9 @@ setup-devbox:
 
 test-devbox:
 	uv run --no-project --with pyyaml --with ansible-core python -B -m unittest discover -s tests -p 'test_devbox.py' -v
+
+test-tool-upgrades:
+	uv run --no-project --with pyyaml --with ansible-core python -B -m unittest discover -s tests -p 'test_tool_upgrades.py' -v
 
 test-dotfiles:
 	uv run --no-project --with pyyaml python -B -m unittest discover -s tests -p 'test_dotfiles.py' -v
@@ -53,7 +56,7 @@ check-devbox:
 	. ./utils/use-classic-sudo.sh; \
 	ansible-playbook local-devbox.yml --check --diff --skip-tags "ssh" --ask-become-pass
 
-validate-devbox: validate test-dotfiles test-devbox check-devbox
+validate-devbox: validate test-dotfiles test-devbox test-tool-upgrades check-devbox
 
 ssh-devbox-vault:
 	ansible-playbook local-devbox.yml --tags "ssh" --ask-vault-pass

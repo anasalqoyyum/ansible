@@ -2,7 +2,8 @@
   become: true
   ansible.builtin.apt:
     name: ufw
-    state: present
+    state: latest
+    update_cache: true
 
 - name: Allow SSH on all interfaces
   become: true

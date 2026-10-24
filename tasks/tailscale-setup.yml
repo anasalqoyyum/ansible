@@ -18,9 +18,9 @@
   become: true
   ansible.builtin.apt:
     name: tailscale
-    state: present
+    state: latest
     update_cache: true
-    cache_valid_time: "{{ 0 if tailscale_apt_source.changed or tailscale_keyring.changed else 3600 }}"
+    cache_valid_time: 0
 
 - name: Enable and start Tailscale
   become: true

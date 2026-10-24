@@ -15,3 +15,9 @@
   tags:
     - install
     - rust
+
+- name: Update Rust toolchains and rustup
+  ansible.builtin.command: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/rustup update"
+  tags:
+    - install
+    - rust

@@ -37,7 +37,7 @@
       - mole
       - asmvik/formulae/yabai
       - asmvik/formulae/skhd
-    state: present
+    state: latest
     update_homebrew: true
   tags:
     - install
@@ -54,7 +54,7 @@
       - resvg
       - imagemagick
       - font-symbols-only-nerd-font
-    state: present
+    state: latest
     update_homebrew: false
   tags:
     - install
@@ -62,7 +62,7 @@
 
 - name: Install Core Apps With Brew Cask
   community.general.homebrew_cask:
-    name:
+    name: &core_brew_casks
       - spotify
       - visual-studio-code
       - google-chrome
@@ -87,20 +87,41 @@
       - steipete/tap/codexbar
       - zed
     state: present
+    update_homebrew: true
     install_options:
       - adopt
   tags:
     - install
     - core-brew
 
+- name: Upgrade Core Apps With Brew Cask
+  community.general.homebrew_cask:
+    name: *core_brew_casks
+    state: latest
+    greedy: true
+  tags:
+    - install
+    - core-brew
+
 - name: Install nerd fonts
   community.general.homebrew_cask:
-    name:
+    name: &core_brew_font_casks
       - font-jetbrains-mono-nerd-font
       - font-geist-mono-nerd-font
     state: present
+    update_homebrew: true
     install_options:
       - adopt
+  tags:
+    - install
+    - core-brew
+    - font
+
+- name: Upgrade nerd fonts
+  community.general.homebrew_cask:
+    name: *core_brew_font_casks
+    state: latest
+    greedy: true
   tags:
     - install
     - core-brew

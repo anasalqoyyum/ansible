@@ -3,7 +3,7 @@
     url: https://get.docker.com
     dest: /tmp/get-docker.sh
     mode: "0755"
-    force: false
+    force: true
   when: "'microsoft' in (ansible_facts['kernel'] | lower)"
   tags:
     - install
@@ -29,7 +29,8 @@
     - name: Install the Debian repository management library for Docker
       ansible.builtin.apt:
         name: python3-debian
-        state: present
+        state: latest
+        update_cache: true
 
     - name: Create apt keyring directory
       ansible.builtin.file:
@@ -67,8 +68,24 @@
           - containerd.io
           - docker-buildx-plugin
           - docker-compose-plugin
-        state: present
+        state: latest
         update_cache: true
+
+- name: Update Docker Engine on WSL
+  become: true
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+    state: latest
+    update_cache: true
+  when: "'microsoft' in (ansible_facts['kernel'] | lower)"
+  tags:
+    - install
+    - docker
 
 - name: Set user to Docker Group
   user:
@@ -83,7 +100,8 @@
 - name: Install docker-compose
   apt:
     name: docker-compose-plugin
-    state: present
+    state: latest
+    update_cache: true
   become: true
   tags:
     - install
@@ -91,10 +109,10 @@
 
 - name: Install standalone Docker Compose
   get_url:
-    url: https://github.com/docker/compose/releases/download/v2.39.2/docker-compose-linux-x86_64
+    url: https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64
     dest: /usr/local/bin/docker-compose
     mode: "0755"
-    force: false
+    force: true
   become: true
   tags:
     - install

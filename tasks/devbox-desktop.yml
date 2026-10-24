@@ -8,8 +8,9 @@
       - xauth
       - x11-utils
       - fonts-liberation
-    state: present
+    state: latest
     install_recommends: false
+    update_cache: true
 
 - name: Create private agent browser and service directories
   ansible.builtin.file:

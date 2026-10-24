@@ -15,6 +15,7 @@
     executable: /bin/bash
   register: mise_executable
   changed_when: false
+  check_mode: false
   tags:
     - install
     - mise
@@ -27,6 +28,7 @@
       - --dry-run-code
   register: mise_install_check
   changed_when: false
+  check_mode: false
   failed_when: mise_install_check.rc not in [0, 1]
   tags:
     - install
@@ -39,6 +41,32 @@
       - install
       - --yes
   when: mise_install_check.rc == 1
+  tags:
+    - install
+    - mise
+
+- name: Check for outdated mise tools
+  ansible.builtin.command:
+    argv:
+      - "{{ mise_executable.stdout }}"
+      - upgrade
+      - --dry-run-code
+  register: mise_upgrade_check
+  changed_when: false
+  check_mode: false
+  failed_when: mise_upgrade_check.rc not in [0, 1]
+  tags:
+    - install
+    - mise
+
+- name: Upgrade configured mise tools within their version ranges
+  ansible.builtin.command:
+    argv:
+      - "{{ mise_executable.stdout }}"
+      - upgrade
+      - --yes
+      - --no-prune
+  when: mise_upgrade_check.rc == 1
   tags:
     - install
     - mise

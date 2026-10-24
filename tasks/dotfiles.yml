@@ -1,7 +1,8 @@
 - name: Install stow on Linux
   apt:
     name: stow
-    state: present
+    state: latest
+    update_cache: true
   become: true
   when: ansible_facts['system'] == "Linux"
   tags:
@@ -13,7 +14,8 @@
 - name: Install stow on macOS
   community.general.homebrew:
     name: stow
-    state: present
+    state: latest
+    update_homebrew: true
   when: ansible_facts['system'] == "Darwin"
   tags:
     - install

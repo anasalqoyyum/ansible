@@ -7,7 +7,6 @@ git:
     pager: diff-so-fancy
   diffRenderers:
     - command: diff-so-fancy
-    - command: delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
 gui:
   nerdFontsVersion: "3"
   # tokyo night theme

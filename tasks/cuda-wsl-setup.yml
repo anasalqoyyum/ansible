@@ -31,7 +31,7 @@
   become: true
   ansible.builtin.apt:
     name: "cuda-toolkit-{{ cuda_toolkit_version }}"
-    state: present
+    state: latest
     update_cache: true
   tags:
     - cuda-wsl

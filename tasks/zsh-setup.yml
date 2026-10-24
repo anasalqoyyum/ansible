@@ -1,7 +1,8 @@
 - name: Install ZSH
   apt:
     name: zsh
-    state: present
+    state: latest
+    update_cache: true
   become: true
   when: ansible_facts['system'] == "Linux"
   tags: &tags_for_zsh_tasks ['install', 'dotfiles', 'zsh']

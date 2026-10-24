@@ -1,37 +1,28 @@
-- name: Check whether cargo-binstall is installed
-  ansible.builtin.stat:
-    path: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/cargo-binstall"
-  register: cargo_binstall_binary
-  tags:
-    - install
-    - rust
-
 - name: Download cargo-binstall installer
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh
     dest: /tmp/install-cargo-binstall.sh
     mode: "0755"
-  when: not cargo_binstall_binary.stat.exists
+    force: true
   tags:
     - install
     - rust
+    - rust-tools
 
 - name: Install cargo-binstall
   ansible.builtin.command: /bin/bash /tmp/install-cargo-binstall.sh
   args:
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/cargo-binstall"
-  when: not cargo_binstall_binary.stat.exists
   tags:
     - install
     - rust
+    - rust-tools
 
 - name: Install eza
   shell: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/cargo-binstall --no-confirm eza || {{ ansible_facts['env']['HOME'] }}/.cargo/bin/cargo install eza"
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/eza"
   tags:
     - install
     - rust
@@ -42,7 +33,6 @@
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/typst"
   tags:
     - install
     - rust
@@ -53,7 +43,6 @@
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/just"
   tags:
     - install
     - rust
@@ -64,7 +53,6 @@
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/usage"
   tags:
     - install
     - rust
@@ -75,7 +63,6 @@
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/zoxide"
   tags:
     - install
     - rust
@@ -87,7 +74,6 @@
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/rg"
   environment:
     CARGO_TARGET_DIR: "{{ ansible_facts['env']['HOME'] }}/.cargo/target-install"
   tags:
@@ -101,7 +87,6 @@
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/fd"
   tags:
     - install
     - rust
@@ -113,7 +98,6 @@
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/bat"
   tags:
     - install
     - rust
@@ -125,7 +109,6 @@
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/yazi"
   environment:
     CARGO_TARGET_DIR: "{{ ansible_facts['env']['HOME'] }}/.cargo/target-install"
   tags:
@@ -139,7 +122,6 @@
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/xh"
   tags:
     - install
     - rust
@@ -151,14 +133,13 @@
   args:
     executable: /bin/bash
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/tree-sitter"
   tags:
     - install
     - rust
     - rust-tools
 
 - name: Install nightly
-  shell: "{{ rustup }} toolchain list | grep -q '^nightly' || {{ rustup }} toolchain install nightly"
+  shell: "{{ rustup }} toolchain install nightly"
   vars:
     rustup: "{{ ansible_facts['env']['HOME'] }}/.cargo/bin/rustup"
   args:

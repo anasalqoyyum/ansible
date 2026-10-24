@@ -69,7 +69,7 @@ Optional dry-run checks:
 - Linux/WSL: `make check-linux`
 - macOS: `make check-macos`
 - Provisioned devbox: `make check-devbox`
-- Regression tests: `make test-dotfiles test-devbox`
+- Regression tests: `make test-dotfiles test-devbox test-tool-upgrades`
 
 Convenience targets:
 
@@ -89,6 +89,26 @@ This installs `openssh-server`, enables `ssh.socket`, and verifies that port 22 
 - Linux dotfiles only: `ansible-playbook -i localhost, local-linux.yml --tags "dotfiles" --ask-become-pass`
 - macOS dotfiles only: `ansible-playbook -i localhost, local-macos.yml --tags "dotfiles" --ask-become-pass`
 - Skip SSH copy tasks: add `--skip-tags "ssh"`
+
+### Updating installed tools
+
+Rerunning a tool's install tag checks for updates instead of stopping when its
+binary already exists. For example:
+
+```bash
+ansible-playbook local-linux.yml --tags "lazygit,fzf,diff-so-fancy" --ask-become-pass
+ansible-playbook local-macos.yml --tags "core-brew" --ask-become-pass
+```
+
+Tags stay independent. `--tags lazygit` does not install or update fzf or
+diff-so-fancy. Homebrew upgrades the listed formulae and casks, including
+auto-updating casks. APT upgrades listed packages to the newest version in their
+configured repositories, not necessarily the newest upstream release.
+
+mise upgrades within configured version ranges without bumping them or pruning
+older installations. CUDA stays on its selected release line, and the patched
+hyprpolkitagent/toolkit, archived wslu package, and bundled signed iss-cli retain
+their explicit versions.
 
 ## Security Notes
 

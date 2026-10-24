@@ -91,9 +91,9 @@
       become: true
       ansible.builtin.apt:
         name: libfuse2t64
-        state: present
+        state: latest
         update_cache: true
-        cache_valid_time: 3600
+        cache_valid_time: 0
 
     - name: Create Helium installation and launcher directories
       tags: [keyring]
@@ -181,9 +181,9 @@
       become: true
       ansible.builtin.apt:
         name: wl-clipboard
-        state: present
+        state: latest
         update_cache: true
-        cache_valid_time: 3600
+        cache_valid_time: 0
 
     - name: Query latest Ghostty Ubuntu release
       ansible.builtin.uri:
@@ -241,10 +241,10 @@
           - sway-notification-center
           - xdg-user-dirs
           - xdg-utils
-        state: present
+        state: latest
         install_recommends: false
         update_cache: true
-        cache_valid_time: 3600
+        cache_valid_time: 0
       register: devbox_hyprland_packages
 
     # These packages enable their units for graphical-session.target, which the
@@ -275,13 +275,11 @@
         dest: "{{ ansible_facts['user_dir'] }}/.local/share/backgrounds/underwater.png"
         mode: "0644"
 
-# Zed updates itself afterwards, so the installer only runs once.
 - name: Install Zed
   tags: [zed]
   ansible.builtin.shell:
     cmd: set -o pipefail && curl -fsSL https://zed.dev/install.sh | sh
     executable: /bin/bash
-    creates: "{{ ansible_facts['user_dir'] }}/.local/bin/zed"
 
 - name: Install latest Obsidian stable
   tags: [obsidian]
@@ -343,7 +341,8 @@
     - name: Install the Debian repository management library
       ansible.builtin.apt:
         name: python3-debian
-        state: present
+        state: latest
+        update_cache: true
 
     - name: Configure the OBS Studio Ubuntu PPA
       ansible.builtin.deb822_repository:
@@ -361,7 +360,7 @@
         state: latest
         install_recommends: false
         update_cache: true
-        cache_valid_time: 3600
+        cache_valid_time: 0
 
 - name: Install Spotify from its official Debian repository
   tags: [spotify]
@@ -370,9 +369,9 @@
     - name: Install the Debian repository management library for Spotify
       ansible.builtin.apt:
         name: python3-debian
-        state: present
+        state: latest
         update_cache: true
-        cache_valid_time: 3600
+        cache_valid_time: 0
 
     - name: Configure the Spotify Debian repository
       ansible.builtin.deb822_repository:

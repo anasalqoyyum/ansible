@@ -2,7 +2,7 @@
   become: true
   ansible.builtin.apt:
     name: openssh-server
-    state: present
+    state: latest
     update_cache: true
 
 - name: Enable and start OpenSSH socket

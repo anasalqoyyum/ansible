@@ -1,35 +1,17 @@
-- name: Check whether Claude Code is installed
-  ansible.builtin.stat:
-    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/claude"
-  register: claude_code_binary
-  tags:
-    - install
-    - ai-tools
-
 - name: Download Claude Code installer
   ansible.builtin.get_url:
     url: https://claude.ai/install.sh
     dest: /tmp/install-claude-code.sh
     mode: "0755"
-  when: not claude_code_binary.stat.exists
+    force: true
   tags:
     - install
     - ai-tools
 
 - name: Install Claude Code natively
-  ansible.builtin.command: /bin/bash /tmp/install-claude-code.sh
+  ansible.builtin.command: /bin/bash /tmp/install-claude-code.sh latest
   args:
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/claude"
-  when: not claude_code_binary.stat.exists
-  tags:
-    - install
-    - ai-tools
-
-- name: Check whether Codex CLI is installed
-  ansible.builtin.stat:
-    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/codex"
-  register: codex_cli_binary
   tags:
     - install
     - ai-tools
@@ -39,7 +21,7 @@
     url: https://chatgpt.com/codex/install.sh
     dest: /tmp/install-codex-cli.sh
     mode: "0755"
-  when: not codex_cli_binary.stat.exists
+    force: true
   tags:
     - install
     - ai-tools
@@ -48,8 +30,8 @@
   ansible.builtin.command: /bin/sh /tmp/install-codex-cli.sh
   args:
     chdir: "{{ ansible_facts['env']['HOME'] }}"
-    creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/codex"
-  when: not codex_cli_binary.stat.exists
+  environment:
+    CODEX_NON_INTERACTIVE: "1"
   tags:
     - install
     - ai-tools
@@ -128,6 +110,17 @@
     - install
     - ai-tools
 
+- name: Update Pi
+  ansible.builtin.command: pi update
+  environment:
+    PATH: "{{ ai_tools_path }}"
+  when:
+    - not ansible_check_mode
+    - pi_binary.rc == 0
+  tags:
+    - install
+    - ai-tools
+
 - name: Verify that Pi is installed
   ansible.builtin.command: pi --version
   environment:
@@ -140,22 +133,9 @@
     - install
     - ai-tools
 
-- name: Check whether OpenCode is installed
-  ansible.builtin.command: opencode --version
-  environment:
-    PATH: "{{ ai_tools_path }}"
-  register: opencode_binary
-  changed_when: false
-  check_mode: false
-  failed_when: false
-  tags:
-    - install
-    - ai-tools
-
 - name: Install OpenCode
   when:
     - not ansible_check_mode
-    - opencode_binary.rc != 0
   tags:
     - install
     - ai-tools

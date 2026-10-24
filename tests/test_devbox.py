@@ -410,7 +410,7 @@ class DevboxTest(unittest.TestCase):
         self.assertEqual((standalone / "SKILL.md").read_text(), "repository skill\n")
         self.assert_no_changes(self.play(tasks))
 
-    def test_github_extensions_wait_for_authentication_and_install_once(self):
+    def test_github_extensions_wait_for_authentication_and_upgrade_on_rerun(self):
         bin_dir = self.root / "bin"
         bin_dir.mkdir()
         gh = bin_dir / "gh"
@@ -425,7 +425,11 @@ case "$1 $2" in
     test -f "$HOME/authenticated"
     ;;
   "extension list") cat "$HOME/installed-extensions" 2>/dev/null || true ;;
-  "extension install") printf '%s\\n' "$3" >> "$HOME/installed-extensions" ;;
+  "extension install")
+    printf '%s\\n' "$3" >> "$HOME/installed-extensions"
+    cp "$HOME/available-extension-version" "$HOME/${3##*/}.version"
+    ;;
+  "extension upgrade") cp "$HOME/available-extension-version" "$HOME/$3.version" ;;
   *) exit 2 ;;
 esac
 """)
@@ -438,11 +442,24 @@ esac
         self.assertFalse(installed.exists())
         (self.home / "authenticated").touch()
         (self.home / "stale-account").touch()
+        available = self.home / "available-extension-version"
+        available.write_text("1.0.0")
         self.play(tasks)
         self.assertEqual(
             installed.read_text().splitlines(), ["dlvhdr/gh-dash", "github/gh-stack"]
         )
-        self.assert_no_changes(self.play(tasks))
+        for name in ["gh-dash", "gh-stack"]:
+            self.assertEqual((self.home / f"{name}.version").read_text(), "1.0.0")
+        available.write_text("2.0.0")
+        self.play(tasks, check=True)
+        for name in ["gh-dash", "gh-stack"]:
+            self.assertEqual((self.home / f"{name}.version").read_text(), "1.0.0")
+        self.play(tasks)
+        for name in ["gh-dash", "gh-stack"]:
+            self.assertEqual((self.home / f"{name}.version").read_text(), "2.0.0")
+        self.assertEqual(
+            installed.read_text().splitlines(), ["dlvhdr/gh-dash", "github/gh-stack"]
+        )
 
     def application_tasks(self, releases):
         class Handler(BaseHTTPRequestHandler):

@@ -58,12 +58,28 @@
       - extension
       - install
       - "{{ item }}"
-  loop:
+  loop: &managed_gh_extensions
     - dlvhdr/gh-dash
     - github/gh-stack
   when:
     - gh_authentication.rc == 0
     - item not in gh_extensions.stdout
+  tags:
+    - install
+    - dotfiles
+    - gh-extensions
+
+- name: Upgrade installed gh extensions
+  ansible.builtin.command:
+    argv:
+      - "{{ gh_executable.stdout }}"
+      - extension
+      - upgrade
+      - "{{ item | basename }}"
+  loop: *managed_gh_extensions
+  when:
+    - gh_authentication.rc == 0
+    - item in gh_extensions.stdout
   tags:
     - install
     - dotfiles
