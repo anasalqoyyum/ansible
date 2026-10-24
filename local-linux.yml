@@ -3,6 +3,7 @@
   connection: local
   gather_facts: true
   vars:
+    core_fuse_package: libfuse2t64
     source_key: "{{ lookup('env', 'ANSIBLE_SOURCE_SSH_KEY') | default('./.ssh/id_ed25519', true) }}"
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
     install_cuda_wsl: false

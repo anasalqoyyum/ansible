@@ -3,23 +3,30 @@ Installed apps:
 
 Name              Version       Source    Updated             Info
 ----              -------       ------    -------             ----
-7zip              25.01         main      2025-11-23 11:42:37
-btop              1.0.4         main      2025-08-12 11:45:05
-fd                10.3.0        main      2025-11-23 11:42:32
-fzf               0.67.0        main      2025-11-23 11:42:33
-gh                2.69.0        main      2025-03-29 06:36:31
+7zip              26.02         main      2026-08-03 10:55:10
+btop              1.0.5         main      2026-06-03 23:03:22
+fd                10.4.2        main      2026-06-03 23:03:24
+ffmpeg            9.0.1         main      2026-09-05 14:52:33
+fzf               0.74.2        main      2026-08-03 10:55:13
+gh                2.97.0        main      2026-08-03 10:55:15
+imagemagick       7.1.2-31      main      2026-09-05 14:52:48
+innounp           2.71.1        main      2026-09-05 14:52:42
+jq                1.8.2         main      2026-09-05 14:52:34
 komorebi          0.1.41        extras    2026-05-10 00:04:57
 komorebi-switcher 0.10.1        amrbashir 2026-05-10 09:57:01
-lazygit           0.57.0        extras    2026-01-01 13:22:48
-mise              2026.3.18     main      2026-04-01 17:24:12
+lazygit           0.63.1        extras    2026-08-03 10:55:18
+mise              2026.5.18     main      2026-06-03 23:02:44
 neofetch          7.1.0         main      2023-02-08 23:29:16
-neovim            0.12.2        main      2026-05-01 10:51:52
-ripgrep           15.1.0        main      2025-11-23 11:42:31
-starship          1.22.1        main      2025-03-29 06:41:46
-vcredist2022      14.44.35211.0 extras    2025-11-23 11:43:43
+neovim            0.12.4        main      2026-08-03 10:55:28
+poppler           26.07.0-0     main      2026-09-05 14:52:40
+resvg             0.47.0        main      2026-09-05 14:52:41
+ripgrep           15.2.0        main      2026-08-03 10:55:31
+starship          1.26.0        main      2026-08-03 10:55:33
+vcredist2022      14.51.36247.0 extras    2026-08-03 10:55:37
 whkd              0.2.10        extras    2026-05-10 00:04:58
 wslcompact        8.7           .oki      2025-08-01 16:40:22
-zoxide            0.9.9         main      2026-05-10 17:27:29
+yazi              26.9.1        main      2026-09-05 14:52:12
+zoxide            0.10.0        main      2026-08-03 10:55:39
 
 scoop install yazi
 scoop install ffmpeg 7zip jq poppler fd ripgrep fzf zoxide resvg imagemagick

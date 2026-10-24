@@ -103,12 +103,18 @@ ansible-playbook local-macos.yml --tags "core-brew" --ask-become-pass
 Tags stay independent. `--tags lazygit` does not install or update fzf or
 diff-so-fancy. Homebrew upgrades the listed formulae and casks, including
 auto-updating casks. APT upgrades listed packages to the newest version in their
-configured repositories, not necessarily the newest upstream release.
+configured repositories, not necessarily the newest upstream release. On Linux,
+`run-linux.sh` also refreshes Ansible through APT on every run. Docker's repository
+is configured for the current Ubuntu release on both WSL and native Linux.
 
 mise upgrades within configured version ranges without bumping them or pruning
 older installations. CUDA stays on its selected release line, and the patched
 hyprpolkitagent/toolkit, archived wslu package, and bundled signed iss-cli retain
-their explicit versions.
+their explicit versions. The WSL CUDA Toolkit remains opt-in. Use
+`INSTALL_CUDA_WSL=true bash run-linux.sh` to install or update its default 13.3
+release line without installing a Linux NVIDIA driver. See
+[the WSL prerequisites](PREREQUISITES.md#wsl-notes) for the Windows driver and
+archived `wslu` dependency.
 
 ## Security Notes
 

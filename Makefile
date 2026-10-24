@@ -8,7 +8,7 @@ WINDOWS_HOME := /mnt/c/Users/$(WINDOWS_USER)
 ZED_WINDOWS_DIR ?= $(WINDOWS_HOME)/AppData/Roaming/Zed
 ZED_DOTFILES_DIR := ./dotfiles/zed/.config/zed
 
-.PHONY: setup-devbox test-devbox test-tool-upgrades check-devbox validate-devbox ssh-devbox-vault test-dotfiles copy-local sync-dotfiles-linux sync-dotfiles-macos sync-dotfiles-windows sync-zed-windows clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
+.PHONY: setup-devbox test-linux-setup test-devbox test-tool-upgrades check-devbox validate-devbox ssh-devbox-vault test-dotfiles copy-local sync-dotfiles-linux sync-dotfiles-macos sync-dotfiles-windows sync-zed-windows clean-dsstore bootstrap-collections syntax-check lint check-linux check-macos validate validate-linux validate-macos ssh-linux-vault ssh-macos-vault ssh-linux-vault-file ssh-macos-vault-file
 
 VAULT_PASSWORD_FILE ?= .vault_pass
 
@@ -25,6 +25,9 @@ copy-local:
 
 setup-devbox:
 	bash run-devbox.sh
+
+test-linux-setup:
+	uv run --no-project --with pyyaml --with ansible-core python -B -m unittest discover -s tests -p 'test_linux_setup.py' -v
 
 test-devbox:
 	uv run --no-project --with pyyaml --with ansible-core python -B -m unittest discover -s tests -p 'test_devbox.py' -v
@@ -63,7 +66,7 @@ ssh-devbox-vault:
 
 validate: bootstrap-collections syntax-check lint
 
-validate-linux: validate check-linux
+validate-linux: validate test-linux-setup check-linux
 
 validate-macos: validate check-macos
 

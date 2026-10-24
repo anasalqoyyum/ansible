@@ -27,6 +27,17 @@
   tags:
     - cuda-wsl
 
+- name: Configure CUDA WSL repository
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/cuda-wsl-ubuntu-x86_64.list
+    content: >
+      deb [arch=amd64 signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg]
+      https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/ /
+    mode: "0644"
+  tags:
+    - cuda-wsl
+
 - name: Install CUDA toolkit
   become: true
   ansible.builtin.apt:

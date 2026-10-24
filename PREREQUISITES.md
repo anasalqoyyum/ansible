@@ -2,7 +2,7 @@
 
 This repository supports three environments:
 
-- Windows through WSL 2 and Ubuntu (`local-linux.yml`)
+- Windows through WSL 2 and Ubuntu 24.04 or 26.04 LTS (`local-linux.yml`)
 - macOS natively (`local-macos.yml`)
 - Native Ubuntu Desktop 26.04 LTS (`local-devbox.yml`), documented in [docs/devbox.md](docs/devbox.md)
 
@@ -42,7 +42,7 @@ cd ~/src/ansible
 bash run-linux.sh
 ```
 
-`run-linux.sh` installs the remaining bootstrap packages (`curl`, `rsync`, and `ca-certificates`), Ansible, the required Ansible collections, and the Linux playbook.
+`run-linux.sh` installs or upgrades the bootstrap packages and Ansible from the configured APT repositories, installs the required Ansible collections, and runs the Linux playbook. It does not add an Ansible PPA.
 
 The Linux playbook also enables systemd in `/etc/wsl.conf`, installs Docker inside WSL, configures the shell, and installs the repository dotfiles. Restart WSL afterwards from PowerShell so systemd and Docker changes take effect:
 
@@ -54,7 +54,9 @@ Then reopen Ubuntu.
 
 ### WSL notes
 
-- CUDA installation is disabled by default because it downloads several gigabytes. Enable it with `INSTALL_CUDA_WSL=true bash run-linux.sh`, or pass `--extra-vars install_cuda_wsl=true` when running the playbook directly.
+- CUDA Toolkit installation is disabled by default because it downloads several gigabytes. Enable it with `INSTALL_CUDA_WSL=true bash run-linux.sh`, or pass `--extra-vars install_cuda_wsl=true` when running the playbook directly. The default is CUDA Toolkit 13.3, with updates within that release line.
+- Keep the NVIDIA driver updated on Windows. WSL uses that driver; do not install a Linux NVIDIA driver or the `cuda`/`cuda-drivers` metapackages inside WSL. The driver does not need a matching toolkit version. Install the toolkit when you need `nvcc` or CUDA development libraries, not merely to run applications that already bundle their CUDA runtime.
+- The shell's `open()` function uses `wslview` to open Windows applications. Its `wslu` package is discontinued upstream, so the playbook retains the archived 4.1.3 package for this integration. WSL and CUDA do not require `wslu`.
 - OpenSSH server installation is disabled by default. Enable it with `INSTALL_OPENSSH_SERVER_WSL=true bash run-linux.sh`, or pass `--extra-vars install_openssh_server_wsl=true` when running the playbook directly. This installs `openssh-server`, enables `ssh.socket`, and verifies that port 22 is listening.
 - The playbook installs Docker Engine inside WSL. Decide whether to use that or Docker Desktop integration rather than configuring both unintentionally.
 - SSH key copying is skipped by `run-linux.sh`. Configure it separately when needed.
@@ -64,6 +66,31 @@ Then reopen Ubuntu.
 ```bash
 make sync-dotfiles-windows
 ```
+
+### Rerun after upgrading Ubuntu
+
+After upgrading Ubuntu 24.04 to 26.04 LTS and restarting WSL, rerun:
+
+```bash
+bash run-linux.sh
+```
+
+To also upgrade the CUDA Toolkit to the selected release line:
+
+```bash
+INSTALL_CUDA_WSL=true bash run-linux.sh
+/usr/local/cuda-13.3/bin/nvcc --version
+```
+
+The setup refreshes Ansible through APT and recreates Docker's repository for the current Ubuntu release. With CUDA enabled, it also restores NVIDIA's WSL repository even when the keyring package is already installed. Existing CUDA toolkits are not removed; check any custom `PATH` or `CUDA_HOME` settings that still select an older version.
+
+Additional playbook arguments are forwarded, for example:
+
+```bash
+INSTALL_CUDA_WSL=true bash run-linux.sh --tags core,docker,cuda-wsl
+```
+
+That command only applies the selected tags. The untagged command also updates tools and syncs dotfiles. Neither command upgrades the Ubuntu release itself.
 
 ## macOS
 
