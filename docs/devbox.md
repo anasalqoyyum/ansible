@@ -36,8 +36,9 @@ means reinstalling Ubuntu and repeating the acceptance tests.
 
 The physical monitor logs your user in to Hyprland automatically at boot (see
 [Hyprland](#hyprland)). Anyone at the keyboard can act as you without a password,
-except for sudo. The opt-in agent desktop is a separate virtual XFCE desktop that
-a systemd user manager starts at boot through `loginctl enable-linger`. It also
+including root access if you enable [passwordless sudo](#optional-passwordless-sudo).
+The opt-in agent desktop is a separate virtual XFCE desktop that a systemd user
+manager starts at boot through `loginctl enable-linger`. It also
 belongs to your user: anyone who can access its forwarded VNC connection can act
 as you. This is intended for a dedicated, single-user machine.
 
@@ -143,6 +144,63 @@ in the repository; the intentional private-key destination is mode `0600`.
 Log out and reconnect after provisioning for Docker group membership and shell
 changes. Membership in the Docker group gives effective root privileges. The
 physical GNOME desktop and the virtual XFCE desktop are separate sessions.
+
+## Optional passwordless sudo
+
+Normal setup does not enable passwordless sudo. To allow unattended installs and
+updates, explicitly run this devbox-only task once:
+
+```bash
+cd ~/repo/ansible
+. ./utils/use-classic-sudo.sh
+ansible-playbook local-devbox.yml --tags devbox-passwordless-sudo --ask-become-pass
+```
+
+This asks for your password once and installs
+`/etc/sudoers.d/99-devbox-nopasswd`, reserved for this task, with root ownership
+and mode `0440`. Ansible validates the rule with `visudo` before installing it.
+The rule grants the development user passwordless access to **all root commands**,
+not just T3 Code updates. Every app, script, or coding agent running as that user
+can then become root without authentication. Restricting remote access through
+Tailscale does not protect against a compromised local app or account. This also
+removes the sudo password barrier for anyone using the automatically logged-in
+physical desktop. Keep your account password for recovery.
+
+Keep the current SSH session open while checking the complete sudoers policy and
+testing without cached authentication:
+
+```bash
+sudo visudo -c
+"${ANSIBLE_BECOME_EXE:-sudo}" -k -n true
+"${ANSIBLE_BECOME_EXE:-sudo}" -l
+```
+
+The second command should succeed silently. Inspect the last command's policy
+listing for `NOPASSWD: ALL`; other sudoers rules can override this task's rule.
+These checks must run as your development user, not from a root shell.
+
+For subsequent updates, omit `--ask-become-pass`. For example:
+
+```bash
+. ./utils/use-classic-sudo.sh
+ansible-playbook local-devbox.yml --tags t3code
+```
+
+The helper selects classic sudo where sudo-rs breaks Ansible's password prompt.
+It may install classic sudo if it is missing. `run-devbox.sh` and Make targets
+that include `--ask-become-pass` still ask for a password even when the sudo rule
+allows passwordless access. Use `ansible-playbook` directly to avoid that prompt.
+Normal setup and broad tags such as `devbox` and `install` do not select this task
+or remove a previously enabled rule.
+
+To remove only this task's rule and return to your other sudo policies:
+
+```bash
+. ./utils/use-classic-sudo.sh
+ansible-playbook local-devbox.yml --tags devbox-passwordless-sudo \
+  -e '{"devbox_passwordless_sudo_enabled": false}' --ask-become-pass
+sudo visudo -c
+```
 
 ## CLIProxyAPI core
 

@@ -68,6 +68,96 @@ class DevboxTest(unittest.TestCase):
     def assert_no_changes(self, output):
         self.assertRegex(output, r"changed=0\s+unreachable=0\s+failed=0")
 
+    def test_passwordless_sudo_requires_its_explicit_tag_in_the_devbox_profile(self):
+        names = [t["name"] for t in self.tasks("devbox-passwordless-sudo.yml")]
+        profile = yaml.safe_load((REPO / "local-devbox.yml").read_text())[0]
+        profile["tasks"] = [
+            task
+            for task in profile["tasks"]
+            if task.get("ansible.builtin.import_tasks")
+            == "tasks/devbox-passwordless-sudo.yml"
+        ]
+        self.assertEqual(len(profile["tasks"]), 1)
+        profile["tasks"][0]["ansible.builtin.import_tasks"] = str(
+            REPO / "tasks/devbox-passwordless-sudo.yml"
+        )
+        profile.pop("handlers")
+        profile.pop("pre_tasks")
+        playbook = self.root / "tag-selection.yml"
+        playbook.write_text(yaml.safe_dump([profile]))
+        for tags in [
+            None,
+            "all",
+            "devbox",
+            "install",
+            "devbox-apps",
+            "devbox-passwordless-sudo",
+        ]:
+            with self.subTest(tags=tags):
+                argv = [
+                    "ansible-playbook",
+                    str(playbook),
+                    "--list-tasks",
+                ]
+                if tags:
+                    argv += ["--tags", tags]
+                result = subprocess.run(argv, env=self.env, capture_output=True, text=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                for name in names:
+                    self.assertEqual(
+                        name in result.stdout, tags == "devbox-passwordless-sudo"
+                    )
+
+    def test_passwordless_sudo_check_apply_validation_and_revoke(self):
+        tasks = self.tasks("devbox-passwordless-sudo.yml")
+        policy = self.root / "99-devbox-nopasswd"
+        for task in tasks:
+            task.pop("become", None)
+            if "ansible.builtin.copy" in task:
+                module = task["ansible.builtin.copy"]
+                self.assertEqual(module["owner"], "root")
+                self.assertEqual(module["group"], "root")
+                module.pop("owner")
+                module.pop("group")
+                module["dest"] = str(policy)
+            if "ansible.builtin.file" in task:
+                task["ansible.builtin.file"]["path"] = str(policy)
+        variables = {"ansible_facts": {"user_id": "devbox-test", "user_uid": 1000}}
+        self.play(tasks, variables, check=True)
+        self.assertFalse(policy.exists())
+        self.play(tasks, variables)
+        expected = "devbox-test ALL=(ALL:ALL) NOPASSWD: ALL\n"
+        self.assertEqual(policy.read_text(), expected)
+        self.assertEqual(policy.stat().st_mode & 0o777, 0o440)
+        self.assert_no_changes(self.play(tasks, variables))
+        self.assert_no_changes(self.play(tasks, variables, check=True))
+
+        enable = next(t for t in tasks if "ansible.builtin.copy" in t)
+        enable["ansible.builtin.copy"]["content"] = "invalid sudoers rule\n"
+        with self.assertRaises(subprocess.CalledProcessError):
+            self.play(tasks, variables)
+        self.assertEqual(policy.read_text(), expected)
+
+        for disabled in [False, "false"]:
+            with self.subTest(disabled=disabled):
+                variables["devbox_passwordless_sudo_enabled"] = disabled
+                self.play(tasks, variables, check=True)
+                self.assertTrue(policy.exists())
+                self.play(tasks, variables)
+                self.assertFalse(policy.exists())
+                self.assert_no_changes(self.play(tasks, variables))
+                policy.write_text(expected)
+
+    def test_passwordless_sudo_rejects_root_and_unsafe_account_names(self):
+        task = self.tasks("devbox-passwordless-sudo.yml")[0]
+        for user, uid in [("root", 0), ("dev ALL=(ALL) ALL", 1000)]:
+            with self.subTest(user=user):
+                with self.assertRaises(subprocess.CalledProcessError):
+                    self.play(
+                        [task],
+                        {"ansible_facts": {"user_id": user, "user_uid": uid}},
+                    )
+
     def test_repository_roots_check_mode_and_repeat_apply(self):
         tasks = self.tasks("devbox-directories.yml")
         self.play(tasks, check=True)

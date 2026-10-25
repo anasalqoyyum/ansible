@@ -24,6 +24,10 @@
       tags: [always]
 
   tasks:
+    - name: Configure optional passwordless sudo
+      ansible.builtin.import_tasks: tasks/devbox-passwordless-sudo.yml
+      tags: [never, devbox-passwordless-sudo]
+
     - name: Configure SSH
       ansible.builtin.import_tasks: tasks/ssh.yml
 
