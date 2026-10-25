@@ -64,6 +64,7 @@ npm.bun = true
 idiomatic_version_file_enable_tools = ["node"]
 experimental = true
 lockfile = false
+auto_update = true
 
 [settings.github]
 credential_command = 'gh auth token --hostname {% if os() == "windows" %}%MISE_CREDENTIAL_HOST%{% else %}"$MISE_CREDENTIAL_HOST"{% endif %}'
