@@ -1,9 +1,11 @@
 ---
-name: gen-pr-title
+name: pr
 description: Generate a PR title and concise PR body from the current branch diff, including a Jira key from the request or branch when present. Adds file-specific fix details for bug fixes and a test plan when new tests were added, then copies the formatted result with the user's yank command.
 ---
 
 Generate a PR title and body for the current branch.
+
+For a body-only request, omit the Title section.
 
 ## Steps
 
@@ -23,9 +25,16 @@ Generate a PR title and body for the current branch.
 - <short bullet>
 - <short bullet>
 
+<optional small visual>
+
 ## What's fixed
 
 - `<path>`: <what was wrong and how this file corrects it>
+
+## Evidence
+
+- **Before:** <observed behavior or result>
+  **After:** <observed behavior or result after the change>
 
 ## Test Plan
 
@@ -33,6 +42,7 @@ Generate a PR title and body for the current branch.
 ```
 
 **Title rules:**
+
 - Use Conventional Commit format: `type(scope): description`
 - Types: `feat`, `fix`, `chore`, `refactor`, `docs`, `test`, `perf`, `style`
 - Scope: the area of the codebase (e.g. `release-management`, `auth`, `organizations`)
@@ -42,28 +52,53 @@ Generate a PR title and body for the current branch.
 - Keep the complete title at or below 72 characters, including the Jira key
 
 **Summary rules:**
+
 - Use as many short bullets as needed, usually 2–4, ordered by impact
 - For features, cover each distinct user-facing capability or meaningful behavior change
 - For fixes, summarize the affected behavior and outcome; leave file-level diagnosis for **What's fixed**
 - Use plain, direct language; keep technical terms when they add useful precision
+- Use the repository's domain language from `GLOSSARY.md` when present
 - State the outcome and reason, rather than narrating implementation details
 - Keep each bullet self-contained and avoid repeating the title or later sections
+- Add a small visual when it clarifies ownership or flow in a complex change, following **Summary visuals** below; omit it when the bullets are sufficient
 - Mention relevant checks that actually ran. Never claim a check passed unless you ran it.
 
+**Summary visuals:**
+
+- Pick the smallest view that explains the change and place it next to the text it supports
+- Use pseudocode for logic or algorithms, a call tree for runtime control flow, or a component tree for UI structure and relevant state boundaries
+- Use a shallow file tree for file responsibilities or a broad refactor, or Mermaid for interactions and data flow
+- Use a `diff` sketch when the surrounding structure is familiar and the additions, removals, or ordering changes are the point. Sketch the relevant component tree, file layout, call tree, or state transition
+- Show the whole block when most of it is new, omitted context would hide ownership or order, or reviewers need a copyable target shape
+- Keep only the calls, files, props, states, and boundaries needed to understand the change
+- When adding a visual, read [Summary visual examples](references/examples.md#summary-visuals) for concrete formats
+
 **What's fixed rules:**
+
 - Include this section only when the title type is `fix`
 - Map each causally relevant source file to the bug it corrects; use backticked repository-relative paths
 - State the previous failure and the correction in one concise bullet
 - Group files in one bullet when they form a single fix, and leave test-only files for **Test Plan**
 - Focus on the files that fix the bug rather than inventorying every touched file
 
+**Evidence rules:**
+
+- Include this section when a before/after comparison helps reviewers assess the change, such as a subtle bug fix, UI change, performance improvement, migration, or complex behavior change
+- Choose based on review value; PR size alone does not require evidence
+- Use the smallest useful comparison. Prefer screenshots for visual changes when capture is available, test or command output for behavior changes, and comparable measurements for performance changes
+- Ground evidence in material you inspected or captured. Label illustrative examples and state when a comparison was not run; illustrations do not establish that the change works
+- Keep it brief and avoid repeating the Summary or Test Plan
+- Omit the section when it adds no useful information
+- When including this section, read [Before/after evidence examples](references/examples.md#beforeafter-evidence) for concrete formats
+
 **Test Plan rules:**
+
 - Include this section only for a `feat` or `fix` that adds at least one test case or test file
 - Map each relevant test file to the behavior or regression it covers; use backticked repository-relative paths
 - Describe the added coverage without claiming tests passed or commands were run unless verified
 
-5. Print the output to the terminal using a single `echo` or `cat` command so it is visible.
-6. Pipe the **same output** through the user's `yank` function to copy it to the clipboard. The yank function reads from stdin and routes to the appropriate clipboard utility (`win32yank`, `pbcopy`, `xclip`, `xsel`, or `wl-copy` depending on the OS). Invoke it as a shell function — source it inline if needed:
+6. Print the output to the terminal using a single `echo` or `cat` command so it is visible.
+7. Pipe the **same output** through the user's `yank` function to copy it to the clipboard. The yank function reads from stdin and routes to the appropriate clipboard utility (`win32yank`, `pbcopy`, `xclip`, `xsel`, or `wl-copy` depending on the OS). Invoke it as a shell function — source it inline if needed:
 
 ```bash
 yank() {
