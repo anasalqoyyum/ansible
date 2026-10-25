@@ -6,9 +6,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/anomalyco/opentui.git",
       "skillPath": "packages/web/src/content/SKILL.md",
-      "skillFolderHash": "45fe4d3cca2f16b35b498fdaac0e48fa688ffaca",
+      "skillFolderHash": "c4af95ff14285a1e95e9ccd277236b4c96ac06f5",
       "installedAt": "2026-02-26T10:38:31.982Z",
-      "updatedAt": "2026-10-25T14:19:16.585Z"
+      "updatedAt": "2026-10-25T22:14:56.071Z"
     },
     "bkt": {
       "source": "avivsinai/bitbucket-cli",
@@ -279,9 +279,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/open-pencil/open-pencil.git",
       "skillPath": "skills/open-pencil/SKILL.md",
-      "skillFolderHash": "802ba90b7071ef2d5500f686b53c0d8035afb3b7",
+      "skillFolderHash": "17a875e703caedc267da5979066d0c2e791fe35f",
       "installedAt": "2026-10-25T13:49:10.924Z",
-      "updatedAt": "2026-10-25T14:19:38.714Z"
+      "updatedAt": "2026-10-25T22:15:03.406Z"
     }
   },
   "dismissed": {
