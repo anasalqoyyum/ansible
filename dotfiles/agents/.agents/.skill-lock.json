@@ -6,54 +6,36 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/anomalyco/opentui.git",
       "skillPath": "packages/web/src/content/SKILL.md",
-      "skillFolderHash": "47c49c26bb6525fbd4cc9ddec4c31a4efb182784",
+      "skillFolderHash": "45fe4d3cca2f16b35b498fdaac0e48fa688ffaca",
       "installedAt": "2026-02-26T10:38:31.982Z",
-      "updatedAt": "2026-10-09T06:04:44.920Z"
+      "updatedAt": "2026-10-25T14:19:16.585Z"
     },
     "bkt": {
       "source": "avivsinai/bitbucket-cli",
       "sourceType": "github",
       "sourceUrl": "https://github.com/avivsinai/bitbucket-cli.git",
       "skillPath": "skills/bkt/SKILL.md",
-      "skillFolderHash": "cf4a8e4af052a88f0846815105dd34fa9234633a",
+      "skillFolderHash": "1b1fe97ac90fb15a77258109a908c746aef70086",
       "installedAt": "2026-04-04T09:27:18.615Z",
-      "updatedAt": "2026-09-10T07:36:29.675Z"
+      "updatedAt": "2026-10-25T14:19:20.222Z"
     },
     "herdr": {
       "source": "herdrdev/herdr",
       "sourceType": "github",
       "sourceUrl": "https://github.com/herdrdev/herdr.git",
       "skillPath": "skills/herdr/SKILL.md",
-      "skillFolderHash": "67042ed7910d4177a9000e0679e78b0346060927",
+      "skillFolderHash": "2be0d86d481d1bb29c62e11ef37b78d27d01b478",
       "installedAt": "2026-07-30T03:30:44.750Z",
-      "updatedAt": "2026-10-01T15:30:13.793Z"
+      "updatedAt": "2026-10-25T14:19:24.341Z"
     },
     "impeccable": {
       "source": "pbakaus/impeccable",
       "sourceType": "github",
       "sourceUrl": "https://github.com/pbakaus/impeccable.git",
       "skillPath": ".agents/skills/impeccable/SKILL.md",
-      "skillFolderHash": "fbcbff0d9089aaf550488371029cb1398ebd43f3",
+      "skillFolderHash": "851543ff58a7d43a04577ddc7daf8c0dcd7d355e",
       "installedAt": "2026-07-30T10:12:48.883Z",
-      "updatedAt": "2026-10-09T06:04:49.632Z"
-    },
-    "imagegen-frontend-mobile": {
-      "source": "Leonxlnx/taste-skill",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/Leonxlnx/taste-skill.git",
-      "skillPath": "skills/imagegen-frontend-mobile/SKILL.md",
-      "skillFolderHash": "9901fcde67e9506a706912107825fdfb72e01f30",
-      "installedAt": "2026-07-30T10:13:48.117Z",
-      "updatedAt": "2026-07-30T10:13:48.117Z"
-    },
-    "imagegen-frontend-web": {
-      "source": "Leonxlnx/taste-skill",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/Leonxlnx/taste-skill.git",
-      "skillPath": "skills/imagegen-frontend-web/SKILL.md",
-      "skillFolderHash": "3b5117d349200e33f9c3399344681620079dcc18",
-      "installedAt": "2026-07-30T10:13:48.118Z",
-      "updatedAt": "2026-07-30T10:13:48.118Z"
+      "updatedAt": "2026-10-25T14:19:28.629Z"
     },
     "security-audit": {
       "source": "cloudflare/security-audit-skill",
@@ -213,9 +195,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/mattpocock/skills.git",
       "skillPath": "skills/engineering/wizard/SKILL.md",
-      "skillFolderHash": "47010ebd1f26c8263016f14cdba835355d278b9a",
+      "skillFolderHash": "e396d3ba97c723a78ffd350fb14a3c409137b306",
       "installedAt": "2026-08-08T15:17:48.515Z",
-      "updatedAt": "2026-10-09T06:05:17.382Z"
+      "updatedAt": "2026-10-25T14:19:30.299Z"
     },
     "writing-for-agents": {
       "source": "mattpocock/skills",
@@ -231,9 +213,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/dmmulroy/anti-slop.git",
       "skillPath": "skills/install-anti-slop/SKILL.md",
-      "skillFolderHash": "89044d21c75a367eac1ddbaf208e650b1a7d5820",
+      "skillFolderHash": "97962dc9fad565ca7695bf57805d9d0138ce1def",
       "installedAt": "2026-08-15T03:07:47.344Z",
-      "updatedAt": "2026-10-01T15:30:35.707Z"
+      "updatedAt": "2026-10-25T14:19:33.994Z"
     },
     "bro": {
       "source": "backnotprop/bro",
@@ -291,6 +273,15 @@
       "skillFolderHash": "ace8c27038e70e4946926886a1e4407eead856fb",
       "installedAt": "2026-10-12T04:11:46.701Z",
       "updatedAt": "2026-10-12T04:11:46.701Z"
+    },
+    "open-pencil": {
+      "source": "open-pencil/open-pencil",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/open-pencil/open-pencil.git",
+      "skillPath": "skills/open-pencil/SKILL.md",
+      "skillFolderHash": "802ba90b7071ef2d5500f686b53c0d8035afb3b7",
+      "installedAt": "2026-10-25T13:49:10.924Z",
+      "updatedAt": "2026-10-25T14:19:38.714Z"
     }
   },
   "dismissed": {
@@ -302,6 +293,7 @@
     "codex",
     "cursor",
     "droid",
+    "fx",
     "gemini-cli",
     "github-copilot",
     "kilo",
