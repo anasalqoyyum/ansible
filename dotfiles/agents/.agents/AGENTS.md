@@ -80,6 +80,14 @@ Save every screenshot you capture to the user's `Screenshots` folder under Pictu
 - macOS: `~/Pictures/Screenshots`.
 - Linux outside WSL: `$(xdg-user-dir PICTURES)/Screenshots`, usually `~/Pictures/Screenshots`.
 
+## Design mockups
+
+When you show a design, mockup, or visual concept and Doop tools are available, put the design on a Doop canvas as well as any image you generate. A generated image is the fallback when Doop is missing or a call fails. Say which one you used.
+
+Before using Doop for a mockup, read `~/.agents/docs/doop-mockups.md` and follow its workflow exceptions.
+
+Skip Doop for a diagram, chart, code diff, or one-off icon. One canvas per task. Name it after the task.
+
 ## Instruction discovery
 
 When the CLI has not loaded Claude instructions, check applicable `CLAUDE.md`, `.claude/CLAUDE.md`, and `.claude/rules/` files. Respect path conditions, resolve symlinks, and read each underlying instruction file once.

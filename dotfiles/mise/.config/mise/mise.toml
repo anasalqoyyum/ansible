@@ -1,5 +1,5 @@
 [tools]
-node = "26"
+node = { version = "26", postinstall = "npm install -g corepack && corepack enable && exit 0" }
 bun = "latest"
 go = "prefix:1.27"
 python = "3.15"
@@ -70,8 +70,6 @@ auto_update = true
 credential_command = 'gh auth token --hostname {% if os() == "windows" %}%MISE_CREDENTIAL_HOST%{% else %}"$MISE_CREDENTIAL_HOST"{% endif %}'
 
 [env]
-# Auto enable corepack for node versions that support it (>=16.9.0).
-# MISE_NODE_COREPACK = true
 # MISE_QUIET = true
 OPENCODE_EXPERIMENTAL_OXFMT = true
 OPENCODE_EXPERIMENTAL_PLAN_MODE = true

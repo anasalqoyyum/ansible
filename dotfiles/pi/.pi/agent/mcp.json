@@ -1,3 +1,7 @@
 {
-  "mcpServers": {}
+  "mcpServers": {
+    "doop": {
+      "url": "https://en.pipefish-sirius.ts.net:8443/mcp"
+    }
+  }
 }
