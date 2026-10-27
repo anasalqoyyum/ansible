@@ -6,9 +6,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/anomalyco/opentui.git",
       "skillPath": "packages/web/src/content/SKILL.md",
-      "skillFolderHash": "c4af95ff14285a1e95e9ccd277236b4c96ac06f5",
+      "skillFolderHash": "1a0e5f0af3a77c0156cbb1873054ffc51a5344b3",
       "installedAt": "2026-02-26T10:38:31.982Z",
-      "updatedAt": "2026-10-25T22:14:56.071Z"
+      "updatedAt": "2026-10-27T18:53:02.301Z"
     },
     "bkt": {
       "source": "avivsinai/bitbucket-cli",
@@ -33,9 +33,9 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/pbakaus/impeccable.git",
       "skillPath": ".agents/skills/impeccable/SKILL.md",
-      "skillFolderHash": "851543ff58a7d43a04577ddc7daf8c0dcd7d355e",
+      "skillFolderHash": "8305acdb8704446cfd0a3e6d7f29fbab836eb746",
       "installedAt": "2026-07-30T10:12:48.883Z",
-      "updatedAt": "2026-10-25T14:19:28.629Z"
+      "updatedAt": "2026-10-27T18:53:07.163Z"
     },
     "security-audit": {
       "source": "cloudflare/security-audit-skill",
@@ -273,15 +273,6 @@
       "skillFolderHash": "ace8c27038e70e4946926886a1e4407eead856fb",
       "installedAt": "2026-10-12T04:11:46.701Z",
       "updatedAt": "2026-10-12T04:11:46.701Z"
-    },
-    "open-pencil": {
-      "source": "open-pencil/open-pencil",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/open-pencil/open-pencil.git",
-      "skillPath": "skills/open-pencil/SKILL.md",
-      "skillFolderHash": "17a875e703caedc267da5979066d0c2e791fe35f",
-      "installedAt": "2026-10-25T13:49:10.924Z",
-      "updatedAt": "2026-10-25T22:15:03.406Z"
     }
   },
   "dismissed": {
