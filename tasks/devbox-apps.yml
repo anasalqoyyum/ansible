@@ -394,6 +394,11 @@
 - name: Install latest T3 Code nightly
   tags: [t3code]
   block:
+    - name: Require a safe absolute home path for T3 Code integration
+      ansible.builtin.assert:
+        that: ansible_facts['user_dir'] is match('^/[A-Za-z0-9_./-]+\Z')
+        fail_msg: "T3 Code integration requires an absolute home path containing only letters, digits, slashes, dots, underscores, and hyphens."
+
     - name: Query T3 Code releases including nightlies
       ansible.builtin.uri:
         url: https://api.github.com/repos/pingdotgg/t3code/releases?per_page=100
@@ -418,21 +423,167 @@
         that: devbox_t3code_nightlies | length > 0
         fail_msg: "No published T3 Code nightly was found in the latest 100 releases."
 
-    - name: Select the newest T3 Code nightly amd64 package
+    - name: Select the newest T3 Code nightly x86_64 AppImage
       ansible.builtin.set_fact:
         devbox_t3code_assets: >-
           {{ devbox_t3code_nightlies[0].assets
-             | selectattr('name', 'match', '^T3-Code-.*-amd64\.deb$')
+             | selectattr('name', 'match', '^T3-Code-.*-x86_64\.AppImage$')
              | list }}
 
-    - name: Require an amd64 package from the newest T3 Code nightly
+    - name: Require an x86_64 AppImage from the newest T3 Code nightly
       ansible.builtin.assert:
         that: devbox_t3code_assets | length == 1
-        fail_msg: "The newest T3 Code nightly has no unique amd64 Debian package."
+        fail_msg: "The newest T3 Code nightly has no unique x86_64 AppImage."
 
-    - name: Install or update T3 Code nightly
+    - name: Require the T3 Code AppImage checksum
+      ansible.builtin.assert:
+        that: devbox_t3code_assets[0].digest | default('') is match('^sha256:[0-9a-f]{64}$')
+        fail_msg: "The T3 Code AppImage is missing its SHA-256 release digest."
+
+    - name: Install T3 Code AppImage runtime and integration tools
       become: true
       ansible.builtin.apt:
-        deb: "{{ devbox_t3code_assets[0].browser_download_url }}"
+        name:
+          - libfuse2t64
+          - apparmor
+          - desktop-file-utils
+          - xdg-utils
+        state: present
         update_cache: true
         cache_valid_time: 3600
+
+    - name: Create user-owned T3 Code installation and launcher directories
+      ansible.builtin.file:
+        path: "{{ ansible_facts['user_dir'] }}/{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - .local/share/t3code
+        - .local/bin
+        - .local/share/applications
+        - .local/share/icons
+        - .cache/ansible/t3code
+      register: devbox_t3code_directories
+
+    - name: Download or update T3 Code AppImage
+      ansible.builtin.get_url:
+        url: "{{ devbox_t3code_assets[0].browser_download_url }}"
+        checksum: "{{ devbox_t3code_assets[0].digest }}"
+        dest: "{{ ansible_facts['user_dir'] }}/.local/share/t3code/t3code.AppImage"
+        mode: "0755"
+      register: devbox_t3code_download
+      when: not ansible_check_mode or not devbox_t3code_directories.changed
+
+    - name: Allow T3 Code AppImage to use the Electron user namespace sandbox
+      become: true
+      ansible.builtin.copy:
+        dest: /etc/apparmor.d/devbox-t3code-appimage
+        owner: root
+        group: root
+        mode: "0644"
+        validate: /usr/sbin/apparmor_parser --skip-cache --skip-kernel-load %s
+        content: |
+          abi <abi/4.0>,
+          include <tunables/global>
+
+          profile devbox-t3code-appimage "{{ ansible_facts['user_dir'] }}/.local/share/t3code/t3code.AppImage" flags=(unconfined) {
+            userns,
+          }
+      register: devbox_t3code_apparmor
+
+    - name: Load the T3 Code AppImage sandbox policy
+      become: true
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/apparmor_parser
+          - --replace
+          - --skip-cache
+          - /etc/apparmor.d/devbox-t3code-appimage
+      changed_when: devbox_t3code_apparmor.changed
+
+    - name: Extract the bundled T3 Code icon
+      ansible.builtin.command:
+        argv:
+          - "{{ ansible_facts['user_dir'] }}/.local/share/t3code/t3code.AppImage"
+          - --appimage-extract
+          - usr/share/icons/hicolor/512x512/apps/t3code.png
+        chdir: "{{ ansible_facts['user_dir'] }}/.cache/ansible/t3code"
+        creates: "{{ omit if devbox_t3code_download.changed else ansible_facts['user_dir'] + '/.cache/ansible/t3code/squashfs-root/usr/share/icons/hicolor/512x512/apps/t3code.png' }}"
+      register: devbox_t3code_icon
+      when: not ansible_check_mode or not devbox_t3code_directories.changed
+
+    - name: Install the T3 Code launcher icon
+      ansible.builtin.copy:
+        src: "{{ ansible_facts['user_dir'] }}/.cache/ansible/t3code/squashfs-root/usr/share/icons/hicolor/512x512/apps/t3code.png"
+        dest: "{{ ansible_facts['user_dir'] }}/.local/share/icons/t3code.png"
+        remote_src: true
+        mode: "0644"
+      when:
+        - not ansible_check_mode or not devbox_t3code_directories.changed
+        - not ansible_check_mode or not devbox_t3code_icon.changed
+
+    - name: Install the T3 Code AppImage command
+      ansible.builtin.copy:
+        dest: "{{ ansible_facts['user_dir'] }}/.local/bin/t3code"
+        mode: "0755"
+        content: |
+          #!/bin/sh
+          exec "{{ ansible_facts['user_dir'] }}/.local/share/t3code/t3code.AppImage" "$@"
+      when: not ansible_check_mode or not devbox_t3code_directories.changed
+
+    - name: Install the T3 Code AppImage desktop launcher
+      ansible.builtin.copy:
+        dest: "{{ ansible_facts['user_dir'] }}/.local/share/applications/t3code.desktop"
+        mode: "0644"
+        content: |
+          [Desktop Entry]
+          Type=Application
+          Name=T3 Code (Nightly)
+          Exec=/usr/bin/env "{{ ansible_facts['user_dir'] }}/.local/bin/t3code" %U
+          Icon={{ ansible_facts['user_dir'] }}/.local/share/icons/t3code.png
+          Terminal=false
+          StartupWMClass=t3code
+          Categories=Development;
+          MimeType=x-scheme-handler/t3code;x-scheme-handler/t3code-dev;
+      when: not ansible_check_mode or not devbox_t3code_directories.changed
+
+    - name: Check the T3 Code URL scheme handlers
+      ansible.builtin.command:
+        argv:
+          - xdg-mime
+          - query
+          - default
+          - "{{ item }}"
+      loop:
+        - x-scheme-handler/t3code
+        - x-scheme-handler/t3code-dev
+      register: devbox_t3code_handlers
+      check_mode: false
+      changed_when: false
+
+    - name: Register the T3 Code AppImage URL scheme handlers
+      ansible.builtin.command:
+        argv:
+          - xdg-mime
+          - default
+          - t3code.desktop
+          - "{{ item.item }}"
+      loop: "{{ devbox_t3code_handlers.results }}"
+      loop_control:
+        label: "{{ item.item }}"
+      when: item.stdout != 't3code.desktop'
+      changed_when: true
+
+    - name: Refresh the user desktop application database
+      ansible.builtin.command:
+        argv:
+          - update-desktop-database
+          - "{{ ansible_facts['user_dir'] }}/.local/share/applications"
+      changed_when: false
+
+    - name: Remove the old T3 Code Debian package
+      tags: [t3code-remove-deb]
+      become: true
+      ansible.builtin.apt:
+        name: t3code
+        state: absent

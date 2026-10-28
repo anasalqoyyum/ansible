@@ -23,6 +23,7 @@ class DevboxTest(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.home = self.root / "home"
         self.home.mkdir()
+        self.t3code_images = {}
         self.env = {
             **os.environ,
             "HOME": str(self.home),
@@ -552,11 +553,28 @@ esac
         )
 
     def application_tasks(self, releases):
+        self.env["XDG_CONFIG_HOME"] = str(self.home / ".config")
+        self.env["XDG_DATA_HOME"] = str(self.home / ".local/share")
+        t3code_images = self.t3code_images
+
         class Handler(BaseHTTPRequestHandler):
             def respond(self, send_body):
-                payload = releases[self.path]
+                payload = (
+                    releases[self.path]
+                    if self.path in releases
+                    else t3code_images[self.path]
+                )
                 binary = isinstance(payload, bytes)
-                body = payload if binary else json.dumps(payload).encode()
+                body = (
+                    payload
+                    if binary
+                    else json.dumps(payload)
+                    .replace(
+                        "https://example.com/t3-",
+                        f"http://127.0.0.1:{self.server.server_port}/t3-",
+                    )
+                    .encode()
+                )
                 self.send_response(200)
                 self.send_header(
                     "Content-Type",
@@ -589,6 +607,10 @@ esac
             .replace("/opt/helium", str(self.root / "opt/helium"))
             .replace("/usr/local", str(self.root / "usr/local"))
             .replace("/usr/bin/google-chrome-stable", str(self.root / "chrome"))
+            .replace(
+                "/etc/apparmor.d/devbox-t3code-appimage",
+                str(self.root / "t3code-apparmor"),
+            )
         )
         for entry in tasks:
             entry.pop("become", None)
@@ -598,6 +620,17 @@ esac
                     task["ansible.builtin.uri"]["url"] = task["ansible.builtin.uri"][
                         "url"
                     ].replace("https://api.github.com", self.application_url)
+                if (
+                    task["name"]
+                    == "Allow T3 Code AppImage to use the Electron user namespace sandbox"
+                ):
+                    module = task["ansible.builtin.copy"]
+                    self.assertEqual(module.pop("owner"), "root")
+                    self.assertEqual(module.pop("group"), "root")
+                if task["name"] == "Load the T3 Code AppImage sandbox policy":
+                    argv = task["ansible.builtin.command"]["argv"]
+                    self.assertEqual(argv[1], "--replace")
+                    argv[1] = "--skip-kernel-load"
                 if "ansible.builtin.apt" in task:
                     package = task.pop("ansible.builtin.apt")
                     task["ansible.builtin.debug"] = {
@@ -608,25 +641,39 @@ esac
                     task["ansible.builtin.debug"] = {"msg": repository["uris"]}
         return tasks
 
+    def t3code_appimage(self, version):
+        return (
+            "#!/bin/sh\n"
+            "set -eu\n"
+            'if [ "$1" = --appimage-extract ]; then\n'
+            '  test "$2" = usr/share/icons/hicolor/512x512/apps/t3code.png\n'
+            "  mkdir -p squashfs-root/usr/share/icons/hicolor/512x512/apps\n"
+            f"  printf 't3code-icon-{version}' > squashfs-root/usr/share/icons/hicolor/512x512/apps/t3code.png\n"
+            "else\n"
+            '  printf "%s\\n" "$@"\n'
+            "fi\n"
+        ).encode()
+
     def nightly_release(self, version, published_at, draft=False):
+        image = self.t3code_appimage(version)
+        self.t3code_images[f"/t3-{version}-x86_64.AppImage"] = image
         return {
             "tag_name": f"v{version}",
             "draft": draft,
             "published_at": published_at,
             "assets": [
+                {"name": f"T3-Code-{version}-amd64.deb"},
+                {"name": f"T3-Code-{version}-arm64.AppImage"},
                 {
-                    "name": f"T3-Code-{version}-{arch}.deb",
-                    "browser_download_url": f"https://example.com/t3-{version}-{arch}.deb",
-                }
-                for arch in ["arm64", "amd64"]
+                    "name": f"T3-Code-{version}-x86_64.AppImage",
+                    "browser_download_url": f"https://example.com/t3-{version}-x86_64.AppImage",
+                    "digest": f"sha256:{hashlib.sha256(image).hexdigest()}",
+                },
             ],
         }
 
-    def test_applications_select_latest_matching_releases_and_refresh_in_check_mode(
-        self,
-    ):
+    def test_ghostty_selects_the_matching_release(self):
         ghostty_path = "/repos/mkasberg/ghostty-ubuntu/releases/latest"
-        t3code_path = "/repos/pingdotgg/t3code/releases?per_page=100"
         releases = {
             ghostty_path: {
                 "assets": [
@@ -641,28 +688,187 @@ esac
                     ]
                 ]
             },
-            t3code_path: [
+        }
+        tasks = self.application_tasks(releases)
+        output = self.play(tasks, tags="ghostty")
+        self.assertIn("wl-clipboard", output)
+        self.assertIn("https://example.com/ghostty-amd64-26.04.deb", output)
+        self.assert_no_changes(self.play(tasks, check=True, tags="ghostty"))
+
+    def test_t3code_appimage_install_update_and_protocol_arguments(self):
+        path = "/repos/pingdotgg/t3code/releases?per_page=100"
+        releases = {
+            path: [
                 self.nightly_release("0.0.10-nightly.1", "2026-04-01T00:00:00Z"),
                 self.nightly_release("0.0.12", "2026-04-04T00:00:00Z"),
                 self.nightly_release(
                     "0.0.10-nightly.3", "2026-04-03T00:00:00Z", draft=True
                 ),
                 self.nightly_release("0.0.10-nightly.2", "2026-04-02T00:00:00Z"),
-            ],
+            ]
         }
         tasks = self.application_tasks(releases)
-        output = self.play(tasks, tags="ghostty,t3code")
-        self.assertIn("wl-clipboard", output)
-        self.assertIn("https://example.com/ghostty-amd64-26.04.deb", output)
-        self.assertIn("https://example.com/t3-0.0.10-nightly.2-amd64.deb", output)
-        self.assertNotIn("https://example.com/t3-0.0.12-amd64.deb", output)
-        releases[t3code_path].append(
+        installed = self.home / ".local/share/t3code/t3code.AppImage"
+        data = self.home / ".config/t3code-v2/session-fixture"
+        data.parent.mkdir(parents=True)
+        data.write_text("preserve user data")
+        mimeapps = self.home / ".config/mimeapps.list"
+        mimeapps.write_text(
+            "[Default Applications]\n"
+            "x-scheme-handler/t3code=com.t3tools.T3Code.desktop\n"
+        )
+        old_handler = self.home / ".local/share/applications/com.t3tools.T3Code.desktop"
+        old_handler.parent.mkdir(parents=True)
+        old_handler.write_text(
+            "[Desktop Entry]\nType=Application\nName=T3 Code\n"
+            'Exec="/opt/T3 Code (Nightly)/t3code" %U\n'
+            "NoDisplay=true\nMimeType=x-scheme-handler/t3code;\n"
+        )
+        (old_handler.parent / "mimeinfo.cache").write_text(
+            "[MIME Cache]\nx-scheme-handler/t3code=com.t3tools.T3Code.desktop;t3code.desktop;\n"
+        )
+        self.play(tasks, check=True, tags="t3code")
+        self.assertFalse(installed.exists())
+        self.play(tasks, tags="t3code")
+        self.assertEqual(
+            installed.read_bytes(), self.t3code_appimage("0.0.10-nightly.2")
+        )
+        self.assertEqual(installed.stat().st_mode & 0o777, 0o755)
+        self.assertEqual(installed.stat().st_uid, os.getuid())
+        self.assertTrue(os.access(installed.parent, os.W_OK))
+        launcher = self.home / ".local/bin/t3code"
+        desktop = self.home / ".local/share/applications/t3code.desktop"
+        self.assertIn(f'Exec=/usr/bin/env "{launcher}" %U', desktop.read_text())
+        self.assertIn(
+            "x-scheme-handler/t3code;x-scheme-handler/t3code-dev;", desktop.read_text()
+        )
+        self.assertNotIn("--no-sandbox", launcher.read_text() + desktop.read_text())
+        for scheme in ["t3code", "t3code-dev"]:
+            result = subprocess.run(
+                ["xdg-mime", "query", "default", f"x-scheme-handler/{scheme}"],
+                env=self.env,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            self.assertEqual(result.stdout.strip(), "t3code.desktop")
+        arguments = ["t3code://open/a path?x=1&y=2", "--example"]
+        result = subprocess.run(
+            [str(launcher), *arguments], capture_output=True, text=True, check=True
+        )
+        self.assertEqual(result.stdout.splitlines(), arguments)
+        icon = self.home / ".local/share/icons/t3code.png"
+        self.assertEqual(icon.read_text(), "t3code-icon-0.0.10-nightly.2")
+        policy = self.root / "t3code-apparmor"
+        self.assertIn(
+            f'profile devbox-t3code-appimage "{installed}"', policy.read_text()
+        )
+        self.assertIn("userns,", policy.read_text())
+        self.assert_no_changes(self.play(tasks, tags="t3code"))
+        self.assert_no_changes(self.play(tasks, check=True, tags="t3code"))
+        policy.unlink()
+        self.play(tasks, tags="t3code")
+        self.assertTrue(policy.exists())
+        icon.unlink()
+        self.play(tasks, tags="t3code")
+        self.assertEqual(icon.read_text(), "t3code-icon-0.0.10-nightly.2")
+        releases[path].append(
             self.nightly_release("0.0.10-nightly.4", "2026-04-05T00:00:00Z")
         )
-        output = self.play(tasks, check=True, tags="ghostty,t3code")
-        self.assertIn("https://example.com/t3-0.0.10-nightly.4-amd64.deb", output)
-        self.assertNotIn("https://example.com/t3-0.0.10-nightly.2-amd64.deb", output)
-        self.assert_no_changes(output)
+        self.play(tasks, check=True, tags="t3code")
+        self.assertEqual(
+            installed.read_bytes(), self.t3code_appimage("0.0.10-nightly.2")
+        )
+        self.play(tasks, tags="t3code")
+        self.assertEqual(
+            installed.read_bytes(), self.t3code_appimage("0.0.10-nightly.4")
+        )
+        self.assertEqual(icon.read_text(), "t3code-icon-0.0.10-nightly.4")
+        self.assertEqual(data.read_text(), "preserve user data")
+        self.assert_no_changes(self.play(tasks, tags="t3code"))
+
+    def test_t3code_rejects_unsafe_home_paths_before_installation(self):
+        guard = self.tasks("devbox-apps.yml")[-1]["block"][0]
+        for home in [
+            "/home/a user",
+            "/home/a$USER",
+            '/home/a"quoted',
+            "/home/a%U",
+            "/home/a\\path",
+            "/home/a`command`",
+            "/home/anas\n",
+        ]:
+            with self.subTest(home=home):
+                with self.assertRaises(subprocess.CalledProcessError) as error:
+                    self.play([guard], {"ansible_facts": {"user_dir": home}})
+                self.assertIn("requires an absolute home path", error.exception.stdout)
+
+    def test_t3code_rejects_missing_and_mismatched_checksums_before_removal(self):
+        path = "/repos/pingdotgg/t3code/releases?per_page=100"
+        release = self.nightly_release("0.0.10-nightly.1", "2026-04-01T00:00:00Z")
+        asset = release["assets"][-1]
+        releases = {path: [release]}
+        tasks = self.application_tasks(releases)
+        for digest in [None, "sha256:" + "0" * 64]:
+            with self.subTest(digest=digest):
+                asset["digest"] = digest
+                with self.assertRaises(subprocess.CalledProcessError) as error:
+                    self.play(tasks, tags="t3code")
+                expected = "missing its SHA-256" if digest is None else "did not match"
+                self.assertIn(expected, error.exception.stdout)
+                self.assertNotIn(
+                    "TASK [Remove the old T3 Code Debian package]",
+                    error.exception.stdout,
+                )
+                self.assertFalse(
+                    (self.home / ".local/share/t3code/t3code.AppImage").exists()
+                )
+
+    def test_t3code_policy_load_failure_stops_removal_and_retries(self):
+        path = "/repos/pingdotgg/t3code/releases?per_page=100"
+        releases = {
+            path: [self.nightly_release("0.0.10-nightly.1", "2026-04-01T00:00:00Z")]
+        }
+        tasks = self.application_tasks(releases)
+        block = next(
+            entry["block"]
+            for entry in tasks
+            if entry["name"] == "Install latest T3 Code nightly"
+        )
+        load = next(
+            task
+            for task in block
+            if task["name"] == "Load the T3 Code AppImage sandbox policy"
+        )
+        remove = next(
+            task
+            for task in self.tasks("devbox-apps.yml")[-1]["block"]
+            if task["name"] == "Remove the old T3 Code Debian package"
+        )
+        self.assertEqual(
+            remove["ansible.builtin.apt"], {"name": "t3code", "state": "absent"}
+        )
+        argv = load["ansible.builtin.command"]["argv"]
+        load["ansible.builtin.command"]["argv"] = ["/bin/false"]
+        with self.assertRaises(subprocess.CalledProcessError) as error:
+            self.play(tasks, tags="t3code")
+        self.assertIn(
+            "TASK [Load the T3 Code AppImage sandbox policy]", error.exception.stdout
+        )
+        self.assertNotIn(
+            "TASK [Remove the old T3 Code Debian package]", error.exception.stdout
+        )
+        self.assertTrue((self.root / "t3code-apparmor").exists())
+        load["ansible.builtin.command"]["argv"] = argv
+        self.play(tasks, tags="t3code")
+        load["ansible.builtin.command"]["argv"] = ["/bin/false"]
+        with self.assertRaises(subprocess.CalledProcessError) as error:
+            self.play(tasks, tags="t3code")
+        self.assertNotIn(
+            "TASK [Remove the old T3 Code Debian package]", error.exception.stdout
+        )
+        load["ansible.builtin.command"]["argv"] = argv
+        self.assert_no_changes(self.play(tasks, tags="t3code"))
 
     def test_nightly_selection_fails_without_falling_back_to_stable_or_older_builds(
         self,
@@ -674,7 +880,7 @@ esac
         releases = {path: [older, newer]}
         tasks = self.application_tasks(releases)
         for candidates, message in [
-            ([older, newer], "newest T3 Code nightly has no unique amd64"),
+            ([older, newer], "newest T3 Code nightly has no unique x86_64"),
             (
                 [self.nightly_release("0.0.12", "2026-04-03T00:00:00Z")],
                 "No published T3 Code nightly",
@@ -686,7 +892,7 @@ esac
                     self.play(tasks, tags="t3code")
                 self.assertIn(message, error.exception.stdout)
                 self.assertNotIn(
-                    "TASK [Install or update T3 Code nightly]", error.exception.stdout
+                    "TASK [Download or update T3 Code AppImage]", error.exception.stdout
                 )
 
     def test_clipboard_utilities_install_without_querying_application_releases(self):

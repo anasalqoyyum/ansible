@@ -310,11 +310,24 @@ ansible-playbook local-devbox.yml --tags spotify --ask-become-pass
 
 T3 Code uses the newest published nightly from
 [pingdotgg/t3code](https://github.com/pingdotgg/t3code/releases), sorted by
-publication time among the latest 100 releases. It installs the amd64 `.deb`,
-never the stable release. Provisioning fails if no nightly is found or the newest
-nightly lacks that package; it does not silently install an older build.
-Applications are installed but not launched. Updates happen when you rerun these
-tasks, not through a scheduled Ansible job.
+publication time among the latest 100 releases. It verifies the x86_64 AppImage's
+SHA-256 release digest and installs it as your user at
+`~/.local/share/t3code/t3code.AppImage`, with a `~/.local/bin/t3code` command and
+application-menu entry. The file and its directory remain user-owned, so T3 Code's
+in-app updater can replace it without sudo or a Polkit password prompt. A narrowly
+attached AppArmor profile permits Electron's user namespace sandbox on Ubuntu;
+the launcher does not disable sandboxing. AppImage packaging itself is not a sandbox.
+
+The task removes the old `t3code` Debian package without purging your application
+data. Existing settings and sessions in `~/.config/t3code-v2` are retained. Close
+T3 Code before migrating an existing Debian installation, then reopen it using the
+new command or application-menu entry.
+
+Provisioning selects nightlies, never stable releases, and fails if no nightly is
+found or the newest nightly lacks a matching AppImage or checksum. It does not
+silently install an older build. Rerunning the task installs the newest nightly
+from that release query; T3 Code can also update itself between provisioning runs.
+Applications are installed but not launched, and no scheduled Ansible job updates them.
 
 ### OpenVPN and WireGuard
 
