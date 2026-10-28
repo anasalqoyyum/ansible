@@ -1,19 +1,23 @@
 ---
 name: pr
-description: Generate a PR title and concise PR body from the current branch diff, including a Jira key from the request or branch when present. Adds file-specific fix details for bug fixes and a test plan when new tests were added, then copies the formatted result with the user's yank command.
+description: Generate a PR title and body from the current branch diff for GitHub or Bitbucket. Adapt to the target repository's PR template, falling back to a concise default format. Include a Jira key from the request or branch when present, and copy standalone drafts with the user's yank command.
 ---
 
 Generate a PR title and body for the current branch.
 
-For a body-only request, omit the Title section.
+For a body-only request, omit the Title section. When another skill uses this one to create a PR, return the title and body separately and skip clipboard steps unless requested. This skill alone does not authorize PR creation.
 
 ## Steps
 
 1. Run `git branch --show-current`. Resolve a Jira key matching `[A-Z][A-Z0-9]+-[0-9]+`, case-insensitively, from an explicit key in the request or from the branch name. Normalize it to uppercase. If explicit and branch keys conflict, or the branch contains multiple keys without an explicit choice, ask which key to use. Continue without a Jira key when neither source contains one.
-2. Resolve the base ref from an explicit PR target or user argument, the current branch's upstream, `main`, or `master`, in that order. Verify it with `git rev-parse`.
+2. Identify the destination repository, host, and target branch from the request, calling workflow, and Git remotes. For forks, the destination repository owns the template. Resolve the base ref from an explicit PR target or user argument, the current branch's upstream, `main`, or `master`, in that order. Verify it with `git rev-parse`.
 3. Run `git diff <base>...HEAD` to understand committed branch changes. Also run `git log <base>..HEAD --oneline` to see the commits. If the user wants working-tree changes included, inspect `git status --short`, `git diff`, `git diff --cached`, and untracked files that belong to the change.
 4. Read any touched files as needed to understand context beyond the diff.
-5. Produce the output in **exactly** this shape — no extra prose before or after. Include the conditional sections only when their rules apply.
+5. Before drafting, read [PR template selection and filling](references/templates.md) and resolve the body format. Use an explicitly requested format or selected template first, otherwise the destination repository's template. Keep required content from applicable repository instructions. Use the default below only when no template or custom format applies.
+
+Apply the title rules below in both template and fallback modes. For standalone output, put `## Title` and the title before the body, unless the request is body-only. With a template, preserve its existing headings, relative order, and checklists. Supplement a bare template with useful missing sections from our default format as described in the template reference. Reuse equivalent sections rather than duplicating them. Default section-inclusion rules apply only to the fallback; use their writing guidance for template content and additions. Produce the requested draft without surrounding commentary.
+
+### Default format
 
 ```
 ## Title
@@ -43,11 +47,12 @@ For a body-only request, omit the Title section.
 
 **Title rules:**
 
-- Use Conventional Commit format: `type(scope): description`
+- Follow an explicit user or repository title convention when present; otherwise use the defaults below. Include a resolved Jira key exactly once, in the convention's ticket position or after the colon by default.
+- Default to Conventional Commit format: `type(scope): description`
 - Types: `feat`, `fix`, `chore`, `refactor`, `docs`, `test`, `perf`, `style`
 - Scope: the area of the codebase (e.g. `release-management`, `auth`, `organizations`)
-- When a Jira key was resolved, place it exactly once after the colon: `fix(test): DEX-2 - this is a test fix`
-- When no Jira key was resolved, preserve the usual `type(scope): description` format
+- In the default format, place a resolved Jira key exactly once after the colon: `fix(test): DEX-2 - this is a test fix`
+- Without a Jira key, omit the ticket segment
 - Description: imperative mood, lowercase, no trailing period
 - Keep the complete title at or below 72 characters, including the Jira key
 
@@ -97,8 +102,9 @@ For a body-only request, omit the Title section.
 - Map each relevant test file to the behavior or regression it covers; use backticked repository-relative paths
 - Describe the added coverage without claiming tests passed or commands were run unless verified
 
-6. Print the output to the terminal using a single `echo` or `cat` command so it is visible.
-7. Pipe the **same output** through the user's `yank` function to copy it to the clipboard. The yank function reads from stdin and routes to the appropriate clipboard utility (`win32yank`, `pbcopy`, `xclip`, `xsel`, or `wl-copy` depending on the OS). Invoke it as a shell function — source it inline if needed:
+6. When a calling workflow creates a PR, pass the generated title separately from the complete body. Exclude only the standalone title wrapper added for display. Keep any `## Title` heading that belongs to the repository template. Use `gh pr create --body-file <file>` for GitHub, or `bkt pr create --body "$BODY"` for Bitbucket after loading `BODY` from a file or a quoted heredoc. Treat Markdown as data, not executable shell text. Submit the filled body rather than relying on CLI autofill or template expansion. Preserve applicable attribution requirements. Return to the calling workflow without printing or copying a second draft.
+7. For standalone drafting, print the output to the terminal using a single `echo` or `cat` command so it is visible.
+8. Pipe the **same output** through the user's `yank` function to copy it to the clipboard. The yank function reads from stdin and routes to the appropriate clipboard utility (`win32yank`, `pbcopy`, `xclip`, `xsel`, or `wl-copy` depending on the OS). Invoke it as a shell function — source it inline if needed:
 
 ```bash
 yank() {
