@@ -67,6 +67,9 @@
     - name: Install Herdr
       ansible.builtin.import_tasks: tasks/herdr-setup.yml
 
+    - name: Install herdr-core
+      ansible.builtin.import_tasks: tasks/herdr-core-setup.yml
+
     - name: Configure Zsh
       ansible.builtin.import_tasks: tasks/zsh-setup.yml
 

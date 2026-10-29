@@ -336,6 +336,7 @@ alias yolo="find . -name 'node_modules' -type d -prune -print -exec sudo rm -rf 
 alias nuke="find . -name 'dist' -type d -prune -print -exec sudo rm -rf '{}' \;"
 alias t="herdr --session main" # prefer Herdr; tmux remains available as `tm`
 alias h="herdr --session main"
+alias hcore="hc"
 alias tm="tmux new-session -A -s main"
 alias hpc="herdr --remote real@192.168.0.107 --session main"
 alias sf="rg --files | fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}' | xargs -r nvim"

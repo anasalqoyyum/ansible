@@ -1,0 +1,36 @@
+- name: Set up herdr-core
+  become: false
+  tags:
+    - install
+    - herdr-core
+  block:
+    - name: Create private installer cache directory
+      ansible.builtin.file:
+        path: "{{ ansible_facts['env']['HOME'] }}/.cache/ansible/herdr-core"
+        state: directory
+        mode: "0700"
+
+    - name: Download herdr-core installer
+      ansible.builtin.get_url:
+        url: https://releases.herdr.dev/core/install.sh
+        dest: "{{ ansible_facts['env']['HOME'] }}/.cache/ansible/herdr-core/install.sh"
+        mode: "0600"
+        force: true
+      when: not ansible_check_mode
+
+    - name: Install or update herdr-core
+      ansible.builtin.command:
+        argv:
+          - /bin/sh
+          - "{{ ansible_facts['env']['HOME'] }}/.cache/ansible/herdr-core/install.sh"
+        chdir: "{{ ansible_facts['env']['HOME'] }}"
+      environment:
+        HC_INSTALL_DIR: "{{ ansible_facts['env']['HOME'] }}/.local/bin"
+        PATH: "{{ ansible_facts['env']['HOME'] }}/.local/bin:{{ ansible_facts['env']['PATH'] }}"
+      changed_when: true
+      when: not ansible_check_mode
+
+    - name: Verify herdr-core CLI
+      ansible.builtin.command: "{{ ansible_facts['env']['HOME'] }}/.local/bin/herdr-core --version"
+      changed_when: false
+      when: not ansible_check_mode

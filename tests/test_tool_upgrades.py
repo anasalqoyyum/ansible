@@ -218,6 +218,7 @@ class ToolUpgradeTest(unittest.TestCase):
         installers = {}
         for filename, tool in [
             ("herdr-setup.yml", ".local/bin/herdr"),
+            ("herdr-core-setup.yml", ".local/bin/herdr-core"),
             ("mise.yml", ".local/bin/mise"),
             ("browser-skill-setup.yml", ".local/bin/bsk"),
             ("rust-tools-setup.yml", ".cargo/bin/cargo-binstall"),

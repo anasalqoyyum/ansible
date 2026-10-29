@@ -46,6 +46,9 @@
     - name: Install Rust tools
       ansible.builtin.import_tasks: tasks/rust-tools-setup.yml
 
+    - name: Install herdr-core
+      ansible.builtin.import_tasks: tasks/herdr-core-setup.yml
+
     - name: Configure dotfiles
       ansible.builtin.import_tasks: tasks/dotfiles.yml
 
