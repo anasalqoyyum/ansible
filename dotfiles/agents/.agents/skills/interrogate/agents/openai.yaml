@@ -1,0 +1,6 @@
+interface:
+  display_name: "Interrogate"
+  short_description: "Prove adversarial findings with executable repros"
+  default_prompt: "Use $interrogate to attack this change and report only findings you can reproduce."
+policy:
+  allow_implicit_invocation: false

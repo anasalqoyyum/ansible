@@ -1,0 +1,4 @@
+interface:
+  display_name: "Show Me Your Work"
+  short_description: "Keep a resumable evidence-backed decision log"
+  default_prompt: "Use $show-me-your-work to keep a decision log for this run."

@@ -21,11 +21,12 @@ Remaining triggers:
 - Nontrivial multi-step work includes a throughput checkpoint. State what can run independently, what is blocked, and what must stay serial.
 - Invoke `unslop` before writing the final reply and before editing any prose file. The Writing the reply section sets Lazy's own rules and does not stand in for that invocation. Editing a skill or an agent-facing doc also invokes `skill-creator` and `writing-for-agents`.
 - Before review, use `no-comments` when the user invokes it. Otherwise perform a focused comment and suppression pass from its reference, and do not claim that the user-only skill ran.
-- UI, mobile, CLI, and TUI work must be reproduced and verified on the matching surface with the available control or domain skill.
+- UI, mobile, CLI, and TUI work must be reproduced and verified on the matching surface with the available control or domain skill. When no repeatable verification workflow exists and the user asks to create one, use `create-verification-skill`; use `maintain-verification-skill` for drift audits.
+- Running a benchmark, comparing performance, or reporting a measured speedup or regression requires `benchmark-checklist` before acting on the number.
 - Any PR-status request uses the Babysit playbook. A request to merge or land uses Shipping, which begins where Babysit ends.
 - Automated review findings are claims, not commands. Triage them using [review triage](references/review-triage.md).
 - A broken skill discovered mid-task should be repaired without blocking when that repair is authorized and separable. Otherwise report it precisely and continue without silently weakening the workflow.
-- Long, autonomous, multi-phase, or handoff-sensitive work keeps a concise decision trail. Commit or publish that trail only when the user authorized the corresponding Git action.
+- Long, autonomous, multi-phase, or handoff-sensitive work keeps a decision trail through `show-me-your-work`. Commit or publish that trail only when the user authorized the corresponding Git action.
 
 ## Principles
 
@@ -34,6 +35,7 @@ Remaining triggers:
 - **Laziness Protocol.** When sizing a diff or considering abstractions, bias toward deletion and the smallest complete change.
 - **Foundational Thinking.** Before logic, identify core types, data structures, sequencing, and shared state.
 - **Redesign from First Principles.** Integrate a new requirement as if it had existed from the beginning.
+- **Attack the Premise.** After two fixes built on the same assumption fail the same gate, write down and test that assumption before trying another fix.
 - **Subtract Before You Add.** Remove dead weight before building on the simpler base.
 - **Minimize Reader Load.** Collapse one-caller wrappers, reduce hidden state, shorten mutable scope, and keep the call path easy to trace.
 - **Outcome-Oriented Execution.** Converge on the target architecture instead of preserving throwaway compatibility states.
@@ -55,6 +57,8 @@ Remaining triggers:
 - **Prove It Works.** Verify the real artifact or surface, not only a proxy such as compilation.
 - **Fix Root Causes.** Reproduce first, trace the symptom to its owner, and remove obsolete workarounds.
 - **Sequence Verifiable Units.** Break multi-step work into small units that each end in a check.
+- **Test Behavior, Not Implementation.** Keep tests that fail when observable behavior breaks and pass when internals change. Derive expectations from the contract, not the implementation.
+- **Explain the Number.** Before trusting a measurement, name the decision it informs, its noise floor, and its limiter. Check for errors, skipped work, and irrelevant workloads. Use `benchmark-checklist` for performance claims.
 
 ### Delegation
 
@@ -133,4 +137,11 @@ Opening a PR is a terminal transition only when the user authorized Git and remo
 - [Worktree cleanup](playbooks/worktree-cleanup.md). Audit and reclaim worktree disk safely.
 - [Opening a PR](playbooks/opening-a-pr.md). Publish a GitHub or Bitbucket PR when explicitly requested.
 
-If no bundled playbook fits, design the smallest rigorous workflow from the Principles. Do not add ceremony merely because the task is large.
+Explicit companion workflows:
+
+- `correct` turns recurring agent mistakes into verified architectural, static, runtime, or behavioral guards.
+- `interrogate` attacks a scoped change or design and reports only findings with executable proof.
+- `create-verification-skill` builds a project-local real-app verification workflow and feature map.
+- `maintain-verification-skill` reconciles that workflow with current source and live behavior.
+
+If no bundled playbook fits, design the smallest rigorous workflow from the Principles. State a falsifiable outcome, quantify the scope, choose rigor proportional to risk, and test one hypothesis per verifiable unit. Use `show-me-your-work` for the decision trail. Do not add ceremony merely because the task is large.

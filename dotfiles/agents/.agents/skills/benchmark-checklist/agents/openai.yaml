@@ -1,0 +1,4 @@
+interface:
+  display_name: "Benchmark Checklist"
+  short_description: "Validate performance measurements before acting"
+  default_prompt: "Use $benchmark-checklist to validate this benchmark and its performance claim."
