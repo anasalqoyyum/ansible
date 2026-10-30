@@ -445,6 +445,16 @@ else owns that name, which is the state in a Hyprland session; a GNOME
 session's shell owns the name itself. The `.deb` comes from the stable manifest
 at <https://hokum.app>, which names the current release and its SHA-256, so
 provisioning installs that build rather than whatever a repository carries.
+To install or update Hokum without rerunning the rest of the Hyprland setup:
+
+```bash
+ansible-playbook local-devbox.yml --tags hokum --ask-become-pass
+```
+
+The `hokum` tag also stops and removes SwayNotificationCenter if present and
+keeps Hokum's service disabled globally so it is not enabled for GNOME sessions.
+It does not change Hyprland packages, wallpaper, dotfiles, or automatic login.
+
 Click the bell in Waybar to see past notifications, middle-click to open
 Hokum's window, or right-click to toggle Do Not Disturb. The bell turns yellow
 while Do Not Disturb is on, and reads "Hokum is not running" when the daemon is

@@ -1106,6 +1106,58 @@ esac
                 self.assertIn(message, error.exception.stdout)
                 self.assertNotIn("TASK [Install or update Obsidian]", error.exception.stdout)
 
+    def test_hokum_tag_selects_only_notification_setup(self):
+        expected = [
+            "Query the latest Hokum release manifest",
+            "Read the installed Hokum package",
+            "Create the Hokum download directory",
+            "Download the Hokum Debian package",
+            "Install Hokum",
+            "Stop a running SwayNotificationCenter",
+            "Restore SwayNotificationCenter's activation file",
+            "Remove SwayNotificationCenter",
+            "Keep Hokum out of GNOME sessions",
+        ]
+        env = {
+            **self.env,
+            "ANSIBLE_COLLECTIONS_PATH": os.environ.get(
+                "ANSIBLE_COLLECTIONS_PATH",
+                f"{Path.home() / '.ansible/collections'}:/usr/share/ansible/collections",
+            ),
+        }
+        for tags in ["hokum", "hyprland", "devbox-apps"]:
+            with self.subTest(tags=tags):
+                result = subprocess.run(
+                    [
+                        "ansible-playbook",
+                        str(REPO / "local-devbox.yml"),
+                        "--list-tasks",
+                        "--tags",
+                        tags,
+                    ],
+                    env=env,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+                selected = [
+                    line.strip().split("\tTAGS:", 1)[0].rstrip()
+                    for line in result.stdout.splitlines()
+                    if "\tTAGS:" in line and not line.lstrip().startswith("play #")
+                ]
+                if tags == "hokum":
+                    self.assertEqual(
+                        selected,
+                        [
+                            "Require native Ubuntu Desktop 26.04 on x86_64 as a regular user",
+                            *expected,
+                        ],
+                    )
+                else:
+                    self.assertEqual(
+                        [name for name in selected if name in expected], expected
+                    )
+
     def test_hokum_is_the_only_notification_daemon(self):
         apps = (REPO / "tasks/devbox-apps.yml").read_text()
         hyprland = next(
