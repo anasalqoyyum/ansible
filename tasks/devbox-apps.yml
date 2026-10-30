@@ -238,7 +238,6 @@
           - wl-clipboard
           - cliphist
           - hyprpicker
-          - sway-notification-center
           - xdg-user-dirs
           - xdg-utils
         state: latest
@@ -246,6 +245,83 @@
         update_cache: true
         cache_valid_time: 0
       register: devbox_hyprland_packages
+
+    # Hokum draws the notification cards. Its manifest names the current stable
+    # build and that build's sha256. The .deb installs hokum.service without
+    # enabling it, so Hyprland starts it and nothing else does.
+    - name: Query the latest Hokum release manifest
+      ansible.builtin.uri:
+        url: https://anoma.ly/release/hokum/desktop/stable.json
+        return_content: true
+      register: devbox_hokum_manifest
+      check_mode: false
+      changed_when: false
+
+    - name: Read the installed Hokum package
+      ansible.builtin.command: dpkg-query -W -f=${Status} ${Version} hokum
+      register: devbox_hokum_installed
+      changed_when: false
+      failed_when: false
+      check_mode: false
+
+    # nfpm appends release 1 to the manifest version, so the .deb reports
+    # 0.1.3-1. A changed release suffix reinstalls once and then settles. The
+    # status prefix keeps a removed package from counting as installed.
+    - name: Install or update Hokum
+      when: >-
+        devbox_hokum_installed.rc != 0 or
+        devbox_hokum_installed.stdout !=
+        'install ok installed ' ~ devbox_hokum_manifest.json.release.version ~ '-1'
+      block:
+        - name: Create the Hokum download directory
+          ansible.builtin.file:
+            path: "{{ ansible_facts['user_dir'] }}/.cache/hokum"
+            state: directory
+            mode: "0755"
+
+        - name: Download the Hokum Debian package
+          ansible.builtin.get_url:
+            url: >-
+              https://anoma.ly{{ devbox_hokum_manifest.json.release.targets['linux-x64-deb'].url }}
+            dest: >-
+              {{ ansible_facts['user_dir'] }}/.cache/hokum/hokum_{{ devbox_hokum_manifest.json.release.version }}_amd64.deb
+            checksum: >-
+              sha256:{{ devbox_hokum_manifest.json.release.targets['linux-x64-deb'].sha256 }}
+            mode: "0644"
+          check_mode: false
+
+        - name: Install Hokum
+          become: true
+          ansible.builtin.apt:
+            deb: >-
+              {{ ansible_facts['user_dir'] }}/.cache/hokum/hokum_{{ devbox_hokum_manifest.json.release.version }}_amd64.deb
+            update_cache: true
+            cache_valid_time: 3600
+
+    # swaync's activation file claims org.freedesktop.Notifications too, so it
+    # has to go rather than sit unused: whichever daemon a notification starts
+    # first would own the name. The diversion is from an earlier provisioning
+    # run that kept the package installed instead. hyprland.conf started swaync
+    # directly, so removing the package leaves that process running.
+    - name: Stop a running SwayNotificationCenter
+      ansible.builtin.command: pkill -x swaync
+      register: devbox_swaync_stop
+      changed_when: devbox_swaync_stop.rc == 0
+      failed_when: false
+
+    - name: Restore SwayNotificationCenter's activation file
+      become: true
+      community.general.dpkg_divert:
+        path: /usr/share/dbus-1/services/org.erikreider.swaync.service
+        divert: /usr/share/dbus-1/services/org.erikreider.swaync.service.disabled
+        rename: true
+        state: absent
+
+    - name: Remove SwayNotificationCenter
+      become: true
+      ansible.builtin.apt:
+        name: sway-notification-center
+        state: absent
 
     # These packages enable their units for graphical-session.target, which the
     # GNOME session also reaches. hyprland.conf starts them instead.
@@ -260,8 +336,18 @@
         - hyprpolkitagent.service
         - hypridle.service
         - hyprpaper.service
-        - swaync.service
       when: not ansible_check_mode or not devbox_hyprland_packages.changed
+
+    # The Hokum unit arrives with the .deb, so a check run on a machine without
+    # the package has nothing to disable.
+    - name: Keep Hokum out of GNOME sessions
+      become: true
+      ansible.builtin.systemd_service:
+        name: hokum.service
+        scope: global
+        enabled: false
+      when: not ansible_check_mode or devbox_hokum_installed.rc == 0
+
 
     - name: Create the wallpaper directory
       ansible.builtin.file:

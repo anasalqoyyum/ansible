@@ -76,9 +76,12 @@ tooltip {
   color: #b4cbff;
 }
 
-#custom-notification.dnd-notification,
-#custom-notification.dnd-none {
+#custom-notification.dnd {
   color: #f0c674;
+}
+
+#custom-notification.unavailable {
+  color: #666666;
 }
 
 #custom-power {

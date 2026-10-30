@@ -64,7 +64,7 @@ Do not forward SSH, VNC, BrowserSkill, or application ports on your router.
 | Install CLIProxyAPI core and keep it running with a lingering systemd user service | Authenticate upstream providers and set the client API key |
 | Install or update Chrome stable, the latest Helium AppImage, Ghostty's latest community Ubuntu package, Obsidian, OBS Studio, Spotify, and the newest T3 Code nightly; install Zed | Sign in to browsers, Obsidian Sync, Spotify, T3 Code, and Zed as needed |
 | Install OpenVPN and WireGuard clients with graphical connection controls | Import your VPN profiles and test connections to your VPN servers |
-| Install Hyprland with Waybar, fuzzel, a wallpaper, and an idle lock screen, and log in to it automatically at boot | Reboot once for automatic login to take effect |
+| Install Hyprland with Waybar, fuzzel, Hokum notifications, a wallpaper, and an idle lock screen, and log in to it automatically at boot | Reboot once for automatic login to take effect |
 | Create `~/repo/` and `~/repo/worktrees/` | Clone your development repositories when needed |
 | Install, enable, and start native OpenSSH and Tailscale | Restore outbound SSH files using Ansible Vault if wanted |
 | Authorize the existing `.ssh/id_ed25519.pub` without removing other authorized keys | Install and connect the BrowserSkill Chrome extension |
@@ -434,9 +434,84 @@ restart GDM, which would end the running desktop. To use GNOME once, log out wit
 `ctrl + alt + delete` and choose Ubuntu from the session menu. GDM saves that
 choice, and the next provisioning run sets Hyprland again.
 
-SwayNotificationCenter displays notifications and keeps their history. Click
-the bell in Waybar to open its panel, or right-click to toggle Do Not Disturb.
-The bell changes its icon and turns yellow when Do Not Disturb is enabled.
+Hokum is the only notification daemon. It owns
+`org.freedesktop.Notifications`, and provisioning removes
+`sway-notification-center`, whose D-Bus activation file claims the same name:
+with both installed, whichever daemon a notification starts first would take
+the name. Hyprland starts Hokum with `exec-once = systemctl --user start
+hokum.service` and stops it with `exec-shutdown`, and provisioning never
+enables the unit for any user. Its D-Bus activation file starts it when nothing
+else owns that name, which is the state in a Hyprland session; a GNOME
+session's shell owns the name itself. The `.deb` comes from the stable manifest
+at <https://hokum.app>, which names the current release and its SHA-256, so
+provisioning installs that build rather than whatever a repository carries.
+Click the bell in Waybar to see past notifications, middle-click to open
+Hokum's window, or right-click to toggle Do Not Disturb. The bell turns yellow
+while Do Not Disturb is on, and reads "Hokum is not running" when the daemon is
+down. Waybar loads `config.jsonc` only at startup, so reload it after editing
+that file with `pkill -USR2 -x waybar`.
+
+Hokum keeps no history: a dismissed card is gone, and its window holds settings
+rather than a backlog. `hokum-history.service` fills that gap. It monitors the
+session bus, keeps the `Notify` calls apps send and the ids Hokum answers with,
+and stores the last 500 in `~/.local/state/hokum-history/log.jsonl`. Left-click
+the Waybar bell to pick from them in fuzzel; Enter copies the whole notification
+to the clipboard. Middle-click opens Hokum's window, right-click toggles Do Not
+Disturb.
+
+The log holds what apps asked Hokum to show, which is not always what appeared:
+Do Not Disturb or a stopped daemon can suppress the card, and a notification the
+app withdraws still stays in the list. Cards that replace themselves on every
+step (volume, brightness, anything carrying `x-dunst-stack-tag` or
+`x-canonical-private-synchronous`) are left out, and a card an app updates moves
+to the newest row instead of piling up. Card ids belong to one run of the daemon,
+so a restart never lets a new card overwrite an older row. A client that
+addresses the notification service by its well-known name rather than its unique
+one is recorded but never merged with an earlier card: the log does not guess
+which daemon answered. Actions and buttons are not kept: the list is text.
+
+Notification bodies can hold one-time codes and private messages, so the log is
+mode `0600` inside a `0700` directory. It only covers what arrives while the
+service runs. Hokum's own settings window writes `~/.config/hokum/config.kdl`,
+which provisioning does not manage. Hokum also carries Sound and Bluetooth
+sections on the same window and a tray icon for them. It checks for a new
+release hourly and offers the `apt` command that installs it; provisioning only
+installs the version in its manifest.
+
+`hokum-history.service` has no installation section on purpose: the Hyprland
+configuration starts and stops it rather than anything enabling it globally, so
+a GNOME session has no recorder. Restart it after changing
+`~/.config/hypr/notification-history` with `systemctl --user restart
+hokum-history.service`.
+
+`exec-shutdown` runs when Hyprland exits normally, not when it crashes, and
+`graphical-session.target` stays inactive in this session, so nothing else stops
+Hokum or the history recorder for you. After a compositor crash, `systemctl
+--user stop hokum.service hokum-history.service` before starting the next
+session. Stopping Hokum does not last while the Waybar bell runs: `hokum dnd`
+reaches the daemon over D-Bus, which starts it again through its activation
+file.
+
+To go back to SwayNotificationCenter, revert the changes that introduced Hokum
+and that removed SwayNotificationCenter, rerun `bash run-devbox.sh`, and restart
+the Hyprland session. That reinstalls the package and restores its configuration
+under `~/.config/swaync/`, the `exec-once = swaync` line, and the Waybar module.
+Stop Hokum before the old daemon starts: `systemctl --user stop hokum.service`,
+and `sudo apt remove hokum` if you do not want the package left installed.
+
+Removing the package leaves Debian's configuration files behind, so `dpkg -l`
+shows `rc` rather than `ii`; the binaries and the activation file are gone. That
+is enough for Hokum to be the only daemon. `sudo apt purge
+sway-notification-center` also deletes those leftover files.
+
+Provisioning stops a running swaync before removing it, which ends
+notifications in the current session. The next Hyprland login starts Hokum, or
+start it now with `systemctl --user start hokum.service`.
+
+Stow does not prune links whose source disappeared, so removing the swaync
+configuration from this repository leaves two dangling links,
+`~/.config/swaync/config.json` and `~/.config/swaync/style.css`. Delete those
+links, and the directory once it is empty.
 
 Press `super + v` to choose a previous clipboard item in fuzzel. Cliphist records
 text and images. Selecting an entry restores its original contents to the

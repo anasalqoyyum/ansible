@@ -68,22 +68,13 @@
     "format": "<span font_desc=\"GoogleSansCode Nerd Font\">󰍛</span> {percentage}%"
   },
   "custom/notification": {
-    "format": "<span font_desc=\"GoogleSansCode Nerd Font\">{icon}</span>",
-    "format-icons": {
-      "notification": "󱅫",
-      "none": "󰂜",
-      "dnd-notification": "󰂠",
-      "dnd-none": "󰪓",
-      "inhibited-notification": "󰂛",
-      "inhibited-none": "󰪑",
-      "dnd-inhibited-notification": "󰂛",
-      "dnd-inhibited-none": "󰪑"
-    },
     "return-type": "json",
-    "exec": "swaync-client --subscribe-waybar",
-    "on-click": "swaync-client --toggle-panel --skip-wait",
-    "on-click-right": "swaync-client --toggle-dnd --skip-wait",
-    "escape": true
+    "exec": "python3 ~/.config/waybar/notifications.py",
+    "restart-interval": 10,
+    "escape": false,
+    "on-click": "~/.config/hypr/notification-history show",
+    "on-click-middle": "hokum",
+    "on-click-right": "hokum dnd toggle"
   },
   "tray": {
     "spacing": 8

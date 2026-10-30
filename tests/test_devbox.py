@@ -1106,6 +1106,99 @@ esac
                 self.assertIn(message, error.exception.stdout)
                 self.assertNotIn("TASK [Install or update Obsidian]", error.exception.stdout)
 
+    def test_hokum_is_the_only_notification_daemon(self):
+        apps = (REPO / "tasks/devbox-apps.yml").read_text()
+        hyprland = next(
+            entry for entry in self.tasks("devbox-apps.yml") if entry["name"] == "Install Hyprland session"
+        )
+        blocks = {}
+        pending = list(hyprland["block"])
+        while pending:
+            task = pending.pop()
+            blocks[task["name"]] = task
+            pending.extend(task.get("block", []))
+
+        packages = blocks["Install Hyprland and its desktop utilities"]["ansible.builtin.apt"]["name"]
+        self.assertNotIn("sway-notification-center", packages)
+
+        manifest = blocks["Query the latest Hokum release manifest"]["ansible.builtin.uri"]
+        self.assertEqual(manifest["url"], "https://anoma.ly/release/hokum/desktop/stable.json")
+        download = blocks["Download the Hokum Debian package"]["ansible.builtin.get_url"]
+        self.assertIn("'linux-x64-deb'].url", download["url"])
+        self.assertIn("'linux-x64-deb'].sha256", download["checksum"])
+        self.assertEqual(
+            blocks["Install or update Hokum"]["when"],
+            "devbox_hokum_installed.rc != 0 or devbox_hokum_installed.stdout != "
+            "'install ok installed ' ~ devbox_hokum_manifest.json.release.version ~ '-1'",
+        )
+        self.assertIn(
+            "${Status} ${Version}",
+            blocks["Read the installed Hokum package"]["ansible.builtin.command"],
+        )
+
+        divert = blocks["Restore SwayNotificationCenter's activation file"][
+            "community.general.dpkg_divert"
+        ]
+        self.assertEqual(
+            divert["path"], "/usr/share/dbus-1/services/org.erikreider.swaync.service"
+        )
+        self.assertEqual(divert["state"], "absent")
+        removal = blocks["Remove SwayNotificationCenter"]["ansible.builtin.apt"]
+        self.assertEqual(removal["name"], "sway-notification-center")
+        self.assertEqual(removal["state"], "absent")
+
+        disabled = blocks["Keep Hyprland session services out of GNOME sessions"]["loop"]
+        self.assertNotIn("swaync.service", disabled)
+        self.assertNotIn("systemctl --user enable", apps)
+        hokum_unit = blocks["Keep Hokum out of GNOME sessions"]
+        self.assertEqual(hokum_unit["ansible.builtin.systemd_service"]["name"], "hokum.service")
+        self.assertFalse(hokum_unit["ansible.builtin.systemd_service"]["enabled"])
+        self.assertEqual(
+            hokum_unit["when"], "not ansible_check_mode or devbox_hokum_installed.rc == 0"
+        )
+        names = [task["name"] for task in hyprland["block"]]
+        self.assertLess(
+            names.index("Stop a running SwayNotificationCenter"),
+            names.index("Restore SwayNotificationCenter's activation file"),
+        )
+        self.assertLess(
+            names.index("Restore SwayNotificationCenter's activation file"),
+            names.index("Remove SwayNotificationCenter"),
+        )
+        stop = blocks["Stop a running SwayNotificationCenter"]["ansible.builtin.command"]
+        self.assertEqual(stop, "pkill -x swaync")
+        self.assertLess(
+            names.index("Install or update Hokum"),
+            names.index("Keep Hokum out of GNOME sessions"),
+        )
+
+        session = (REPO / "dotfiles/hyprland/.config/hypr/hyprland.conf").read_text()
+        self.assertIn("exec-once = systemctl --user start hokum.service", session)
+        self.assertIn("exec-shutdown = systemctl --user stop hokum.service", session)
+        self.assertNotIn("exec-once = swaync\n", session)
+
+        waybar = (REPO / "dotfiles/hyprland/.config/waybar/config.jsonc").read_text()
+        self.assertNotIn("swaync-client", waybar)
+        self.assertIn("python3 ~/.config/waybar/notifications.py", waybar)
+        self.assertIn('"on-click": "~/.config/hypr/notification-history show"', waybar)
+        self.assertIn('"on-click-middle": "hokum"', waybar)
+        self.assertFalse((REPO / "dotfiles/hyprland/.config/swaync").exists())
+
+    def test_notification_history_runs_with_the_hyprland_session(self):
+        session = (REPO / "dotfiles/hyprland/.config/hypr/hyprland.conf").read_text()
+        self.assertIn("exec-once = systemctl --user start hokum-history.service", session)
+        self.assertIn("exec-shutdown = systemctl --user stop hokum-history.service", session)
+
+        unit = (
+            REPO / "dotfiles/hyprland/.config/systemd/user/hokum-history.service"
+        ).read_text()
+        self.assertIn("ExecStart=%h/.config/hypr/notification-history record", unit)
+        self.assertNotIn("[Install]", unit)
+        self.assertTrue(
+            (REPO / "dotfiles/hyprland/.config/hypr/notification-history").stat().st_mode
+            & 0o111
+        )
+
     def test_profile_preserves_shared_setup_and_excludes_wsl(self):
         play = yaml.safe_load((REPO / "local-devbox.yml").read_text())[0]
         imports = [t["ansible.builtin.import_tasks"] for t in play["tasks"]]

@@ -1,0 +1,12 @@
+[Unit]
+Description=Record the notifications apps send
+Documentation=https://hokum.app
+# No installation section on purpose: Hyprland starts this from its own
+# config, and graphical-session.target is also reached by the GNOME session,
+# which has its own notification server.
+After=graphical-session.target
+
+[Service]
+ExecStart=%h/.config/hypr/notification-history record
+Restart=always
+RestartSec=2

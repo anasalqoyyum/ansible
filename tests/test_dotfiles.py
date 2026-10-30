@@ -367,8 +367,8 @@ class DotfilesTest(unittest.TestCase):
         paths = [
             ".config/hypr/clipboard-history",
             ".config/hypr/hyprtoolkit.conf",
-            ".config/swaync/config.json",
-            ".config/swaync/style.css",
+            ".config/waybar/config.jsonc",
+            ".config/waybar/style.css",
         ]
         for relative in paths:
             self.write(self.source / "hyprland" / relative, "managed config\n")

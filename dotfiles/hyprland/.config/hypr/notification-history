@@ -1,0 +1,347 @@
+#!/usr/bin/env python3
+"""Keep a log of the notifications apps ask Hokum to show, and list it in fuzzel.
+
+Hokum draws cards and stores nothing, so `record` listens to the session bus for
+Notify calls and for Hokum's replies, which carry the id a card was given. `show`
+lists what it heard. `record` runs as a user service; `show` is what the Waybar
+bell opens.
+"""
+
+import json
+import os
+import select
+import shutil
+import subprocess
+import sys
+import threading
+import time
+from datetime import datetime
+from pathlib import Path
+
+LIMIT = 500
+PENDING = 64
+SERVICE = "org.freedesktop.Notifications"
+CALL_MATCH = f"interface='{SERVICE}',member='Notify'"
+# Volume and brightness cards replace themselves on every step; a list of them
+# says nothing.
+TRANSIENT_HINTS = ("x-dunst-stack-tag", "x-canonical-private-synchronous")
+
+LOCK = threading.Lock()
+# Card ids only mean something inside one run of the daemon, on one bus, so a
+# record's generation is the bus id plus the daemon's unique name. Both are read
+# from the messages themselves: the call's destination and the reply's sender.
+BUS_ID: str | None = None
+# Replies can be read before the call they answer, because the two monitors are
+# separate processes.
+ORPHAN_IDS: dict[tuple[str, int], tuple[int, str]] = {}
+
+def bus_id() -> str:
+    global BUS_ID
+    if BUS_ID is None:
+        result = subprocess.run(
+            [
+                "busctl", "--user", "call", "org.freedesktop.DBus",
+                "/org/freedesktop/DBus", "org.freedesktop.DBus", "GetId",
+            ],
+            capture_output=True,
+            text=True,
+        )
+        parts = result.stdout.split()
+        BUS_ID = parts[1].strip('"') if result.returncode == 0 and len(parts) > 1 else ""
+    return BUS_ID
+
+def log_path() -> Path:
+    state = os.environ.get("XDG_STATE_HOME") or Path.home() / ".local/state"
+    return Path(state) / "hokum-history/log.jsonl"
+
+def load() -> list[dict]:
+    try:
+        text = log_path().read_text(encoding="utf-8")
+    except OSError:
+        return []
+    records = []
+    for line in text.splitlines():
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(record, dict):
+            records.append(record)
+    return records
+
+def save(records: list[dict]) -> None:
+    """Write the log where only the owner can read it: notification bodies can
+    carry one-time codes and private messages."""
+    path = log_path()
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    os.chmod(path.parent, 0o700)
+    temporary = path.with_suffix(".tmp")
+    temporary.write_text(
+        "".join(json.dumps(record, ensure_ascii=False) + "\n" for record in records),
+        encoding="utf-8",
+    )
+    os.chmod(temporary, 0o600)
+    os.replace(temporary, path)
+
+def parse(line: str) -> dict | None:
+    """A record from one Notify call, or None for anything else."""
+    try:
+        message = json.loads(line)
+    except json.JSONDecodeError:
+        return None
+    if message.get("type") != "method_call" or message.get("member") != "Notify":
+        return None
+    data = (message.get("payload") or {}).get("data") or []
+    if len(data) < 5:
+        return None
+    app, replaces, _, summary, body = data[:5]
+    hints = data[6] if len(data) > 6 and isinstance(data[6], dict) else {}
+    if any(name in hints for name in TRANSIENT_HINTS):
+        return None
+    # The bus delivers to the owner's unique name. A message addressed to the
+    # well-known name instead keeps that name as its generation, which no reply
+    # can match: such a card is recorded but never replaces another, because
+    # guessing the owner here could attribute it to the wrong daemon.
+    daemon = message.get("destination")
+    return {
+        "time": datetime.now().astimezone().isoformat(timespec="seconds"),
+        "app": str(app),
+        "summary": str(summary),
+        "body": str(body),
+        "replaces": int(replaces),
+        "id": None,
+        "generation": f"{bus_id()}:{daemon}",
+        "caller": None,
+        "cookie": None,
+    }
+
+def parse_reply(line: str) -> tuple[tuple[str, int], int, str] | None:
+    """The (caller, cookie) key, the id and the generation from a Notify reply."""
+    try:
+        message = json.loads(line)
+    except json.JSONDecodeError:
+        return None
+    if message.get("type") != "method_return" or "reply_cookie" not in message:
+        return None
+    data = (message.get("payload") or {}).get("data") or []
+    if len(data) != 1 or not isinstance(data[0], int):
+        return None
+    caller = message.get("destination")
+    daemon = message.get("sender")
+    if not isinstance(caller, str) or not isinstance(daemon, str):
+        return None
+    return (caller, message["reply_cookie"]), data[0], f"{bus_id()}:{daemon}"
+
+def drop_replaced(records: list[dict], entry: dict) -> None:
+    """Remove the row a replacement card stands in for."""
+    if not entry["replaces"]:
+        return
+    for index, record in enumerate(records):
+        if record is entry:
+            continue
+        if (
+            record.get("id") == entry["replaces"]
+            and record.get("generation") == entry["generation"]
+        ):
+            # The card is the same one, but it just changed, so it belongs at
+            # the newest end of the list.
+            records.pop(index)
+            return
+
+def store(entry: dict, caller: str | None, cookie: int | None) -> None:
+    """Add the entry, or rewrite the row an app is updating in place."""
+    with LOCK:
+        records = load()[-LIMIT:]
+        entry["caller"] = caller
+        entry["cookie"] = cookie
+        if caller is not None and cookie is not None:
+            orphan = ORPHAN_IDS.pop((caller, cookie), None)
+            if orphan is not None:
+                entry["id"], entry["generation"] = orphan
+        drop_replaced(records, entry)
+        records.append(entry)
+        save(records[-LIMIT:])
+
+def store_id(key: tuple[str, int], identifier: int, generation: str) -> None:
+    with LOCK:
+        records = load()
+        for index, record in enumerate(records):
+            if (
+                record.get("caller") == key[0]
+                and record.get("cookie") == key[1]
+                and record.get("generation") == generation
+            ):
+                record["id"] = identifier
+                # A replacement written while this id was still unknown could
+                # not find this row, so it stays behind until now. Only a later
+                # row supersedes it: an older one is already superseded itself.
+                for later in records[index + 1:]:
+                    if (
+                        later.get("replaces") == identifier
+                        and later.get("generation") == record.get("generation")
+                    ):
+                        records.remove(record)
+                        break
+                save(records)
+                return
+        ORPHAN_IDS[key] = (identifier, generation)
+        for stale in list(ORPHAN_IDS)[:-PENDING]:
+            del ORPHAN_IDS[stale]
+
+def on_call(line: str) -> None:
+    entry = parse(line)
+    if entry is None:
+        return
+    try:
+        message = json.loads(line)
+    except json.JSONDecodeError:
+        message = {}
+    store(entry, message.get("sender"), message.get("cookie"))
+
+def on_reply(line: str) -> None:
+    reply = parse_reply(line)
+    if reply is not None:
+        store_id(*reply)
+
+def owner() -> str | None:
+    result = subprocess.run(
+        [
+            "busctl", "--user", "call", "org.freedesktop.DBus",
+            "/org/freedesktop/DBus", "org.freedesktop.DBus", "GetNameOwner", "s", SERVICE,
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        return None
+    parts = result.stdout.split()
+    return parts[1].strip('"') if len(parts) > 1 else None
+
+def stop(process: subprocess.Popen) -> None:
+    process.terminate()
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=5)
+    process.stdout.close()
+
+def calls() -> None:
+    """Every Notify call, whichever daemon answers it."""
+    while True:
+        process = subprocess.Popen(
+            ["busctl", "--user", "monitor", "--json=short", f"--match={CALL_MATCH}"],
+            stdout=subprocess.PIPE,
+            text=True,
+        )
+        try:
+            for line in process.stdout:
+                on_call(line)
+        finally:
+            stop(process)
+        time.sleep(2)
+
+def replies() -> None:
+    """The daemon's replies, which are only visible while it owns the name."""
+    while True:
+        name = owner()
+        if name is None:
+            time.sleep(2)
+            continue
+        process = subprocess.Popen(
+            ["busctl", "--user", "monitor", "--json=short", f"--match=sender='{name}'"],
+            stdout=subprocess.PIPE,
+            text=True,
+        )
+        check = time.monotonic() + 1.0
+        try:
+            while True:
+                ready, _, _ = select.select([process.stdout], [], [], 1.0)
+                if time.monotonic() >= check:
+                    # busctl keeps watching a name that no longer exists, so the
+                    # daemon restarting has to be noticed here, whatever the bus
+                    # traffic looks like.
+                    check = time.monotonic() + 1.0
+                    if owner() != name:
+                        break
+                if not ready:
+                    continue
+                line = process.stdout.readline()
+                if not line:
+                    break
+                on_reply(line)
+        finally:
+            stop(process)
+        time.sleep(1)
+
+def record() -> int:
+    threads = [
+        threading.Thread(target=calls, daemon=True),
+        threading.Thread(target=replies, daemon=True),
+    ]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    return 0
+
+def one_line(text: str) -> str:
+    return " ".join(text.split())
+
+def label(record: dict) -> str:
+    try:
+        when = datetime.fromisoformat(record.get("time", "")).strftime("%H:%M")
+    except ValueError:
+        when = "--:--"
+    app = one_line(str(record.get("app", "")))
+    summary = one_line(str(record.get("summary", "")))
+    body = one_line(str(record.get("body", "")))
+    text = summary or body
+    if summary and body:
+        text = f"{summary} — {body}"
+    return f"{when}  {app}  {text}"[:160]
+
+def full_text(record: dict) -> str:
+    summary = str(record.get("summary", "")).strip()
+    body = str(record.get("body", "")).strip()
+    parts = [part for part in (summary, body) if part]
+    try:
+        when = datetime.fromisoformat(record.get("time", "")).strftime("%Y-%m-%d %H:%M")
+    except ValueError:
+        when = ""
+    app = str(record.get("app", "")).strip()
+    parts.append(" · ".join(part for part in (app, when) if part))
+    return "\n\n".join(parts)
+
+def show() -> int:
+    fuzzel = shutil.which("fuzzel")
+    if fuzzel is None:
+        print("notification-history: fuzzel is not installed", file=sys.stderr)
+        return 1
+    records = load()
+    labels = [label(record) for record in reversed(records)] or ["No notifications yet"]
+    choice = subprocess.run(
+        [fuzzel, "--dmenu", "--no-run-if-empty", "--prompt", "notifications > "],
+        input="\n".join(labels) + "\n",
+        capture_output=True,
+        text=True,
+    )
+    if choice.returncode != 0 or not records:
+        return 0
+    selected = choice.stdout.rstrip("\n")
+    if selected not in labels:
+        return 0
+    record_of_choice = records[len(records) - 1 - labels.index(selected)]
+    subprocess.run(["wl-copy"], input=full_text(record_of_choice), text=True)
+    return 0
+
+def main(argv: list[str]) -> int:
+    if argv[:1] == ["record"]:
+        return record()
+    if argv[:1] == ["show"]:
+        return show()
+    print("usage: notification-history record|show", file=sys.stderr)
+    return 2
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
