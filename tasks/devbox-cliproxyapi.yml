@@ -114,6 +114,11 @@
           # Sends Codex multi-agent messages as plaintext; encrypted agent_message
           # content is rejected upstream with invalid_encrypted_content.
           optimize-multi-agent-v2: true
+      upstream:
+        codex:
+          # Pins each Codex websocket to one account and model so response.steer
+          # events reach the response they reference.
+          response-steering: true
   no_log: true
   notify: Restart CLIProxyAPI
   when:
