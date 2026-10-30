@@ -109,6 +109,11 @@
           - "{{ lookup('ansible.builtin.password', '/dev/null', length=64, chars=['ascii_letters', 'digits']) }}"
       oauth:
         auth-dir: "{{ ansible_facts['user_dir'] }}/.cli-proxy-api"
+      client:
+        codex:
+          # Sends Codex multi-agent messages as plaintext; encrypted agent_message
+          # content is rejected upstream with invalid_encrypted_content.
+          optimize-multi-agent-v2: true
   no_log: true
   notify: Restart CLIProxyAPI
   when:
