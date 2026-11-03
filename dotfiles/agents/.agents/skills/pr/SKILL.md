@@ -64,6 +64,7 @@ Apply the title rules below in both template and fallback modes. For standalone 
 - Use plain, direct language; keep technical terms when they add useful precision
 - Use the repository's domain language from `GLOSSARY.md` when present
 - State the outcome and reason, rather than narrating implementation details
+- Lead with the concrete user problem and resulting behavior. For a small change, a short paragraph or one bullet can be enough; use additional bullets only when they help review.
 - Keep each bullet self-contained and avoid repeating the title or later sections
 - Add a small visual when it clarifies ownership or flow in a complex change, following **Summary visuals** below; omit it when the bullets are sufficient
 - Mention relevant checks that actually ran. Never claim a check passed unless you ran it.
@@ -102,7 +103,7 @@ Apply the title rules below in both template and fallback modes. For standalone 
 - Map each relevant test file to the behavior or regression it covers; use backticked repository-relative paths
 - Describe the added coverage without claiming tests passed or commands were run unless verified
 
-6. When a calling workflow creates a PR, pass the generated title separately from the complete body. Exclude only the standalone title wrapper added for display. Keep any `## Title` heading that belongs to the repository template. Use `gh pr create --body-file <file>` for GitHub, or `bkt pr create --body "$BODY"` for Bitbucket after loading `BODY` from a file or a quoted heredoc. Treat Markdown as data, not executable shell text. Submit the filled body rather than relying on CLI autofill or template expansion. Preserve applicable attribution requirements. Return to the calling workflow without printing or copying a second draft.
+6. When a calling workflow creates a PR, pass the generated title separately from the complete body. Exclude only the standalone title wrapper added for display. Keep any `## Title` heading that belongs to the repository template. Use `gh pr create --body-file <file>` for GitHub, or `bkt pr create --body "$BODY"` for Bitbucket after loading `BODY` from a file or a quoted heredoc. Treat Markdown as data, not executable shell text. Submit the filled body rather than relying on CLI autofill or template expansion. Preserve applicable attribution requirements. The caller verifies the published URL, source head, target, and draft state, then follows the harness's PR linking rules. Return to the calling workflow without printing or copying a second draft.
 7. For standalone drafting, print the output to the terminal using a single `echo` or `cat` command so it is visible.
 8. Pipe the **same output** through the user's `yank` function to copy it to the clipboard. The yank function reads from stdin and routes to the appropriate clipboard utility (`win32yank`, `pbcopy`, `xclip`, `xsel`, or `wl-copy` depending on the OS). Invoke it as a shell function — source it inline if needed:
 
@@ -128,3 +129,6 @@ echo "$OUTPUT" | yank
 ```
 
 Use `tee /dev/stderr` or a variable to both print and pipe without running the generation twice.
+
+Problem-first writing adapted from [tstack's file-pr](https://github.com/t3dotgg/tstack/tree/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/file-pr).
+[MIT notice](../tstack-license.txt).

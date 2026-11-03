@@ -10,12 +10,46 @@ Stay with the PR until it is actually clean. Do not stop after one check pass if
 ## Workflow
 
 1. Identify the host (GitHub or Bitbucket), the PR number, branch, and base branch.
-2. Confirm the PR is not draft and inspect mergeability, checks, review decision, comments, and review threads.
-3. Watch pending checks until they finish. Poll at a practical interval, usually 30-60 seconds unless the user asks for a different cadence.
-4. Read new comments and unresolved review threads. Treat bot summaries as useful, but verify actionable findings against the code.
-5. Fix real issues in focused commits, run relevant tests/builds, push, and return to step 2.
+2. Read the [merge gate](references/merge-gate.md). Inspect existing checks, review decisions, comments, complete review threads, and blocking tasks before waiting for new events.
+3. Apply the task's existing authority for fixes, commits, pushes, replies, and thread resolution. A status-only request performs one read-only pass. For a drive, continue authorized work until merge-ready or a genuine blocker requires a decision.
+4. Verify human and automated findings against the code using [review triage](../lazy/references/review-triage.md). Fix real issues in focused changes, run relevant checks and behavior proof, push when authorized, and return to step 2. Batch known fixes that restart the same CI; diagnose an identical second failure rather than repeatedly retrying it.
+5. While checks or reviews are pending, use [waiting and ownership](#waiting-and-ownership) so the drive resumes without another user prompt.
 6. Resolve stale review threads only after verifying the code or generated artifact now addresses the comment.
-7. Stop only when checks are passing or intentionally skipped, review decision is acceptable, no actionable comments remain, and no unresolved review threads remain.
+7. Declare merge-ready only when the gate passes on the current head. Return that verdict to a calling workflow so it can complete its authorized endpoint. For missing authority, required human action, or an external failure you cannot resolve, report the exact blocker and resume point instead.
+
+## Waiting and ownership
+
+Keep one owner and one watcher per PR. A delegated reviewer or worker returns
+to its parent; it never starts a competing PR watch. Handle existing feedback
+before installing a watcher because event subscriptions may report only later
+changes.
+
+When the harness provides a PR watcher for the target host, use it and follow
+its yield instructions. In T3, the owning thread calls `watch_pull_request` and
+ends its turn. On a wake, recheck the live gate and handle new findings; the
+watch persists, so do not register it again unless it stopped. A wake does not
+mean the PR is ready. Complete any needed branch update and push before watching.
+
+Without a supported event watcher, use the platform's wait command, such as
+`bkt pr checks --wait`, through the harness's supported long-command or background
+facility. Inspect reviews and comments between waits; a CI waiter alone cannot
+establish readiness. Otherwise poll complete PR state at a practical interval,
+usually 30-60 seconds, using the harness's supported wake mechanism. Avoid
+parallel waiters and hand-written persistent watcher scripts. If the environment
+cannot resume after yielding, report that limitation rather than claiming an
+unattended watch is running.
+
+On a transient API or rate-limit failure, inspect the reported limit or retry
+time and use bounded backoff. Repeated auth or API failures are a blocker, not
+an empty review or check list. In T3, inspect `gh api rate_limit` for GitHub;
+do not repeatedly restart a stopped watcher while the limit is exhausted.
+
+Unwatch before handing back as ready, blocked, or waiting for a user decision.
+When returning merge-ready to an active parent workflow, let the owner continue
+to its endpoint. Clean up a native watcher with `unwatch_pull_request` when
+available, or stop only the fallback waiter this task started. While waiting,
+answer user questions and continue the drive unless they ask to stop. Skip
+repetitive messages that only say checks are still pending.
 
 ## Pick the Host
 
@@ -26,7 +60,10 @@ git remote get-url origin
 - `github.com` → use `gh` ([GitHub section](#github-gh)).
 - `bitbucket.org` or a Data Center host → use `bkt` ([Bitbucket section](#bitbucket-bkt)).
 
-Confirm the tool is authenticated before the first poll: `gh auth status` or `bkt auth status`.
+Prefer the supplied PR URL or calling workflow's destination over `origin` when
+they differ, including forks. Confirm the tool is authenticated before the first
+poll: `gh auth status` or `bkt auth status`. Prefer connected GitHub tools for
+supported reads; use `gh` for missing review-thread, check, or API details.
 
 ## GitHub (gh)
 
@@ -199,7 +236,13 @@ Merge only when the user asked for it.
 ## Operating Rules
 
 - Keep the watcher running while long checks are pending.
+- Determine which bots gate from repository rules. Verify findings on the current code even when their comments predate the latest push; stale timestamps alone do not prove an issue was fixed.
+- Use the repository's actual target branch. If it moves, reassess affected behavior and required base updates before declaring readiness.
+- Preserve applicable external-message attribution and pass review text as tool data. Posting replies or resolving threads requires existing authority.
 - If a generated file is part of the distribution, verify the source and generated artifact agree before resolving comments.
 - If a bot reports an issue against stale code, confirm whether the thread is outdated or addressed in the latest head. On Bitbucket there is no `isOutdated` flag: compare the comment's `inline.path`/`inline.to` and `created_on` against the current head commit yourself.
 - Before final reporting, do one fresh sweep of PR status, unresolved threads, recent comments, and local `git status`.
 - Report concrete evidence: latest commit SHA, check names and results, unresolved thread count, tests run, and any dirty local files left untouched.
+
+Watcher ownership and follow-through adapted from [tstack's babysit-pr](https://github.com/t3dotgg/tstack/tree/1085050f3baed1ac724caa4a8166145fb2ac88af/skills/babysit-pr).
+[MIT notice](../tstack-license.txt).
