@@ -26,7 +26,7 @@ Revisit an approved decision only when new information changes its scope, stakes
 
 - When the user authorizes posting a comment, review, reply, or message on GitHub, Bitbucket, Jira, or another external service, append this footer on a separate line:
 
-  `Posted by <model-name> on behalf of Anas Alqoyyum.`
+  `🤖 Written by <model-name> on behalf of Anas Alqoyyum`
 
 - Replace `<model-name>` with the actual model used to write the message. Use session or runtime metadata; never guess. If unavailable, ask before posting.
 - Include the footer in drafts intended for external posting. Keep it out of ordinary chat responses, code comments, and commit messages.
