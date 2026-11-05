@@ -27,6 +27,7 @@
       - libssl-dev
       - libxml2-dev
       - libxmlsec1-dev
+      - libxkbcommon-x11-dev
       - llvm
       - make
       - ncdu
