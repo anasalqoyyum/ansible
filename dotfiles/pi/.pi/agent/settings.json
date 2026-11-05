@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.4.0",
+  "lastChangelogVersion": "1.5.0",
   "defaultProvider": "openai",
   "defaultModel": "gpt-6.1-sol",
   "defaultThinkingLevel": "high",
@@ -77,5 +77,9 @@
   },
   "classifier": {
     "model": "kenari/jev-1-13:free"
+  },
+  "extensionChangelogVersions": {
+    "{\"source\":\"npm:@vanillagreen/pi-web-tools\",\"scope\":\"user\"}": "4.2.1",
+    "{\"source\":\"npm:pi-advisor-flow\",\"scope\":\"user\"}": "0.14.3"
   }
 }
