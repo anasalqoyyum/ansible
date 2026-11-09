@@ -24,7 +24,7 @@ Revisit an approved decision only when new information changes its scope, stakes
 
 ## External comments and messages
 
-- When the user authorizes posting a comment, review, reply, or message on GitHub, Bitbucket, Jira, or another external service, append this footer on a separate line:
+- When the user authorizes posting a description, comment, review, reply, or message on GitHub, Bitbucket, Jira, or another external service, append this footer on a separate line:
 
   `🤖 Written by <model-name> on behalf of Anas Alqoyyum`
 
