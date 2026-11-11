@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.5.0",
+  "lastChangelogVersion": "1.5.2",
   "defaultProvider": "openai",
   "defaultModel": "gpt-6.1-sol",
   "defaultThinkingLevel": "high",
@@ -81,6 +81,6 @@
   "extensionChangelogVersions": {
     "{\"source\":\"npm:@vanillagreen/pi-web-tools\",\"scope\":\"user\"}": "4.2.1",
     "{\"source\":\"npm:pi-advisor-flow\",\"scope\":\"user\"}": "0.14.4",
-    "{\"source\":\"npm:pi-context-view\",\"scope\":\"user\"}": "0.8.3"
+    "{\"source\":\"npm:pi-context-view\",\"scope\":\"user\"}": "0.8.4"
   }
 }

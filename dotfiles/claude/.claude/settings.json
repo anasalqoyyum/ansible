@@ -6,6 +6,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
+  "attribution": false,
   "model": "opus[1m]",
   "outputStyle": "Concise",
   "effortLevel": "high",
