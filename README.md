@@ -84,6 +84,16 @@ INSTALL_OPENSSH_SERVER_WSL=true bash run-linux.sh
 
 This installs `openssh-server`, enables `ssh.socket`, and verifies that port 22 is listening. It is disabled by default.
 
+Optional standalone T3 Code service on WSL:
+
+```bash
+INSTALL_T3_WSL=true bash run-linux.sh --tags t3code
+```
+
+This installs or updates to the latest T3 nightly and runs its user service on loopback port 3775.
+See [docs/t3-wsl.md](docs/t3-wsl.md) for the desktop migration, Windows Tailscale
+HTTPS route, pairing, and validation commands.
+
 ## Useful Playbook Commands
 
 - Linux dotfiles only: `ansible-playbook -i localhost, local-linux.yml --tags "dotfiles" --ask-become-pass`

@@ -17,4 +17,5 @@ ansible-playbook local-linux.yml \
   --skip-tags "macos-only,ssh" \
   --extra-vars "install_cuda_wsl=${INSTALL_CUDA_WSL:-false}" \
   --extra-vars "install_openssh_server_wsl=${INSTALL_OPENSSH_SERVER_WSL:-false}" \
+  --extra-vars "install_t3_wsl=${INSTALL_T3_WSL:-false}" \
   "$@"

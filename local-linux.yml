@@ -8,6 +8,10 @@
     dest_key: "{{ lookup('env', 'HOME') }}/.ssh/id_ed25519"
     install_cuda_wsl: false
     install_openssh_server_wsl: false
+    install_t3_wsl: false
+    t3_wsl_port: 3775
+    t3_wsl_home: "{{ ansible_facts['user_dir'] }}/.t3"
+    t3_wsl_service_path: "{{ ansible_facts['user_dir'] }}/.local/bin:{{ ansible_facts['user_dir'] }}/.local/share/mise/shims:{{ ansible_facts['env']['PATH'] }}"
     cuda_toolkit_version: "13-3"
     cuda_supported_ubuntu_releases:
       "12-9": [focal, jammy, noble]
@@ -93,6 +97,15 @@
 
     - name: Configure Git
       ansible.builtin.import_tasks: tasks/git-setup.yml
+
+    - name: Configure standalone T3 Code on WSL
+      ansible.builtin.import_tasks: tasks/t3-wsl-setup.yml
+      when:
+        - "'microsoft' in (ansible_facts['kernel'] | lower)"
+        - install_t3_wsl | bool
+      tags:
+        - t3code
+        - wsl
 
     - name: Install win32yank
       ansible.builtin.import_tasks: tasks/win32yank-setup.yml

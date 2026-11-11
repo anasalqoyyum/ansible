@@ -1,0 +1,2 @@
+[Service]
+Environment={{ ('PATH=' ~ t3_wsl_service_path) | replace('%', '%%') | to_json }}

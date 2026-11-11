@@ -1,0 +1,150 @@
+- name: Configure the T3 Code user service
+  become: false
+  environment:
+    PATH: "{{ t3_wsl_service_path }}"
+    XDG_RUNTIME_DIR: "/run/user/{{ ansible_facts['user_uid'] }}"
+    DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/{{ ansible_facts['user_uid'] }}/bus"
+  block:
+    - name: Require systemd and a valid fixed port
+      ansible.builtin.assert:
+        that:
+          - ansible_facts['service_mgr'] == 'systemd'
+          - t3_wsl_port | int > 0
+          - t3_wsl_port | int < 65536
+          - "'\n' not in t3_wsl_service_path"
+
+    - name: Create T3 Code configuration directories
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: directory
+        mode: "{{ item.mode }}"
+      loop:
+        - { path: "{{ ansible_facts['user_dir'] }}/.cache/ansible/t3code-wsl", mode: "0700" }
+        - { path: "{{ ansible_facts['user_dir'] }}/.local/bin", mode: "0755" }
+        - { path: "{{ ansible_facts['user_dir'] }}/.config/systemd/user/t3code.service.d", mode: "0700" }
+        - { path: "{{ t3_wsl_home }}", mode: "0700" }
+
+    - name: Check for the standalone T3 command
+      ansible.builtin.stat:
+        path: "{{ ansible_facts['user_dir'] }}/.local/bin/t3"
+      register: t3_wsl_cli
+
+    - name: Read the installed T3 version
+      ansible.builtin.command:
+        argv: ["{{ ansible_facts['user_dir'] }}/.local/bin/t3", --version]
+      register: t3_wsl_cli_version
+      changed_when: false
+      check_mode: false
+      when: t3_wsl_cli.stat.exists
+
+    - name: Install or update to the latest standalone T3 nightly
+      when: not ansible_check_mode
+      block:
+        - name: Download the official T3 installer
+          ansible.builtin.get_url:
+            url: https://t3.codes/install.sh
+            dest: "{{ ansible_facts['user_dir'] }}/.cache/ansible/t3code-wsl/install.sh"
+            mode: "0600"
+            force: true
+
+        - name: Install the latest T3 nightly release
+          ansible.builtin.command:
+            argv: [/bin/sh, "{{ ansible_facts['user_dir'] }}/.cache/ansible/t3code-wsl/install.sh"]
+          environment:
+            T3CODE_CHANNEL: nightly
+            T3CODE_VERSION: ""
+            T3CODE_HOME: "{{ t3_wsl_home }}"
+            T3CODE_INSTALL_BIN_DIR: "{{ ansible_facts['user_dir'] }}/.local/bin"
+          changed_when: false
+
+        - name: Check whether the installed T3 version changed
+          ansible.builtin.command:
+            argv: ["{{ ansible_facts['user_dir'] }}/.local/bin/t3", --version]
+          register: t3_wsl_updated_version
+          changed_when: t3_wsl_updated_version.stdout != t3_wsl_cli_version.stdout | default('')
+
+    - name: Check whether the T3 home exists during a dry run
+      ansible.builtin.stat:
+        path: "{{ t3_wsl_home }}"
+      register: t3_wsl_home_directory
+
+    - name: Pin the T3 service to its loopback port
+      ansible.builtin.lineinfile:
+        path: "{{ t3_wsl_home }}/service.env"
+        regexp: "^{{ item.key }}="
+        line: "{{ item.key }}={{ item.value }}"
+        create: true
+        mode: "0600"
+      loop:
+        - { key: T3CODE_PORT, value: "{{ t3_wsl_port }}" }
+        - { key: T3CODE_HOST, value: "127.0.0.1" }
+        - { key: T3CODE_LAN, value: "false" }
+      register: t3_wsl_environment
+      when: not ansible_check_mode or t3_wsl_home_directory.stat.exists
+
+    - name: Check whether the service drop-in directory exists during a dry run
+      ansible.builtin.stat:
+        path: "{{ ansible_facts['user_dir'] }}/.config/systemd/user/t3code.service.d"
+      register: t3_wsl_drop_in_directory
+
+    - name: Give the T3 service access to user-installed provider commands
+      ansible.builtin.template:
+        src: t3-wsl/10-user-path.conf.j2
+        dest: "{{ ansible_facts['user_dir'] }}/.config/systemd/user/t3code.service.d/10-user-path.conf"
+        mode: "0644"
+      register: t3_wsl_path_override
+      when: not ansible_check_mode or t3_wsl_drop_in_directory.stat.exists
+
+    - name: Install or reconcile the official T3 user service
+      ansible.builtin.command:
+        argv:
+          - "{{ ansible_facts['user_dir'] }}/.local/bin/t3"
+          - service
+          - install
+          - --base-dir
+          - "{{ t3_wsl_home }}"
+      register: t3_wsl_service_install
+      changed_when: "'Service installed' in t3_wsl_service_install.stdout or 'Service updated' in t3_wsl_service_install.stdout"
+      when: not ansible_check_mode
+
+    - name: Check whether user lingering is already enabled
+      ansible.builtin.stat:
+        path: "/var/lib/systemd/linger/{{ ansible_facts['user_id'] }}"
+      register: t3_wsl_linger
+
+    - name: Enable the T3 user service when WSL starts
+      become: true
+      ansible.builtin.command:
+        argv: [loginctl, enable-linger, "{{ ansible_facts['user_id'] }}"]
+        creates: "/var/lib/systemd/linger/{{ ansible_facts['user_id'] }}"
+      when:
+        - not ansible_check_mode
+        - not t3_wsl_linger.stat.exists
+
+    - name: Enable and start the T3 user service
+      ansible.builtin.systemd_service:
+        name: t3code.service
+        scope: user
+        daemon_reload: true
+        enabled: true
+        state: "{{ 'restarted' if t3_wsl_environment.changed or t3_wsl_path_override.changed else 'started' }}"
+      when: not ansible_check_mode
+
+    - name: Wait for the fixed T3 port
+      ansible.builtin.wait_for:
+        host: 127.0.0.1
+        port: "{{ t3_wsl_port }}"
+        timeout: 30
+      when: not ansible_check_mode
+
+    - name: Verify the endpoint is a Linux T3 environment
+      ansible.builtin.uri:
+        url: "http://127.0.0.1:{{ t3_wsl_port }}/.well-known/t3/environment"
+        return_content: true
+      register: t3_wsl_descriptor
+      until:
+        - t3_wsl_descriptor.status == 200
+        - t3_wsl_descriptor.json.platform.os | default('') == 'linux'
+      retries: 30
+      delay: 2
+      when: not ansible_check_mode
