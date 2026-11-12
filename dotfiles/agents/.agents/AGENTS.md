@@ -80,6 +80,8 @@ Save every screenshot you capture to the user's `Screenshots` folder under Pictu
 - macOS: `~/Pictures/Screenshots`.
 - Linux outside WSL: `$(xdg-user-dir PICTURES)/Screenshots`, usually `~/Pictures/Screenshots`.
 
+Capture a web page without a browser tool using the mise-managed Playwright CLI: `playwright screenshot --browser chromium --full-page --viewport-size 1440,1100 --wait-for-timeout 1000 <url> <file>.png`. When it reports a missing browser, run `playwright install chromium-headless-shell`.
+
 ## Design mockups
 
 When you show a design, mockup, or visual concept and Doop tools are available, put the design on a Doop canvas as well as any image you generate. A generated image is the fallback when Doop is missing or a call fails. Say which one you used.

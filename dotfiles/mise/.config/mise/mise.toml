@@ -49,6 +49,7 @@ prettier = { version = "latest" }
 "npm:confluence-cli" = { version = "latest" }
 "npm:netlify-cli" = { version = "latest" }
 "npm:hunkdiff" = "latest"
+playwright = { version = "latest", postinstall = "playwright install chromium-headless-shell" }
 # To setup typescript-plugin
 "npm:@astrojs/ts-plugin" = { version = "latest" }
 "npm:@vue/typescript-plugin" = { version = "latest" }
