@@ -54,6 +54,8 @@ playwright = { version = "latest", postinstall = "playwright install chromium-he
 "npm:@astrojs/ts-plugin" = { version = "latest" }
 "npm:@vue/typescript-plugin" = { version = "latest" }
 "npm:typescript-svelte-plugin" = { version = "latest" }
+dust = "latest"
+"aqua:blacknon/hwatch" = "latest"
 
 [settings]
 python.uv_venv_auto = true

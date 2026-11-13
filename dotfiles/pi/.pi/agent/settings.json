@@ -80,7 +80,7 @@
   },
   "extensionChangelogVersions": {
     "{\"source\":\"npm:@vanillagreen/pi-web-tools\",\"scope\":\"user\"}": "4.2.1",
-    "{\"source\":\"npm:pi-advisor-flow\",\"scope\":\"user\"}": "0.14.4",
+    "{\"source\":\"npm:pi-advisor-flow\",\"scope\":\"user\"}": "0.15.0",
     "{\"source\":\"npm:pi-context-view\",\"scope\":\"user\"}": "0.8.4"
   }
 }
