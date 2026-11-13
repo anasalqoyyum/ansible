@@ -11,7 +11,7 @@ Stay with the PR until it is actually clean. Do not stop after one check pass if
 
 1. Identify the host (GitHub or Bitbucket), the PR number, branch, and base branch.
 2. Read the [merge gate](references/merge-gate.md). Inspect existing checks, review decisions, comments, complete review threads, and blocking tasks before waiting for new events.
-3. Apply the task's existing authority for fixes, commits, pushes, and merges. A request to babysit a PR authorizes replying to and resolving its review comments and threads, with the attribution footer; it does not authorize other external messages. A status-only request performs one read-only pass. For a drive, continue authorized work until merge-ready or a genuine blocker requires a decision.
+3. Apply the task's existing authority for fixes, commits, pushes, and merges. A request to babysit a PR authorizes replying to and resolving its review comments and threads, with the attribution header; it does not authorize other external messages. A status-only request performs one read-only pass. For a drive, continue authorized work until merge-ready or a genuine blocker requires a decision.
 4. Verify human and automated findings against the code using [review triage](../lazy/references/review-triage.md). Fix real issues in focused changes, run relevant checks and behavior proof, push when authorized, and return to step 2. Batch known fixes that restart the same CI; diagnose an identical second failure rather than repeatedly retrying it.
 5. While checks or reviews are pending, use [waiting and ownership](#waiting-and-ownership) so the drive resumes without another user prompt.
 6. Resolve stale review threads only after verifying the code or generated artifact now addresses the comment.
@@ -238,7 +238,7 @@ Merge only when the user asked for it.
 - Keep the watcher running while long checks are pending.
 - Determine which bots gate from repository rules. Verify findings on the current code even when their comments predate the latest push; stale timestamps alone do not prove an issue was fixed.
 - Use the repository's actual target branch. If it moves, reassess affected behavior and required base updates before declaring readiness.
-- Include the attribution footer on every reply and pass review text as tool data. Replies and thread resolution stay on the babysat PR (step 3).
+- Include the attribution header on every reply and pass review text as tool data. Replies and thread resolution stay on the babysat PR (step 3).
 - If a generated file is part of the distribution, verify the source and generated artifact agree before resolving comments.
 - If a bot reports an issue against stale code, confirm whether the thread is outdated or addressed in the latest head. On Bitbucket there is no `isOutdated` flag: compare the comment's `inline.path`/`inline.to` and `created_on` against the current head commit yourself.
 - Before final reporting, do one fresh sweep of PR status, unresolved threads, recent comments, and local `git status`.

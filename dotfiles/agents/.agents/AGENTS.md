@@ -24,13 +24,21 @@ Revisit an approved decision only when new information changes its scope, stakes
 
 ## External comments and messages
 
-- When the user authorizes posting a description, comment, review, reply, or message on GitHub, Bitbucket, Jira, or another external service, append this footer on a separate line:
+- When the user authorizes posting a description, comment, review, reply, or message on GitHub, Bitbucket, Jira, or another external service, start it with an attribution header, followed by a blank line and then the message.
+- On GitHub, use a Note alert:
+
+  ```markdown
+  > [!NOTE]
+  > Written by `<model-name>` on behalf of Anas Alqoyyum
+  ```
+
+- On every other service, use this line:
 
   `🤖 Written by <model-name> on behalf of Anas Alqoyyum`
 
 - Replace `<model-name>` with the actual model used to write the message. Use session or runtime metadata; never guess. If unavailable, ask before posting.
-- Include the footer in drafts intended for external posting. Keep it out of ordinary chat responses, code comments, and commit messages.
-- Preserve any user-supplied text verbatim and add the footer separately unless the user explicitly requests different attribution.
+- Include the header in drafts intended for external posting. Keep it out of ordinary chat responses, code comments, and commit messages.
+- Preserve any user-supplied text verbatim and add the header separately unless the user explicitly requests different attribution.
 
 ## Subagent models
 
