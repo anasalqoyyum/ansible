@@ -1,0 +1,12 @@
+- name: Install Antigravity CLI with Google's installer
+  ansible.builtin.shell: |
+    set -o pipefail
+    curl -fsSL https://antigravity.google/cli/install.sh | /bin/bash
+  args:
+    executable: /bin/bash
+    creates: "{{ ansible_facts['user_dir'] }}/.local/bin/agy"
+  become: false
+  tags:
+    - install
+    - ai-tools
+    - antigravity

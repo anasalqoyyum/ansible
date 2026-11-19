@@ -92,6 +92,9 @@
     - name: Install AI tools
       ansible.builtin.import_tasks: tasks/ai-tools.yml
 
+    - name: Install Antigravity CLI
+      ansible.builtin.import_tasks: tasks/antigravity-setup.yml
+
     - name: Install BrowserSkill
       ansible.builtin.import_tasks: tasks/browser-skill-setup.yml
 
