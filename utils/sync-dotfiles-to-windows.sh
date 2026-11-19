@@ -78,7 +78,7 @@ sync_file "claude agents" "$repo_root/dotfiles/agents/.agents/AGENTS.md" "$windo
 sync_dir "claude skills" "$repo_root/dotfiles/agents/.agents/skills" "$windows_home/.claude/skills"
 sync_file "claude settings" "$repo_root/dotfiles/claude/.claude/settings.json" "$windows_home/.claude/settings.json"
 sync_file "antigravity settings" "$repo_root/dotfiles/antigravity/.gemini/antigravity-cli/settings.json" "$windows_home/.gemini/antigravity-cli/settings.json"
-sync_file "antigravity skills" "$repo_root/dotfiles/antigravity/.gemini/config/skills.json" "$windows_home/.gemini/config/skills.json"
+sync_dir "antigravity skills" "$repo_root/dotfiles/agents/.agents/skills" "$windows_home/.gemini/config/skills"
 sync_file "antigravity mcp" "$repo_root/dotfiles/antigravity/.gemini/config/mcp_config.json" "$windows_home/.gemini/config/mcp_config.json"
 sync_dir "mise" "$repo_root/dotfiles/mise/.config/mise" "$windows_home/.config/mise"
 sync_dir "nvim" "$repo_root/dotfiles/nvim/.config/nvim" "$windows_home/AppData/Local/nvim"

@@ -544,14 +544,18 @@ class DotfilesTest(unittest.TestCase):
         self.assert_runtime_state(paths)
 
     def test_antigravity_settings_seeded_once_without_stow_conflict(self):
-        self.env["STOW_FOLDERS"] = "pi,demo,antigravity"
+        self.env["STOW_FOLDERS"] = "pi,demo,agents,antigravity"
+        self.write(
+            self.source / "agents/.agents/skills/demo/SKILL.md",
+            "demo skill\n",
+        )
         self.write(
             self.source / "antigravity/.gemini/antigravity-cli/settings.json",
             '{\n  "toolPermission": "always-proceed"\n}\n',
         )
         self.write(
-            self.source / "antigravity/.gemini/config/skills.json",
-            '{\n  "entries": []\n}\n',
+            self.source / "antigravity/.gemini/config/mcp_config.json",
+            '{\n  "mcpServers": {}\n}\n',
         )
         self.rsync()
 
@@ -567,6 +571,10 @@ class DotfilesTest(unittest.TestCase):
             "Run stow to create symlinks",
             "Ensure Antigravity CLI config directory exists",
             "Seed Antigravity CLI settings on fresh machines",
+            "Ensure Antigravity global config directory exists",
+            "Check for legacy Antigravity skills.json symlink",
+            "Remove legacy Antigravity skills.json symlink",
+            "Link shared agent skills directory into Antigravity config",
         }
         playbook = self.source.parent / "test-antigravity.yml"
         playbook.write_text(
@@ -584,15 +592,28 @@ class DotfilesTest(unittest.TestCase):
         )
 
         target = self.home / ".gemini/antigravity-cli/settings.json"
+        skills_link = self.home / ".gemini/config/skills"
+        legacy_skills_json = self.home / ".gemini/config/skills.json"
         argv = ["ansible-playbook", "-i", "localhost,", playbook]
 
         before = self.snapshot()
         self.run_command(argv + ["--check"])
         self.assertEqual(self.snapshot(), before)
 
-        # Fresh machine: seeded as a regular 0600 file while skills.json is stowed.
+        # Simulate a legacy stowed skills.json symlink from an earlier sync.
+        legacy_skills_json.parent.mkdir(parents=True, exist_ok=True)
+        legacy_skills_json.symlink_to(
+            "../../.dotfiles/antigravity/.gemini/config/skills.json"
+        )
+
+        # Fresh machine: seeded as a regular 0600 file, mcp_config.json stowed,
+        # legacy skills.json symlink removed, and skills linked as one directory.
         self.run_command(argv)
-        self.assertTrue((self.home / ".gemini/config/skills.json").is_symlink())
+        self.assertTrue((self.home / ".gemini/config/mcp_config.json").is_symlink())
+        self.assertFalse(os.path.lexists(legacy_skills_json))
+        self.assertTrue(skills_link.is_symlink())
+        self.assertEqual(os.readlink(skills_link), str(self.home / ".agents/skills"))
+        self.assertEqual((skills_link / "demo/SKILL.md").read_text(), "demo skill\n")
         self.assertFalse(target.is_symlink())
         self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o600)
         self.assertEqual(
@@ -609,6 +630,8 @@ class DotfilesTest(unittest.TestCase):
         self.run_command(argv)
         self.assertFalse(target.is_symlink())
         self.assertEqual(target.read_text(), local_content)
+        self.assertTrue(skills_link.is_symlink())
+        self.assertEqual(os.readlink(skills_link), str(self.home / ".agents/skills"))
 
 
 if __name__ == "__main__":
