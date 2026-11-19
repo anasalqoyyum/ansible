@@ -1,5 +1,5 @@
 personality = "pragmatic"
-model = "gpt-6.1-sol"
+model = "gpt-6.2-sol"
 model_reasoning_effort = "high"
 model_verbosity = "low"
 model_reasoning_summary = "detailed"
@@ -13,6 +13,9 @@ sandbox_mode = "danger-full-access"
 [agents]
 default_subagent_model = "gpt-6-luna"
 default_subagent_reasoning_effort = "max"
+
+[mcp_servers.doop]
+url = "https://en.pipefish-sirius.ts.net:8443/mcp"
 
 [features]
 default_mode_request_user_input = true

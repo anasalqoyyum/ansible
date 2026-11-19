@@ -349,6 +349,7 @@ alias rgf="rg --fixed-strings"
 alias k="kubectl"
 alias cx="codex --dangerously-bypass-approvals-and-sandbox"
 alias cc="claude --permission-mode auto"
+alias ag="agy --dangerously-skip-permissions"
 # Disabled by security policy
 # alias cc="IS_DEMO=1 claude --dangerously-skip-permissions"
 # alias cx="codex --yolo"
