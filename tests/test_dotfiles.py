@@ -546,6 +546,10 @@ class DotfilesTest(unittest.TestCase):
     def test_antigravity_settings_seeded_once_without_stow_conflict(self):
         self.env["STOW_FOLDERS"] = "pi,demo,agents,antigravity"
         self.write(
+            self.source / "agents/.agents/AGENTS.md",
+            "# Global agent guidelines\n",
+        )
+        self.write(
             self.source / "agents/.agents/skills/demo/SKILL.md",
             "demo skill\n",
         )
@@ -556,6 +560,9 @@ class DotfilesTest(unittest.TestCase):
         self.write(
             self.source / "antigravity/.gemini/config/mcp_config.json",
             '{\n  "mcpServers": {}\n}\n',
+        )
+        (self.source / "antigravity/.gemini/GEMINI.md").symlink_to(
+            "../../agents/.agents/AGENTS.md"
         )
         self.rsync()
 
@@ -609,6 +616,10 @@ class DotfilesTest(unittest.TestCase):
         # Fresh machine: seeded as a regular 0600 file, mcp_config.json stowed,
         # legacy skills.json symlink removed, and skills linked as one directory.
         self.run_command(argv)
+        self.assertTrue((self.home / ".gemini/GEMINI.md").is_symlink())
+        self.assertEqual(
+            (self.home / ".gemini/GEMINI.md").read_text(), "# Global agent guidelines\n"
+        )
         self.assertTrue((self.home / ".gemini/config/mcp_config.json").is_symlink())
         self.assertFalse(os.path.lexists(legacy_skills_json))
         self.assertTrue(skills_link.is_symlink())
