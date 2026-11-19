@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "1.5.2",
   "defaultProvider": "openai",
-  "defaultModel": "gpt-6.1-sol",
+  "defaultModel": "gpt-6.2-sol",
   "defaultThinkingLevel": "high",
   "defaultTools": [
     "+codemode"
@@ -25,12 +25,12 @@
   "enableInstallTelemetry": false,
   "editorPaddingX": 0,
   "enabledModels": [
-    "openai/gpt-6.1-sol",
-    "openai/gpt-6-astra",
     "kenari/claude-sonnet-5-5",
     "kenari/glm-5-3-flash",
     "kenari/deepseek-v4-1-flash",
-    "deepseek/deepseek-flash"
+    "deepseek/deepseek-flash",
+    "openai/gpt-6.2-astra",
+    "openai/gpt-6.2-sol"
   ],
   "modelThinkingLevels": {
     "openai/gpt-6.1-sol": "high",
@@ -80,7 +80,7 @@
   },
   "extensionChangelogVersions": {
     "{\"source\":\"npm:@vanillagreen/pi-web-tools\",\"scope\":\"user\"}": "4.2.1",
-    "{\"source\":\"npm:pi-advisor-flow\",\"scope\":\"user\"}": "0.15.0",
+    "{\"source\":\"npm:pi-advisor-flow\",\"scope\":\"user\"}": "0.16.0",
     "{\"source\":\"npm:pi-context-view\",\"scope\":\"user\"}": "0.8.4"
   }
 }
