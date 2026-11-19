@@ -543,6 +543,73 @@ class DotfilesTest(unittest.TestCase):
         self.run_command(argv)
         self.assert_runtime_state(paths)
 
+    def test_antigravity_settings_seeded_once_without_stow_conflict(self):
+        self.env["STOW_FOLDERS"] = "pi,demo,antigravity"
+        self.write(
+            self.source / "antigravity/.gemini/antigravity-cli/settings.json",
+            '{\n  "toolPermission": "always-proceed"\n}\n',
+        )
+        self.write(
+            self.source / "antigravity/.gemini/config/skills.json",
+            '{\n  "entries": []\n}\n',
+        )
+        self.rsync()
+
+        utils = self.source.parent / "utils"
+        utils.mkdir()
+        shutil.copy(REPO / "utils/preserve-local-dotfiles.py", utils)
+        names = {
+            "Ensure .dotfiles directory exists",
+            "Preserve local state behind legacy directory symlinks",
+            "Sync dotfiles from repo (idempotent)",
+            "Preview dotfiles sync changes in check mode",
+            "Make scripts executable",
+            "Run stow to create symlinks",
+            "Ensure Antigravity CLI config directory exists",
+            "Seed Antigravity CLI settings on fresh machines",
+        }
+        playbook = self.source.parent / "test-antigravity.yml"
+        playbook.write_text(
+            yaml.safe_dump(
+                [
+                    {
+                        "hosts": "localhost",
+                        "connection": "local",
+                        "gather_facts": False,
+                        "tasks": [task for task in TASKS if task["name"] in names],
+                    }
+                ],
+                sort_keys=False,
+            )
+        )
+
+        target = self.home / ".gemini/antigravity-cli/settings.json"
+        argv = ["ansible-playbook", "-i", "localhost,", playbook]
+
+        before = self.snapshot()
+        self.run_command(argv + ["--check"])
+        self.assertEqual(self.snapshot(), before)
+
+        # Fresh machine: seeded as a regular 0600 file while skills.json is stowed.
+        self.run_command(argv)
+        self.assertTrue((self.home / ".gemini/config/skills.json").is_symlink())
+        self.assertFalse(target.is_symlink())
+        self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o600)
+        self.assertEqual(
+            target.read_text(), '{\n  "toolPermission": "always-proceed"\n}\n'
+        )
+
+        # After agy replaces settings.json with local state, re-sync neither conflicts nor overwrites.
+        local_content = '{\n  "toolPermission": "always-proceed",\n  "trustedWorkspaces": ["/tmp/ws"]\n}\n'
+        target.write_text(local_content)
+        self.write(
+            self.source / "antigravity/.gemini/antigravity-cli/settings.json",
+            '{\n  "toolPermission": "ask"\n}\n',
+        )
+        self.run_command(argv)
+        self.assertFalse(target.is_symlink())
+        self.assertEqual(target.read_text(), local_content)
+
 
 if __name__ == "__main__":
     unittest.main()

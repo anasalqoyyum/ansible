@@ -128,6 +128,29 @@
     - dotfiles
     - stow
 
+# Antigravity CLI atomically replaces settings.json on write and stores local
+# state (e.g. trustedWorkspaces) in it, so seed it once instead of stowing it.
+- name: Ensure Antigravity CLI config directory exists
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/.gemini/antigravity-cli"
+    state: directory
+    mode: "0755"
+  tags:
+    - install
+    - dotfiles
+    - stow
+
+- name: Seed Antigravity CLI settings on fresh machines
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/dotfiles/antigravity/.gemini/antigravity-cli/settings.json"
+    dest: "{{ lookup('env', 'HOME') }}/.gemini/antigravity-cli/settings.json"
+    mode: "0600"
+    force: false
+  tags:
+    - install
+    - dotfiles
+    - stow
+
 # Claude Code syncs claude.ai skills into ~/.claude/skills/synced, so that
 # directory must not be a symlink to the shared ~/.agents/skills.
 - name: Check Claude skills directory

@@ -111,7 +111,8 @@ echo ""
 typeset -a directory_links=(agents/.agents/skills)
 
 typeset -a stow_cmd
-stow_cmd=(stow -R --no-folding --ignore='(^|/)node_modules$')
+# Antigravity CLI atomically replaces settings.json on write, so Ansible seeds it instead.
+stow_cmd=(stow -R --no-folding --ignore='(^|/)node_modules$' --ignore='^\.gemini/antigravity-cli/settings\.json$')
 for entry in "${directory_links[@]}"; do
   stow_cmd+=("--ignore=^${${entry#*/}//./\\.}")
 done

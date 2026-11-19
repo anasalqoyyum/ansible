@@ -78,6 +78,29 @@ existing WSL threads. The direct link from `en` to WSL was created on 2026-11-11
 The WSL environment ID is `bf14f5df-725f-435c-8d96-f6b34bff2a48`; its reported
 label is still `Real`, derived from the distro's hostname.
 
+## Sign in to Antigravity
+
+The headless service cannot sign in from T3's provider settings. `agy` fails
+with `No browser is available here (no graphical display is available to open a
+browser)` before it prints a Google link, so T3 has nothing to show. T3 also
+uses its own profile under `~/.t3/userdata/providers/antigravity/<hash>/`, so the
+`agy` login in `~/.gemini` does not apply.
+
+Sign in once from a terminal on the WSL host itself, not from an SSH client
+machine, into T3's profile:
+
+```bash
+P=~/.t3/userdata/providers/antigravity/ac0a3dfd6dddb20962cecff6ee5fe65e19d3923be20e52c5ab52ff877f7e4c32
+GEMINI_HOME=$P AGY_ACP_FORCE_FILE_STORAGE=1 agy acp --login --gemini-dir $P --app-data-dir antigravity-acp
+```
+
+Open the printed Google link in any browser, then paste the authorization code
+or the full URL of the page you land on. Click Refresh on the Antigravity
+provider in T3 afterward.
+
+The profile hash can differ per install; use the directory that exists under
+`~/.t3/userdata/providers/antigravity/`.
+
 ## Verify
 
 ```bash
