@@ -194,6 +194,7 @@ class DevboxTest(unittest.TestCase):
         self.assertFalse(config["management"]["allow-remote"])
         self.assertEqual(config["server"]["host"], "127.0.0.1")
         self.assertNotEqual(config["access"]["api-keys"][0], key)
+        self.assertEqual(config["oauth"]["excluded-models"], {"antigravity": ["*"]})
         for path in [key_file, config_file]:
             self.assertEqual(path.stat().st_mode & 0o777, 0o600)
 

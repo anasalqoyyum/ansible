@@ -241,6 +241,39 @@ After editing the configuration, use
 This service is devbox-only. The macOS profile already installs the
 `cliproxyapi` Homebrew formula, but does not start it with `brew services`.
 
+### T3 Code usage limits
+
+T3 Code can show subscription limits for the proxy's accounts. In T3 Code, open
+**Settings → Usage providers**, add a CLIProxyAPI source with the URL
+`http://127.0.0.1:8317`, and enter the management password from
+`~/.config/cliproxyapi/management-key`.
+
+T3 Code's own Antigravity provider cannot show limits while Antigravity keeps
+its Google sign-in in the system keyring, because T3 Code reads them from
+`antigravity-acp/acp_token.json` in the provider profile. As a workaround, sign
+in to Antigravity on the proxy as well:
+
+```bash
+cli-proxy-api -config "$HOME/.config/cliproxyapi/config.yaml" -antigravity-login
+```
+
+New configurations exclude every Antigravity model under
+`oauth.excluded-models`, so the proxy reads the account's quota but never routes
+requests to it. Using Antigravity sign-ins from third-party clients can get an
+account restricted. Provisioning does not change an existing `config.yaml`, so
+add the block by hand on older installations:
+
+```yaml
+oauth:
+  excluded-models:
+    antigravity:
+      - "*"
+```
+
+Do not disable the Antigravity account instead: T3 Code skips disabled
+accounts. To confirm the exclusion, check that `/v1/models` lists no Gemini or
+Claude models.
+
 ## Desktop applications
 
 Normal provisioning installs Chrome, Helium, Ghostty, Zed, Obsidian, OBS Studio,

@@ -109,6 +109,11 @@
           - "{{ lookup('ansible.builtin.password', '/dev/null', length=64, chars=['ascii_letters', 'digits']) }}"
       oauth:
         auth-dir: "{{ ansible_facts['user_dir'] }}/.cli-proxy-api"
+        excluded-models:
+          # Antigravity accounts are added only so T3 Code can read their
+          # quota; requests are never routed to them.
+          antigravity:
+            - "*"
       client:
         codex:
           # Sends Codex multi-agent messages as plaintext; encrypted agent_message
