@@ -17,9 +17,14 @@ work. Resolve the PR's source and destination repositories separately, including
 forks and release or stacked targets. Use GitHub tools for GitHub and
 [bkt](../../bkt/SKILL.md) for Bitbucket Cloud or Data Center.
 
-Carry forward the user's authority and limits for edits, commits, pushes,
-rebases, PR creation, review replies, and merging. Ask only when the next needed
-operation lacks authority or a product decision changes the result. Do the
+Asking for `full-stop` or `full-send` authorizes, for this change and its PR:
+edits, branch creation, commits, pushes, creating the PR and editing its
+description, and babysit's replies to and resolution of review comments and
+threads (with the attribution header). `full-send` adds the merge.
+Force-pushing a shared branch and messages outside the PR still need the user's
+authority.
+Carry forward any further authority and limits the user gave. Ask only when the
+next needed operation lacks authority or a product decision changes the result. Do the
 independent authorized work first. A no-commit or no-publish instruction takes
 precedence over the endpoint; report the exact transition left for the user.
 

@@ -247,15 +247,6 @@
       "installedAt": "2026-08-15T03:17:30.109Z",
       "updatedAt": "2026-08-15T03:17:30.109Z"
     },
-    "recap": {
-      "source": "backnotprop/bro",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/backnotprop/bro.git",
-      "skillPath": "skills/recap/SKILL.md",
-      "skillFolderHash": "8b916f4a6b339fdc3372131a30259c3fce71cfa5",
-      "installedAt": "2026-08-15T03:17:30.110Z",
-      "updatedAt": "2026-09-05T06:02:59.070Z"
-    },
     "show-me": {
       "source": "humanlayer/skills",
       "sourceType": "github",

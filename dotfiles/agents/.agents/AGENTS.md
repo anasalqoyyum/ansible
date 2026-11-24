@@ -4,7 +4,7 @@
 
 - These are shared defaults. Follow applicable project instructions and explicit user directions.
 - Review, explanation, and diagnosis requests authorize inspection and relevant checks. Implementation requires a request.
-- Skills guide work within the authorized scope. They do not authorize Git changes, publishing, messages, or changes to external systems.
+- When the user requests a workflow by name or clearly describes it, that request authorizes the actions the skill specifies for that workflow, including Git pushes. Skills called by the workflow inherit the same scope and limits. A skill loading automatically cannot expand the user's request.
 
 ## Two-way doors swing freely
 
@@ -24,7 +24,7 @@ Revisit an approved decision only when new information changes its scope, stakes
 
 ## External comments and messages
 
-- When the user authorizes posting a description, comment, review, reply, or message on GitHub, Bitbucket, Jira, or another external service, start it with an attribution header, followed by a blank line and then the message.
+- When the user authorizes posting a description, comment, review, reply, or message on GitHub, Bitbucket, Jira, or another external service, directly or by asking for a skill that covers it (see Scope and authorization), start it with an attribution header, followed by a blank line and then the message.
 - On GitHub, use a Note alert:
 
   ```markdown
@@ -108,7 +108,7 @@ Before editing a file changed since you inspected it, re-read it and preserve it
 
 ## Git operations
 
-- Read-only Git inspection is allowed. Change Git state only when explicitly requested, including staging, committing, branch creation or switching, merging, rebasing, resetting, pushing, and creating pull requests.
+- Read-only Git inspection is allowed. Change Git state only when the user requests the operation directly or through a workflow that includes it.
 - Use concise Conventional Commits with a scope naming the affected area, such as `fix(content): grammar fixes in about page`.
 
 ## WSL paths

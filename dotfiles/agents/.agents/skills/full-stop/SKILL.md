@@ -7,7 +7,8 @@ description: Carry a change through implementation, verification, review, PR cre
 
 Read and follow the shared
 [completion workflow](../full-send/references/completion-workflow.md) with
-endpoint `merge-ready`. The user's current limits and existing authority apply.
+endpoint `merge-ready`. Asking for full-stop grants the authority that workflow
+lists, except the merge. The user's current limits still apply.
 
 Leave the PR open and unmerged. Never merge, enable auto-merge, enter a merge
 queue, or delegate those actions in this mode. Check existing automatic merge
