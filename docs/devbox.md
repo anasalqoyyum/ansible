@@ -362,6 +362,117 @@ silently install an older build. Rerunning the task installs the newest nightly
 from that release query; T3 Code can also update itself between provisioning runs.
 Applications are installed but not launched, and no scheduled Ansible job updates them.
 
+### T3 agent memory and swap
+
+Apply this after [initial bootstrap](#initial-bootstrap). On the 16 GiB devbox,
+Claude's scratch files were taking up RAM and swap on `/tmp`, and parallel
+Vitest workers triggered two system-wide OOM kills. Move Claude scratch to the
+SSD, default Vitest to one worker per run, and aim for 8 GiB of total swap.
+
+#### Put Claude scratch on the SSD
+
+Use the same shell for the setup commands and run them as the devbox user.
+Check that `/var/lib` is on the SSD and adjust the path if your disk layout
+differs. Claude appends `claude-<uid>` to
+`CLAUDE_CODE_TMPDIR`. [Claude Code environment variables](https://code.claude.com/docs/en/env-vars)
+
+```bash
+user_id=$(id -u)
+scratch_root=/var/lib/t3-agent-scratch
+scratch_dir="$scratch_root/claude-$user_id"
+legacy_dir="/tmp/claude-$user_id"
+findmnt -T /var/lib -o TARGET,SOURCE,FSTYPE
+sudo install -d -m 0711 -o root -g root "$scratch_root"
+sudo install -d -m 0700 -o "$user_id" -g "$(id -g)" "$scratch_dir"
+```
+
+On a machine that already has Claude files in `$legacy_dir`, quit T3 and stop
+standalone Claude sessions before copying. Compare the copy with a checksum
+dry run. Once the copy matches, rename the original directory out of the way.
+Keep it until the bind mount and a new T3 session pass verification, then
+remove the old copy.
+
+```bash
+rsync -aHAXxS -- "$legacy_dir/" "$scratch_dir/"
+rsync -aHAXxS --dry-run --checksum --delete --itemize-changes -- "$legacy_dir/" "$scratch_dir/"
+```
+
+Add the line printed below once to `/etc/fstab` with `sudoedit`. The bind mount
+lets resumed sessions and anything using the default `/tmp` path reach the same
+files. [systemd mount units](https://www.freedesktop.org/software/systemd/man/latest/systemd.mount.html)
+
+```bash
+if [ ! -e "$legacy_dir" ] && [ ! -L "$legacy_dir" ]; then
+  sudo install -d -m 0700 -o root -g root "$legacy_dir"
+fi
+printf '%s\t%s\tnone\tbind,nosuid,nodev,nofail,x-systemd.before=local-fs.target\t0\t0\n' \
+  "$scratch_dir" "$legacy_dir"
+```
+
+#### Set the swap target
+
+Check `swapon --show --bytes` and the existing `/etc/fstab` entries. Keep the
+existing swap active and add only the shortfall. The example adds 4 GiB to a
+machine with 4 GiB already configured. Use `8G` if there is no existing swap.
+Skip file creation if the target is already met. These commands assume an ext4
+root filesystem and enough free space.
+
+```bash
+extra_swap=/swap-extra.img
+extra_swap_size=4G
+sudo test ! -e "$extra_swap" && sudo test ! -L "$extra_swap" &&
+  sudo install -m 0600 /dev/null "$extra_swap" &&
+  sudo fallocate -l "$extra_swap_size" "$extra_swap" &&
+  sudo mkswap "$extra_swap"
+```
+
+If you created the file, add `/swap-extra.img none swap sw,nofail 0 0` once to
+`/etc/fstab`. Validate the file, reload systemd, and start the scratch mount.
+
+```bash
+sudo findmnt --verify &&
+  sudo systemctl daemon-reload &&
+  sudo systemctl start "$(systemd-escape --path --suffix=mount "$legacy_dir")"
+```
+
+Start the extra swap if you added it.
+
+```bash
+sudo systemctl start "$(systemd-escape --path --suffix=swap /swap-extra.img)"
+```
+
+#### Set and verify the launcher environment
+
+Insert these exports before the `exec` in `~/.local/bin/t3code`. The Vitest
+default applies per invocation to versions that support `VITEST_MAX_WORKERS`.
+The [Ansible T3 task](../tasks/devbox-apps.yml) replaces the launcher, so reapply
+the exports after any provisioning run that includes that task.
+[Vitest worker settings](https://v4.vitest.dev/guide/migration.html#pool-rework)
+
+```sh
+export CLAUDE_CODE_TMPDIR="${CLAUDE_CODE_TMPDIR:-/var/lib/t3-agent-scratch}"
+export VITEST_MAX_WORKERS="${VITEST_MAX_WORKERS:-1}"
+```
+
+Quit T3 and reopen it from the application menu or `~/.local/bin/t3code`.
+Run the following from a new T3 agent command. Expect the scratch path, worker
+count `1`, an ext4 mount, matching directories, and about 8 GiB of total swap.
+Use the agent shell or inspect the T3 backend process environment. The desktop
+window process can omit these variables even when the agents inherit them.
+
+```bash
+printenv CLAUDE_CODE_TMPDIR VITEST_MAX_WORKERS
+legacy_dir="/tmp/claude-$(id -u)"
+findmnt -T "$legacy_dir" -o TARGET,SOURCE,FSTYPE
+test "$legacy_dir" -ef "$CLAUDE_CODE_TMPDIR/claude-$(id -u)" && echo 'Same directory'
+swapon --show
+free -h
+```
+
+Repeat the checks after reboot. If the machine still stalls during parallel
+work, check `vmstat 1` for sustained swap reads and writes (`si` and `so`), and
+check the kernel journal for OOM kills with `sudo journalctl -k -b -g 'oom-kill:|Out of memory'`.
+
 ### OpenVPN and WireGuard
 
 The devbox profile installs OpenVPN, its NetworkManager GUI plugin, WireGuard
